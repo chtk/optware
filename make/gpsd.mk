@@ -40,7 +40,7 @@ GPSD_IPK_VERSION=1
 
 #
 # GPSD_CONFFILES should be a list of user-editable files
-#GPSD_CONFFILES=/opt/etc/gpsd.conf /opt/etc/init.d/SXXgpsd
+#GPSD_CONFFILES=$(OPTWARE_PREFIX)etc/gpsd.conf $(OPTWARE_PREFIX)etc/init.d/SXXgpsd
 
 #
 # GPSD_PATCHES should list any patches, in the the order in
@@ -132,7 +132,7 @@ $(GPSD_BUILD_DIR)/.configured: $(DL_DIR)/$(GPSD_SOURCE) $(GPSD_PATCHES) make/gps
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		$(GPSD_CONFIG_ARGS) \
 		--disable-nls \
@@ -142,11 +142,11 @@ $(GPSD_BUILD_DIR)/.configured: $(DL_DIR)/$(GPSD_SOURCE) $(GPSD_PATCHES) make/gps
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -208,19 +208,19 @@ $(GPSD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GPSD_IPK_DIR)/opt/sbin or $(GPSD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GPSD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GPSD_IPK_DIR)/opt/etc/gpsd/...
-# Documentation files should be installed in $(GPSD_IPK_DIR)/opt/doc/gpsd/...
-# Daemon startup scripts should be installed in $(GPSD_IPK_DIR)/opt/etc/init.d/S??gpsd
+# Libraries and include files should be installed into $(GPSD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)etc/gpsd/...
+# Documentation files should be installed in $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)doc/gpsd/...
+# Daemon startup scripts should be installed in $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gpsd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GPSD_IPK): $(GPSD_BUILD_DIR)/.built
 	rm -rf $(GPSD_IPK_DIR) $(BUILD_DIR)/gpsd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GPSD_BUILD_DIR) DESTDIR=$(GPSD_IPK_DIR) install-strip
-	-$(STRIP_COMMAND) $(GPSD_IPK_DIR)/opt/lib/python2.5/site-packages/*.so
+	-$(STRIP_COMMAND) $(GPSD_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/*.so
 	$(MAKE) $(GPSD_IPK_DIR)/CONTROL/control
 	echo $(GPSD_CONFFILES) | sed -e 's/ /\n/g' > $(GPSD_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GPSD_IPK_DIR)

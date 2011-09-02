@@ -109,7 +109,7 @@ $(LIBUSB_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBUSB_SOURCE) $(LIBUSB_PATCHES) ma
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--disable-build-docs \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 	$(PATCH_LIBTOOL) $(LIBUSB_BUILD_DIR)/libtool
 	touch $(LIBUSB_BUILD_DIR)/.configured
@@ -158,12 +158,12 @@ $(LIBUSB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBUSB_IPK_DIR)/opt/sbin or $(LIBUSB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBUSB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBUSB_IPK_DIR)/opt/etc/libusb/...
-# Documentation files should be installed in $(LIBUSB_IPK_DIR)/opt/doc/libusb/...
-# Daemon startup scripts should be installed in $(LIBUSB_IPK_DIR)/opt/etc/init.d/S??libusb
+# Libraries and include files should be installed into $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)etc/libusb/...
+# Documentation files should be installed in $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)doc/libusb/...
+# Daemon startup scripts should be installed in $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libusb
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -172,13 +172,13 @@ $(LIBUSB_IPK): $(LIBUSB_BUILD_DIR)/.built
 	$(MAKE) -C $(LIBUSB_BUILD_DIR) DESTDIR=$(LIBUSB_IPK_DIR) \
 		SUBDIRS=. lib_LTLIBRARIES=libusb.la install-strip
 	( cd $(LIBUSB_BUILD_DIR)/tests ; \
-		$(TARGET_CC) -o $(LIBUSB_IPK_DIR)/opt/bin/testlibusb testlibusb.c \
+		$(TARGET_CC) -o $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)bin/testlibusb testlibusb.c \
 			-I$(STAGING_INCLUDE_DIR) -L$(STAGING_LIB_DIR) -lusb \
-			-Wl,--rpath -Wl,/opt/lib )
-	$(STRIP_COMMAND) $(LIBUSB_IPK_DIR)/opt/bin/testlibusb
-#	rm -rf $(LIBUSB_IPK_DIR)/opt/include
-#	rm -rf $(LIBUSB_IPK_DIR)/opt/bin/libusb-config
-	rm -rf $(LIBUSB_IPK_DIR)/opt/lib/libusb.{a,la}
+			-Wl,--rpath -Wl,$(OPTWARE_PREFIX)lib )
+	$(STRIP_COMMAND) $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)bin/testlibusb
+#	rm -rf $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)include
+#	rm -rf $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)bin/libusb-config
+	rm -rf $(LIBUSB_IPK_DIR)$(OPTWARE_PREFIX)lib/libusb.{a,la}
 	$(MAKE) $(LIBUSB_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBUSB_IPK_DIR)
 

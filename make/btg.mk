@@ -55,7 +55,7 @@ BTG_IPK_VERSION=1
 
 #
 # BTG_CONFFILES should be a list of user-editable files
-#BTG_CONFFILES=/opt/etc/btg.conf /opt/etc/init.d/SXXbtg
+#BTG_CONFFILES=$(OPTWARE_PREFIX)etc/btg.conf $(OPTWARE_PREFIX)etc/init.d/SXXbtg
 
 #
 # BTG_PATCHES should list any patches, in the the order in
@@ -76,7 +76,7 @@ ifeq ($(OPTWARE_TARGET), $(filter mbwe-bluering, $(OPTWARE_TARGET)))
 	BTG_CPPFLAGS+= -mcpu=arm9
 endif
 
-BTG_LDFLAGS=-Wl,-rpath,/opt/lib/btg -ltorrent-rasterbar -lboost_system -lboost_filesystem -lboost_date_time -lboost_thread -lboost_program_options -lgnutls 
+BTG_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)lib/btg -ltorrent-rasterbar -lboost_system -lboost_filesystem -lboost_date_time -lboost_thread -lboost_program_options -lgnutls 
 
 #
 # BTG_BUILD_DIR is the directory in which the build is done.
@@ -174,7 +174,7 @@ endif
 		LIBTORRENT_CFLAGS="-I$(STAGING_INCLUDE_DIR)" \
 		LIBCURL="$(STAGING_LDFLAGS) -lcurl" \
 		LIBCURL_CPPFLAGS="$(STAGING_CPPFLAGS)" \
-		DIALOG="/opt/bin/dialog" \
+		DIALOG="$(OPTWARE_PREFIX)bin/dialog" \
 		LIBGNUTLS_CONFIG="$(STAGING_PREFIX)/bin/libgnutls-config" \
 		LIBGNUTLS_CFLAGS="$(STAGING_CPPFLAGS)" \
 		LIBGNUTLS_LIBS="$(STAGING_LDFLAGS) -lgnutls" \
@@ -182,7 +182,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--program-prefix= \
 		--with-boost="$(STAGING_PREFIX)" \
 		--with-boost-libdir="$(STAGING_LIB_DIR)" \
@@ -265,23 +265,23 @@ endif
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BTG_IPK_DIR)/opt/sbin or $(BTG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BTG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BTG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BTG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BTG_IPK_DIR)/opt/etc/btg/...
-# Documentation files should be installed in $(BTG_IPK_DIR)/opt/doc/btg/...
-# Daemon startup scripts should be installed in $(BTG_IPK_DIR)/opt/etc/init.d/S??btg
+# Libraries and include files should be installed into $(BTG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/btg/...
+# Documentation files should be installed in $(BTG_IPK_DIR)$(OPTWARE_PREFIX)doc/btg/...
+# Daemon startup scripts should be installed in $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??btg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(BTG_IPK): $(BTG_BUILD_DIR)/.built
 	rm -rf $(BTG_IPK_DIR) $(BUILD_DIR)/btg_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BTG_BUILD_DIR) DESTDIR=$(BTG_IPK_DIR) install-strip
-#	install -d $(BTG_IPK_DIR)/opt/etc/
-#	install -m 644 $(BTG_SOURCE_DIR)/btg.conf $(BTG_IPK_DIR)/opt/etc/btg.conf
-#	install -d $(BTG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(BTG_SOURCE_DIR)/rc.btg $(BTG_IPK_DIR)/opt/etc/init.d/SXXbtg
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(BTG_IPK_DIR)/opt/etc/init.d/SXXbtg
+#	install -d $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(BTG_SOURCE_DIR)/btg.conf $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/btg.conf
+#	install -d $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(BTG_SOURCE_DIR)/rc.btg $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXbtg
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(BTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXbtg
 	$(MAKE) $(BTG_IPK_DIR)/CONTROL/control
 #	install -m 755 $(BTG_SOURCE_DIR)/postinst $(BTG_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(BTG_IPK_DIR)/CONTROL/postinst

@@ -124,7 +124,7 @@ $(<BAR>_BUILD_DIR)/.configured: $(DL_DIR)/template-cvs-$(<BAR>_VERSION).tar.gz
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -176,22 +176,22 @@ $(<BAR>_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(<BAR>_IPK_DIR)/opt/sbin or $(<BAR>_IPK_DIR)/opt/bin
+# Binaries should be installed into $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(<BAR>_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(<BAR>_IPK_DIR)/opt/etc/<bar>/...
-# Documentation files should be installed in $(<BAR>_IPK_DIR)/opt/doc/<bar>/...
-# Daemon startup scripts should be installed in $(<BAR>_IPK_DIR)/opt/etc/init.d/S??<bar>
+# Libraries and include files should be installed into $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/<bar>/...
+# Documentation files should be installed in $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)doc/<bar>/...
+# Daemon startup scripts should be installed in $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??<bar>
 #
 # You may need to patch your application to make it use these locations.
 #
 $(<BAR>_IPK): $(<BAR>_BUILD_DIR)/.built
 	rm -rf $(<BAR>_IPK_DIR) $(BUILD_DIR)/<bar>_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<BAR>_BUILD_DIR) DESTDIR=$(<BAR>_IPK_DIR) install
-	install -d $(<BAR>_IPK_DIR)/opt/etc/
-	install -m 644 $(<BAR>_SOURCE_DIR)/<bar>.conf $(<BAR>_IPK_DIR)/opt/etc/<bar>.conf
-	install -d $(<BAR>_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(<BAR>_SOURCE_DIR)/rc.<bar> $(<BAR>_IPK_DIR)/opt/etc/init.d/SXX<bar>
+	install -d $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(<BAR>_SOURCE_DIR)/<bar>.conf $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/<bar>.conf
+	install -d $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(<BAR>_SOURCE_DIR)/rc.<bar> $(<BAR>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXX<bar>
 	$(MAKE) $(<BAR>_IPK_DIR)/CONTROL/control
 	install -m 755 $(<BAR>_SOURCE_DIR)/postinst $(<BAR>_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(<BAR>_SOURCE_DIR)/prerm $(<BAR>_IPK_DIR)/CONTROL/prerm

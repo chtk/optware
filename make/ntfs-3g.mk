@@ -46,7 +46,7 @@ NTFS-3G_IPK_VERSION=1
 
 #
 # NTFS-3G_CONFFILES should be a list of user-editable files
-#NTFS-3G_CONFFILES=/opt/etc/ntfs-3g.conf /opt/etc/init.d/SXXntfs-3g
+#NTFS-3G_CONFFILES=$(OPTWARE_PREFIX)etc/ntfs-3g.conf $(OPTWARE_PREFIX)etc/init.d/SXXntfs-3g
 
 #
 # NTFS-3G_PATCHES should list any patches, in the the order in
@@ -128,8 +128,8 @@ $(NTFS-3G_BUILD_DIR)/.configured: $(DL_DIR)/$(NTFS-3G_SOURCE) $(NTFS-3G_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(NTFS-3G_IPK_DIR)/opt \
-		--exec_prefix=$(NTFS-3G_IPK_DIR)/opt \
+		--prefix=$(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)\
+		--exec_prefix=$(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--disable-ldconfig \
@@ -176,25 +176,25 @@ $(NTFS-3G_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NTFS-3G_IPK_DIR)/opt/sbin or $(NTFS-3G_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NTFS-3G_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NTFS-3G_IPK_DIR)/opt/etc/ntfs-3g/...
-# Documentation files should be installed in $(NTFS-3G_IPK_DIR)/opt/doc/ntfs-3g/...
-# Daemon startup scripts should be installed in $(NTFS-3G_IPK_DIR)/opt/etc/init.d/S??ntfs-3g
+# Libraries and include files should be installed into $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/ntfs-3g/...
+# Documentation files should be installed in $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)doc/ntfs-3g/...
+# Daemon startup scripts should be installed in $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ntfs-3g
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NTFS-3G_IPK): $(NTFS-3G_BUILD_DIR)/.built
 	rm -rf $(NTFS-3G_IPK_DIR) $(BUILD_DIR)/ntfs-3g_*_$(TARGET_ARCH).ipk
-	mkdir -p $(NTFS-3G_IPK_DIR)/opt/sbin
+	mkdir -p $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	$(MAKE) -C $(NTFS-3G_BUILD_DIR) install-strip
-	ln -s ../bin/ntfs-3g $(NTFS-3G_IPK_DIR)/opt/sbin/mount.ntfs-3g
-#	install -d $(NTFS-3G_IPK_DIR)/opt/etc/
-#	install -m 644 $(NTFS-3G_SOURCE_DIR)/ntfs-3g.conf $(NTFS-3G_IPK_DIR)/opt/etc/ntfs-3g.conf
-#	install -d $(NTFS-3G_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NTFS-3G_SOURCE_DIR)/rc.ntfs-3g $(NTFS-3G_IPK_DIR)/opt/etc/init.d/SXXntfs-3g
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NTFS-3G_IPK_DIR)/opt/etc/init.d/SXXntfs-3g
+	ln -s ../bin/ntfs-3g $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)sbin/mount.ntfs-3g
+#	install -d $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NTFS-3G_SOURCE_DIR)/ntfs-3g.conf $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/ntfs-3g.conf
+#	install -d $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NTFS-3G_SOURCE_DIR)/rc.ntfs-3g $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXntfs-3g
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NTFS-3G_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXntfs-3g
 	$(MAKE) $(NTFS-3G_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NTFS-3G_SOURCE_DIR)/postinst $(NTFS-3G_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NTFS-3G_IPK_DIR)/CONTROL/postinst

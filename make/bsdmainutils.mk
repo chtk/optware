@@ -44,7 +44,7 @@ BSDMAINUTILS_IPK_VERSION=5
 
 #
 # BSDMAINUTILS_CONFFILES should be a list of user-editable files
-#BSDMAINUTILS_CONFFILES=/opt/etc/bsdmainutils.conf /opt/etc/init.d/SXXbsdmainutils
+#BSDMAINUTILS_CONFFILES=$(OPTWARE_PREFIX)etc/bsdmainutils.conf $(OPTWARE_PREFIX)etc/init.d/SXXbsdmainutils
 
 #
 # BSDMAINUTILS_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ endif
 	sed -i \
 	    -e 's/install -o root -g root/install /' \
 	    -e '/root:tty/s/^/#/' \
-	    -e 's|/usr/|/opt/|g' \
+	    -e 's|/usr/|$(OPTWARE_PREFIX)|g' \
 		$(BSDMAINUTILS_BUILD_DIR)/Makefile \
 		$(BSDMAINUTILS_BUILD_DIR)/*.mk \
 		$(BSDMAINUTILS_BUILD_DIR)/*/*/Makefile \
@@ -141,7 +141,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -198,12 +198,12 @@ $(BSDMAINUTILS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BSDMAINUTILS_IPK_DIR)/opt/sbin or $(BSDMAINUTILS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BSDMAINUTILS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BSDMAINUTILS_IPK_DIR)/opt/etc/bsdmainutils/...
-# Documentation files should be installed in $(BSDMAINUTILS_IPK_DIR)/opt/doc/bsdmainutils/...
-# Daemon startup scripts should be installed in $(BSDMAINUTILS_IPK_DIR)/opt/etc/init.d/S??bsdmainutils
+# Libraries and include files should be installed into $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/bsdmainutils/...
+# Documentation files should be installed in $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)doc/bsdmainutils/...
+# Daemon startup scripts should be installed in $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bsdmainutils
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -211,26 +211,26 @@ $(BSDMAINUTILS_IPK): $(BSDMAINUTILS_BUILD_DIR)/.built
 	rm -rf $(BSDMAINUTILS_IPK_DIR) $(BUILD_DIR)/bsdmainutils_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BSDMAINUTILS_BUILD_DIR) install \
 		DESTDIR=$(BSDMAINUTILS_IPK_DIR) \
-		sysconfdir=$(BSDMAINUTILS_IPK_DIR)/opt/etc
-	rm -rf $(BSDMAINUTILS_IPK_DIR)/opt/games $(BSDMAINUTILS_IPK_DIR)/opt/share/man/man6
-	$(STRIP_COMMAND) `ls $(BSDMAINUTILS_IPK_DIR)/opt/bin/* | egrep -v bin/lorder`
-	rm -f $(BSDMAINUTILS_IPK_DIR)/opt/bin/cal
+		sysconfdir=$(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc
+	rm -rf $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)games $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)share/man/man6
+	$(STRIP_COMMAND) `ls $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/* | egrep -v bin/lorder`
+	rm -f $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/cal
 	$(MAKE) $(BSDMAINUTILS_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm
-	cd $(BSDMAINUTILS_IPK_DIR)/opt/bin; \
+	cd $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin; \
 	for f in *; do \
 	    mv $$f bsdmainutils-$$f; \
-	    echo "update-alternatives --install /opt/bin/$$f $$f /opt/bin/bsdmainutils-$$f 50" \
+	    echo "update-alternatives --install $(OPTWARE_PREFIX)bin/$$f $$f $(OPTWARE_PREFIX)bin/bsdmainutils-$$f 50" \
 		>> $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst; \
-	    echo "update-alternatives --remove $$f /opt/bin/bsdmainutils-$$f" \
+	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)bin/bsdmainutils-$$f" \
 		>> $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm; \
 	done
-	echo "update-alternatives --install /opt/bin/cal cal /opt/bin/ncal 50" \
+	echo "update-alternatives --install $(OPTWARE_PREFIX)bin/cal cal $(OPTWARE_PREFIX)bin/ncal 50" \
 	    >> $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst
-	echo "update-alternatives --remove cal /opt/bin/ncal" \
+	echo "update-alternatives --remove cal $(OPTWARE_PREFIX)bin/ncal" \
 	    >> $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm
-	d=/opt/share/man/man1; \
+	d=$(OPTWARE_PREFIX)share/man/man1; \
 	cd $(BSDMAINUTILS_IPK_DIR)/$$d; \
 	for f in *; do \
 	    mv $$f bsdmainutils-$$f; \

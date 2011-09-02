@@ -43,7 +43,7 @@ CLIMM_IPK_VERSION=1
 
 #
 # CLIMM_CONFFILES should be a list of user-editable files
-#CLIMM_CONFFILES=/opt/etc/climm.conf /opt/etc/init.d/SXXclimm
+#CLIMM_CONFFILES=$(OPTWARE_PREFIX)etc/climm.conf $(OPTWARE_PREFIX)etc/init.d/SXXclimm
 
 #
 # CLIMM_PATCHES should list any patches, in the the order in
@@ -131,7 +131,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(CLIMM_CONFIG_ARGS) \
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
 		--with-libgcrypt-prefix=$(STAGING_PREFIX) \
@@ -188,23 +188,23 @@ $(CLIMM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CLIMM_IPK_DIR)/opt/sbin or $(CLIMM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CLIMM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CLIMM_IPK_DIR)/opt/etc/climm/...
-# Documentation files should be installed in $(CLIMM_IPK_DIR)/opt/doc/climm/...
-# Daemon startup scripts should be installed in $(CLIMM_IPK_DIR)/opt/etc/init.d/S??climm
+# Libraries and include files should be installed into $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/climm/...
+# Documentation files should be installed in $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)doc/climm/...
+# Daemon startup scripts should be installed in $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??climm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CLIMM_IPK): $(CLIMM_BUILD_DIR)/.built
 	rm -rf $(CLIMM_IPK_DIR) $(BUILD_DIR)/climm_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CLIMM_BUILD_DIR) DESTDIR=$(CLIMM_IPK_DIR) install-strip
-#	install -d $(CLIMM_IPK_DIR)/opt/etc/
-#	install -m 644 $(CLIMM_SOURCE_DIR)/climm.conf $(CLIMM_IPK_DIR)/opt/etc/climm.conf
-#	install -d $(CLIMM_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(CLIMM_SOURCE_DIR)/rc.climm $(CLIMM_IPK_DIR)/opt/etc/init.d/SXXclimm
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLIMM_IPK_DIR)/opt/etc/init.d/SXXclimm
+#	install -d $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(CLIMM_SOURCE_DIR)/climm.conf $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/climm.conf
+#	install -d $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(CLIMM_SOURCE_DIR)/rc.climm $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXclimm
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLIMM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXclimm
 	$(MAKE) $(CLIMM_IPK_DIR)/CONTROL/control
 #	install -m 755 $(CLIMM_SOURCE_DIR)/postinst $(CLIMM_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLIMM_IPK_DIR)/CONTROL/postinst

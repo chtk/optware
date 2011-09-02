@@ -47,7 +47,7 @@ PY-PROTOCOLS_IPK_VERSION=5
 
 #
 # PY-PROTOCOLS_CONFFILES should be a list of user-editable files
-#PY-PROTOCOLS_CONFFILES=/opt/etc/py-protocols.conf /opt/etc/init.d/SXXpy-protocols
+#PY-PROTOCOLS_CONFFILES=$(OPTWARE_PREFIX)etc/py-protocols.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-protocols
 
 #
 # PY-PROTOCOLS_PATCHES should list any patches, in the the order in
@@ -133,7 +133,7 @@ $(PY-PROTOCOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PROTOCOLS_SOURCE) $(PY-PRO
         fi
 	mv $(BUILD_DIR)/$(PY-PROTOCOLS_DIR) $(PY-PROTOCOLS_BUILD_DIR)/2.4
 	(cd $(PY-PROTOCOLS_BUILD_DIR)/2.4; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.4") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.4") >> setup.cfg \
 	)
 	# 2.5
 	rm -rf $(BUILD_DIR)/$(PY-PROTOCOLS_DIR)
@@ -143,7 +143,7 @@ $(PY-PROTOCOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PROTOCOLS_SOURCE) $(PY-PRO
         fi
 	mv $(BUILD_DIR)/$(PY-PROTOCOLS_DIR) $(PY-PROTOCOLS_BUILD_DIR)/2.5
 	(cd $(PY-PROTOCOLS_BUILD_DIR)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	touch $@
 
@@ -212,12 +212,12 @@ $(PY25-PROTOCOLS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PROTOCOLS_IPK_DIR)/opt/sbin or $(PY-PROTOCOLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PROTOCOLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PROTOCOLS_IPK_DIR)/opt/etc/py-protocols/...
-# Documentation files should be installed in $(PY-PROTOCOLS_IPK_DIR)/opt/doc/py-protocols/...
-# Daemon startup scripts should be installed in $(PY-PROTOCOLS_IPK_DIR)/opt/etc/init.d/S??py-protocols
+# Libraries and include files should be installed into $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/py-protocols/...
+# Documentation files should be installed in $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX)doc/py-protocols/...
+# Daemon startup scripts should be installed in $(PY-PROTOCOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-protocols
 #
 # You may need to patch your application to make it use these locations.
 #

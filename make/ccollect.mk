@@ -40,18 +40,18 @@ CCOLLECT_IPK_VERSION=1
 
 #
 # CCOLLECT_CONFFILES should be a list of user-editable files
-CCOLLECT_CONFFILES=/opt/etc/ccollect/defaults/pre_exec \
-		/opt/etc/ccollect/defaults/post_exec \
-		/opt/etc/ccollect/defaults/intervals/daily \
-		/opt/etc/ccollect/defaults/intervals/weekly \
-		/opt/etc/ccollect/defaults/intervals/monthly \
-		/opt/etc/ccollect/defaults/intervals/normal \
-		/opt/etc/ccollect/defaults/sources/exclude \
-		/opt/etc/ccollect/defaults/sources/rsync_options \
-		/opt/etc/ccollect/defaults/sources/source_postfix \
-		/opt/etc/ccollect/defaults/sources/source_prefix \
-		/opt/etc/ccollect/defaults/sources/verbose \
-		/opt/etc/ccollect/defaults/verbose \
+CCOLLECT_CONFFILES=$(OPTWARE_PREFIX)etc/ccollect/defaults/pre_exec \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/post_exec \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/daily \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/weekly \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/monthly \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/normal \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/exclude \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/rsync_options \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/source_postfix \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/source_prefix \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/verbose \
+		$(OPTWARE_PREFIX)etc/ccollect/defaults/verbose \
 
 #
 # CCOLLECT_PATCHES should list any patches, in the the order in
@@ -128,9 +128,9 @@ $(CCOLLECT_BUILD_DIR)/.configured: $(DL_DIR)/$(CCOLLECT_SOURCE) $(CCOLLECT_PATCH
 		then mv $(BUILD_DIR)/$(CCOLLECT_DIR) $(CCOLLECT_BUILD_DIR) ; \
 	fi
 	(cd $(CCOLLECT_BUILD_DIR); \
-		sed -i -e '1aexport PATH=/opt/bin:/opt/sbin:$$PATH' \
-			-e 's|/etc/ccollect|/opt/etc/ccollect|' \
-			-e 's|mktemp|/opt/bin/mktemp|' ccollect.sh \
+		sed -i -e '1aexport PATH=$(OPTWARE_PREFIX)bin:$(OPTWARE_PREFIX)sbin:$$PATH' \
+			-e 's|/etc/ccollect|$(OPTWARE_PREFIX)etc/ccollect|' \
+			-e 's|mktemp|$(OPTWARE_PREFIX)bin/mktemp|' ccollect.sh \
 				tools/*.sh tools/old/*.sh \
 	)
 	touch $@
@@ -182,65 +182,65 @@ $(CCOLLECT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CCOLLECT_IPK_DIR)/opt/sbin or $(CCOLLECT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CCOLLECT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/...
-# Documentation files should be installed in $(CCOLLECT_IPK_DIR)/opt/doc/ccollect/...
-# Daemon startup scripts should be installed in $(CCOLLECT_IPK_DIR)/opt/etc/init.d/S??ccollect
+# Libraries and include files should be installed into $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/...
+# Documentation files should be installed in $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/ccollect/...
+# Daemon startup scripts should be installed in $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ccollect
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CCOLLECT_IPK): $(CCOLLECT_BUILD_DIR)/.built
 	rm -rf $(CCOLLECT_IPK_DIR) $(BUILD_DIR)/ccollect_*_$(TARGET_ARCH).ipk
-	install -d $(CCOLLECT_IPK_DIR)/opt/bin
-	install -m 755 $(CCOLLECT_BUILD_DIR)/ccollect.sh $(CCOLLECT_IPK_DIR)/opt/bin
-#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_add_source.sh $(CCOLLECT_IPK_DIR)/opt/bin
-#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_analyse_logs.sh $(CCOLLECT_IPK_DIR)/opt/bin
-#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_delete_source.sh $(CCOLLECT_IPK_DIR)/opt/bin
-#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_list_intervals.sh $(CCOLLECT_IPK_DIR)/opt/bin
-#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_logwrapper.sh $(CCOLLECT_IPK_DIR)/opt/bin
-	install -d $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/sources
-	install -d $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/intervals
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(CCOLLECT_BUILD_DIR)/ccollect.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_add_source.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_analyse_logs.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_delete_source.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_list_intervals.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/ccollect_logwrapper.sh $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/sources
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/pre_exec  \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/post_exec  \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/intervals/daily \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/intervals/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/intervals/weekly \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/intervals/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/intervals/monthly \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/intervals/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/intervals/normal \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/intervals/
-	install -d $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/intervals/
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/sources/exclude \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/sources/rsync_options \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/sources/source_postfix \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/sources/source_prefix \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/sources/verbose \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/sources/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/sources/
 	install -m 755 $(CCOLLECT_BUILD_DIR)/conf/defaults/verbose \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/defaults/
-	install -d $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/tools
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/defaults/
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/tools
 	install -m 755 $(CCOLLECT_BUILD_DIR)/tools/*.sh \
-		$(CCOLLECT_IPK_DIR)/opt/etc/ccollect/tools/
-	install -d $(CCOLLECT_IPK_DIR)/opt/doc/ccollect
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/tools/
+	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/ccollect
 	install -m 644 $(CCOLLECT_BUILD_DIR)/doc/*.text \
-		$(CCOLLECT_IPK_DIR)/opt/doc/ccollect/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/ccollect/
 	install -m 644 $(CCOLLECT_BUILD_DIR)/doc/man/*.text \
-		$(CCOLLECT_IPK_DIR)/opt/doc/ccollect/
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/ccollect/
 	install -m 644 $(CCOLLECT_BUILD_DIR)/doc/HACKING \
-		$(CCOLLECT_IPK_DIR)/opt/doc/ccollect/
-#	install -m 644 $(CCOLLECT_SOURCE_DIR)/ccollect.conf $(CCOLLECT_IPK_DIR)/opt/etc/ccollect/ccollect.conf
-#	install -d $(CCOLLECT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(CCOLLECT_SOURCE_DIR)/rc.ccollect $(CCOLLECT_IPK_DIR)/opt/etc/init.d/SXXccollect
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CCOLLECT_IPK_DIR)/opt/etc/init.d/SXXccollect
+		$(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/ccollect/
+#	install -m 644 $(CCOLLECT_SOURCE_DIR)/ccollect.conf $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/ccollect/ccollect.conf
+#	install -d $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(CCOLLECT_SOURCE_DIR)/rc.ccollect $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXccollect
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXccollect
 	$(MAKE) $(CCOLLECT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(CCOLLECT_SOURCE_DIR)/postinst $(CCOLLECT_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CCOLLECT_IPK_DIR)/CONTROL/postinst

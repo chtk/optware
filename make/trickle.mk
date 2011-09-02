@@ -99,7 +99,7 @@ $(TRICKLE_BUILD_DIR)/.configured: $(DL_DIR)/$(TRICKLE_SOURCE) $(TRICKLE_PATCHES)
 		--target=$(GNU_TARGET_NAME) \
 		--with-libevent=$(STAGING_PREFIX) \
 		--with-gnu-ld \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--enable-shared \
 	)
@@ -126,16 +126,16 @@ trickle: $(TRICKLE_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libtrickle.so.$(TRICKLE_VERSION): $(TRICKLE_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(TRICKLE_BUILD_DIR)/trickle.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(TRICKLE_BUILD_DIR)/libtrickle.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(TRICKLE_BUILD_DIR)/libtrickle.so.$(TRICKLE_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libtrickle.so.$(TRICKLE_VERSION) libtrickle.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libtrickle.so.$(TRICKLE_VERSION) libtrickle.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtrickle.so.$(TRICKLE_VERSION): $(TRICKLE_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(TRICKLE_BUILD_DIR)/trickle.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(TRICKLE_BUILD_DIR)/libtrickle.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(TRICKLE_BUILD_DIR)/libtrickle.so.$(TRICKLE_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libtrickle.so.$(TRICKLE_VERSION) libtrickle.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libtrickle.so.$(TRICKLE_VERSION) libtrickle.so
 
-trickle-stage: $(STAGING_DIR)/opt/lib/libtrickle.so.$(TRICKLE_VERSION)
+trickle-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtrickle.so.$(TRICKLE_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -159,12 +159,12 @@ $(TRICKLE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TRICKLE_IPK_DIR)/opt/sbin or $(TRICKLE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TRICKLE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TRICKLE_IPK_DIR)/opt/etc/trickle/...
-# Documentation files should be installed in $(TRICKLE_IPK_DIR)/opt/doc/trickle/...
-# Daemon startup scripts should be installed in $(TRICKLE_IPK_DIR)/opt/etc/init.d/S??trickle
+# Libraries and include files should be installed into $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)etc/trickle/...
+# Documentation files should be installed in $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)doc/trickle/...
+# Daemon startup scripts should be installed in $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??trickle
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -172,10 +172,10 @@ $(TRICKLE_IPK): $(TRICKLE_BUILD_DIR)/.built
 	rm -rf $(TRICKLE_IPK_DIR) $(BUILD_DIR)/trickle_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TRICKLE_BUILD_DIR) DESTDIR=$(TRICKLE_IPK_DIR) transform='' \
 		install-binPROGRAMS install-trickleoverloadDATA install-man
-#	install -d $(TRICKLE_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(TRICKLE_IPK_DIR)/opt/bin/trickle* $(TRICKLE_IPK_DIR)/opt/lib/trickle/*
-#	install -d $(TRICKLE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(TRICKLE_SOURCE_DIR)/rc.trickle $(TRICKLE_IPK_DIR)/opt/etc/init.d/SXXtrickle
+#	install -d $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)bin/trickle* $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)lib/trickle/*
+#	install -d $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(TRICKLE_SOURCE_DIR)/rc.trickle $(TRICKLE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtrickle
 	$(MAKE) $(TRICKLE_IPK_DIR)/CONTROL/control
 #	install -m 644 $(TRICKLE_SOURCE_DIR)/postinst $(TRICKLE_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(TRICKLE_SOURCE_DIR)/prerm $(TRICKLE_IPK_DIR)/CONTROL/prerm

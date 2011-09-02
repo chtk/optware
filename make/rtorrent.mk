@@ -39,7 +39,7 @@ RTORRENT_CONFLICTS=
 
 #
 # RTORRENT_CONFFILES should be a list of user-editable files
-RTORRENT_CONFFILES=/opt/etc/rtorrent.conf
+RTORRENT_CONFFILES=$(OPTWARE_PREFIX)etc/rtorrent.conf
 
 
 #
@@ -155,14 +155,14 @@ endif
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(RTORRENT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(RTORRENT_LDFLAGS)" \
-		PKG_CONFIG_PATH="$(STAGING_DIR)/opt/lib/pkgconfig/" \
+		PKG_CONFIG_PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/pkgconfig/" \
 		$(RTORRENT_CONFIGURE) \
-		PATH="$(PATH):$(STAGING_DIR)/opt/bin" \
+		PATH="$(PATH):$(STAGING_DIR)$(OPTWARE_PREFIX)bin" \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(RTORRENT_CONFIGURE_OPTS) \
 		--disable-nls \
 		--disable-static \
@@ -221,12 +221,12 @@ endif
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RTORRENT_IPK_DIR)/opt/sbin or $(RTORRENT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RTORRENT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RTORRENT_IPK_DIR)/opt/etc/rtorrent/...
-# Documentation files should be installed in $(RTORRENT_IPK_DIR)/opt/doc/rtorrent/...
-# Daemon startup scripts should be installed in $(RTORRENT_IPK_DIR)/opt/etc/init.d/S??rtorrent
+# Libraries and include files should be installed into $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/rtorrent/...
+# Documentation files should be installed in $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)doc/rtorrent/...
+# Daemon startup scripts should be installed in $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??rtorrent
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -234,14 +234,14 @@ $(RTORRENT_IPK): $(RTORRENT_BUILD_DIR)/.built
 	rm -rf $(RTORRENT_IPK_DIR) $(BUILD_DIR)/rtorrent_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RTORRENT_BUILD_DIR) DESTDIR=$(RTORRENT_IPK_DIR) install-strip
 	$(MAKE) $(RTORRENT_IPK_DIR)/CONTROL/control
-	install -d $(RTORRENT_IPK_DIR)/opt/share/torrent
-	install -d $(RTORRENT_IPK_DIR)/opt/share/torrent/work
-	install -d $(RTORRENT_IPK_DIR)/opt/share/torrent/dl
-	install -d $(RTORRENT_IPK_DIR)/opt/etc
-	install -m 644 $(RTORRENT_SOURCE_DIR)/rtorrent.conf $(RTORRENT_IPK_DIR)/opt/etc/
-	install -m 755 $(RTORRENT_SOURCE_DIR)/rtor $(RTORRENT_IPK_DIR)/opt/bin
-	install -d $(RTORRENT_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(RTORRENT_SOURCE_DIR)/rc.rtorrent $(RTORRENT_IPK_DIR)/opt/etc/init.d/S99rtorrent
+	install -d $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)share/torrent
+	install -d $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)share/torrent/work
+	install -d $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)share/torrent/dl
+	install -d $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(RTORRENT_SOURCE_DIR)/rtorrent.conf $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 755 $(RTORRENT_SOURCE_DIR)/rtor $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(RTORRENT_SOURCE_DIR)/rc.rtorrent $(RTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S99rtorrent
 	$(MAKE) $(RTORRENT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(RTORRENT_SOURCE_DIR)/postinst $(RTORRENT_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(RTORRENT_IPK_DIR)/CONTROL/postinst

@@ -40,7 +40,7 @@ QEMACS_IPK_VERSION=1
 
 #
 # QEMACS_CONFFILES should be a list of user-editable files
-#QEMACS_CONFFILES=/opt/etc/qemacs.conf /opt/etc/init.d/SXXqemacs
+#QEMACS_CONFFILES=$(OPTWARE_PREFIX)etc/qemacs.conf $(OPTWARE_PREFIX)etc/init.d/SXXqemacs
 
 #
 # QEMACS_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(QEMACS_BUILD_DIR)/.configured: $(DL_DIR)/$(QEMACS_SOURCE) $(QEMACS_PATCHES) ma
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--cpu=$(TARGET_ARCH) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-x11 \
 		--disable-xv \
 		--disable-xrender \
@@ -194,27 +194,27 @@ $(QEMACS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(QEMACS_IPK_DIR)/opt/sbin or $(QEMACS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(QEMACS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(QEMACS_IPK_DIR)/opt/etc/qemacs/...
-# Documentation files should be installed in $(QEMACS_IPK_DIR)/opt/doc/qemacs/...
-# Daemon startup scripts should be installed in $(QEMACS_IPK_DIR)/opt/etc/init.d/S??qemacs
+# Libraries and include files should be installed into $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/qemacs/...
+# Documentation files should be installed in $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)doc/qemacs/...
+# Daemon startup scripts should be installed in $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??qemacs
 #
 # You may need to patch your application to make it use these locations.
 #
 $(QEMACS_IPK): $(QEMACS_BUILD_DIR)/.built
 	rm -rf $(QEMACS_IPK_DIR) $(BUILD_DIR)/qemacs_*_$(TARGET_ARCH).ipk
-	install -d $(QEMACS_IPK_DIR)/opt/bin/ $(QEMACS_IPK_DIR)/opt/share/ $(QEMACS_IPK_DIR)/opt/man/man1
+	install -d $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)bin/ $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)share/ $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) -C $(QEMACS_BUILD_DIR) install \
 		DESTDIR=$(QEMACS_IPK_DIR) \
-		prefix=$(QEMACS_IPK_DIR)/opt \
+		prefix=$(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)\
 		;
-#	install -d $(QEMACS_IPK_DIR)/opt/etc/
-#	install -m 644 $(QEMACS_SOURCE_DIR)/qemacs.conf $(QEMACS_IPK_DIR)/opt/etc/qemacs.conf
-#	install -d $(QEMACS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(QEMACS_SOURCE_DIR)/rc.qemacs $(QEMACS_IPK_DIR)/opt/etc/init.d/SXXqemacs
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QEMACS_IPK_DIR)/opt/etc/init.d/SXXqemacs
+#	install -d $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(QEMACS_SOURCE_DIR)/qemacs.conf $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/qemacs.conf
+#	install -d $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(QEMACS_SOURCE_DIR)/rc.qemacs $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXqemacs
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXqemacs
 	$(MAKE) $(QEMACS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(QEMACS_SOURCE_DIR)/postinst $(QEMACS_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QEMACS_IPK_DIR)/CONTROL/postinst

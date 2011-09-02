@@ -40,7 +40,7 @@ MOBLOCK_IPK_VERSION=1
 
 #
 # MOBLOCK_CONFFILES should be a list of user-editable files
-#MOBLOCK_CONFFILES=/opt/etc/moblock.conf /opt/etc/init.d/SXXmoblock
+#MOBLOCK_CONFFILES=$(OPTWARE_PREFIX)etc/moblock.conf $(OPTWARE_PREFIX)etc/init.d/SXXmoblock
 
 #
 # MOBLOCK_PATCHES should list any patches, in the the order in
@@ -168,26 +168,26 @@ $(MOBLOCK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MOBLOCK_IPK_DIR)/opt/sbin or $(MOBLOCK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MOBLOCK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MOBLOCK_IPK_DIR)/opt/etc/moblock/...
-# Documentation files should be installed in $(MOBLOCK_IPK_DIR)/opt/doc/moblock/...
-# Daemon startup scripts should be installed in $(MOBLOCK_IPK_DIR)/opt/etc/init.d/S??moblock
+# Libraries and include files should be installed into $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/moblock/...
+# Documentation files should be installed in $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)doc/moblock/...
+# Daemon startup scripts should be installed in $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??moblock
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MOBLOCK_IPK): $(MOBLOCK_BUILD_DIR)/.built
 	rm -rf $(MOBLOCK_IPK_DIR) $(BUILD_DIR)/moblock_*_$(TARGET_ARCH).ipk
-	install -d $(MOBLOCK_IPK_DIR)/opt/bin
+	install -d $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)bin
 	$(MAKE) -C $(MOBLOCK_BUILD_DIR) DESTDIR=$(MOBLOCK_IPK_DIR) install
-	install -d $(MOBLOCK_IPK_DIR)/opt/share/doc/moblock
-	install -m 644 $(MOBLOCK_BUILD_DIR)/README $(MOBLOCK_IPK_DIR)/opt/share/doc/moblock
-	install -m 644 $(MOBLOCK_BUILD_DIR)/MoBlock-nfq.sh $(MOBLOCK_IPK_DIR)/opt/bin
-#	install -m 644 $(MOBLOCK_SOURCE_DIR)/moblock.conf $(MOBLOCK_IPK_DIR)/opt/etc/moblock.conf
-#	install -d $(MOBLOCK_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MOBLOCK_SOURCE_DIR)/rc.moblock $(MOBLOCK_IPK_DIR)/opt/etc/init.d/SXXmoblock
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOBLOCK_IPK_DIR)/opt/etc/init.d/SXXmoblock
+	install -d $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)share/doc/moblock
+	install -m 644 $(MOBLOCK_BUILD_DIR)/README $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)share/doc/moblock
+	install -m 644 $(MOBLOCK_BUILD_DIR)/MoBlock-nfq.sh $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)bin
+#	install -m 644 $(MOBLOCK_SOURCE_DIR)/moblock.conf $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/moblock.conf
+#	install -d $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MOBLOCK_SOURCE_DIR)/rc.moblock $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmoblock
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOBLOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmoblock
 	$(MAKE) $(MOBLOCK_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MOBLOCK_SOURCE_DIR)/postinst $(MOBLOCK_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOBLOCK_IPK_DIR)/CONTROL/postinst

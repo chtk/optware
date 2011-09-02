@@ -41,7 +41,7 @@ EACCELERATOR_IPK_VERSION=1
 
 #
 # EACCELERATOR_CONFFILES should be a list of user-editable files
-EACCELERATOR_CONFFILES=/opt/etc/php.d/eaccelerator.ini
+EACCELERATOR_CONFFILES=$(OPTWARE_PREFIX)etc/php.d/eaccelerator.ini
 
 #
 # EACCELERATOR_PATCHES should list any patches, in the the order in
@@ -121,12 +121,12 @@ make/eaccelerator.mk make/php.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-eaccelerator=shared \
-		--with-php-config=$(STAGING_DIR)/opt/bin/php-config \
+		--with-php-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/php-config \
 		--with-eaccelerator-userid='"nobody"' \
 	)
-	sed -i -e '/^CPPFLAGS/s|-I/opt/include/php ||' $(@D)/Makefile
+	sed -i -e '/^CPPFLAGS/s|-I$(OPTWARE_PREFIX)include/php ||' $(@D)/Makefile
 	touch $@
 
 eaccelerator-unpack: $(EACCELERATOR_BUILD_DIR)/.configured
@@ -175,22 +175,22 @@ $(EACCELERATOR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(EACCELERATOR_IPK_DIR)/opt/sbin or $(EACCELERATOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(EACCELERATOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(EACCELERATOR_IPK_DIR)/opt/etc/eaccelerator/...
-# Documentation files should be installed in $(EACCELERATOR_IPK_DIR)/opt/doc/eaccelerator/...
-# Daemon startup scripts should be installed in $(EACCELERATOR_IPK_DIR)/opt/etc/init.d/S??eaccelerator
+# Libraries and include files should be installed into $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/eaccelerator/...
+# Documentation files should be installed in $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)doc/eaccelerator/...
+# Daemon startup scripts should be installed in $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??eaccelerator
 #
 # You may need to patch your application to make it use these locations.
 #
 $(EACCELERATOR_IPK): $(EACCELERATOR_BUILD_DIR)/.built
 	rm -rf $(EACCELERATOR_IPK_DIR) $(BUILD_DIR)/eaccelerator_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(EACCELERATOR_BUILD_DIR) INSTALL_ROOT=$(EACCELERATOR_IPK_DIR) install
-	$(STRIP_COMMAND) $(EACCELERATOR_IPK_DIR)/opt/lib/php/extensions/eaccelerator.so
-	install -d $(EACCELERATOR_IPK_DIR)/opt/tmp/eaccelerator
-	install -d $(EACCELERATOR_IPK_DIR)/opt/etc/php.d
-	install -m 644 $(EACCELERATOR_SOURCE_DIR)/eaccelerator.ini $(EACCELERATOR_IPK_DIR)/opt/etc/php.d/eaccelerator.ini
+	$(STRIP_COMMAND) $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)lib/php/extensions/eaccelerator.so
+	install -d $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)tmp/eaccelerator
+	install -d $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/php.d
+	install -m 644 $(EACCELERATOR_SOURCE_DIR)/eaccelerator.ini $(EACCELERATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/php.d/eaccelerator.ini
 	$(MAKE) $(EACCELERATOR_IPK_DIR)/CONTROL/control
 	echo $(EACCELERATOR_CONFFILES) | sed -e 's/ /\n/g' > $(EACCELERATOR_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(EACCELERATOR_IPK_DIR)

@@ -38,7 +38,7 @@ LOGROTATE_IPK_VERSION=2
 
 #
 # LOGROTATE_CONFFILES should be a list of user-editable files
-LOGROTATE_CONFFILES=/opt/etc/logrotate.conf
+LOGROTATE_CONFFILES=$(OPTWARE_PREFIX)etc/logrotate.conf
 
 #
 # LOGROTATE_PATCHES should list any patches, in the the order in
@@ -156,25 +156,25 @@ $(LOGROTATE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LOGROTATE_IPK_DIR)/opt/sbin or $(LOGROTATE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LOGROTATE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LOGROTATE_IPK_DIR)/opt/etc/logrotate/...
-# Documentation files should be installed in $(LOGROTATE_IPK_DIR)/opt/doc/logrotate/...
-# Daemon startup scripts should be installed in $(LOGROTATE_IPK_DIR)/opt/etc/init.d/S??logrotate
+# Libraries and include files should be installed into $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)etc/logrotate/...
+# Documentation files should be installed in $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)doc/logrotate/...
+# Daemon startup scripts should be installed in $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??logrotate
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LOGROTATE_IPK): $(LOGROTATE_BUILD_DIR)/.built
 	rm -rf $(LOGROTATE_IPK_DIR) $(BUILD_DIR)/logrotate_*_$(TARGET_ARCH).ipk
-	install -d $(LOGROTATE_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(LOGROTATE_BUILD_DIR)/logrotate -o $(LOGROTATE_IPK_DIR)/opt/sbin/logrotate
-	install -d $(LOGROTATE_IPK_DIR)/opt/etc/logrotate.d
-	install -d $(LOGROTATE_IPK_DIR)/opt/etc/cron.d
-	install -m 644 $(LOGROTATE_SOURCE_DIR)/logrotate.conf $(LOGROTATE_IPK_DIR)/opt/etc/logrotate.conf
-	install -d $(LOGROTATE_IPK_DIR)/opt/man/man8
-	install -m 644 $(LOGROTATE_BUILD_DIR)/logrotate.8 $(LOGROTATE_IPK_DIR)/opt/man/man8
-	install -d $(LOGROTATE_IPK_DIR)/opt/var/lib
+	install -d $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(LOGROTATE_BUILD_DIR)/logrotate -o $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)sbin/logrotate
+	install -d $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)etc/logrotate.d
+	install -d $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)etc/cron.d
+	install -m 644 $(LOGROTATE_SOURCE_DIR)/logrotate.conf $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)etc/logrotate.conf
+	install -d $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -m 644 $(LOGROTATE_BUILD_DIR)/logrotate.8 $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(LOGROTATE_IPK_DIR)$(OPTWARE_PREFIX)var/lib
 	$(MAKE) $(LOGROTATE_IPK_DIR)/CONTROL/control
 	install -m 644 $(LOGROTATE_SOURCE_DIR)/postinst $(LOGROTATE_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(LOGROTATE_SOURCE_DIR)/prerm $(LOGROTATE_IPK_DIR)/CONTROL/prerm

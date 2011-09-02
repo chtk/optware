@@ -41,7 +41,7 @@ DIRECTFB_IPK_VERSION=1
 
 #
 # DIRECTFB_CONFFILES should be a list of user-editable files
-#DIRECTFB_CONFFILES=/opt/etc/directfb.conf /opt/etc/init.d/SXXdirectfb
+#DIRECTFB_CONFFILES=$(OPTWARE_PREFIX)etc/directfb.conf $(OPTWARE_PREFIX)etc/init.d/SXXdirectfb
 
 #
 # DIRECTFB_PATCHES should list any patches, in the the order in
@@ -135,7 +135,7 @@ $(DIRECTFB_BUILD_DIR)/.configured: $(DL_DIR)/$(DIRECTFB_SOURCE) $(DIRECTFB_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		\
 		--enable-jpeg \
 		--enable-png \
@@ -206,12 +206,12 @@ $(DIRECTFB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DIRECTFB_IPK_DIR)/opt/sbin or $(DIRECTFB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DIRECTFB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DIRECTFB_IPK_DIR)/opt/etc/directfb/...
-# Documentation files should be installed in $(DIRECTFB_IPK_DIR)/opt/doc/directfb/...
-# Daemon startup scripts should be installed in $(DIRECTFB_IPK_DIR)/opt/etc/init.d/S??directfb
+# Libraries and include files should be installed into $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)etc/directfb/...
+# Documentation files should be installed in $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)doc/directfb/...
+# Daemon startup scripts should be installed in $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??directfb
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -219,7 +219,7 @@ $(DIRECTFB_IPK): $(DIRECTFB_BUILD_DIR)/.built
 	rm -rf $(DIRECTFB_IPK_DIR) $(BUILD_DIR)/directfb_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DIRECTFB_BUILD_DIR) install-strip \
 		DESTDIR=$(DIRECTFB_IPK_DIR)
-	find $(DIRECTFB_IPK_DIR)/opt/lib -name '*.la' | xargs rm -f
+	find $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.la' | xargs rm -f
 	$(MAKE) $(DIRECTFB_IPK_DIR)/CONTROL/control
 	echo $(DIRECTFB_CONFFILES) | sed -e 's/ /\n/g' > $(DIRECTFB_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DIRECTFB_IPK_DIR)

@@ -105,7 +105,7 @@ $(COWSAY_BUILD_DIR)/.configured: $(DL_DIR)/$(COWSAY_SOURCE) $(COWSAY_PATCHES) ma
 	if test "$(BUILD_DIR)/$(COWSAY_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(COWSAY_DIR) $(@D) ; \
 	fi
-	sed -i -e '/%BANGPERL%/s|$$usethisperl|/opt/bin/perl|' \
+	sed -i -e '/%BANGPERL%/s|$$usethisperl|$(OPTWARE_PREFIX)bin/perl|' \
 	       -e '/%PREFIX%/s|$$PREFIX|/opt|' \
 	       $(@D)/install.sh
 	touch $@
@@ -154,12 +154,12 @@ $(COWSAY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(COWSAY_IPK_DIR)/opt/sbin or $(COWSAY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(COWSAY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(COWSAY_IPK_DIR)/opt/etc/cowsay/...
-# Documentation files should be installed in $(COWSAY_IPK_DIR)/opt/doc/cowsay/...
-# Daemon startup scripts should be installed in $(COWSAY_IPK_DIR)/opt/etc/init.d/S??cowsay
+# Libraries and include files should be installed into $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)etc/cowsay/...
+# Documentation files should be installed in $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)doc/cowsay/...
+# Daemon startup scripts should be installed in $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cowsay
 #
 # You may need to patch your application to make it use these locations.
 #

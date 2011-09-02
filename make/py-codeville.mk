@@ -40,7 +40,7 @@ PY-CODEVILLE_IPK_VERSION=1
 
 #
 # PY-CODEVILLE_CONFFILES should be a list of user-editable files
-#PY-CODEVILLE_CONFFILES=/opt/etc/py-codeville.conf /opt/etc/init.d/SXXpy-codeville
+#PY-CODEVILLE_CONFFILES=$(OPTWARE_PREFIX)etc/py-codeville.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-codeville
 
 #
 # PY-CODEVILLE_PATCHES should list any patches, in the the order in
@@ -109,11 +109,11 @@ $(PY-CODEVILLE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-CODEVILLE_SOURCE) $(PY-COD
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg; \
 	)
 	touch $(PY-CODEVILLE_BUILD_DIR)/.configured
@@ -167,12 +167,12 @@ $(PY-CODEVILLE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-CODEVILLE_IPK_DIR)/opt/sbin or $(PY-CODEVILLE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-CODEVILLE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-CODEVILLE_IPK_DIR)/opt/etc/py-codeville/...
-# Documentation files should be installed in $(PY-CODEVILLE_IPK_DIR)/opt/doc/py-codeville/...
-# Daemon startup scripts should be installed in $(PY-CODEVILLE_IPK_DIR)/opt/etc/init.d/S??py-codeville
+# Libraries and include files should be installed into $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)etc/py-codeville/...
+# Documentation files should be installed in $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)doc/py-codeville/...
+# Daemon startup scripts should be installed in $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-codeville
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -181,7 +181,7 @@ $(PY-CODEVILLE_IPK): $(PY-CODEVILLE_BUILD_DIR)/.built
 	(cd $(PY-CODEVILLE_BUILD_DIR); \
 	    python2.4 setup.py install --root=$(PY-CODEVILLE_IPK_DIR) --prefix=/opt; \
 	)
-#	-$(STRIP_COMMAND) `find $(PY-CODEVILLE_IPK_DIR)/opt/lib/python2.4/site-packages/codeville -name '*.so'`
+#	-$(STRIP_COMMAND) `find $(PY-CODEVILLE_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.4/site-packages/codeville -name '*.so'`
 	$(MAKE) $(PY-CODEVILLE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY-CODEVILLE_IPK_DIR)
 

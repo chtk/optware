@@ -40,7 +40,7 @@ PAL_IPK_VERSION=2
 
 #
 # PAL_CONFFILES should be a list of user-editable files
-#PAL_CONFFILES=/opt/etc/pal.conf /opt/etc/init.d/SXXpal
+#PAL_CONFFILES=$(OPTWARE_PREFIX)etc/pal.conf $(OPTWARE_PREFIX)etc/init.d/SXXpal
 
 #
 # PAL_PATCHES should list any patches, in the the order in
@@ -119,7 +119,7 @@ $(PAL_BUILD_DIR)/.configured: $(DL_DIR)/$(PAL_SOURCE) $(PAL_PATCHES) make/pal.mk
 	       -e 's/-o root//' \
 	       -e 's|-I$${prefix}/include ||' \
 		$(@D)/src/Makefile
-	sed -i -e 's|/etc|/opt/etc|' $(@D)/src/input.c $(@D)/src/Makefile
+	sed -i -e 's|/etc|$(OPTWARE_PREFIX)etc|' $(@D)/src/input.c $(@D)/src/Makefile
 #	(cd $(PAL_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PAL_CPPFLAGS)" \
@@ -128,7 +128,7 @@ $(PAL_BUILD_DIR)/.configured: $(DL_DIR)/$(PAL_SOURCE) $(PAL_PATCHES) make/pal.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -147,7 +147,7 @@ $(PAL_BUILD_DIR)/.built: $(PAL_BUILD_DIR)/.configured
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PAL_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(PAL_LDFLAGS)" \
 		LIBDIR="$(STAGING_LDFLAGS) $(PAL_LDFLAGS)" \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		;
 	touch $@
 
@@ -188,12 +188,12 @@ $(PAL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PAL_IPK_DIR)/opt/sbin or $(PAL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PAL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PAL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PAL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PAL_IPK_DIR)/opt/etc/pal/...
-# Documentation files should be installed in $(PAL_IPK_DIR)/opt/doc/pal/...
-# Daemon startup scripts should be installed in $(PAL_IPK_DIR)/opt/etc/init.d/S??pal
+# Libraries and include files should be installed into $(PAL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/pal/...
+# Documentation files should be installed in $(PAL_IPK_DIR)$(OPTWARE_PREFIX)doc/pal/...
+# Daemon startup scripts should be installed in $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pal
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -201,14 +201,14 @@ $(PAL_IPK): $(PAL_BUILD_DIR)/.built
 	rm -rf $(PAL_IPK_DIR) $(BUILD_DIR)/pal_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PAL_BUILD_DIR)/src install-no-rm \
 		DESTDIR=$(PAL_IPK_DIR) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		;
-	$(STRIP_COMMAND) $(PAL_IPK_DIR)/opt/bin/pal
-#	install -d $(PAL_IPK_DIR)/opt/etc/
-#	install -m 644 $(PAL_SOURCE_DIR)/pal.conf $(PAL_IPK_DIR)/opt/etc/pal.conf
-#	install -d $(PAL_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(PAL_SOURCE_DIR)/rc.pal $(PAL_IPK_DIR)/opt/etc/init.d/SXXpal
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PAL_IPK_DIR)/opt/etc/init.d/SXXpal
+	$(STRIP_COMMAND) $(PAL_IPK_DIR)$(OPTWARE_PREFIX)bin/pal
+#	install -d $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(PAL_SOURCE_DIR)/pal.conf $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/pal.conf
+#	install -d $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(PAL_SOURCE_DIR)/rc.pal $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpal
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpal
 	$(MAKE) $(PAL_IPK_DIR)/CONTROL/control
 #	install -m 755 $(PAL_SOURCE_DIR)/postinst $(PAL_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PAL_IPK_DIR)/CONTROL/postinst

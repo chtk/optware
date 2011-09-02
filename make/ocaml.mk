@@ -39,7 +39,7 @@ OCAML_IPK_VERSION=1
 
 #
 # OCAML_CONFFILES should be a list of user-editable files
-#OCAML_CONFFILES=/opt/etc/ocaml.conf /opt/etc/init.d/SXXocaml
+#OCAML_CONFFILES=$(OPTWARE_PREFIX)etc/ocaml.conf $(OPTWARE_PREFIX)etc/init.d/SXXocaml
 
 #
 # OCAML_PATCHES should list any patches, in the the order in
@@ -91,7 +91,7 @@ $(OCAML_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(OCAML_SOURCE)
 	rm -rf $(BUILD_DIR)/$(OCAML_DIR) $(@D)
 	$(OCAML_UNZIP) $(DL_DIR)/$(OCAML_SOURCE) | tar -C $(HOST_BUILD_DIR) -xvf -
 	mv $(HOST_BUILD_DIR)/$(OCAML_DIR) $(@D)
-	cd $(@D) && ./configure -prefix /opt -no-tk
+	cd $(@D) && ./configure -prefix $(OPTWARE_PREFIX)-no-tk
 	cd $(@D) && $(MAKE) world
 	touch $@
 
@@ -119,7 +119,7 @@ fi; \
 		LDFLAGS="$(STAGING_LDFLAGS) $(OCAML_LDFLAGS)" \
 		./configure \
 		-host $(GNU_TARGET_NAME) \
-		-prefix /opt \
+		-prefix $(OPTWARE_PREFIX)\
 		-no-tk \
 		-cc $(TARGET_CC) \
 		-ranlib $(TARGET_RANLIB) \
@@ -170,9 +170,9 @@ $(OCAML_IPK_DIR)/CONTROL/control:
 
 $(OCAML_IPK): $(OCAML_BUILD_DIR)/.built
 	rm -rf $(OCAML_IPK_DIR) $(BUILD_DIR)/ocaml_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(OCAML_BUILD_DIR) PREFIX=$(OCAML_IPK_DIR)/opt install
-	for exe in ocamlrun ocamlyacc; do $(STRIP_COMMAND) $(OCAML_IPK_DIR)/opt/bin/$$exe; done
-	for so in `find $(OCAML_IPK_DIR)/opt/lib/ocaml -name '*.so'`; do $(STRIP_COMMAND) $$so; done
+	$(MAKE) -C $(OCAML_BUILD_DIR) PREFIX=$(OCAML_IPK_DIR)$(OPTWARE_PREFIX)install
+	for exe in ocamlrun ocamlyacc; do $(STRIP_COMMAND) $(OCAML_IPK_DIR)$(OPTWARE_PREFIX)bin/$$exe; done
+	for so in `find $(OCAML_IPK_DIR)$(OPTWARE_PREFIX)lib/ocaml -name '*.so'`; do $(STRIP_COMMAND) $$so; done
 	$(MAKE) $(OCAML_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(OCAML_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(OCAML_IPK_DIR)

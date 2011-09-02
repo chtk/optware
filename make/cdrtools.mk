@@ -231,12 +231,12 @@ $(CDRTOOLS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CDRTOOLS_IPK_DIR)/opt/sbin or $(CDRTOOLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CDRTOOLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CDRTOOLS_IPK_DIR)/opt/etc/cdrtools/...
-# Documentation files should be installed in $(CDRTOOLS_IPK_DIR)/opt/doc/cdrtools/...
-# Daemon startup scripts should be installed in $(CDRTOOLS_IPK_DIR)/opt/etc/init.d/S??cdrtools
+# Libraries and include files should be installed into $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/cdrtools/...
+# Documentation files should be installed in $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)doc/cdrtools/...
+# Daemon startup scripts should be installed in $(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cdrtools
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -244,7 +244,7 @@ $(CDRTOOLS_IPK): $(CDRTOOLS_BUILD_DIR)/.built
 	rm -rf $(CDRTOOLS_IPK_DIR) $(BUILD_DIR)/cdrtools_*_$(TARGET_ARCH).ipk
 	$(TARGET_CONFIGURE_OPTS) \
 	$(CDRTOOLS_MAKE) -C $(CDRTOOLS_BUILD_DIR) LDOPTX=$(CDRTOOLS_LDFLAGS) \
-		INS_BASE=$(CDRTOOLS_IPK_DIR)/opt install
+		INS_BASE=$(CDRTOOLS_IPK_DIR)$(OPTWARE_PREFIX)install
 	$(MAKE) $(CDRTOOLS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CDRTOOLS_IPK_DIR)
 

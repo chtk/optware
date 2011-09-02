@@ -41,9 +41,9 @@ $(PERL-ARCHIVE-TAR_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-ARCHIVE-TAR_SOURCE) 
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL -d\
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-archive-tar-unpack: $(PERL-ARCHIVE-TAR_BUILD_DIR)/.configured
 $(PERL-ARCHIVE-TAR_BUILD_DIR)/.built: $(PERL-ARCHIVE-TAR_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-archive-tar: $(PERL-ARCHIVE-TAR_BUILD_DIR)/.built
@@ -82,14 +82,14 @@ $(PERL-ARCHIVE-TAR_IPK_DIR)/CONTROL/control:
 $(PERL-ARCHIVE-TAR_IPK): $(PERL-ARCHIVE-TAR_BUILD_DIR)/.built
 	rm -rf $(PERL-ARCHIVE-TAR_IPK_DIR) $(BUILD_DIR)/perl-archive-tar_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-ARCHIVE-TAR_BUILD_DIR) DESTDIR=$(PERL-ARCHIVE-TAR_IPK_DIR) install
-	perl -pi -e 's|$(PERL_HOSTPERL)|/opt/bin/perl|g' $(PERL-ARCHIVE-TAR_IPK_DIR)/*
-	find $(PERL-ARCHIVE-TAR_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-ARCHIVE-TAR_IPK_DIR)/opt/lib/perl5 ; \
+	perl -pi -e 's|$(PERL_HOSTPERL)|$(OPTWARE_PREFIX)bin/perl|g' $(PERL-ARCHIVE-TAR_IPK_DIR)/*
+	find $(PERL-ARCHIVE-TAR_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-ARCHIVE-TAR_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-ARCHIVE-TAR_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-ARCHIVE-TAR_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-ARCHIVE-TAR_IPK_DIR)/CONTROL/control
 	echo $(PERL-ARCHIVE-TAR_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-ARCHIVE-TAR_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-ARCHIVE-TAR_IPK_DIR)

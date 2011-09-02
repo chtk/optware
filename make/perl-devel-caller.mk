@@ -41,7 +41,7 @@ $(PERL-DEVEL-CALLER_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-DEVEL-CALLER_SOURCE
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Build.PL \
 		--config cc=$(TARGET_CC) \
 		--config ld=$(TARGET_CC) \
@@ -53,7 +53,7 @@ perl-devel-caller-unpack: $(PERL-DEVEL-CALLER_BUILD_DIR)/.configured
 $(PERL-DEVEL-CALLER_BUILD_DIR)/.built: $(PERL-DEVEL-CALLER_BUILD_DIR)/.configured
 	rm -f $@
 	(cd $(PERL-DEVEL-CALLER_BUILD_DIR); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		./Build \
 	)
 	touch $@
@@ -85,16 +85,16 @@ $(PERL-DEVEL-CALLER_IPK_DIR)/CONTROL/control:
 $(PERL-DEVEL-CALLER_IPK): $(PERL-DEVEL-CALLER_BUILD_DIR)/.built
 	rm -rf $(PERL-DEVEL-CALLER_IPK_DIR) $(BUILD_DIR)/perl-devel-caller_*_$(TARGET_ARCH).ipk
 	(cd $(PERL-DEVEL-CALLER_BUILD_DIR); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
-		./Build --prefix $(PERL-DEVEL-CALLER_IPK_DIR)/opt install \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		./Build --prefix $(PERL-DEVEL-CALLER_IPK_DIR)$(OPTWARE_PREFIX)install \
 	)
-	find $(PERL-DEVEL-CALLER_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-DEVEL-CALLER_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-DEVEL-CALLER_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-DEVEL-CALLER_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-DEVEL-CALLER_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-DEVEL-CALLER_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-DEVEL-CALLER_IPK_DIR)/CONTROL/control
 	echo $(PERL-DEVEL-CALLER_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-DEVEL-CALLER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-DEVEL-CALLER_IPK_DIR)

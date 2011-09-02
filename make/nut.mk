@@ -46,7 +46,7 @@ NUT_IPK_VERSION=1
 
 #
 # NUT_CONFFILES should be a list of user-editable files
-#NUT_CONFFILES=/opt/etc/nut.conf /opt/etc/init.d/SXXnut
+#NUT_CONFFILES=$(OPTWARE_PREFIX)etc/nut.conf $(OPTWARE_PREFIX)etc/init.d/SXXnut
 
 #
 # NUT_PATCHES should list any patches, in the the order in
@@ -138,19 +138,19 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-hotplug-dir=/opt/etc/hotplug \
-		--with-udev-dir=/opt/etc/udev \
-		--with-htmlpath=/opt/share/nut/html \
-		--with-statepath=/opt/var/state/ups \
-		--with-pidpath=/opt/var/run \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-hotplug-dir=$(OPTWARE_PREFIX)etc/hotplug \
+		--with-udev-dir=$(OPTWARE_PREFIX)etc/udev \
+		--with-htmlpath=$(OPTWARE_PREFIX)share/nut/html \
+		--with-statepath=$(OPTWARE_PREFIX)var/state/ups \
+		--with-pidpath=$(OPTWARE_PREFIX)var/run \
 		--with-cgi \
 		--with-gd-includes=-I$(STAGING_INCLUDE_DIR) \
 		--with-gd-libs="$(NUT_GD_LIBS)" \
 		--disable-nls \
 		--disable-static \
 	)
-	sed -i -e 's| -I/opt/include||g' $(@D)/*/Makefile
+	sed -i -e 's| -I$(OPTWARE_PREFIX)include||g' $(@D)/*/Makefile
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
 
@@ -201,12 +201,12 @@ $(NUT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NUT_IPK_DIR)/opt/sbin or $(NUT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NUT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NUT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NUT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NUT_IPK_DIR)/opt/etc/nut/...
-# Documentation files should be installed in $(NUT_IPK_DIR)/opt/doc/nut/...
-# Daemon startup scripts should be installed in $(NUT_IPK_DIR)/opt/etc/init.d/S??nut
+# Libraries and include files should be installed into $(NUT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/nut/...
+# Documentation files should be installed in $(NUT_IPK_DIR)$(OPTWARE_PREFIX)doc/nut/...
+# Daemon startup scripts should be installed in $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nut
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -214,11 +214,11 @@ $(NUT_IPK): $(NUT_BUILD_DIR)/.built
 	rm -rf $(NUT_IPK_DIR) $(BUILD_DIR)/nut_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NUT_BUILD_DIR) install-strip \
 		DESTDIR=$(NUT_IPK_DIR) transform=''
-#	install -d $(NUT_IPK_DIR)/opt/etc/
-#	install -m 644 $(NUT_SOURCE_DIR)/nut.conf $(NUT_IPK_DIR)/opt/etc/nut.conf
-#	install -d $(NUT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NUT_SOURCE_DIR)/rc.nut $(NUT_IPK_DIR)/opt/etc/init.d/SXXnut
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NUT_IPK_DIR)/opt/etc/init.d/SXXnut
+#	install -d $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NUT_SOURCE_DIR)/nut.conf $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/nut.conf
+#	install -d $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NUT_SOURCE_DIR)/rc.nut $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnut
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnut
 	$(MAKE) $(NUT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NUT_SOURCE_DIR)/postinst $(NUT_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NUT_IPK_DIR)/CONTROL/postinst

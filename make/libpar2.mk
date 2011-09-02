@@ -141,7 +141,7 @@ $(LIBPAR2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBPAR2_SOURCE) $(LIBPAR2_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -197,20 +197,20 @@ $(LIBPAR2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBPAR2_IPK_DIR)/opt/sbin or $(LIBPAR2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBPAR2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBPAR2_IPK_DIR)/opt/etc/libpar2/...
-# Documentation files should be installed in $(LIBPAR2_IPK_DIR)/opt/doc/libpar2/...
-# Daemon startup scripts should be installed in $(LIBPAR2_IPK_DIR)/opt/etc/init.d/S??libpar2
+# Libraries and include files should be installed into $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)etc/libpar2/...
+# Documentation files should be installed in $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)doc/libpar2/...
+# Daemon startup scripts should be installed in $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libpar2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBPAR2_IPK): $(LIBPAR2_BUILD_DIR)/.built
 	rm -rf $(LIBPAR2_IPK_DIR) $(BUILD_DIR)/libpar2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBPAR2_BUILD_DIR) DESTDIR=$(LIBPAR2_IPK_DIR) install-strip
-	rm -f $(LIBPAR2_IPK_DIR)/opt/lib/libpar2.la
-	rm -f -R $(LIBPAR2_IPK_DIR)/opt/lib/libpar2
+	rm -f $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)lib/libpar2.la
+	rm -f -R $(LIBPAR2_IPK_DIR)$(OPTWARE_PREFIX)lib/libpar2
 	$(MAKE) $(LIBPAR2_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBPAR2_IPK_DIR)
 

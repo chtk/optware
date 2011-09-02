@@ -40,7 +40,7 @@ YASM_IPK_VERSION=1
 
 #
 # YASM_CONFFILES should be a list of user-editable files
-#YASM_CONFFILES=/opt/etc/yasm.conf /opt/etc/init.d/SXXyasm
+#YASM_CONFFILES=$(OPTWARE_PREFIX)etc/yasm.conf $(OPTWARE_PREFIX)etc/init.d/SXXyasm
 
 #
 # YASM_PATCHES should list any patches, in the the order in
@@ -103,7 +103,7 @@ $(YASM_HOST_BUILD_DIR)/.staged: host/.configured $(DL_DIR)/$(YASM_SOURCE) $(YASM
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(GNU_HOST_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,7 +150,7 @@ $(YASM_BUILD_DIR)/.configured: $(DL_DIR)/$(YASM_SOURCE) $(YASM_PATCHES) make/yas
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -194,23 +194,23 @@ $(YASM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(YASM_IPK_DIR)/opt/sbin or $(YASM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(YASM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(YASM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(YASM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(YASM_IPK_DIR)/opt/etc/yasm/...
-# Documentation files should be installed in $(YASM_IPK_DIR)/opt/doc/yasm/...
-# Daemon startup scripts should be installed in $(YASM_IPK_DIR)/opt/etc/init.d/S??yasm
+# Libraries and include files should be installed into $(YASM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/yasm/...
+# Documentation files should be installed in $(YASM_IPK_DIR)$(OPTWARE_PREFIX)doc/yasm/...
+# Daemon startup scripts should be installed in $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??yasm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(YASM_IPK): $(YASM_BUILD_DIR)/.built
 	rm -rf $(YASM_IPK_DIR) $(BUILD_DIR)/yasm_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(YASM_BUILD_DIR) DESTDIR=$(YASM_IPK_DIR) install-strip
-#	install -d $(YASM_IPK_DIR)/opt/etc/
-#	install -m 644 $(YASM_SOURCE_DIR)/yasm.conf $(YASM_IPK_DIR)/opt/etc/yasm.conf
-#	install -d $(YASM_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(YASM_SOURCE_DIR)/rc.yasm $(YASM_IPK_DIR)/opt/etc/init.d/SXXyasm
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(YASM_IPK_DIR)/opt/etc/init.d/SXXyasm
+#	install -d $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(YASM_SOURCE_DIR)/yasm.conf $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/yasm.conf
+#	install -d $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(YASM_SOURCE_DIR)/rc.yasm $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXyasm
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(YASM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXyasm
 	$(MAKE) $(YASM_IPK_DIR)/CONTROL/control
 #	install -m 755 $(YASM_SOURCE_DIR)/postinst $(YASM_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(YASM_IPK_DIR)/CONTROL/postinst

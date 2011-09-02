@@ -40,7 +40,7 @@ LIBDVDCSS_IPK_VERSION=1
 
 #
 # LIBDVDCSS_CONFFILES should be a list of user-editable files
-#LIBDVDCSS_CONFFILES=/opt/etc/libdvdcss.conf /opt/etc/init.d/SXXlibdvdcss
+#LIBDVDCSS_CONFFILES=$(OPTWARE_PREFIX)etc/libdvdcss.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibdvdcss
 
 #
 # LIBDVDCSS_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LIBDVDCSS_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBDVDCSS_SOURCE) $(LIBDVDCSS_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,23 +177,23 @@ $(LIBDVDCSS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBDVDCSS_IPK_DIR)/opt/sbin or $(LIBDVDCSS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBDVDCSS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBDVDCSS_IPK_DIR)/opt/etc/libdvdcss/...
-# Documentation files should be installed in $(LIBDVDCSS_IPK_DIR)/opt/doc/libdvdcss/...
-# Daemon startup scripts should be installed in $(LIBDVDCSS_IPK_DIR)/opt/etc/init.d/S??libdvdcss
+# Libraries and include files should be installed into $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/libdvdcss/...
+# Documentation files should be installed in $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)doc/libdvdcss/...
+# Daemon startup scripts should be installed in $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libdvdcss
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBDVDCSS_IPK): $(LIBDVDCSS_BUILD_DIR)/.built
 	rm -rf $(LIBDVDCSS_IPK_DIR) $(BUILD_DIR)/libdvdcss_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBDVDCSS_BUILD_DIR) DESTDIR=$(LIBDVDCSS_IPK_DIR) install-strip
-#	install -d $(LIBDVDCSS_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBDVDCSS_SOURCE_DIR)/libdvdcss.conf $(LIBDVDCSS_IPK_DIR)/opt/etc/libdvdcss.conf
-#	install -d $(LIBDVDCSS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBDVDCSS_SOURCE_DIR)/rc.libdvdcss $(LIBDVDCSS_IPK_DIR)/opt/etc/init.d/SXXlibdvdcss
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBDVDCSS_IPK_DIR)/opt/etc/init.d/SXXlibdvdcss
+#	install -d $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBDVDCSS_SOURCE_DIR)/libdvdcss.conf $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/libdvdcss.conf
+#	install -d $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBDVDCSS_SOURCE_DIR)/rc.libdvdcss $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibdvdcss
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBDVDCSS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibdvdcss
 	$(MAKE) $(LIBDVDCSS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBDVDCSS_SOURCE_DIR)/postinst $(LIBDVDCSS_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBDVDCSS_IPK_DIR)/CONTROL/postinst

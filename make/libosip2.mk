@@ -45,7 +45,7 @@ LIBOSIP2_IPK_VERSION=2
 
 #
 # LIBOSIP2_CONFFILES should be a list of user-editable files
-#LIBOSIP2_CONFFILES=/opt/etc/libosip2.conf /opt/etc/init.d/SXXlibosip2
+#LIBOSIP2_CONFFILES=$(OPTWARE_PREFIX)etc/libosip2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibosip2
 
 #
 # LIBOSIP2_PATCHES should list any patches, in the the order in
@@ -120,7 +120,7 @@ $(LIBOSIP2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBOSIP2_SOURCE) $(LIBOSIP2_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -175,22 +175,22 @@ $(LIBOSIP2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBOSIP2_IPK_DIR)/opt/sbin or $(LIBOSIP2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBOSIP2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBOSIP2_IPK_DIR)/opt/etc/libosip2/...
-# Documentation files should be installed in $(LIBOSIP2_IPK_DIR)/opt/doc/libosip2/...
-# Daemon startup scripts should be installed in $(LIBOSIP2_IPK_DIR)/opt/etc/init.d/S??libosip2
+# Libraries and include files should be installed into $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/libosip2/...
+# Documentation files should be installed in $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)doc/libosip2/...
+# Daemon startup scripts should be installed in $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libosip2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBOSIP2_IPK): $(LIBOSIP2_BUILD_DIR)/.built
 	rm -rf $(LIBOSIP2_IPK_DIR) $(BUILD_DIR)/libosip2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBOSIP2_BUILD_DIR) DESTDIR=$(LIBOSIP2_IPK_DIR) install-strip
-#	install -d $(LIBOSIP2_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBOSIP2_SOURCE_DIR)/libosip2.conf $(LIBOSIP2_IPK_DIR)/opt/etc/libosip2.conf
-#	install -d $(LIBOSIP2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBOSIP2_SOURCE_DIR)/rc.libosip2 $(LIBOSIP2_IPK_DIR)/opt/etc/init.d/SXXlibosip2
+#	install -d $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBOSIP2_SOURCE_DIR)/libosip2.conf $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/libosip2.conf
+#	install -d $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBOSIP2_SOURCE_DIR)/rc.libosip2 $(LIBOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibosip2
 	$(MAKE) $(LIBOSIP2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBOSIP2_SOURCE_DIR)/postinst $(LIBOSIP2_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBOSIP2_SOURCE_DIR)/prerm $(LIBOSIP2_IPK_DIR)/CONTROL/prerm

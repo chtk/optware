@@ -52,7 +52,7 @@ TRANSMISSION_IPK_VERSION=1
 
 #
 # TRANSMISSION_CONFFILES should be a list of user-editable files
-#TRANSMISSION_CONFFILES=/opt/etc/transmission.conf
+#TRANSMISSION_CONFFILES=$(OPTWARE_PREFIX)etc/transmission.conf
 
 TRANSMISSION_PATCHES = $(TRANSMISSION_SOURCE_DIR)/int64_switch.patch
 
@@ -208,8 +208,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--datadir=/opt/share \
+		--prefix=$(OPTWARE_PREFIX)\
+		--datadir=$(OPTWARE_PREFIX)share \
 		--disable-gtk \
 		--disable-wx \
 		--disable-nls \
@@ -259,7 +259,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-gtk \
 		--disable-wx \
 		--disable-nls \
@@ -327,12 +327,12 @@ endif
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TRANSMISSION_IPK_DIR)/opt/sbin or $(TRANSMISSION_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TRANSMISSION_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TRANSMISSION_IPK_DIR)/opt/etc/transmission/...
-# Documentation files should be installed in $(TRANSMISSION_IPK_DIR)/opt/doc/transmission/...
-# Daemon startup scripts should be installed in $(TRANSMISSION_IPK_DIR)/opt/etc/init.d/S??transmission
+# Libraries and include files should be installed into $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc/transmission/...
+# Documentation files should be installed in $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)doc/transmission/...
+# Daemon startup scripts should be installed in $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??transmission
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -345,12 +345,12 @@ endif
 	rm -rf $(TRANSMISSION_IPK_DIR) $(BUILD_DIR)/transmission_*_$(TARGET_ARCH).ipk
 	install -d $(TRANSMISSION_IPK_DIR)/opt
 	$(MAKE) -C $(TRANSMISSION_BUILD_DIR) DESTDIR=$(TRANSMISSION_IPK_DIR) install-strip
-#	install -d $(TRANSMISSION_IPK_DIR)/opt/etc
-#	install -m 644 $(TRANSMISSION_SOURCE_DIR)/transmission.conf $(TRANSMISSION_IPK_DIR)/opt/etc/transmission.conf
-	install -d $(TRANSMISSION_IPK_DIR)/opt/share/doc/transmission
-	install -m 666 $(TRANSMISSION_BUILD_DIR)/[CNR]*  $(TRANSMISSION_IPK_DIR)/opt/share/doc/transmission
-	install -d $(TRANSMISSION_IPK_DIR)/opt/var/log
-	install -d $(TRANSMISSION_IPK_DIR)/opt/var/run
+#	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc
+#	install -m 644 $(TRANSMISSION_SOURCE_DIR)/transmission.conf $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc/transmission.conf
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmission
+	install -m 666 $(TRANSMISSION_BUILD_DIR)/[CNR]*  $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmission
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)var/log
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)var/run
 	$(MAKE) $(TRANSMISSION_IPK_DIR)/CONTROL/control
 	echo $(TRANSMISSION_CONFFILES) | sed -e 's/ /\n/g' > $(TRANSMISSION_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TRANSMISSION_IPK_DIR)

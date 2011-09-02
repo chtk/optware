@@ -48,7 +48,7 @@ IPTABLES_IPK_VERSION=1
 
 #
 # IPTABLES_CONFFILES should be a list of user-editable files
-#IPTABLES_CONFFILES=/opt/etc/iptables.conf /opt/etc/init.d/SXXiptables
+#IPTABLES_CONFFILES=$(OPTWARE_PREFIX)etc/iptables.conf $(OPTWARE_PREFIX)etc/init.d/SXXiptables
 
 #
 # IPTABLES_PATCHES should list any patches, in the the order in
@@ -160,9 +160,9 @@ iptables-stage-headers: $(IPTABLES_BUILD_DIR)/.staged-headers
 
 $(IPTABLES_BUILD_DIR)/.staged-headers: $(IPTABLES_BUILD_DIR)/.staged
 	cp -R $(IPTABLES_BUILD_DIR)/include $(STAGING_DIR)/opt
-	rm -f $(STAGING_DIR)/opt/include/Makefile*
-	rm -f $(STAGING_DIR)/opt/include/*.in
-	rm -fr $(STAGING_DIR)/opt/lib/*.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)include/Makefile*
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)include/*.in
+	rm -fr $(STAGING_DIR)$(OPTWARE_PREFIX)lib/*.la
 	touch $@
 
 
@@ -188,21 +188,21 @@ $(IPTABLES_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IPTABLES_IPK_DIR)/opt/sbin or $(IPTABLES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IPTABLES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IPTABLES_IPK_DIR)/opt/etc/iptables/...
-# Documentation files should be installed in $(IPTABLES_IPK_DIR)/opt/doc/iptables/...
-# Daemon startup scripts should be installed in $(IPTABLES_IPK_DIR)/opt/etc/init.d/S??iptables
+# Libraries and include files should be installed into $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)etc/iptables/...
+# Documentation files should be installed in $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)doc/iptables/...
+# Daemon startup scripts should be installed in $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??iptables
 #
 # You may need to patch your application to make it use these locations.
 #
 $(IPTABLES_IPK): $(IPTABLES_BUILD_DIR)/.built
 	rm -rf $(IPTABLES_IPK_DIR) $(BUILD_DIR)/iptables_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IPTABLES_BUILD_DIR) install \
-		$(TARGET_CONFIGURE_OPTS) PREFIX=/opt DESTDIR=$(IPTABLES_IPK_DIR)
-	$(STRIP_COMMAND) $(IPTABLES_IPK_DIR)/opt/lib/*.so* $(IPTABLES_IPK_DIR)/opt/sbin/* \
-		$(IPTABLES_IPK_DIR)/opt/libexec/xtables/*.so*
+		$(TARGET_CONFIGURE_OPTS) PREFIX=$(OPTWARE_PREFIX)DESTDIR=$(IPTABLES_IPK_DIR)
+	$(STRIP_COMMAND) $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so* $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)sbin/* \
+		$(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)libexec/xtables/*.so*
 	$(MAKE) $(IPTABLES_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPTABLES_IPK_DIR)
 

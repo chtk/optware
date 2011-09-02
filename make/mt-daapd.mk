@@ -52,7 +52,7 @@ $(MT_DAAPD_BUILD_DIR)/.configured: $(DL_DIR)/$(MT_DAAPD_SOURCE) make/mt-daapd.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	        --with-static-libs=$(STAGING_LIB_DIR) \
 		--with-gdbm-include=$(STAGING_INCLUDE_DIR) \
 		--enable-nslu2 \
@@ -94,27 +94,27 @@ $(MT_DAAPD_IPK_DIR)/CONTROL/control:
 
 $(MT_DAAPD_IPK): $(MT_DAAPD_BUILD_DIR)/src/mt-daapd
 	rm -rf $(MT_DAAPD_IPK_DIR) $(BUILD_DIR)/mt-daapd_*_$(TARGET_ARCH).ipk
-	install -d $(MT_DAAPD_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(MT_DAAPD_BUILD_DIR)/src/mt-daapd -o $(MT_DAAPD_IPK_DIR)/opt/sbin/mt-daapd
-	install -d $(MT_DAAPD_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(MT_DAAPD_SOURCE_DIR)/rc.mt-daapd $(MT_DAAPD_IPK_DIR)/opt/etc/init.d/S60mt-daapd
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(MT_DAAPD_BUILD_DIR)/src/mt-daapd -o $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/mt-daapd
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(MT_DAAPD_SOURCE_DIR)/rc.mt-daapd $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S60mt-daapd
 	$(MAKE) $(MT_DAAPD_IPK_DIR)/CONTROL/control
 	install -m 644 $(MT_DAAPD_SOURCE_DIR)/postinst $(MT_DAAPD_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(MT_DAAPD_SOURCE_DIR)/prerm $(MT_DAAPD_IPK_DIR)/CONTROL/prerm
 	install -m 644 $(MT_DAAPD_SOURCE_DIR)/conffiles $(MT_DAAPD_IPK_DIR)/CONTROL/conffiles
 
-	install -d $(MT_DAAPD_IPK_DIR)/opt/etc/mt-daapd
-	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.conf $(MT_DAAPD_IPK_DIR)/opt/etc/mt-daapd
-	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.playlist $(MT_DAAPD_IPK_DIR)/opt/etc/mt-daapd
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)etc/mt-daapd
+	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.conf $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)etc/mt-daapd
+	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.playlist $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)etc/mt-daapd
 
-	install -d $(MT_DAAPD_IPK_DIR)/opt/doc/mt-daapd
-	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.conf $(MT_DAAPD_IPK_DIR)/opt/doc/mt-daapd
-	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.playlist $(MT_DAAPD_IPK_DIR)/opt/doc/mt-daapd
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)doc/mt-daapd
+	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.conf $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)doc/mt-daapd
+	install -m 644 $(MT_DAAPD_SOURCE_DIR)/mt-daapd.playlist $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)doc/mt-daapd
 
-	install -d $(MT_DAAPD_IPK_DIR)/opt/share/mt-daapd/admin-root
-	install -m 644 $(MT_DAAPD_BUILD_DIR)/admin-root/* $(MT_DAAPD_IPK_DIR)/opt/share/mt-daapd/admin-root
-	rm -f $(MT_DAAPD_IPK_DIR)/opt/share/mt-daapd/admin-root/Makefile*
-	install -d $(MT_DAAPD_IPK_DIR)/opt/var/mt-daapd
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)share/mt-daapd/admin-root
+	install -m 644 $(MT_DAAPD_BUILD_DIR)/admin-root/* $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)share/mt-daapd/admin-root
+	rm -f $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)share/mt-daapd/admin-root/Makefile*
+	install -d $(MT_DAAPD_IPK_DIR)$(OPTWARE_PREFIX)var/mt-daapd
 
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MT_DAAPD_IPK_DIR)
 

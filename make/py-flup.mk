@@ -42,7 +42,7 @@ PY-FLUP_IPK_VERSION=1
 
 #
 # PY-FLUP_CONFFILES should be a list of user-editable files
-#PY-FLUP_CONFFILES=/opt/etc/py-flup.conf /opt/etc/init.d/SXXpy-flup
+#PY-FLUP_CONFFILES=$(OPTWARE_PREFIX)etc/py-flup.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-flup
 
 #
 # PY-FLUP_PATCHES should list any patches, in the the order in
@@ -124,9 +124,9 @@ $(PY-FLUP_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-FLUP_SOURCE) $(PY-FLUP_PATCHES)
 	(cd $(@D)/2.4; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.4"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.4"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	# 2.5
@@ -139,9 +139,9 @@ $(PY-FLUP_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-FLUP_SOURCE) $(PY-FLUP_PATCHES)
 	(cd $(@D)/2.5; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.5"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	# 2.6
@@ -154,9 +154,9 @@ $(PY-FLUP_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-FLUP_SOURCE) $(PY-FLUP_PATCHES)
 	(cd $(@D)/2.6; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.6"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	touch $@
@@ -243,12 +243,12 @@ $(PY26-FLUP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-FLUP_IPK_DIR)/opt/sbin or $(PY-FLUP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-FLUP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-FLUP_IPK_DIR)/opt/etc/py-flup/...
-# Documentation files should be installed in $(PY-FLUP_IPK_DIR)/opt/doc/py-flup/...
-# Daemon startup scripts should be installed in $(PY-FLUP_IPK_DIR)/opt/etc/init.d/S??py-flup
+# Libraries and include files should be installed into $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX)etc/py-flup/...
+# Documentation files should be installed in $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX)doc/py-flup/...
+# Daemon startup scripts should be installed in $(PY-FLUP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-flup
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -45,7 +45,7 @@ $(GDBM_BUILD_DIR)/.configured: $(DL_DIR)/$(GDBM_SOURCE) $(GDBM_PATCHES) make/gdb
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	);
@@ -87,9 +87,9 @@ $(GDBM_IPK_DIR)/CONTROL/control:
 $(GDBM_IPK): $(GDBM_BUILD_DIR)/.built
 	rm -rf $(GDBM_IPK_DIR) $(GDBM_IPK)
 	$(MAKE) -C $(GDBM_BUILD_DIR) INSTALL_ROOT=$(GDBM_IPK_DIR) install install-compat
-	$(STRIP_COMMAND) $(GDBM_IPK_DIR)/opt/lib/*.so.*
-	rm -rf $(GDBM_IPK_DIR)/opt/{man,info}
-	rm -f $(GDBM_IPK_DIR)/opt/lib/*.{la,a}
+	$(STRIP_COMMAND) $(GDBM_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
+	rm -rf $(GDBM_IPK_DIR)$(OPTWARE_PREFIX){man,info}
+	rm -f $(GDBM_IPK_DIR)$(OPTWARE_PREFIX)lib/*.{la,a}
 	$(MAKE) $(GDBM_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GDBM_IPK_DIR)
 

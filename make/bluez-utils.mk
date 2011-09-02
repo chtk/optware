@@ -42,16 +42,16 @@ BLUEZ-UTILS_IPK_VERSION=3
 #
 # BLUEZ-UTILS_CONFFILES should be a list of user-editable files
 BLUEZ-UTILS_CONFFILES=\
-/opt/etc/bluetooth/hcid.conf \
-/opt/etc/bluetooth/echo.service \
-/opt/etc/bluetooth/input.service \
-/opt/etc/bluetooth/serial.service \
-/opt/etc/bluetooth/network.service \
-/opt/etc/bluetooth/rfcomm.conf \
-/opt/etc/dbus-1/system.d/bluetooth.conf \
-/opt/etc/init.d/bluetooth \
-/opt/etc/default/bluetooth \
-/opt/etc/udev/bluetooth.rules \
+$(OPTWARE_PREFIX)etc/bluetooth/hcid.conf \
+$(OPTWARE_PREFIX)etc/bluetooth/echo.service \
+$(OPTWARE_PREFIX)etc/bluetooth/input.service \
+$(OPTWARE_PREFIX)etc/bluetooth/serial.service \
+$(OPTWARE_PREFIX)etc/bluetooth/network.service \
+$(OPTWARE_PREFIX)etc/bluetooth/rfcomm.conf \
+$(OPTWARE_PREFIX)etc/dbus-1/system.d/bluetooth.conf \
+$(OPTWARE_PREFIX)etc/init.d/bluetooth \
+$(OPTWARE_PREFIX)etc/default/bluetooth \
+$(OPTWARE_PREFIX)etc/udev/bluetooth.rules \
 
 
 #
@@ -144,7 +144,7 @@ $(BLUEZ-UTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(BLUEZ-UTILS_SOURCE) $(BLUEZ-UT
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-all \
 		$(BLUEZ-UTILS_CONFIG_ARGS) \
 		--disable-glib \
@@ -200,19 +200,19 @@ $(BLUEZ-UTILS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BLUEZ-UTILS_IPK_DIR)/opt/sbin or $(BLUEZ-UTILS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BLUEZ-UTILS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BLUEZ-UTILS_IPK_DIR)/opt/etc/bluez-utils/...
-# Documentation files should be installed in $(BLUEZ-UTILS_IPK_DIR)/opt/doc/bluez-utils/...
-# Daemon startup scripts should be installed in $(BLUEZ-UTILS_IPK_DIR)/opt/etc/init.d/S??bluez-utils
+# Libraries and include files should be installed into $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/bluez-utils/...
+# Documentation files should be installed in $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)doc/bluez-utils/...
+# Daemon startup scripts should be installed in $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bluez-utils
 #
 # You may need to patch your application to make it use these locations.
 #
 $(BLUEZ-UTILS_IPK): $(BLUEZ-UTILS_BUILD_DIR)/.built
 	rm -rf $(BLUEZ-UTILS_IPK_DIR) $(BUILD_DIR)/bluez-utils_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BLUEZ-UTILS_BUILD_DIR) DESTDIR=$(BLUEZ-UTILS_IPK_DIR) install-strip
-#	sed -i -e 's|"/etc|"/opt/etc|' $(BLUEZ-UTILS_IPK_DIR)/opt/etc/*/bluetooth
+#	sed -i -e 's|"/etc|"$(OPTWARE_PREFIX)etc|' $(BLUEZ-UTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/*/bluetooth
 	$(MAKE) $(BLUEZ-UTILS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BLUEZ-UTILS_IPK_DIR)
 

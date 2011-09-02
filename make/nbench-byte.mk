@@ -30,7 +30,7 @@ NBENCH_BYTE_IPK_VERSION=1
 
 #
 # NBENCH_BYTE_CONFFILES should be a list of user-editable files
-# NBENCH_BYTE_CONFFILES=/opt/etc/nbench-byte.conf /opt/etc/init.d/SXXnbench-byte
+# NBENCH_BYTE_CONFFILES=$(OPTWARE_PREFIX)etc/nbench-byte.conf $(OPTWARE_PREFIX)etc/init.d/SXXnbench-byte
 
 #
 # NBENCH_BYTE_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(NBENCH_BYTE_BUILD_DIR)/.configured: $(DL_DIR)/$(NBENCH_BYTE_SOURCE) $(NBENCH_B
 	#	--build=$(GNU_HOST_NAME) \
 	#	--host=$(GNU_TARGET_NAME) \
 	#	--target=$(GNU_TARGET_NAME) \
-	#	--prefix=/opt \
+	#	--prefix=$(OPTWARE_PREFIX)\
 	#	--disable-nls \
 	#	--disable-static \
 	#)
@@ -167,22 +167,22 @@ $(NBENCH_BYTE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NBENCH_BYTE_IPK_DIR)/opt/sbin or $(NBENCH_BYTE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NBENCH_BYTE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NBENCH_BYTE_IPK_DIR)/opt/etc/nbench-byte/...
-# Documentation files should be installed in $(NBENCH_BYTE_IPK_DIR)/opt/doc/nbench-byte/...
-# Daemon startup scripts should be installed in $(NBENCH_BYTE_IPK_DIR)/opt/etc/init.d/S??nbench-byte
+# Libraries and include files should be installed into $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)etc/nbench-byte/...
+# Documentation files should be installed in $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)doc/nbench-byte/...
+# Daemon startup scripts should be installed in $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nbench-byte
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NBENCH_BYTE_IPK): $(NBENCH_BYTE_BUILD_DIR)/.built
 	rm -rf $(NBENCH_BYTE_IPK_DIR) $(BUILD_DIR)/nbench-byte_*_$(TARGET_ARCH).ipk
-	mkdir -p $(NBENCH_BYTE_IPK_DIR)/opt/bin
-	cp $(NBENCH_BYTE_BUILD_DIR)/nbench $(NBENCH_BYTE_IPK_DIR)/opt/bin
+	mkdir -p $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	cp $(NBENCH_BYTE_BUILD_DIR)/nbench $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)bin
 	
-	mkdir -p $(NBENCH_BYTE_IPK_DIR)/opt/share
-	cp $(NBENCH_BYTE_BUILD_DIR)/NNET.DAT $(NBENCH_BYTE_IPK_DIR)/opt/share/nbench-byte.dat
+	mkdir -p $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)share
+	cp $(NBENCH_BYTE_BUILD_DIR)/NNET.DAT $(NBENCH_BYTE_IPK_DIR)$(OPTWARE_PREFIX)share/nbench-byte.dat
 
 	$(MAKE) $(NBENCH_BYTE_IPK_DIR)/CONTROL/control
 	# install -m 755 $(NBENCH_BYTE_SOURCE_DIR)/postinst $(NBENCH_BYTE_IPK_DIR)/CONTROL/postinst

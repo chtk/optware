@@ -79,7 +79,7 @@ $(LIBSTDC++_BUILD_DIR)/.staged: $(LIBSTDC++_BUILD_DIR)/.built
 ifdef LIBSTDC++_USED
 	install -d $(STAGING_LIB_DIR)
 	install -m 644 $(@D)/$(LIBSTDC++_LIBNAME_FULL) $(STAGING_LIB_DIR)
-	(cd $(STAGING_DIR)/opt/lib; \
+	(cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
 	 ln -sf $(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_LIBNAME); \
 	 ln -sf $(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_LIBNAME_MAJOR) \
 	)
@@ -105,13 +105,13 @@ $(LIBSTDC++_IPK_DIR)/CONTROL/control:
 $(LIBSTDC++_IPK): $(LIBSTDC++_BUILD_DIR)/.built
 	rm -rf $(LIBSTDC++_IPK_DIR) $(BUILD_DIR)/libstdc++_*_$(TARGET_ARCH).ipk
 ifdef LIBSTDC++_USED
-	install -d $(LIBSTDC++_IPK_DIR)/opt/lib
-	install -m 644 $(LIBSTDC++_BUILD_DIR)/$(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_IPK_DIR)/opt/lib
-	(cd $(LIBSTDC++_IPK_DIR)/opt/lib; \
+	install -d $(LIBSTDC++_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(LIBSTDC++_BUILD_DIR)/$(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_IPK_DIR)$(OPTWARE_PREFIX)lib
+	(cd $(LIBSTDC++_IPK_DIR)$(OPTWARE_PREFIX)lib; \
 	 ln -s $(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_LIBNAME); \
 	 ln -s $(LIBSTDC++_LIBNAME_FULL) $(LIBSTDC++_LIBNAME_MAJOR) \
 	)
-	$(STRIP_COMMAND) $(LIBSTDC++_IPK_DIR)/opt/lib/*.$(SHLIB_EXT)
+	$(STRIP_COMMAND) $(LIBSTDC++_IPK_DIR)$(OPTWARE_PREFIX)lib/*.$(SHLIB_EXT)
 endif
 	$(MAKE) $(LIBSTDC++_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBSTDC++_IPK_DIR)

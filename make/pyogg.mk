@@ -46,7 +46,7 @@ PYOGG_IPK_VERSION=1
 
 #
 # PYOGG_CONFFILES should be a list of user-editable files
-#PYOGG_CONFFILES=/opt/etc/pyogg.conf /opt/etc/init.d/SXXpyogg
+#PYOGG_CONFFILES=$(OPTWARE_PREFIX)etc/pyogg.conf $(OPTWARE_PREFIX)etc/init.d/SXXpyogg
 
 #
 # PYOGG_PATCHES should list any patches, in the the order in
@@ -177,12 +177,12 @@ $(PYOGG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PYOGG_IPK_DIR)/opt/sbin or $(PYOGG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PYOGG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PYOGG_IPK_DIR)/opt/etc/pyogg/...
-# Documentation files should be installed in $(PYOGG_IPK_DIR)/opt/doc/pyogg/...
-# Daemon startup scripts should be installed in $(PYOGG_IPK_DIR)/opt/etc/init.d/S??pyogg
+# Libraries and include files should be installed into $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)etc/pyogg/...
+# Documentation files should be installed in $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)doc/pyogg/...
+# Daemon startup scripts should be installed in $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pyogg
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -192,7 +192,7 @@ $(PYOGG_IPK): $(PYOGG_BUILD_DIR)/.built
 	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared' \
 	    python2.4 setup.py install --root=$(PYOGG_IPK_DIR) --prefix=/opt; \
 	)
-	for so in `find $(PYOGG_IPK_DIR)/opt/lib/python2.4/site-packages -name '*.so'`; do \
+	for so in `find $(PYOGG_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.4/site-packages -name '*.so'`; do \
 	    $(STRIP_COMMAND) $$so; \
 	done
 	$(MAKE) $(PYOGG_IPK_DIR)/CONTROL/control

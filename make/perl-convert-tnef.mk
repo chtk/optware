@@ -40,9 +40,9 @@ $(PERL-CONVERT-TNEF_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-CONVERT-TNEF_SOURCE
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL -d\
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-CONVERT-TNEF_BUILD_DIR)/.configured
 
@@ -51,7 +51,7 @@ perl-convert-tnef-unpack: $(PERL-CONVERT-TNEF_BUILD_DIR)/.configured
 $(PERL-CONVERT-TNEF_BUILD_DIR)/.built: $(PERL-CONVERT-TNEF_BUILD_DIR)/.configured
 	rm -f $(PERL-CONVERT-TNEF_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-CONVERT-TNEF_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-CONVERT-TNEF_BUILD_DIR)/.built
 
 perl-convert-tnef: $(PERL-CONVERT-TNEF_BUILD_DIR)/.built
@@ -81,13 +81,13 @@ $(PERL-CONVERT-TNEF_IPK_DIR)/CONTROL/control:
 $(PERL-CONVERT-TNEF_IPK): $(PERL-CONVERT-TNEF_BUILD_DIR)/.built
 	rm -rf $(PERL-CONVERT-TNEF_IPK_DIR) $(BUILD_DIR)/perl-convert-tnef_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-CONVERT-TNEF_BUILD_DIR) DESTDIR=$(PERL-CONVERT-TNEF_IPK_DIR) install
-	find $(PERL-CONVERT-TNEF_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-CONVERT-TNEF_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-CONVERT-TNEF_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-CONVERT-TNEF_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-CONVERT-TNEF_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-CONVERT-TNEF_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-CONVERT-TNEF_IPK_DIR)/CONTROL/control
 	echo $(PERL-CONVERT-TNEF_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-CONVERT-TNEF_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-CONVERT-TNEF_IPK_DIR)

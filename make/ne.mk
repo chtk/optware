@@ -37,7 +37,7 @@ NE_CONFLICTS=
 
 #
 # NE_CONFFILES should be a list of user-editable files
-#NE_CONFFILES=/opt/etc/ne.conf /opt/etc/init.d/SXXne
+#NE_CONFFILES=$(OPTWARE_PREFIX)etc/ne.conf $(OPTWARE_PREFIX)etc/init.d/SXXne
 
 #
 # NE_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(NE_BUILD_DIR)/.configured: $(DL_DIR)/$(NE_SOURCE) $(NE_PATCHES) make/ne.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -186,27 +186,27 @@ $(NE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NE_IPK_DIR)/opt/sbin or $(NE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NE_IPK_DIR)/opt/etc/ne/...
-# Documentation files should be installed in $(NE_IPK_DIR)/opt/doc/ne/...
-# Daemon startup scripts should be installed in $(NE_IPK_DIR)/opt/etc/init.d/S??ne
+# Libraries and include files should be installed into $(NE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NE_IPK_DIR)$(OPTWARE_PREFIX)etc/ne/...
+# Documentation files should be installed in $(NE_IPK_DIR)$(OPTWARE_PREFIX)doc/ne/...
+# Daemon startup scripts should be installed in $(NE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ne
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NE_IPK): $(NE_BUILD_DIR)/.built
 	rm -rf $(NE_IPK_DIR) $(BUILD_DIR)/ne_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(NE_BUILD_DIR) DESTDIR=$(NE_IPK_DIR) install-strip
-	install -d $(NE_IPK_DIR)/opt/bin
-	install -m 755 $(NE_BUILD_DIR)/src/ne $(NE_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(NE_IPK_DIR)/opt/bin/ne
-	install -d $(NE_IPK_DIR)/opt/share/doc/ne
-	cp -rp $(NE_BUILD_DIR)/doc/* $(NE_IPK_DIR)/opt/share/doc/ne
-	install -d $(NE_IPK_DIR)/opt/share/man/man1
-	mv $(NE_IPK_DIR)/opt/share/doc/ne/*.1 $(NE_IPK_DIR)/opt/share/man/man1/
-	install -d $(NE_IPK_DIR)/opt/share/info
-	mv $(NE_IPK_DIR)/opt/share/doc/ne/*.info.gz $(NE_IPK_DIR)/opt/share/info/
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(NE_BUILD_DIR)/src/ne $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin/ne
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne
+	cp -rp $(NE_BUILD_DIR)/doc/* $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne/*.1 $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/info
+	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne/*.info.gz $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/info/
 	$(MAKE) $(NE_IPK_DIR)/CONTROL/control
 	echo $(NE_CONFFILES) | sed -e 's/ /\n/g' > $(NE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NE_IPK_DIR)

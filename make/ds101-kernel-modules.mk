@@ -29,7 +29,7 @@ DS101-KERNEL-MODULES_IPK_VERSION=3
 
 #
 # DS101-KERNEL-MODULES_CONFFILES should be a list of user-editable files
-#DS101-KERNEL-MODULES_CONFFILES=/opt/etc/ds101-kernel-modules.conf /opt/etc/init.d/SXXds101-kernel-modules
+#DS101-KERNEL-MODULES_CONFFILES=$(OPTWARE_PREFIX)etc/ds101-kernel-modules.conf $(OPTWARE_PREFIX)etc/init.d/SXXds101-kernel-modules
 
 #
 # DS101-KERNEL-MODULES_PATCHES should list any patches, in the the order in
@@ -161,8 +161,8 @@ $(DS101-KERNEL-MODULES_IPK_DIR)/CONTROL/control:
 	    echo "Conflicts: $(DS101-KERNEL-MODULES_CONFLICTS)"; \
 	  ) >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/control; \
 	  echo "#! /bin/sh" > $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/postinst ;\
-	  echo "echo running /opt/etc/init.d/S01mod_$$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/postinst ;\
-	  echo "/opt/etc/init.d/S01mod_$$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/postinst ;\
+	  echo "echo running $(OPTWARE_PREFIX)etc/init.d/S01mod_$$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/postinst ;\
+	  echo "$(OPTWARE_PREFIX)etc/init.d/S01mod_$$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/postinst ;\
 	  echo "#! /bin/sh" > $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/prerm ;\
 	  echo "echo trying rmmod $$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/prerm ;\
 	  echo "rmmod $$m" >> $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/CONTROL/prerm ;\
@@ -173,12 +173,12 @@ $(DS101-KERNEL-MODULES_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DS101-KERNEL-MODULES_IPK_DIR)/opt/sbin or $(DS101-KERNEL-MODULES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DS101-KERNEL-MODULES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)/opt/etc/ds101-kernel-modules/...
-# Documentation files should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)/opt/doc/ds101-kernel-modules/...
-# Daemon startup scripts should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)/opt/etc/init.d/S??ds101-kernel-modules
+# Libraries and include files should be installed into $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)etc/ds101-kernel-modules/...
+# Documentation files should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)doc/ds101-kernel-modules/...
+# Daemon startup scripts should be installed in $(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ds101-kernel-modules
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -186,16 +186,16 @@ $(DS101-KERNEL-MODULES_BUILD_DIR)/.ipkdone: $(DS101-KERNEL-MODULES_BUILD_DIR)/.b
 	rm -rf $(DS101-KERNEL-MODULES_IPK_DIR)* $(BUILD_DIR)/kernel-module_*_$(TARGET_ARCH).ipk
 	(cd $(DS101-KERNEL-MODULES_BUILD_DIR)/linux-2.4.x; \
 	  export ROOTDIR=$(DS101-KERNEL-MODULES_BUILD_DIR); \
-	  INSTALL_MOD_PATH=$(DS101-KERNEL-MODULES_IPK_DIR)/opt $(MAKE) modules_install \
+	  INSTALL_MOD_PATH=$(DS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)$(MAKE) modules_install \
 	)
 	rm -rf $(DS101-KERNEL-MODULES_IPK_DIR)/lib/modules/2.4.22-uc0/kernel/drivers/synobios
 	for m in $(DS101-KERNEL-MODULES); do \
-	  install -d $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/lib/modules; \
-	  install -m 644 `find $(DS101-KERNEL-MODULES_IPK_DIR) -name $$m.o` $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/lib/modules; \
-	  install -d $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/etc/init.d; \
+	  install -d $(DS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)lib/modules; \
+	  install -m 644 `find $(DS101-KERNEL-MODULES_IPK_DIR) -name $$m.o` $(DS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)lib/modules; \
+	  install -d $(DS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)etc/init.d; \
 	  if [ -f $(DS101-KERNEL-MODULES_SOURCE_DIR)/S01mod_$$m ] ; then \
-		install -m 755  $(DS101-KERNEL-MODULES_SOURCE_DIR)/S01mod_$$m $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/etc/init.d; \
-	  else 	install -m 755  $(DS101-KERNEL-MODULES_SOURCE_DIR)/S01mod_generic $(DS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/etc/init.d/S01mod_$$m; \
+		install -m 755  $(DS101-KERNEL-MODULES_SOURCE_DIR)/S01mod_$$m $(DS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)etc/init.d; \
+	  else 	install -m 755  $(DS101-KERNEL-MODULES_SOURCE_DIR)/S01mod_generic $(DS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)etc/init.d/S01mod_$$m; \
 	  fi;\
 	done
 	$(MAKE) $(DS101-KERNEL-MODULES_IPK_DIR)/CONTROL/control

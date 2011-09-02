@@ -41,9 +41,9 @@ $(PERL-FILE-RENAME_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-FILE-RENAME_SOURCE) 
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-file-rename-unpack: $(PERL-FILE-RENAME_BUILD_DIR)/.configured
 $(PERL-FILE-RENAME_BUILD_DIR)/.built: $(PERL-FILE-RENAME_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-file-rename: $(PERL-FILE-RENAME_BUILD_DIR)/.built
@@ -82,20 +82,20 @@ $(PERL-FILE-RENAME_IPK_DIR)/CONTROL/control:
 $(PERL-FILE-RENAME_IPK): $(PERL-FILE-RENAME_BUILD_DIR)/.built
 	rm -rf $(PERL-FILE-RENAME_IPK_DIR) $(BUILD_DIR)/perl-file-rename_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-FILE-RENAME_BUILD_DIR) DESTDIR=$(PERL-FILE-RENAME_IPK_DIR) install
-	find $(PERL-FILE-RENAME_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-FILE-RENAME_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-FILE-RENAME_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-FILE-RENAME_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-FILE-RENAME_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-FILE-RENAME_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-FILE-RENAME_IPK_DIR)/CONTROL/control
-	mv $(PERL-FILE-RENAME_IPK_DIR)/opt/bin/rename $(PERL-FILE-RENAME_IPK_DIR)/opt/bin/perl-file-rename
+	mv $(PERL-FILE-RENAME_IPK_DIR)$(OPTWARE_PREFIX)bin/rename $(PERL-FILE-RENAME_IPK_DIR)$(OPTWARE_PREFIX)bin/perl-file-rename
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install /opt/bin/rename rename /opt/bin/perl-file-rename 85"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/rename rename $(OPTWARE_PREFIX)bin/perl-file-rename 85"; \
 	) > $(PERL-FILE-RENAME_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove rename /opt/bin/perl-file-rename"; \
+	 echo "update-alternatives --remove rename $(OPTWARE_PREFIX)bin/perl-file-rename"; \
 	) > $(PERL-FILE-RENAME_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

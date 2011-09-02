@@ -42,7 +42,7 @@ PY-MX-BASE_IPK_VERSION=1
 
 #
 # PY-MX-BASE_CONFFILES should be a list of user-editable files
-#PY-MX-BASE_CONFFILES=/opt/etc/py-mx-base.conf /opt/etc/init.d/SXXpy-mx-base
+#PY-MX-BASE_CONFFILES=$(OPTWARE_PREFIX)etc/py-mx-base.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-mx-base
 
 #
 # PY-MX-BASE_PATCHES should list any patches, in the the order in
@@ -126,9 +126,9 @@ $(PY-MX-BASE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-MX-BASE_SOURCE) $(PY-MX-BASE
                 echo "[build_ext]"; \
                 echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
                 echo "library-dirs=$(STAGING_LIB_DIR)"; \
-                echo "rpath=/opt/lib"; \
+                echo "rpath=$(OPTWARE_PREFIX)lib"; \
                 echo "[build_scripts]"; \
-                echo "executable=/opt/bin/python2.4" \
+                echo "executable=$(OPTWARE_PREFIX)bin/python2.4" \
             ) >> setup.cfg; \
         )
 	# 2.5
@@ -141,9 +141,9 @@ $(PY-MX-BASE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-MX-BASE_SOURCE) $(PY-MX-BASE
                 echo "[build_ext]"; \
                 echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
                 echo "library-dirs=$(STAGING_LIB_DIR)"; \
-                echo "rpath=/opt/lib"; \
+                echo "rpath=$(OPTWARE_PREFIX)lib"; \
                 echo "[build_scripts]"; \
-                echo "executable=/opt/bin/python2.5" \
+                echo "executable=$(OPTWARE_PREFIX)bin/python2.5" \
             ) >> setup.cfg; \
         )
 	# 2.6
@@ -156,9 +156,9 @@ $(PY-MX-BASE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-MX-BASE_SOURCE) $(PY-MX-BASE
                 echo "[build_ext]"; \
                 echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
                 echo "library-dirs=$(STAGING_LIB_DIR)"; \
-                echo "rpath=/opt/lib"; \
+                echo "rpath=$(OPTWARE_PREFIX)lib"; \
                 echo "[build_scripts]"; \
-                echo "executable=/opt/bin/python2.6" \
+                echo "executable=$(OPTWARE_PREFIX)bin/python2.6" \
             ) >> setup.cfg; \
         )
 	touch $@
@@ -263,12 +263,12 @@ $(PY26-MX-BASE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-MX-BASE_IPK_DIR)/opt/sbin or $(PY-MX-BASE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-MX-BASE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-MX-BASE_IPK_DIR)/opt/etc/py-mx-base/...
-# Documentation files should be installed in $(PY-MX-BASE_IPK_DIR)/opt/doc/py-mx-base/...
-# Daemon startup scripts should be installed in $(PY-MX-BASE_IPK_DIR)/opt/etc/init.d/S??py-mx-base
+# Libraries and include files should be installed into $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX)etc/py-mx-base/...
+# Documentation files should be installed in $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX)doc/py-mx-base/...
+# Daemon startup scripts should be installed in $(PY-MX-BASE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-mx-base
 #
 # You may need to patch your application to make it use these locations.
 #

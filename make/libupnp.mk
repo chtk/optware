@@ -46,7 +46,7 @@ LIBUPNP_IPK_VERSION=1
 
 #
 # LIBUPNP_CONFFILES should be a list of user-editable files
-#LIBUPNP_CONFFILES=/opt/etc/libupnp.conf /opt/etc/init.d/SXXlibupnp
+#LIBUPNP_CONFFILES=$(OPTWARE_PREFIX)etc/libupnp.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibupnp
 
 #
 # LIBUPNP_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(LIBUPNP_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBUPNP_SOURCE) $(LIBUPNP_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -185,23 +185,23 @@ $(LIBUPNP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBUPNP_IPK_DIR)/opt/sbin or $(LIBUPNP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBUPNP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBUPNP_IPK_DIR)/opt/etc/libupnp/...
-# Documentation files should be installed in $(LIBUPNP_IPK_DIR)/opt/doc/libupnp/...
-# Daemon startup scripts should be installed in $(LIBUPNP_IPK_DIR)/opt/etc/init.d/S??libupnp
+# Libraries and include files should be installed into $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/libupnp/...
+# Documentation files should be installed in $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)doc/libupnp/...
+# Daemon startup scripts should be installed in $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libupnp
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBUPNP_IPK): $(LIBUPNP_BUILD_DIR)/.built
 	rm -rf $(LIBUPNP_IPK_DIR) $(BUILD_DIR)/libupnp_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBUPNP_BUILD_DIR) DESTDIR=$(LIBUPNP_IPK_DIR) install-strip
-	rm -f $(LIBUPNP_IPK_DIR)/opt/lib/*.la
-	install -d $(LIBUPNP_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBUPNP_SOURCE_DIR)/libupnp.conf $(LIBUPNP_IPK_DIR)/opt/etc/libupnp.conf
-#	install -d $(LIBUPNP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBUPNP_SOURCE_DIR)/rc.libupnp $(LIBUPNP_IPK_DIR)/opt/etc/init.d/SXXlibupnp
+	rm -f $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	install -d $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBUPNP_SOURCE_DIR)/libupnp.conf $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/libupnp.conf
+#	install -d $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBUPNP_SOURCE_DIR)/rc.libupnp $(LIBUPNP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibupnp
 	$(MAKE) $(LIBUPNP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBUPNP_SOURCE_DIR)/postinst $(LIBUPNP_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBUPNP_SOURCE_DIR)/prerm $(LIBUPNP_IPK_DIR)/CONTROL/prerm

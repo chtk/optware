@@ -40,7 +40,7 @@ PY-CHERRYTEMPLATE_IPK_VERSION=2
 
 #
 # PY-CHERRYTEMPLATE_CONFFILES should be a list of user-editable files
-#PY-CHERRYTEMPLATE_CONFFILES=/opt/etc/py-cherrytemplate.conf /opt/etc/init.d/SXXpy-cherrytemplate
+#PY-CHERRYTEMPLATE_CONFFILES=$(OPTWARE_PREFIX)etc/py-cherrytemplate.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-cherrytemplate
 
 #
 # PY-CHERRYTEMPLATE_PATCHES should list any patches, in the the order in
@@ -106,7 +106,7 @@ $(PY-CHERRYTEMPLATE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-CHERRYTEMPLATE_SOURCE
 	mv $(BUILD_DIR)/$(PY-CHERRYTEMPLATE_DIR) $(PY-CHERRYTEMPLATE_BUILD_DIR)
 	(cd $(PY-CHERRYTEMPLATE_BUILD_DIR); \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python") > setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python") > setup.cfg \
 	)
 	touch $(PY-CHERRYTEMPLATE_BUILD_DIR)/.configured
 
@@ -156,12 +156,12 @@ $(PY-CHERRYTEMPLATE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/sbin or $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/py-cherrytemplate/...
-# Documentation files should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/doc/py-cherrytemplate/...
-# Daemon startup scripts should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/init.d/S??py-cherrytemplate
+# Libraries and include files should be installed into $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/py-cherrytemplate/...
+# Documentation files should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)doc/py-cherrytemplate/...
+# Daemon startup scripts should be installed in $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-cherrytemplate
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -170,10 +170,10 @@ $(PY-CHERRYTEMPLATE_IPK): $(PY-CHERRYTEMPLATE_BUILD_DIR)/.built
 #	$(MAKE) -C $(PY-CHERRYTEMPLATE_BUILD_DIR) DESTDIR=$(PY-CHERRYTEMPLATE_IPK_DIR) install
 	(cd $(PY-CHERRYTEMPLATE_BUILD_DIR); \
 	python2.4 setup.py install --root=$(PY-CHERRYTEMPLATE_IPK_DIR) --prefix=/opt)
-#	install -d $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/
-#	install -m 644 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/py-cherrytemplate.conf $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/py-cherrytemplate.conf
-#	install -d $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/rc.py-cherrytemplate $(PY-CHERRYTEMPLATE_IPK_DIR)/opt/etc/init.d/SXXpy-cherrytemplate
+#	install -d $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/py-cherrytemplate.conf $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/py-cherrytemplate.conf
+#	install -d $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/rc.py-cherrytemplate $(PY-CHERRYTEMPLATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpy-cherrytemplate
 	$(MAKE) $(PY-CHERRYTEMPLATE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/postinst $(PY-CHERRYTEMPLATE_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(PY-CHERRYTEMPLATE_SOURCE_DIR)/prerm $(PY-CHERRYTEMPLATE_IPK_DIR)/CONTROL/prerm

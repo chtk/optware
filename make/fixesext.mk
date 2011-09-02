@@ -119,7 +119,7 @@ $(FIXESEXT_PATCHES) make/fixesext.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -153,12 +153,12 @@ fixesext-stage: $(FIXESEXT_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FIXESEXT_IPK_DIR)/opt/sbin or $(FIXESEXT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FIXESEXT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FIXESEXT_IPK_DIR)/opt/etc/fixesext/...
-# Documentation files should be installed in $(FIXESEXT_IPK_DIR)/opt/doc/fixesext/...
-# Daemon startup scripts should be installed in $(FIXESEXT_IPK_DIR)/opt/etc/init.d/S??fixesext
+# Libraries and include files should be installed into $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/fixesext/...
+# Documentation files should be installed in $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX)doc/fixesext/...
+# Daemon startup scripts should be installed in $(FIXESEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??fixesext
 #
 # You may need to patch your application to make it use these locations.
 #

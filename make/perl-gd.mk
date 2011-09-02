@@ -42,16 +42,16 @@ $(PERL-GD_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-GD_SOURCE) $(PERL-GD_PATCHES)
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
 			-options "JPEG,FT,PNG,GIF,ANIMGIF,FONTCONFIG" \
-			-lib_gd_path $(STAGING_DIR)/opt \
-			-lib_ft_path $(STAGING_DIR)/opt \
-			-lib_png_path  $(STAGING_DIR)/opt \
-			-lib_jpeg_path $(STAGING_DIR)/opt \
-		     	-lib_zlib_path $(STAGING_DIR)/opt \
+			-lib_gd_path $(STAGING_DIR)$(OPTWARE_PREFIX)\
+			-lib_ft_path $(STAGING_DIR)$(OPTWARE_PREFIX)\
+			-lib_png_path  $(STAGING_DIR)$(OPTWARE_PREFIX)\
+			-lib_jpeg_path $(STAGING_DIR)$(OPTWARE_PREFIX)\
+		     	-lib_zlib_path $(STAGING_DIR)$(OPTWARE_PREFIX)\
 			INC="$(STAGING_CPPFLAGS)" \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-GD_BUILD_DIR)/.configured
 
@@ -62,12 +62,12 @@ $(PERL-GD_BUILD_DIR)/.built: $(PERL-GD_BUILD_DIR)/.configured
 	$(MAKE) -C $(PERL-GD_BUILD_DIR) \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
-		LDDLFLAGS="-shared -L$(STAGING_LIB_DIR) -rpath /opt/lib -rpath-link $(STAGING_LIB_DIR)" \
+		LDDLFLAGS="-shared -L$(STAGING_LIB_DIR) -rpath $(OPTWARE_PREFIX)lib -rpath-link $(STAGING_LIB_DIR)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		LDLOADLIBS="`$(STAGING_PREFIX)/bin/gdlib-config --libs` -lgd" \
-		LD_RUN_PATH=/opt/lib \
+		LD_RUN_PATH=$(OPTWARE_PREFIX)lib \
 		$(PERL_INC) \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-GD_BUILD_DIR)/.built
 
 perl-gd: $(PERL-GD_BUILD_DIR)/.built
@@ -97,13 +97,13 @@ $(PERL-GD_IPK_DIR)/CONTROL/control:
 $(PERL-GD_IPK): $(PERL-GD_BUILD_DIR)/.built
 	rm -rf $(PERL-GD_IPK_DIR) $(BUILD_DIR)/perl-gd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-GD_BUILD_DIR) DESTDIR=$(PERL-GD_IPK_DIR) install
-	find $(PERL-GD_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-GD_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-GD_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-GD_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-GD_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-GD_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-GD_IPK_DIR)/CONTROL/control
 	echo $(PERL-GD_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-GD_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-GD_IPK_DIR)

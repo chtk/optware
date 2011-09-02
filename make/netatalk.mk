@@ -45,7 +45,7 @@ NETATALK_IPK_VERSION=2
 
 #
 # NETATALK_CONFFILES should be a list of user-editable files
-#NETATALK_CONFFILES=/opt/etc/netatalk.conf /opt/etc/init.d/SXXnetatalk
+#NETATALK_CONFFILES=$(OPTWARE_PREFIX)etc/netatalk.conf $(OPTWARE_PREFIX)etc/init.d/SXXnetatalk
 
 #
 # NETATALK_PATCHES should list any patches, in the the order in
@@ -142,7 +142,7 @@ $(NETATALK_BUILD_DIR)/.configured: $(DL_DIR)/$(NETATALK_SOURCE) $(NETATALK_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-bdb=$(STAGING_PREFIX) \
 		--with-libgcrypt-dir=$(STAGING_PREFIX) \
 		--with-ssl-dir=$(STAGING_PREFIX) \
@@ -210,28 +210,28 @@ $(NETATALK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NETATALK_IPK_DIR)/opt/sbin or $(NETATALK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NETATALK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NETATALK_IPK_DIR)/opt/etc/netatalk/...
-# Documentation files should be installed in $(NETATALK_IPK_DIR)/opt/doc/netatalk/...
-# Daemon startup scripts should be installed in $(NETATALK_IPK_DIR)/opt/etc/init.d/S??netatalk
+# Libraries and include files should be installed into $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/netatalk/...
+# Documentation files should be installed in $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)doc/netatalk/...
+# Daemon startup scripts should be installed in $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??netatalk
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NETATALK_IPK): $(NETATALK_BUILD_DIR)/.built
 	rm -rf $(NETATALK_IPK_DIR) $(BUILD_DIR)/netatalk_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NETATALK_BUILD_DIR) \
-		pamdir=/opt/etc/pam.d \
+		pamdir=$(OPTWARE_PREFIX)etc/pam.d \
 		DESTDIR=$(NETATALK_IPK_DIR) transform='' install-strip
-	rm -f $(NETATALK_IPK_DIR)/opt/lib/*.la \
-	      $(NETATALK_IPK_DIR)/opt/etc/netatalk/uams/*.la \
-	      $(NETATALK_IPK_DIR)/opt/lib/libatalk.a
-#	install -d $(NETATALK_IPK_DIR)/opt/etc/
-#	install -m 644 $(NETATALK_SOURCE_DIR)/netatalk.conf $(NETATALK_IPK_DIR)/opt/etc/netatalk.conf
-#	install -d $(NETATALK_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NETATALK_SOURCE_DIR)/rc.netatalk $(NETATALK_IPK_DIR)/opt/etc/init.d/SXXnetatalk
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETATALK_IPK_DIR)/opt/etc/init.d/SXXnetatalk
+	rm -f $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la \
+	      $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/netatalk/uams/*.la \
+	      $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)lib/libatalk.a
+#	install -d $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NETATALK_SOURCE_DIR)/netatalk.conf $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/netatalk.conf
+#	install -d $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NETATALK_SOURCE_DIR)/rc.netatalk $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnetatalk
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETATALK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnetatalk
 	$(MAKE) $(NETATALK_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NETATALK_SOURCE_DIR)/postinst $(NETATALK_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETATALK_IPK_DIR)/CONTROL/postinst

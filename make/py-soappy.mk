@@ -43,7 +43,7 @@ PY-SOAPPY_IPK_VERSION=3
 
 #
 # PY-SOAPPY_CONFFILES should be a list of user-editable files
-#PY-SOAPPY_CONFFILES=/opt/etc/py-soappy.conf /opt/etc/init.d/SXXpy-soappy
+#PY-SOAPPY_CONFFILES=$(OPTWARE_PREFIX)etc/py-soappy.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-soappy
 
 #
 # PY-SOAPPY_PATCHES should list any patches, in the the order in
@@ -116,7 +116,7 @@ $(PY-SOAPPY_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-SOAPPY_SOURCE) $(PY-SOAPPY_PA
 	cp $(PY-SOAPPY_BUILD_DIR)/$(PY-SOAPPY_FPCONST_DIR)/fpconst.py $(PY-SOAPPY_BUILD_DIR)/SOAPpy/
 	(cd $(PY-SOAPPY_BUILD_DIR); \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python") > setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python") > setup.cfg \
 	)
 	touch $(PY-SOAPPY_BUILD_DIR)/.configured
 
@@ -166,12 +166,12 @@ $(PY-SOAPPY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-SOAPPY_IPK_DIR)/opt/sbin or $(PY-SOAPPY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-SOAPPY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-SOAPPY_IPK_DIR)/opt/etc/py-soappy/...
-# Documentation files should be installed in $(PY-SOAPPY_IPK_DIR)/opt/doc/py-soappy/...
-# Daemon startup scripts should be installed in $(PY-SOAPPY_IPK_DIR)/opt/etc/init.d/S??py-soappy
+# Libraries and include files should be installed into $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)etc/py-soappy/...
+# Documentation files should be installed in $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)doc/py-soappy/...
+# Daemon startup scripts should be installed in $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-soappy
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -181,11 +181,11 @@ $(PY-SOAPPY_IPK): $(PY-SOAPPY_BUILD_DIR)/.built
 	(cd $(PY-SOAPPY_BUILD_DIR); \
 	python2.4 setup.py install --root=$(PY-SOAPPY_IPK_DIR) --prefix=/opt)
 	for d in bid contrib docs tests tools validate fpconst; do \
-		install -d $(PY-SOAPPY_IPK_DIR)/opt/share/doc/SOAPpy/$$d; \
-		install $(PY-SOAPPY_BUILD_DIR)/$$d*/* $(PY-SOAPPY_IPK_DIR)/opt/share/doc/SOAPpy/$$d; \
+		install -d $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)share/doc/SOAPpy/$$d; \
+		install $(PY-SOAPPY_BUILD_DIR)/$$d*/* $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)share/doc/SOAPpy/$$d; \
 	done
 	for f in LICENSE README RELEASE_INFO ChangeLog TODO; do \
-		install $(PY-SOAPPY_BUILD_DIR)/$$f $(PY-SOAPPY_IPK_DIR)/opt/share/doc/SOAPpy/; \
+		install $(PY-SOAPPY_BUILD_DIR)/$$f $(PY-SOAPPY_IPK_DIR)$(OPTWARE_PREFIX)share/doc/SOAPpy/; \
 	done
 	$(MAKE) $(PY-SOAPPY_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY-SOAPPY_IPK_DIR)

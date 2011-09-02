@@ -105,7 +105,7 @@ $(VBLADE_BUILD_DIR)/.configured: $(DL_DIR)/$(VBLADE_SOURCE) $(VBLADE_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -161,25 +161,25 @@ $(VBLADE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(VBLADE_IPK_DIR)/opt/sbin or $(VBLADE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(VBLADE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(VBLADE_IPK_DIR)/opt/etc/vblade/...
-# Documentation files should be installed in $(VBLADE_IPK_DIR)/opt/doc/vblade/...
-# Daemon startup scripts should be installed in $(VBLADE_IPK_DIR)/opt/etc/init.d/S??vblade
+# Libraries and include files should be installed into $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)etc/vblade/...
+# Documentation files should be installed in $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)doc/vblade/...
+# Daemon startup scripts should be installed in $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??vblade
 #
 # You may need to patch your application to make it use these locations.
 #
 $(VBLADE_IPK): $(VBLADE_BUILD_DIR)/.built
 	rm -rf $(VBLADE_IPK_DIR) $(BUILD_DIR)/vblade_*_$(TARGET_ARCH).ipk
-	mkdir -p $(VBLADE_IPK_DIR)/opt/sbin
-	install -m 755 $(VBLADE_BUILD_DIR)/vblade $(VBLADE_IPK_DIR)/opt/sbin
+	mkdir -p $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(VBLADE_BUILD_DIR)/vblade $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	$(MAKE) $(VBLADE_IPK_DIR)/CONTROL/control
-	$(STRIP_COMMAND) $(VBLADE_IPK_DIR)/opt/sbin/vblade
-	install -d $(VBLADE_IPK_DIR)/opt/share/man/man8
-	install -m644 $(VBLADE_BUILD_DIR)/vblade.8 $(VBLADE_IPK_DIR)/opt/share/man/man8
-	install -d $(VBLADE_IPK_DIR)/opt/share/doc/vblade
-	install -m644 $(VBLADE_BUILD_DIR)/[CNR]* $(VBLADE_IPK_DIR)/opt/share/doc/vblade
+	$(STRIP_COMMAND) $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)sbin/vblade
+	install -d $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
+	install -m644 $(VBLADE_BUILD_DIR)/vblade.8 $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
+	install -d $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/vblade
+	install -m644 $(VBLADE_BUILD_DIR)/[CNR]* $(VBLADE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/vblade
 	echo $(VBLADE_CONFFILES) | sed -e 's/ /\n/g' > $(VBLADE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(VBLADE_IPK_DIR)
 

@@ -40,7 +40,7 @@ TINYSCHEME_IPK_VERSION=1
 
 #
 # TINYSCHEME_CONFFILES should be a list of user-editable files
-#TINYSCHEME_CONFFILES=/opt/etc/tinyscheme.conf /opt/etc/init.d/SXXtinyscheme
+#TINYSCHEME_CONFFILES=$(OPTWARE_PREFIX)etc/tinyscheme.conf $(OPTWARE_PREFIX)etc/init.d/SXXtinyscheme
 
 #
 # TINYSCHEME_PATCHES should list any patches, in the the order in
@@ -120,7 +120,7 @@ $(TINYSCHEME_BUILD_DIR)/.configured: $(DL_DIR)/$(TINYSCHEME_SOURCE) $(TINYSCHEME
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -138,7 +138,7 @@ $(TINYSCHEME_BUILD_DIR)/.built: $(TINYSCHEME_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		LD=$(TARGET_CC) \
 		AR="$(TARGET_AR) crs" \
-		PLATFORM_FEATURES=-DInitFile=\\\"/opt/lib/tinyscheme/init.scm\\\" \
+		PLATFORM_FEATURES=-DInitFile=\\\"$(OPTWARE_PREFIX)lib/tinyscheme/init.scm\\\" \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(TINYSCHEME_CPPFLAGS)" \
 		LDFLAGS="-shared $(STAGING_LDFLAGS) $(TINYSCHEME_LDFLAGS)"
 	touch $(TINYSCHEME_BUILD_DIR)/.built
@@ -180,30 +180,30 @@ $(TINYSCHEME_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TINYSCHEME_IPK_DIR)/opt/sbin or $(TINYSCHEME_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TINYSCHEME_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TINYSCHEME_IPK_DIR)/opt/etc/tinyscheme/...
-# Documentation files should be installed in $(TINYSCHEME_IPK_DIR)/opt/doc/tinyscheme/...
-# Daemon startup scripts should be installed in $(TINYSCHEME_IPK_DIR)/opt/etc/init.d/S??tinyscheme
+# Libraries and include files should be installed into $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)etc/tinyscheme/...
+# Documentation files should be installed in $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)doc/tinyscheme/...
+# Daemon startup scripts should be installed in $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??tinyscheme
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TINYSCHEME_IPK): $(TINYSCHEME_BUILD_DIR)/.built
 	rm -rf $(TINYSCHEME_IPK_DIR) $(BUILD_DIR)/tinyscheme_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(TINYSCHEME_BUILD_DIR) DESTDIR=$(TINYSCHEME_IPK_DIR) install-strip
-	install -d $(TINYSCHEME_IPK_DIR)/opt/lib/tinyscheme/
-	install $(TINYSCHEME_BUILD_DIR)/libtinyscheme.so $(TINYSCHEME_IPK_DIR)/opt/lib/
-	install $(TINYSCHEME_BUILD_DIR)/init.scm $(TINYSCHEME_IPK_DIR)/opt/lib/tinyscheme/
-	install -d $(TINYSCHEME_IPK_DIR)/opt/bin/
-	install $(TINYSCHEME_BUILD_DIR)/scheme $(TINYSCHEME_IPK_DIR)/opt/bin/tinyscheme
-	install -d $(TINYSCHEME_IPK_DIR)/opt/share/doc/tinyscheme/
+	install -d $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)lib/tinyscheme/
+	install $(TINYSCHEME_BUILD_DIR)/libtinyscheme.so $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	install $(TINYSCHEME_BUILD_DIR)/init.scm $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)lib/tinyscheme/
+	install -d $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install $(TINYSCHEME_BUILD_DIR)/scheme $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)bin/tinyscheme
+	install -d $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)share/doc/tinyscheme/
 	for f in BUILDING CHANGES COPYING hack.txt Manual.txt MiniSCHEMETribute.txt; \
-		do install $(TINYSCHEME_BUILD_DIR)/$$f $(TINYSCHEME_IPK_DIR)/opt/share/doc/tinyscheme/; done
-	install -d $(TINYSCHEME_IPK_DIR)/opt/include/tinyscheme/
-	install $(TINYSCHEME_BUILD_DIR)/scheme.h $(TINYSCHEME_IPK_DIR)/opt/include/tinyscheme/
-	$(STRIP_COMMAND) $(TINYSCHEME_IPK_DIR)/opt/lib/libtinyscheme.so
-	$(STRIP_COMMAND) $(TINYSCHEME_IPK_DIR)/opt/bin/tinyscheme
+		do install $(TINYSCHEME_BUILD_DIR)/$$f $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)share/doc/tinyscheme/; done
+	install -d $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)include/tinyscheme/
+	install $(TINYSCHEME_BUILD_DIR)/scheme.h $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)include/tinyscheme/
+	$(STRIP_COMMAND) $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)lib/libtinyscheme.so
+	$(STRIP_COMMAND) $(TINYSCHEME_IPK_DIR)$(OPTWARE_PREFIX)bin/tinyscheme
 	$(MAKE) $(TINYSCHEME_IPK_DIR)/CONTROL/control
 	echo $(TINYSCHEME_CONFFILES) | sed -e 's/ /\n/g' > $(TINYSCHEME_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TINYSCHEME_IPK_DIR)

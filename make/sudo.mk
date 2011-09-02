@@ -19,7 +19,7 @@ SUDO_CONFLICTS=
 
 SUDO_IPK_VERSION?=1
 
-SUDO_CONFFILES=/opt/etc/sudoers
+SUDO_CONFFILES=$(OPTWARE_PREFIX)etc/sudoers
 
 #SUDO_PATCHES=
 
@@ -60,13 +60,13 @@ $(SUDO_BUILD_DIR)/.configured: $(DL_DIR)/$(SUDO_SOURCE) $(SUDO_PATCHES) make/sud
 			--host=$(GNU_TARGET_NAME) \
 			--target=$(GNU_TARGET_NAME) \
 			--build=$(GNU_HOST_NAME) \
-			--prefix=/opt \
+			--prefix=$(OPTWARE_PREFIX)\
 			--enable-authentication \
 			--without-pam \
 			--without-insults \
 			--with-editor=/bin/vi \
 			--with-env-editor \
-			--sysconfdir=/opt/etc
+			--sysconfdir=$(OPTWARE_PREFIX)etc
 	touch $@
 
 sudo-unpack: $(SUDO_BUILD_DIR)/.configured
@@ -101,16 +101,16 @@ $(SUDO_IPK): $(SUDO_BUILD_DIR)/.built
 	rm -rf $(SUDO_IPK_DIR) $(BUILD_DIR)/sudo_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SUDO_BUILD_DIR) DESTDIR=$(SUDO_IPK_DIR) install
 	$(STRIP_COMMAND) \
-	    $(SUDO_IPK_DIR)/opt/bin/sudo \
-	    $(SUDO_IPK_DIR)/opt/bin/sudoreplay \
-	    $(SUDO_IPK_DIR)/opt/libexec/sudo_noexec.so \
-	    $(SUDO_IPK_DIR)/opt/sbin/visudo
-	install -d $(SUDO_IPK_DIR)/opt/share/doc/sudo
+	    $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)bin/sudo \
+	    $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)bin/sudoreplay \
+	    $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)libexec/sudo_noexec.so \
+	    $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)sbin/visudo
+	install -d $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)share/doc/sudo
 ifeq ($(SUDO_VERSION),1.7.4.6)
-	install -m 644 $(<D)/sample.sudoers $(SUDO_IPK_DIR)/opt/share/doc/sudo/sample.sudoers
+	install -m 644 $(<D)/sample.sudoers $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)share/doc/sudo/sample.sudoers
 else
-	$(STRIP_COMMAND) $(SUDO_IPK_DIR)/opt/libexec/sudoers.so
-	install -m 644 $(<D)/doc/sample.sudoers $(SUDO_IPK_DIR)/opt/share/doc/sudo/sample.sudoers
+	$(STRIP_COMMAND) $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)libexec/sudoers.so
+	install -m 644 $(<D)/doc/sample.sudoers $(SUDO_IPK_DIR)$(OPTWARE_PREFIX)share/doc/sudo/sample.sudoers
 endif
 	$(MAKE) $(SUDO_IPK_DIR)/CONTROL/control
 	install -m 644 $(SUDO_SOURCE_DIR)/postinst $(SUDO_IPK_DIR)/CONTROL/postinst

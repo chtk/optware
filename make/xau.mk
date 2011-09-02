@@ -118,7 +118,7 @@ $(XAU_BUILD_DIR)/.configured: $(DL_DIR)/xau-$(XAU_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $(XAU_BUILD_DIR)/.configured
@@ -153,12 +153,12 @@ xau-stage: $(XAU_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XAU_IPK_DIR)/opt/sbin or $(XAU_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XAU_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XAU_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XAU_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XAU_IPK_DIR)/opt/etc/xau/...
-# Documentation files should be installed in $(XAU_IPK_DIR)/opt/doc/xau/...
-# Daemon startup scripts should be installed in $(XAU_IPK_DIR)/opt/etc/init.d/S??xau
+# Libraries and include files should be installed into $(XAU_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XAU_IPK_DIR)$(OPTWARE_PREFIX)etc/xau/...
+# Documentation files should be installed in $(XAU_IPK_DIR)$(OPTWARE_PREFIX)doc/xau/...
+# Daemon startup scripts should be installed in $(XAU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xau
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -166,7 +166,7 @@ $(XAU_IPK): $(XAU_BUILD_DIR)/.built
 	rm -rf $(XAU_IPK_DIR) $(BUILD_DIR)/xau_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XAU_BUILD_DIR) DESTDIR=$(XAU_IPK_DIR) install-strip
 	$(MAKE) $(XAU_IPK_DIR)/CONTROL/control
-	rm -f $(XAU_IPK_DIR)/opt/lib/*.la
+	rm -f $(XAU_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XAU_IPK_DIR)
 
 #

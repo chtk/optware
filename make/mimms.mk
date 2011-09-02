@@ -40,7 +40,7 @@ MIMMS_IPK_VERSION=2
 
 #
 # MIMMS_CONFFILES should be a list of user-editable files
-#MIMMS_CONFFILES=/opt/etc/mimms.conf /opt/etc/init.d/SXXmimms
+#MIMMS_CONFFILES=$(OPTWARE_PREFIX)etc/mimms.conf $(OPTWARE_PREFIX)etc/init.d/SXXmimms
 
 #
 # MIMMS_PATCHES should list any patches, in the the order in
@@ -115,7 +115,7 @@ $(MIMMS_BUILD_DIR)/.configured: $(DL_DIR)/$(MIMMS_SOURCE) $(MIMMS_PATCHES) make/
 	if test "$(BUILD_DIR)/$(MIMMS_DIR)" != "$(MIMMS_BUILD_DIR)" ; \
 		then mv $(BUILD_DIR)/$(MIMMS_DIR) $(MIMMS_BUILD_DIR) ; \
 	fi
-	sed -i -e 's|/usr/|/opt/|g' $(MIMMS_BUILD_DIR)/Makefile
+	sed -i -e 's|/usr/|$(OPTWARE_PREFIX)|g' $(MIMMS_BUILD_DIR)/Makefile
 #	(cd $(MIMMS_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(MIMMS_CPPFLAGS)" \
@@ -124,7 +124,7 @@ $(MIMMS_BUILD_DIR)/.configured: $(DL_DIR)/$(MIMMS_SOURCE) $(MIMMS_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -142,7 +142,7 @@ $(MIMMS_BUILD_DIR)/.built: $(MIMMS_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(MIMMS_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(MIMMS_LDFLAGS)" \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		;
 	touch $@
 
@@ -183,12 +183,12 @@ $(MIMMS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MIMMS_IPK_DIR)/opt/sbin or $(MIMMS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MIMMS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MIMMS_IPK_DIR)/opt/etc/mimms/...
-# Documentation files should be installed in $(MIMMS_IPK_DIR)/opt/doc/mimms/...
-# Daemon startup scripts should be installed in $(MIMMS_IPK_DIR)/opt/etc/init.d/S??mimms
+# Libraries and include files should be installed into $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)etc/mimms/...
+# Documentation files should be installed in $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)doc/mimms/...
+# Daemon startup scripts should be installed in $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mimms
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -198,7 +198,7 @@ $(MIMMS_IPK): $(MIMMS_BUILD_DIR)/.built
 	$(MAKE) -C $(MIMMS_BUILD_DIR) install \
 		DESTDIR=$(MIMMS_IPK_DIR) \
 		prefix=$(MIMMS_IPK_DIR)/opt
-	$(STRIP_COMMAND) $(MIMMS_IPK_DIR)/opt/bin/mimms
+	$(STRIP_COMMAND) $(MIMMS_IPK_DIR)$(OPTWARE_PREFIX)bin/mimms
 	$(MAKE) $(MIMMS_IPK_DIR)/CONTROL/control
 	echo $(MIMMS_CONFFILES) | sed -e 's/ /\n/g' > $(MIMMS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MIMMS_IPK_DIR)

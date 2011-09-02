@@ -110,12 +110,12 @@ $(QEMU_BUILD_DIR)/.configured: $(DL_DIR)/$(QEMU_SOURCE) $(QEMU_PATCHES)
 		--extra-ldflags="$(STAGING_LDFLAGS) $(QEMU_LDFLAGS)" \
 		--cpu=$(QEMU_CPU) \
 		--make="$(MAKE)" \
-		--prefix=/opt \
-		--interp-prefix=/opt/lib/gnemul/qemu-%M \
+		--prefix=$(OPTWARE_PREFIX)\
+		--interp-prefix=$(OPTWARE_PREFIX)lib/gnemul/qemu-%M \
 		--target-list="$(QEMU_TARGET_LIST)" \
 		--disable-gfx-check \
 	)
-	sed -i -e 's%/tmp/qemu.log%/opt/tmp/qemu.log%' $(QEMU_BUILD_DIR)/vl.c $(QEMU_BUILD_DIR)/exec.c $(QEMU_BUILD_DIR)/linux-user/main.c
+	sed -i -e 's%/tmp/qemu.log%$(OPTWARE_PREFIX)tmp/qemu.log%' $(QEMU_BUILD_DIR)/vl.c $(QEMU_BUILD_DIR)/exec.c $(QEMU_BUILD_DIR)/linux-user/main.c
 	echo "CONFIG_SDL=yes" >>$(QEMU_BUILD_DIR)/config-host.mak
 	echo "#define CONFIG_SDL 1" >>$(QEMU_BUILD_DIR)/config-host.h
 	touch $(QEMU_BUILD_DIR)/.configured
@@ -175,28 +175,28 @@ $(QEMU_USER_IPK_DIR)/CONTROL/control:
 $(QEMU_IPK) $(QEMU_USER_IPK): $(QEMU_BUILD_DIR)/.built
 	rm -rf $(QEMU_IPK_DIR) $(BUILD_DIR)/qemu_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(QEMU_BUILD_DIR) \
-		prefix=$(QEMU_IPK_DIR)/opt \
-		bindir=$(QEMU_IPK_DIR)/opt/bin \
-		mandir=$(QEMU_IPK_DIR)/opt/share/man \
-		datadir=$(QEMU_IPK_DIR)/opt/share/qemu \
-		docdir=$(QEMU_IPK_DIR)/opt/share/doc/qemu \
+		prefix=$(QEMU_IPK_DIR)$(OPTWARE_PREFIX)\
+		bindir=$(QEMU_IPK_DIR)$(OPTWARE_PREFIX)bin \
+		mandir=$(QEMU_IPK_DIR)$(OPTWARE_PREFIX)share/man \
+		datadir=$(QEMU_IPK_DIR)$(OPTWARE_PREFIX)share/qemu \
+		docdir=$(QEMU_IPK_DIR)$(OPTWARE_PREFIX)share/doc/qemu \
 		install
-	$(STRIP_COMMAND) $(QEMU_IPK_DIR)/opt/bin/*
-	mkdir $(QEMU_IPK_DIR)/opt/tmp
-	chmod a+rwxt $(QEMU_IPK_DIR)/opt/tmp
+	$(STRIP_COMMAND) $(QEMU_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	mkdir $(QEMU_IPK_DIR)$(OPTWARE_PREFIX)tmp
+	chmod a+rwxt $(QEMU_IPK_DIR)$(OPTWARE_PREFIX)tmp
 	$(MAKE) $(QEMU_IPK_DIR)/CONTROL/control
-	mkdir -p $(QEMU_USER_IPK_DIR)/opt/bin
-	mkdir -p $(QEMU_USER_IPK_DIR)/opt/etc/init.d
+	mkdir -p $(QEMU_USER_IPK_DIR)$(OPTWARE_PREFIX)bin
+	mkdir -p $(QEMU_USER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 	for F in $(QEMU_TARGET_LIST) ; \
-		do if test -r  $(QEMU_IPK_DIR)/opt/bin/qemu-$${F%-user} ; \
-		then mv $(QEMU_IPK_DIR)/opt/bin/qemu-$${F%-user} \
-			$(QEMU_USER_IPK_DIR)/opt/bin ; \
+		do if test -r  $(QEMU_IPK_DIR)$(OPTWARE_PREFIX)bin/qemu-$${F%-user} ; \
+		then mv $(QEMU_IPK_DIR)$(OPTWARE_PREFIX)bin/qemu-$${F%-user} \
+			$(QEMU_USER_IPK_DIR)$(OPTWARE_PREFIX)bin ; \
 		fi ; done
 	$(MAKE) $(QEMU_USER_IPK_DIR)/CONTROL/control
 	install -m 755 $(QEMU_SOURCE_DIR)/rc.qemu-user \
 		$(QEMU_USER_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(QEMU_SOURCE_DIR)/rc.qemu-user \
-		$(QEMU_USER_IPK_DIR)/opt/etc/init.d/S10qemu-user
+		$(QEMU_USER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S10qemu-user
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(QEMU_IPK_DIR)
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(QEMU_USER_IPK_DIR)
 

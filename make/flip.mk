@@ -41,7 +41,7 @@ FLIP_IPK_VERSION=1
 
 #
 # FLIP_CONFFILES should be a list of user-editable files
-#FLIP_CONFFILES=/opt/etc/flip.conf /opt/etc/init.d/SXXflip
+#FLIP_CONFFILES=$(OPTWARE_PREFIX)etc/flip.conf $(OPTWARE_PREFIX)etc/init.d/SXXflip
 
 #
 # FLIP_PATCHES should list any patches, in the the order in
@@ -168,27 +168,27 @@ $(FLIP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FLIP_IPK_DIR)/opt/sbin or $(FLIP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FLIP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FLIP_IPK_DIR)/opt/etc/flip/...
-# Documentation files should be installed in $(FLIP_IPK_DIR)/opt/doc/flip/...
-# Daemon startup scripts should be installed in $(FLIP_IPK_DIR)/opt/etc/init.d/S??flip
+# Libraries and include files should be installed into $(FLIP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/flip/...
+# Documentation files should be installed in $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)doc/flip/...
+# Daemon startup scripts should be installed in $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??flip
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FLIP_IPK): $(FLIP_BUILD_DIR)/.built
 	rm -rf $(FLIP_IPK_DIR) $(BUILD_DIR)/flip_*_$(TARGET_ARCH).ipk
-	install -d $(FLIP_IPK_DIR)/opt/bin/
-	install $(FLIP_BUILD_DIR)/flip $(FLIP_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(FLIP_IPK_DIR)/opt/bin/flip
-	install -d $(FLIP_IPK_DIR)/opt/share/doc/flip/
-	echo $(FLIP_SITE) > $(FLIP_IPK_DIR)/opt/share/doc/flip/url.txt
+	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install $(FLIP_BUILD_DIR)/flip $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/flip
+	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)share/doc/flip/
+	echo $(FLIP_SITE) > $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)share/doc/flip/url.txt
 #	$(MAKE) -C $(FLIP_BUILD_DIR) DESTDIR=$(FLIP_IPK_DIR) install-strip
-#	install -d $(FLIP_IPK_DIR)/opt/etc/
-#	install -m 644 $(FLIP_SOURCE_DIR)/flip.conf $(FLIP_IPK_DIR)/opt/etc/flip.conf
-#	install -d $(FLIP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(FLIP_SOURCE_DIR)/rc.flip $(FLIP_IPK_DIR)/opt/etc/init.d/SXXflip
+#	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(FLIP_SOURCE_DIR)/flip.conf $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/flip.conf
+#	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(FLIP_SOURCE_DIR)/rc.flip $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXflip
 	$(MAKE) $(FLIP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(FLIP_SOURCE_DIR)/postinst $(FLIP_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(FLIP_SOURCE_DIR)/prerm $(FLIP_IPK_DIR)/CONTROL/prerm

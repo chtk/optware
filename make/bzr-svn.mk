@@ -41,7 +41,7 @@ BZR-SVN_IPK_VERSION=1
 
 #
 # BZR-SVN_CONFFILES should be a list of user-editable files
-#BZR-SVN_CONFFILES=/opt/etc/bzr-svn.conf /opt/etc/init.d/SXXbzr-svn
+#BZR-SVN_CONFFILES=$(OPTWARE_PREFIX)etc/bzr-svn.conf $(OPTWARE_PREFIX)etc/init.d/SXXbzr-svn
 
 #
 # BZR-SVN_PATCHES should list any patches, in the the order in
@@ -120,11 +120,11 @@ $(BZR-SVN_BUILD_DIR)/.configured: $(DL_DIR)/$(BZR-SVN_SOURCE) $(BZR-SVN_PATCHES)
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	)
 	# 2.6
@@ -137,11 +137,11 @@ $(BZR-SVN_BUILD_DIR)/.configured: $(DL_DIR)/$(BZR-SVN_SOURCE) $(BZR-SVN_PATCHES)
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.6"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -213,12 +213,12 @@ $(PY26-BZR-SVN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BZR-SVN_IPK_DIR)/opt/sbin or $(BZR-SVN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BZR-SVN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BZR-SVN_IPK_DIR)/opt/etc/bzr-svn/...
-# Documentation files should be installed in $(BZR-SVN_IPK_DIR)/opt/doc/bzr-svn/...
-# Daemon startup scripts should be installed in $(BZR-SVN_IPK_DIR)/opt/etc/init.d/S??bzr-svn
+# Libraries and include files should be installed into $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)etc/bzr-svn/...
+# Documentation files should be installed in $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)doc/bzr-svn/...
+# Daemon startup scripts should be installed in $(BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bzr-svn
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -227,7 +227,7 @@ $(PY25-BZR-SVN_IPK): $(BZR-SVN_BUILD_DIR)/.built
 	(cd $(BZR-SVN_BUILD_DIR)/2.5; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-BZR-SVN_IPK_DIR) --prefix=/opt; \
 	)
-#	$(STRIP_COMMAND) $(PY25-BZR-SVN_IPK_DIR)/opt/lib/python2.5/site-packages/bzrlib/*.so
+#	$(STRIP_COMMAND) $(PY25-BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/bzrlib/*.so
 	$(MAKE) $(PY25-BZR-SVN_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-BZR-SVN_IPK_DIR)
 
@@ -236,7 +236,7 @@ $(PY26-BZR-SVN_IPK): $(BZR-SVN_BUILD_DIR)/.built
 	(cd $(BZR-SVN_BUILD_DIR)/2.6; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-BZR-SVN_IPK_DIR) --prefix=/opt; \
 	)
-#	$(STRIP_COMMAND) $(PY26-BZR-SVN_IPK_DIR)/opt/lib/python2.6/site-packages/bzrlib/*.so
+#	$(STRIP_COMMAND) $(PY26-BZR-SVN_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.6/site-packages/bzrlib/*.so
 	$(MAKE) $(PY26-BZR-SVN_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY26-BZR-SVN_IPK_DIR)
 

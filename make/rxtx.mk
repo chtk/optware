@@ -41,7 +41,7 @@ RXTX_IPK_VERSION=1
 
 #
 # RXTX_CONFFILES should be a list of user-editable files
-#RXTX_CONFFILES=/opt/etc/rxtx.conf /opt/etc/init.d/SXXrxtx
+#RXTX_CONFFILES=$(OPTWARE_PREFIX)etc/rxtx.conf $(OPTWARE_PREFIX)etc/init.d/SXXrxtx
 
 #
 # RXTX_PATCHES should list any patches, in the the order in
@@ -134,7 +134,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -188,29 +188,29 @@ $(RXTX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RXTX_IPK_DIR)/opt/sbin or $(RXTX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RXTX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RXTX_IPK_DIR)/opt/etc/rxtx/...
-# Documentation files should be installed in $(RXTX_IPK_DIR)/opt/doc/rxtx/...
-# Daemon startup scripts should be installed in $(RXTX_IPK_DIR)/opt/etc/init.d/S??rxtx
+# Libraries and include files should be installed into $(RXTX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/rxtx/...
+# Documentation files should be installed in $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)doc/rxtx/...
+# Daemon startup scripts should be installed in $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??rxtx
 #
 # You may need to patch your application to make it use these locations.
 #
 $(RXTX_IPK): $(RXTX_BUILD_DIR)/.built
 	rm -rf $(RXTX_IPK_DIR) $(BUILD_DIR)/rxtx_*_$(TARGET_ARCH).ipk
-	install -d $(RXTX_IPK_DIR)/opt/lib/java
+	install -d $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)lib/java
 	$(MAKE) -C $(RXTX_BUILD_DIR) install \
 		DESTDIR=$(RXTX_IPK_DIR) \
-		JHOME=$(RXTX_IPK_DIR)/opt/lib/java \
-		RXTX_PATH=$(RXTX_IPK_DIR)/opt/lib \
+		JHOME=$(RXTX_IPK_DIR)$(OPTWARE_PREFIX)lib/java \
+		RXTX_PATH=$(RXTX_IPK_DIR)$(OPTWARE_PREFIX)lib \
 		;
-	$(STRIP_COMMAND) $(RXTX_IPK_DIR)/opt/lib/*.so
-#	install -d $(RXTX_IPK_DIR)/opt/etc/
-#	install -m 644 $(RXTX_SOURCE_DIR)/rxtx.conf $(RXTX_IPK_DIR)/opt/etc/rxtx.conf
-#	install -d $(RXTX_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(RXTX_SOURCE_DIR)/rc.rxtx $(RXTX_IPK_DIR)/opt/etc/init.d/SXXrxtx
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(RXTX_IPK_DIR)/opt/etc/init.d/SXXrxtx
+	$(STRIP_COMMAND) $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
+#	install -d $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(RXTX_SOURCE_DIR)/rxtx.conf $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/rxtx.conf
+#	install -d $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(RXTX_SOURCE_DIR)/rc.rxtx $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXrxtx
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(RXTX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXrxtx
 	$(MAKE) $(RXTX_IPK_DIR)/CONTROL/control
 #	install -m 755 $(RXTX_SOURCE_DIR)/postinst $(RXTX_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(RXTX_IPK_DIR)/CONTROL/postinst

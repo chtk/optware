@@ -28,7 +28,7 @@ PHP_FCGI_IPK_VERSION=1
 #
 # PHP_FCGI_CONFFILES should be a list of user-editable files
 #
-PHP_FCGI_CONFFILES=/opt/etc/lighttpd/conf.d/10-php-fcgi.conf
+PHP_FCGI_CONFFILES=$(OPTWARE_PREFIX)etc/lighttpd/conf.d/10-php-fcgi.conf
 
 #
 # PHP_FCGI_LOCALES defines which locales get installed
@@ -141,7 +141,7 @@ $(PHP_FCGI_BUILD_DIR)/.configured: $(PHP_FCGI_PATCHES)
                 CFLAGS="$(STAGING_CPPFLAGS) $(PHP_FCGI_CPPFLAGS) $(STAGING_LDFLAGS) $(PHP_FCGI_LDFLAGS)" \
                 PATH="$(STAGING_DIR)/bin:$$PATH" \
                 PHP_FCGI_LIBXML_DIR=$(STAGING_PREFIX) \
-                EXTENSION_DIR=/opt/lib/php/extensions \
+                EXTENSION_DIR=$(OPTWARE_PREFIX)lib/php/extensions \
                 ac_cv_func_memcmp_working=yes \
                 cv_php_mbstring_stdarg=yes \
                 STAGING_PREFIX="$(STAGING_PREFIX)" \
@@ -150,8 +150,8 @@ $(PHP_FCGI_BUILD_DIR)/.configured: $(PHP_FCGI_PATCHES)
                 --build=$(GNU_HOST_NAME) \
                 --host=$(GNU_TARGET_NAME) \
                 --target=$(GNU_TARGET_NAME) \
-                --prefix=/opt \
-                --with-config-file-scan-dir=/opt/etc/php.d \
+                --prefix=$(OPTWARE_PREFIX)\
+                --with-config-file-scan-dir=$(OPTWARE_PREFIX)etc/php.d \
                 --with-layout=GNU \
                 --disable-static \
                 --enable-dba=shared \
@@ -228,22 +228,22 @@ php-fcgi-stage: $(PHP_FCGI_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PHP_FCGI_IPK_DIR)/opt/sbin or $(PHP_FCGI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PHP_FCGI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PHP_FCGI_IPK_DIR)/opt/etc/php/...
-# Documentation files should be installed in $(PHP_FCGI_IPK_DIR)/opt/doc/php/...
-# Daemon startup scripts should be installed in $(PHP_FCGI_IPK_DIR)/opt/etc/init.d/S??php
+# Libraries and include files should be installed into $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/php/...
+# Documentation files should be installed in $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)doc/php/...
+# Daemon startup scripts should be installed in $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??php
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PHP_FCGI_IPK): $(PHP_FCGI_BUILD_DIR)/.built
 	rm -rf $(PHP_FCGI_IPK_DIR) $(BUILD_DIR)/php-fcgi_*_$(TARGET_ARCH).ipk
-	install -d $(PHP_FCGI_IPK_DIR)/opt/bin
-	install -m 755 $(PHP_FCGI_BUILD_DIR)/sapi/cgi/php-cgi $(PHP_FCGI_IPK_DIR)/opt/bin/php-fcgi
-	$(STRIP_COMMAND) $(PHP_FCGI_IPK_DIR)/opt/bin/php-fcgi
-	install -d $(PHP_FCGI_IPK_DIR)/opt/etc/lighttpd/conf.d
-	install -m 644 $(PHP_FCGI_SOURCE_DIR)/php-fcgi-lighttpd.conf $(PHP_FCGI_IPK_DIR)/opt/etc/lighttpd/conf.d/10-php-fcgi.conf
+	install -d $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(PHP_FCGI_BUILD_DIR)/sapi/cgi/php-cgi $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)bin/php-fcgi
+	$(STRIP_COMMAND) $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)bin/php-fcgi
+	install -d $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/conf.d
+	install -m 644 $(PHP_FCGI_SOURCE_DIR)/php-fcgi-lighttpd.conf $(PHP_FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/conf.d/10-php-fcgi.conf
 	$(MAKE) $(PHP_FCGI_IPK_DIR)/CONTROL/control
 	echo $(PHP_FCGI_CONFFILES) | sed -e 's/ /\n/g' > $(PHP_FCGI_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PHP_FCGI_IPK_DIR)

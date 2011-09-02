@@ -35,7 +35,7 @@ VTE_LOCALES=
 
 #
 # VTE_CONFFILES should be a list of user-editable files
-#VTE_CONFFILES=/opt/etc/vte.conf /opt/etc/init.d/SXXvte
+#VTE_CONFFILES=$(OPTWARE_PREFIX)etc/vte.conf $(OPTWARE_PREFIX)etc/init.d/SXXvte
 
 #
 # VTE_PATCHES should list any patches, in the the order in
@@ -122,7 +122,7 @@ $(VTE_BUILD_DIR)/.configured: $(DL_DIR)/$(VTE_SOURCE) \
 	fi
 	(cd $(VTE_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
-		PATH="$(STAGING_DIR)/opt/bin:$$PATH" \
+		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$$PATH" \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(VTE_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(VTE_LDFLAGS)" \
 		PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
@@ -133,7 +133,7 @@ $(VTE_BUILD_DIR)/.configured: $(DL_DIR)/$(VTE_SOURCE) \
 		--target=$(GNU_TARGET_NAME) \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-gtk-doc \
 		--disable-static \
 		--disable-glibtest \
@@ -163,28 +163,28 @@ vte: $(VTE_BUILD_DIR)/.built
 #
 $(VTE_BUILD_DIR)/.staged: $(VTE_BUILD_DIR)/.built
 	$(MAKE) -C $(VTE_BUILD_DIR) install-strip prefix=$(STAGING_DIR)/opt
-	rm -rf $(STAGING_DIR)/opt/lib/libvte.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libvte.la
 
 vte-stage: $(VTE_BUILD_DIR)/.staged
 
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(VTE_IPK_DIR)/opt/sbin or $(VTE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(VTE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(VTE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(VTE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(VTE_IPK_DIR)/opt/etc/vte/...
-# Documentation files should be installed in $(VTE_IPK_DIR)/opt/doc/vte/...
-# Daemon startup scripts should be installed in $(VTE_IPK_DIR)/opt/etc/init.d/S??vte
+# Libraries and include files should be installed into $(VTE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(VTE_IPK_DIR)$(OPTWARE_PREFIX)etc/vte/...
+# Documentation files should be installed in $(VTE_IPK_DIR)$(OPTWARE_PREFIX)doc/vte/...
+# Daemon startup scripts should be installed in $(VTE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??vte
 #
 # You may need to patch your application to make it use these locations.
 #
 $(VTE_IPK): $(VTE_BUILD_DIR)/.built
 	rm -rf $(VTE_IPK_DIR) $(BUILD_DIR)/vte_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(VTE_BUILD_DIR) DESTDIR=$(VTE_IPK_DIR) install-strip
-	rm -f $(VTE_IPK_DIR)/opt/lib/*.la
-	rm -rf $(VTE_IPK_DIR)/opt/share/gtk-doc
-	install -d $(VTE_IPK_DIR)/opt/etc/init.d
+	rm -f $(VTE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -rf $(VTE_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
+	install -d $(VTE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 	$(MAKE) $(VTE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(VTE_IPK_DIR)
 

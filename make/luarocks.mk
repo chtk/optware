@@ -40,7 +40,7 @@ LUAROCKS_IPK_VERSION=1
 
 #
 # LUAROCKS_CONFFILES should be a list of user-editable files
-LUAROCKS_CONFFILES=/opt/etc/luarocks/config.lua
+LUAROCKS_CONFFILES=$(OPTWARE_PREFIX)etc/luarocks/config.lua
 
 #
 # LUAROCKS_PATCHES should list any patches, in the the order in
@@ -120,8 +120,8 @@ $(LUAROCKS_BUILD_DIR)/.configured: $(DL_DIR)/$(LUAROCKS_SOURCE) $(LUAROCKS_PATCH
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(LUAROCKS_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(LUAROCKS_LDFLAGS)" \
 		./configure \
-		--prefix=/opt \
-		--rocks-tree=/opt/local/lib/luarocks \
+		--prefix=$(OPTWARE_PREFIX)\
+		--rocks-tree=$(OPTWARE_PREFIX)local/lib/luarocks \
 		--with-lua=$(STAGING_PREFIX) \
 		--with-downloader=wget \
 		--with-md5-checker=md5sum \
@@ -136,9 +136,9 @@ luarocks-unpack: $(LUAROCKS_BUILD_DIR)/.configured
 $(LUAROCKS_BUILD_DIR)/.built: $(LUAROCKS_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		LUA_BINDIR=/opt/bin \
-		LUA_INCDIR=/opt/include \
-		LUA_LIBDIR=/opt/lib \
+		LUA_BINDIR=$(OPTWARE_PREFIX)bin \
+		LUA_INCDIR=$(OPTWARE_PREFIX)include \
+		LUA_LIBDIR=$(OPTWARE_PREFIX)lib \
 		LUAROCKS_UNAME_S=Linux \
 		LUAROCKS_UNAME_M=$(TARGET_ARCH) \
 		;
@@ -182,19 +182,19 @@ $(LUAROCKS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LUAROCKS_IPK_DIR)/opt/sbin or $(LUAROCKS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LUAROCKS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LUAROCKS_IPK_DIR)/opt/etc/luarocks/...
-# Documentation files should be installed in $(LUAROCKS_IPK_DIR)/opt/doc/luarocks/...
-# Daemon startup scripts should be installed in $(LUAROCKS_IPK_DIR)/opt/etc/init.d/S??luarocks
+# Libraries and include files should be installed into $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)etc/luarocks/...
+# Documentation files should be installed in $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)doc/luarocks/...
+# Daemon startup scripts should be installed in $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??luarocks
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LUAROCKS_IPK): $(LUAROCKS_BUILD_DIR)/.built
 	rm -rf $(LUAROCKS_IPK_DIR) $(BUILD_DIR)/luarocks_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LUAROCKS_BUILD_DIR) DESTDIR=$(LUAROCKS_IPK_DIR) install
-	install -d $(LUAROCKS_IPK_DIR)/opt/local/bin $(LUAROCKS_IPK_DIR)/opt/local/lib/luarocks
+	install -d $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)local/bin $(LUAROCKS_IPK_DIR)$(OPTWARE_PREFIX)local/lib/luarocks
 	$(MAKE) $(LUAROCKS_IPK_DIR)/CONTROL/control
 	echo $(LUAROCKS_CONFFILES) | sed -e 's/ /\n/g' > $(LUAROCKS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LUAROCKS_IPK_DIR)

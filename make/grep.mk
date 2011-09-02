@@ -56,7 +56,7 @@ $(GREP_BUILD_DIR)/.configured: $(DL_DIR)/$(GREP_SOURCE) make/grep.mk
 		./configure \
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_HOST_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(GREP_CONFIGURE_ARGS) \
 	);
 	sed -i -e '/^LIBS/s|-L/usr/lib||' $(@D)/src/Makefile
@@ -96,18 +96,18 @@ $(GREP_IPK): $(GREP_BUILD_DIR)/.built
 		top_distdir=$(GREP_IPK_DIR) \
 		DESTDIR=$(GREP_IPK_DIR) \
 		AM_MAKEFLAGS="DESTDIR=$(GREP_IPK_DIR)"
-	rm -f $(GREP_IPK_DIR)/opt/info/dir $(GREP_IPK_DIR)/opt/info/dir.old
-	$(STRIP_COMMAND) $(GREP_IPK_DIR)/opt/bin/grep
-	$(STRIP_COMMAND) $(GREP_IPK_DIR)/opt/bin/egrep $(GREP_IPK_DIR)/opt/bin/fgrep
+	rm -f $(GREP_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GREP_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	$(STRIP_COMMAND) $(GREP_IPK_DIR)$(OPTWARE_PREFIX)bin/grep
+	$(STRIP_COMMAND) $(GREP_IPK_DIR)$(OPTWARE_PREFIX)bin/egrep $(GREP_IPK_DIR)$(OPTWARE_PREFIX)bin/fgrep
 	$(MAKE) $(GREP_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(GREP_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(GREP_IPK_DIR)/CONTROL/prerm
-	cd $(GREP_IPK_DIR)/opt/bin; \
+	cd $(GREP_IPK_DIR)$(OPTWARE_PREFIX)bin; \
 	for f in grep egrep fgrep; do \
 	    mv $$f grep-$$f; \
-	    echo "update-alternatives --install /opt/bin/$$f $$f /opt/bin/grep-$$f 80" \
+	    echo "update-alternatives --install $(OPTWARE_PREFIX)bin/$$f $$f $(OPTWARE_PREFIX)bin/grep-$$f 80" \
 		>> $(GREP_IPK_DIR)/CONTROL/postinst; \
-	    echo "update-alternatives --remove $$f /opt/bin/grep-$$f" \
+	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)bin/grep-$$f" \
 		>> $(GREP_IPK_DIR)/CONTROL/prerm; \
 	done
 	if test -n "$(UPD-ALT_PREFIX)"; then \

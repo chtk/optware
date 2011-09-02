@@ -40,7 +40,7 @@ EXIF_IPK_VERSION=1
 
 #
 # EXIF_CONFFILES should be a list of user-editable files
-#EXIF_CONFFILES=/opt/etc/exif.conf /opt/etc/init.d/SXXexif
+#EXIF_CONFFILES=$(OPTWARE_PREFIX)etc/exif.conf $(OPTWARE_PREFIX)etc/init.d/SXXexif
 
 #
 # EXIF_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ $(EXIF_BUILD_DIR)/.configured: $(DL_DIR)/$(EXIF_SOURCE) $(EXIF_PATCHES) make/exi
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -182,23 +182,23 @@ $(EXIF_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(EXIF_IPK_DIR)/opt/sbin or $(EXIF_IPK_DIR)/opt/bin
+# Binaries should be installed into $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(EXIF_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(EXIF_IPK_DIR)/opt/etc/exif/...
-# Documentation files should be installed in $(EXIF_IPK_DIR)/opt/doc/exif/...
-# Daemon startup scripts should be installed in $(EXIF_IPK_DIR)/opt/etc/init.d/S??exif
+# Libraries and include files should be installed into $(EXIF_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/exif/...
+# Documentation files should be installed in $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)doc/exif/...
+# Daemon startup scripts should be installed in $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??exif
 #
 # You may need to patch your application to make it use these locations.
 #
 $(EXIF_IPK): $(EXIF_BUILD_DIR)/.built
 	rm -rf $(EXIF_IPK_DIR) $(BUILD_DIR)/exif_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(EXIF_BUILD_DIR) DESTDIR=$(EXIF_IPK_DIR) install-strip
-#	install -d $(EXIF_IPK_DIR)/opt/etc/
-#	install -m 644 $(EXIF_SOURCE_DIR)/exif.conf $(EXIF_IPK_DIR)/opt/etc/exif.conf
-#	install -d $(EXIF_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(EXIF_SOURCE_DIR)/rc.exif $(EXIF_IPK_DIR)/opt/etc/init.d/SXXexif
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(EXIF_IPK_DIR)/opt/etc/init.d/SXXexif
+#	install -d $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(EXIF_SOURCE_DIR)/exif.conf $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/exif.conf
+#	install -d $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(EXIF_SOURCE_DIR)/rc.exif $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXexif
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(EXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXexif
 	$(MAKE) $(EXIF_IPK_DIR)/CONTROL/control
 #	install -m 755 $(EXIF_SOURCE_DIR)/postinst $(EXIF_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(EXIF_IPK_DIR)/CONTROL/postinst

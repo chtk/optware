@@ -45,7 +45,7 @@ TIN_IPK_VERSION=1
 
 #
 # TIN_CONFFILES should be a list of user-editable files
-#TIN_CONFFILES=/opt/etc/tin.conf /opt/etc/init.d/SXXtin
+#TIN_CONFFILES=$(OPTWARE_PREFIX)etc/tin.conf $(OPTWARE_PREFIX)etc/init.d/SXXtin
 
 #
 # TIN_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(TIN_BUILD_DIR)/.configured: $(DL_DIR)/$(TIN_SOURCE) $(TIN_PATCHES)
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--with-build-cc=$(HOSTCC) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(TIN_BUILD_DIR)/.configured
@@ -171,22 +171,22 @@ $(TIN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TIN_IPK_DIR)/opt/sbin or $(TIN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TIN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TIN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TIN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TIN_IPK_DIR)/opt/etc/tin/...
-# Documentation files should be installed in $(TIN_IPK_DIR)/opt/doc/tin/...
-# Daemon startup scripts should be installed in $(TIN_IPK_DIR)/opt/etc/init.d/S??tin
+# Libraries and include files should be installed into $(TIN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/tin/...
+# Documentation files should be installed in $(TIN_IPK_DIR)$(OPTWARE_PREFIX)doc/tin/...
+# Daemon startup scripts should be installed in $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??tin
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TIN_IPK): $(TIN_BUILD_DIR)/.built
 	rm -rf $(TIN_IPK_DIR) $(BUILD_DIR)/tin_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TIN_BUILD_DIR) DESTDIR=$(TIN_IPK_DIR) STRIP="$(STRIP_COMMAND)" install
-	install -d $(TIN_IPK_DIR)/opt/etc/
-#	install -m 644 $(TIN_SOURCE_DIR)/tin.conf $(TIN_IPK_DIR)/opt/etc/tin.conf
-#	install -d $(TIN_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(TIN_SOURCE_DIR)/rc.tin $(TIN_IPK_DIR)/opt/etc/init.d/SXXtin
+	install -d $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(TIN_SOURCE_DIR)/tin.conf $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/tin.conf
+#	install -d $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(TIN_SOURCE_DIR)/rc.tin $(TIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtin
 	$(MAKE) $(TIN_IPK_DIR)/CONTROL/control
 #	install -m 755 $(TIN_SOURCE_DIR)/postinst $(TIN_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(TIN_SOURCE_DIR)/prerm $(TIN_IPK_DIR)/CONTROL/prerm

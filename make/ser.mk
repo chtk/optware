@@ -39,7 +39,7 @@ SER_IPK_VERSION=5
 
 #
 # SER_CONFFILES should be a list of user-editable files
-#SER_CONFFILES=/opt/etc/ser.conf /opt/etc/init.d/SXXser
+#SER_CONFFILES=$(OPTWARE_PREFIX)etc/ser.conf $(OPTWARE_PREFIX)etc/init.d/SXXser
 
 #
 # SER_PATCHES should list any patches, in the the order in
@@ -120,7 +120,7 @@ $(SER_BUILD_DIR)/.configured: $(DL_DIR)/$(SER_SOURCE) $(SER_PATCHES)
 #		--build=$(GNU_HOST_NAME) \
 #		--host=$(GNU_TARGET_NAME) \
 #		--target=$(GNU_TARGET_NAME) \
-#		--prefix=/opt \
+#		--prefix=$(OPTWARE_PREFIX)\
 #		--disable-nls \
 	)
 	touch $(SER_BUILD_DIR)/.configured
@@ -135,7 +135,7 @@ $(SER_BUILD_DIR)/.built: $(SER_BUILD_DIR)/.configured
 	CC_EXTRA_OPTS="$(STAGING_CPPFLAGS) $(SER_CPPFLAGS)" \
 	LD_EXTRA_OPTS="$(STAGING_LDFLAGS) $(SER_LDFLAGS)" \
 	CC="$(TARGET_CC)" \
-	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=/opt \
+	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=$(OPTWARE_PREFIX)\
 		$(SER_MAKEFLAGS) all
 	touch $(SER_BUILD_DIR)/.built
 
@@ -151,7 +151,7 @@ $(SER_BUILD_DIR)/.staged: $(SER_BUILD_DIR)/.built
 	rm -f $(SER_BUILD_DIR)/.staged
 	LD_EXTRA_OPTS="$(STAGING_LDFLAGS) $(SER_LDFLAGS)" \
 	CC="$(TARGET_CC)" \
-	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=/opt \
+	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=$(OPTWARE_PREFIX)\
 	BASEDIR=$(STAGING_DIR) \
 	LOCALBASE=$(STAGING_DIR) \
 		$(SER_MAKEFLAGS) install
@@ -181,12 +181,12 @@ $(SER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SER_IPK_DIR)/opt/sbin or $(SER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SER_IPK_DIR)/opt/etc/ser/...
-# Documentation files should be installed in $(SER_IPK_DIR)/opt/doc/ser/...
-# Daemon startup scripts should be installed in $(SER_IPK_DIR)/opt/etc/init.d/S??ser
+# Libraries and include files should be installed into $(SER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/ser/...
+# Documentation files should be installed in $(SER_IPK_DIR)$(OPTWARE_PREFIX)doc/ser/...
+# Daemon startup scripts should be installed in $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ser
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -194,15 +194,15 @@ $(SER_IPK): $(SER_BUILD_DIR)/.built
 	rm -rf $(SER_IPK_DIR) $(BUILD_DIR)/ser_*_${TARGET_ARCH}.ipk
 	LD_EXTRA_OPTS="$(STAGING_LDFLAGS) $(SER_LDFLAGS)" \
 	CC="$(TARGET_CC)" \
-	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=/opt \
+	$(MAKE) -C $(SER_BUILD_DIR) DESTDIR=$(OPTWARE_PREFIX)\
 		BASEDIR=$(SER_IPK_DIR) LOCALBASE=$(SER_IPK_DIR) \
 		$(SER_MAKEFLAGS) install
-	$(STRIP_COMMAND) $(SER_IPK_DIR)/opt/sbin/ser $(SER_IPK_DIR)/opt/sbin/gen_ha1
-	$(STRIP_COMMAND) $(SER_IPK_DIR)/opt/lib/ser/modules/*.so
-#	install -d $(SER_IPK_DIR)/opt/etc/
-#	install -m 644 $(SER_SOURCE_DIR)/ser.conf $(SER_IPK_DIR)/opt/etc/ser.conf
-#	install -d $(SER_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SER_SOURCE_DIR)/rc.ser $(SER_IPK_DIR)/opt/etc/init.d/SXXser
+	$(STRIP_COMMAND) $(SER_IPK_DIR)$(OPTWARE_PREFIX)sbin/ser $(SER_IPK_DIR)$(OPTWARE_PREFIX)sbin/gen_ha1
+	$(STRIP_COMMAND) $(SER_IPK_DIR)$(OPTWARE_PREFIX)lib/ser/modules/*.so
+#	install -d $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SER_SOURCE_DIR)/ser.conf $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/ser.conf
+#	install -d $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SER_SOURCE_DIR)/rc.ser $(SER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXser
 	$(MAKE) $(SER_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SER_SOURCE_DIR)/postinst $(SER_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(SER_SOURCE_DIR)/prerm $(SER_IPK_DIR)/CONTROL/prerm

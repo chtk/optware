@@ -86,7 +86,7 @@ $(CVS_BUILD_DIR)/.configured: $(DL_DIR)/$(CVS_SOURCE) $(CVS_PATCHES) make/cvs.mk
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_HOST_NAME) \
 		--without-gssapi \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	);
 	touch $@
 
@@ -137,20 +137,20 @@ $(CVS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CVS_IPK_DIR)/opt/sbin or $(CVS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CVS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CVS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CVS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CVS_IPK_DIR)/opt/etc/ushare/...
-# Documentation files should be installed in $(CVS_IPK_DIR)/opt/doc/ushare/...
-# Daemon startup scripts should be installed in $(CVS_IPK_DIR)/opt/etc/init.d/S??ushare
+# Libraries and include files should be installed into $(CVS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CVS_IPK_DIR)$(OPTWARE_PREFIX)etc/ushare/...
+# Documentation files should be installed in $(CVS_IPK_DIR)$(OPTWARE_PREFIX)doc/ushare/...
+# Daemon startup scripts should be installed in $(CVS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ushare
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CVS_IPK): $(CVS_BUILD_DIR)/.built
 	rm -rf $(CVS_IPK_DIR) $(BUILD_DIR)/ushare_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CVS_BUILD_DIR) DESTDIR=$(CVS_IPK_DIR) install-strip
-#	$(STRIP_COMMAND) $(CVS_BUILD_DIR)/src/cvs -o $(CVS_IPK_DIR)/opt/bin/cvs
-	install -d $(CVS_IPK_DIR)/opt/bin/
+#	$(STRIP_COMMAND) $(CVS_BUILD_DIR)/src/cvs -o $(CVS_IPK_DIR)$(OPTWARE_PREFIX)bin/cvs
+	install -d $(CVS_IPK_DIR)$(OPTWARE_PREFIX)bin/
 	$(MAKE) $(CVS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CVS_IPK_DIR)
 

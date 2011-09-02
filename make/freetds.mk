@@ -41,7 +41,7 @@ FREETDS_IPK_VERSION=4
 
 #
 # FREETDS_CONFFILES should be a list of user-editable files
-FREETDS_CONFFILES=/opt/etc/freetds/freetds.conf /opt/etc/freetds/locales.conf /opt/etc/freetds/pool.conf
+FREETDS_CONFFILES=$(OPTWARE_PREFIX)etc/freetds/freetds.conf $(OPTWARE_PREFIX)etc/freetds/locales.conf $(OPTWARE_PREFIX)etc/freetds/pool.conf
 
 #
 # FREETDS_PATCHES should list any patches, in the the order in
@@ -118,8 +118,8 @@ $(FREETDS_BUILD_DIR)/.configured: $(DL_DIR)/$(FREETDS_SOURCE) $(FREETDS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc/freetds \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc/freetds \
 		--enable-msdblib \
 		--enable-odbc \
 		--disable-nls \
@@ -182,23 +182,23 @@ $(FREETDS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FREETDS_IPK_DIR)/opt/sbin or $(FREETDS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FREETDS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FREETDS_IPK_DIR)/opt/etc/freetds/...
-# Documentation files should be installed in $(FREETDS_IPK_DIR)/opt/doc/freetds/...
-# Daemon startup scripts should be installed in $(FREETDS_IPK_DIR)/opt/etc/init.d/S??freetds
+# Libraries and include files should be installed into $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/freetds/...
+# Documentation files should be installed in $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)doc/freetds/...
+# Daemon startup scripts should be installed in $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??freetds
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FREETDS_IPK): $(FREETDS_BUILD_DIR)/.built
 	rm -rf $(FREETDS_IPK_DIR) $(BUILD_DIR)/freetds_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FREETDS_BUILD_DIR) DESTDIR=$(FREETDS_IPK_DIR) install-strip
-	rm -f $(FREETDS_IPK_DIR)/opt/lib/*.la
-#	install -d $(FREETDS_IPK_DIR)/opt/etc/
-#	install -m 644 $(FREETDS_SOURCE_DIR)/freetds.conf $(FREETDS_IPK_DIR)/opt/etc/freetds.conf
-#	install -d $(FREETDS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(FREETDS_SOURCE_DIR)/rc.freetds $(FREETDS_IPK_DIR)/opt/etc/init.d/SXXfreetds
+	rm -f $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+#	install -d $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(FREETDS_SOURCE_DIR)/freetds.conf $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/freetds.conf
+#	install -d $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(FREETDS_SOURCE_DIR)/rc.freetds $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfreetds
 	$(MAKE) $(FREETDS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(FREETDS_SOURCE_DIR)/postinst $(FREETDS_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(FREETDS_SOURCE_DIR)/prerm $(FREETDS_IPK_DIR)/CONTROL/prerm

@@ -40,7 +40,7 @@ DOSFSTOOLS_IPK_VERSION=1
 
 #
 # DOSFSTOOLS_CONFFILES should be a list of user-editable files
-#DOSFSTOOLS_CONFFILES=/opt/etc/dosfstools.conf /opt/etc/init.d/SXXdosfstools
+#DOSFSTOOLS_CONFFILES=$(OPTWARE_PREFIX)etc/dosfstools.conf $(OPTWARE_PREFIX)etc/init.d/SXXdosfstools
 
 #
 # DOSFSTOOLS_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(DOSFSTOOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) $(DOSFSTOOLS
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -157,8 +157,8 @@ dosfstools: $(DOSFSTOOLS_BUILD_DIR)/.built
 #	rm -f $@
 #	$(MAKE) -C $(@D) install \
 		DESTDIR=$(STAGING_DIR) \
-		PREFIX=/opt \
-		MANDIR=/opt/share/man/man8 \
+		PREFIX=$(OPTWARE_PREFIX)\
+		MANDIR=$(OPTWARE_PREFIX)share/man/man8 \
 		;
 #	touch $@
 #
@@ -186,12 +186,12 @@ $(DOSFSTOOLS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DOSFSTOOLS_IPK_DIR)/opt/sbin or $(DOSFSTOOLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DOSFSTOOLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DOSFSTOOLS_IPK_DIR)/opt/etc/dosfstools/...
-# Documentation files should be installed in $(DOSFSTOOLS_IPK_DIR)/opt/doc/dosfstools/...
-# Daemon startup scripts should be installed in $(DOSFSTOOLS_IPK_DIR)/opt/etc/init.d/S??dosfstools
+# Libraries and include files should be installed into $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/dosfstools/...
+# Documentation files should be installed in $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)doc/dosfstools/...
+# Daemon startup scripts should be installed in $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??dosfstools
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -199,10 +199,10 @@ $(DOSFSTOOLS_IPK): $(DOSFSTOOLS_BUILD_DIR)/.built
 	rm -rf $(DOSFSTOOLS_IPK_DIR) $(BUILD_DIR)/dosfstools_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DOSFSTOOLS_BUILD_DIR) install \
 		DESTDIR=$(DOSFSTOOLS_IPK_DIR) \
-		PREFIX=/opt \
-		MANDIR=/opt/share/man/man8 \
+		PREFIX=$(OPTWARE_PREFIX)\
+		MANDIR=$(OPTWARE_PREFIX)share/man/man8 \
 		;
-	$(STRIP_COMMAND) $(DOSFSTOOLS_IPK_DIR)/opt/sbin/dosfs* $(DOSFSTOOLS_IPK_DIR)/opt/sbin/mkdosfs
+	$(STRIP_COMMAND) $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin/dosfs* $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin/mkdosfs
 	$(MAKE) $(DOSFSTOOLS_IPK_DIR)/CONTROL/control
 	echo $(DOSFSTOOLS_CONFFILES) | sed -e 's/ /\n/g' > $(DOSFSTOOLS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DOSFSTOOLS_IPK_DIR)

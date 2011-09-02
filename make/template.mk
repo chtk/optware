@@ -46,7 +46,7 @@
 
 #
 # <FOO>_CONFFILES should be a list of user-editable files
-#<FOO>_CONFFILES=/opt/etc/<foo>.conf /opt/etc/init.d/SXX<foo>
+#<FOO>_CONFFILES=$(OPTWARE_PREFIX)etc/<foo>.conf $(OPTWARE_PREFIX)etc/init.d/SXX<foo>
 
 #
 # <FOO>_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(<FOO>_BUILD_DIR)/.configured: $(DL_DIR)/$(<FOO>_SOURCE) $(<FOO>_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -183,23 +183,23 @@ $(<FOO>_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(<FOO>_IPK_DIR)/opt/sbin or $(<FOO>_IPK_DIR)/opt/bin
+# Binaries should be installed into $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(<FOO>_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(<FOO>_IPK_DIR)/opt/etc/<foo>/...
-# Documentation files should be installed in $(<FOO>_IPK_DIR)/opt/doc/<foo>/...
-# Daemon startup scripts should be installed in $(<FOO>_IPK_DIR)/opt/etc/init.d/S??<foo>
+# Libraries and include files should be installed into $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/<foo>/...
+# Documentation files should be installed in $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)doc/<foo>/...
+# Daemon startup scripts should be installed in $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??<foo>
 #
 # You may need to patch your application to make it use these locations.
 #
 $(<FOO>_IPK): $(<FOO>_BUILD_DIR)/.built
 	rm -rf $(<FOO>_IPK_DIR) $(BUILD_DIR)/<foo>_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<FOO>_BUILD_DIR) DESTDIR=$(<FOO>_IPK_DIR) install-strip
-#	install -d $(<FOO>_IPK_DIR)/opt/etc/
-#	install -m 644 $(<FOO>_SOURCE_DIR)/<foo>.conf $(<FOO>_IPK_DIR)/opt/etc/<foo>.conf
-#	install -d $(<FOO>_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(<FOO>_SOURCE_DIR)/rc.<foo> $(<FOO>_IPK_DIR)/opt/etc/init.d/SXX<foo>
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(<FOO>_IPK_DIR)/opt/etc/init.d/SXX<foo>
+#	install -d $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(<FOO>_SOURCE_DIR)/<foo>.conf $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/<foo>.conf
+#	install -d $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(<FOO>_SOURCE_DIR)/rc.<foo> $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXX<foo>
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(<FOO>_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXX<foo>
 	$(MAKE) $(<FOO>_IPK_DIR)/CONTROL/control
 #	install -m 755 $(<FOO>_SOURCE_DIR)/postinst $(<FOO>_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(<FOO>_IPK_DIR)/CONTROL/postinst

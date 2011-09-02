@@ -107,13 +107,13 @@ $(ARC_IPK_DIR)/CONTROL/control:
 
 $(ARC_IPK): $(ARC_BUILD_DIR)/.built
 	rm -rf $(ARC_IPK_DIR) $(BUILD_DIR)/arc_*_$(TARGET_ARCH).ipk
-	install -d $(ARC_IPK_DIR)/opt/bin
-	install -m 755 $(ARC_BUILD_DIR)/arc $(ARC_IPK_DIR)/opt/bin
-	install -m 755 $(ARC_BUILD_DIR)/marc $(ARC_IPK_DIR)/opt/bin
-	install -d $(ARC_IPK_DIR)/opt/share/man/man1
-	install -m 644 $(ARC_BUILD_DIR)/arc.1 $(ARC_IPK_DIR)/opt/share/man/man1
-	$(STRIP_COMMAND) $(ARC_IPK_DIR)/opt/bin/arc
-	$(STRIP_COMMAND) $(ARC_IPK_DIR)/opt/bin/marc
+	install -d $(ARC_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(ARC_BUILD_DIR)/arc $(ARC_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(ARC_BUILD_DIR)/marc $(ARC_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(ARC_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	install -m 644 $(ARC_BUILD_DIR)/arc.1 $(ARC_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	$(STRIP_COMMAND) $(ARC_IPK_DIR)$(OPTWARE_PREFIX)bin/arc
+	$(STRIP_COMMAND) $(ARC_IPK_DIR)$(OPTWARE_PREFIX)bin/marc
 	$(MAKE) $(ARC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ARC_IPK_DIR)
 

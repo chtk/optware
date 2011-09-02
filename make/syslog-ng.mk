@@ -38,7 +38,7 @@ SYSLOG-NG_IPK_VERSION=2
 
 #
 # SYSLOG-NG_CONFFILES should be a list of user-editable files
-SYSLOG-NG_CONFFILES=/opt/etc/syslog-ng/syslog-ng.conf
+SYSLOG-NG_CONFFILES=$(OPTWARE_PREFIX)etc/syslog-ng/syslog-ng.conf
 
 #
 # SYSLOG-NG_PATCHES should list any patches, in the the order in
@@ -118,8 +118,8 @@ $(SYSLOG-NG_BUILD_DIR)/.configured: $(DL_DIR)/$(SYSLOG-NG_SOURCE) $(SYSLOG-NG_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc/syslog-ng \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc/syslog-ng \
 		--enable-dynamic-linking \
 		--disable-nls \
 		--disable-spoof-source \
@@ -172,26 +172,26 @@ $(SYSLOG-NG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SYSLOG-NG_IPK_DIR)/opt/sbin or $(SYSLOG-NG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SYSLOG-NG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SYSLOG-NG_IPK_DIR)/opt/etc/syslog-ng/...
-# Documentation files should be installed in $(SYSLOG-NG_IPK_DIR)/opt/doc/syslog-ng/...
-# Daemon startup scripts should be installed in $(SYSLOG-NG_IPK_DIR)/opt/etc/init.d/S??syslog-ng
+# Libraries and include files should be installed into $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/syslog-ng/...
+# Documentation files should be installed in $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)doc/syslog-ng/...
+# Daemon startup scripts should be installed in $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??syslog-ng
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SYSLOG-NG_IPK): $(SYSLOG-NG_BUILD_DIR)/.built
 	rm -rf $(SYSLOG-NG_IPK_DIR) $(BUILD_DIR)/syslog-ng_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SYSLOG-NG_BUILD_DIR) DESTDIR=$(SYSLOG-NG_IPK_DIR) install
-	$(STRIP_COMMAND) $(SYSLOG-NG_IPK_DIR)/opt/sbin/syslog-ng $(SYSLOG-NG_IPK_DIR)/opt/bin/loggen
-	install -d $(SYSLOG-NG_IPK_DIR)/opt/etc/syslog-ng
-	install -m 644 $(SYSLOG-NG_SOURCE_DIR)/syslog-ng.conf $(SYSLOG-NG_IPK_DIR)/opt/etc/syslog-ng
-	install -d $(SYSLOG-NG_IPK_DIR)/opt/doc/syslog-ng
-	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/README.optware $(SYSLOG-NG_IPK_DIR)/opt/doc/syslog-ng
-	install -d $(SYSLOG-NG_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/rc.syslog-ng $(SYSLOG-NG_IPK_DIR)/opt/etc/init.d/S01syslog-ng
-	install -d $(SYSLOG-NG_IPK_DIR)/opt/var/log
+	$(STRIP_COMMAND) $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)sbin/syslog-ng $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)bin/loggen
+	install -d $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/syslog-ng
+	install -m 644 $(SYSLOG-NG_SOURCE_DIR)/syslog-ng.conf $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/syslog-ng
+	install -d $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)doc/syslog-ng
+	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/README.optware $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)doc/syslog-ng
+	install -d $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/rc.syslog-ng $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S01syslog-ng
+	install -d $(SYSLOG-NG_IPK_DIR)$(OPTWARE_PREFIX)var/log
 	$(MAKE) $(SYSLOG-NG_IPK_DIR)/CONTROL/control
 	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/postinst $(SYSLOG-NG_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(SYSLOG-NG_SOURCE_DIR)/prerm $(SYSLOG-NG_IPK_DIR)/CONTROL/prerm

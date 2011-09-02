@@ -40,7 +40,7 @@ TOR_IPK_VERSION=1
 
 #
 # TOR_CONFFILES should be a list of user-editable files
-TOR_CONFFILES=/opt/etc/tor.conf /opt/etc/init.d/SXXtor
+TOR_CONFFILES=$(OPTWARE_PREFIX)etc/tor.conf $(OPTWARE_PREFIX)etc/init.d/SXXtor
 
 #
 # TOR_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(TOR_BUILD_DIR)/.configured: $(DL_DIR)/$(TOR_SOURCE) $(TOR_PATCHES) make/tor.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-libevent-dir=$(STAGING_PREFIX) \
@@ -185,22 +185,22 @@ $(TOR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TOR_IPK_DIR)/opt/sbin or $(TOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TOR_IPK_DIR)/opt/etc/tor/...
-# Documentation files should be installed in $(TOR_IPK_DIR)/opt/doc/tor/...
-# Daemon startup scripts should be installed in $(TOR_IPK_DIR)/opt/etc/init.d/S??tor
+# Libraries and include files should be installed into $(TOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TOR_IPK_DIR)$(OPTWARE_PREFIX)etc/tor/...
+# Documentation files should be installed in $(TOR_IPK_DIR)$(OPTWARE_PREFIX)doc/tor/...
+# Daemon startup scripts should be installed in $(TOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??tor
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TOR_IPK): $(TOR_BUILD_DIR)/.built
 	rm -rf $(TOR_IPK_DIR) $(BUILD_DIR)/tor_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TOR_BUILD_DIR) DESTDIR=$(TOR_IPK_DIR) install-strip
-#	install -m 644 $(TOR_SOURCE_DIR)/tor.conf $(TOR_IPK_DIR)/opt/etc/tor.conf
-#	install -d $(TOR_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(TOR_SOURCE_DIR)/rc.tor $(TOR_IPK_DIR)/opt/etc/init.d/SXXtor
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXtor
+#	install -m 644 $(TOR_SOURCE_DIR)/tor.conf $(TOR_IPK_DIR)$(OPTWARE_PREFIX)etc/tor.conf
+#	install -d $(TOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(TOR_SOURCE_DIR)/rc.tor $(TOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtor
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtor
 	$(MAKE) $(TOR_IPK_DIR)/CONTROL/control
 #	install -m 755 $(TOR_SOURCE_DIR)/postinst $(TOR_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

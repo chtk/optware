@@ -46,7 +46,7 @@ TSHARK_IPK_VERSION ?= 1
 
 #
 # TSHARK_CONFFILES should be a list of user-editable files
-#TSHARK_CONFFILES=/opt/etc/tshark.conf /opt/etc/init.d/SXXtshark
+#TSHARK_CONFFILES=$(OPTWARE_PREFIX)etc/tshark.conf $(OPTWARE_PREFIX)etc/init.d/SXXtshark
 
 #
 # TSHARK_PATCHES should list any patches, in the the order in
@@ -137,7 +137,7 @@ $(TSHARK_BUILD_DIR)/.configured: $(DL_DIR)/$(TSHARK_SOURCE) $(TSHARK_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-wireshark \
 		--with-glib-prefix=$(STAGING_PREFIX) \
 		--disable-gtk2 \
@@ -195,12 +195,12 @@ $(TSHARK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TSHARK_IPK_DIR)/opt/sbin or $(TSHARK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TSHARK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TSHARK_IPK_DIR)/opt/etc/wireshark/...
-# Documentation files should be installed in $(TSHARK_IPK_DIR)/opt/doc/wireshark/...
-# Daemon startup scripts should be installed in $(TSHARK_IPK_DIR)/opt/etc/init.d/S??wireshark
+# Libraries and include files should be installed into $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/wireshark/...
+# Documentation files should be installed in $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)doc/wireshark/...
+# Daemon startup scripts should be installed in $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??wireshark
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -210,16 +210,16 @@ $(TSHARK_IPK): $(TSHARK_BUILD_DIR)/.built
 		DESTDIR=$(TSHARK_IPK_DIR) \
 		program_transform_name="" \
 		install
-	rm -f $(TSHARK_IPK_DIR)/opt/lib/*.la
-	rm -f $(TSHARK_IPK_DIR)/opt/lib/wireshark/plugins/*/*.la
+	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/wireshark/plugins/*/*.la
 	$(STRIP_COMMAND) \
-		$(TSHARK_IPK_DIR)/opt/bin/[a-em-z]* \
-		$(TSHARK_IPK_DIR)/opt/lib/lib* \
-		$(TSHARK_IPK_DIR)/opt/lib/wireshark/plugins/*/*.so
-	install -d $(TSHARK_IPK_DIR)/opt/etc/
-#	install -m 644 $(TSHARK_SOURCE_DIR)/tshark.conf $(TSHARK_IPK_DIR)/opt/etc/tshark.conf
-#	install -d $(TSHARK_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(TSHARK_SOURCE_DIR)/rc.tshark $(TSHARK_IPK_DIR)/opt/etc/init.d/SXXtshark
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)bin/[a-em-z]* \
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/lib* \
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/wireshark/plugins/*/*.so
+	install -d $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(TSHARK_SOURCE_DIR)/tshark.conf $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/tshark.conf
+#	install -d $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(TSHARK_SOURCE_DIR)/rc.tshark $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtshark
 	$(MAKE) $(TSHARK_IPK_DIR)/CONTROL/control
 #	install -m 755 $(TSHARK_SOURCE_DIR)/postinst $(TSHARK_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(TSHARK_SOURCE_DIR)/prerm $(TSHARK_IPK_DIR)/CONTROL/prerm

@@ -41,7 +41,7 @@ LZMA_IPK_VERSION=1
 
 #
 # LZMA_CONFFILES should be a list of user-editable files
-#LZMA_CONFFILES=/opt/etc/lzma.conf /opt/etc/init.d/SXXlzma
+#LZMA_CONFFILES=$(OPTWARE_PREFIX)etc/lzma.conf $(OPTWARE_PREFIX)etc/init.d/SXXlzma
 
 #
 # LZMA_PATCHES should list any patches, in the the order in
@@ -143,23 +143,23 @@ $(LZMA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LZMA_IPK_DIR)/opt/sbin or $(LZMA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LZMA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LZMA_IPK_DIR)/opt/etc/lzma/...
-# Documentation files should be installed in $(LZMA_IPK_DIR)/opt/doc/lzma/...
-# Daemon startup scripts should be installed in $(LZMA_IPK_DIR)/opt/etc/init.d/S??lzma
+# Libraries and include files should be installed into $(LZMA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/lzma/...
+# Documentation files should be installed in $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)doc/lzma/...
+# Daemon startup scripts should be installed in $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??lzma
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LZMA_IPK): $(LZMA_BUILD_DIR)/.built
 	rm -rf $(LZMA_IPK_DIR) $(BUILD_DIR)/lzma_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LZMA_BUILD_DIR) DESTDIR=$(LZMA_IPK_DIR) install-strip
-#	install -d $(LZMA_IPK_DIR)/opt/etc/
-#	install -m 644 $(LZMA_SOURCE_DIR)/lzma.conf $(LZMA_IPK_DIR)/opt/etc/lzma.conf
-#	install -d $(LZMA_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LZMA_SOURCE_DIR)/rc.lzma $(LZMA_IPK_DIR)/opt/etc/init.d/SXXlzma
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LZMA_IPK_DIR)/opt/etc/init.d/SXXlzma
+#	install -d $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LZMA_SOURCE_DIR)/lzma.conf $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/lzma.conf
+#	install -d $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LZMA_SOURCE_DIR)/rc.lzma $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlzma
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LZMA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlzma
 	$(MAKE) $(LZMA_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LZMA_SOURCE_DIR)/postinst $(LZMA_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LZMA_IPK_DIR)/CONTROL/postinst

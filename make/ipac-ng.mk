@@ -25,10 +25,10 @@ IPAC-NG_IPK_VERSION=3
 #
 # IPAC-NG_CONFFILES should be a list of user-editable files
 IPAC-NG_CONFFILES= \
-	/opt/etc/ipac-ng/ipac.conf \
-	/opt/etc/ipac-ng/rules.conf \
-	/opt/etc/init.d/S25ipac-ng \
-	/opt/etc/cron.d/ipac-ng
+	$(OPTWARE_PREFIX)etc/ipac-ng/ipac.conf \
+	$(OPTWARE_PREFIX)etc/ipac-ng/rules.conf \
+	$(OPTWARE_PREFIX)etc/init.d/S25ipac-ng \
+	$(OPTWARE_PREFIX)etc/cron.d/ipac-ng
 
 #
 # IPAC-NG_PATCHES should list any patches, in the the order in
@@ -114,14 +114,14 @@ $(IPAC-NG_BUILD_DIR)/.configured: $(DL_DIR)/$(IPAC-NG_SOURCE) $(IPAC-NG_PATCHES)
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(IPAC-NG_CPPFLAGS)" \
 		CFLAGS="$(STAGING_CPPFLAGS) $(IPAC-NG_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(IPAC-NG_LDFLAGS)" \
-		ipac_datadir=/opt/var/lib/ipac \
-		RUNFILE=/opt/var/run/ipac.rules \
-		PIDFILE=/opt/var/run/ipac.pid \
-		RECONFLAG=/opt/var/lib/ipac/flag \
-		STATUSFILE=/opt/var/run/ipac.status \
-		LOCKFILE=/opt/var/lock/ipac.lck \
-		IPTABLES=/opt/sbin/iptables \
-		PERL=/opt/sbin/perl \
+		ipac_datadir=$(OPTWARE_PREFIX)var/lib/ipac \
+		RUNFILE=$(OPTWARE_PREFIX)var/run/ipac.rules \
+		PIDFILE=$(OPTWARE_PREFIX)var/run/ipac.pid \
+		RECONFLAG=$(OPTWARE_PREFIX)var/lib/ipac/flag \
+		STATUSFILE=$(OPTWARE_PREFIX)var/run/ipac.status \
+		LOCKFILE=$(OPTWARE_PREFIX)var/lock/ipac.lck \
+		IPTABLES=$(OPTWARE_PREFIX)sbin/iptables \
+		PERL=$(OPTWARE_PREFIX)sbin/perl \
 		ac_cv_lib_pq_PQexec=no \
 		ac_cv_lib_mysqlclient_mysql_query=no \
 		ac_cv_lib_sqlite_sqlite_get_table=no \
@@ -129,8 +129,8 @@ $(IPAC-NG_BUILD_DIR)/.configured: $(DL_DIR)/$(IPAC-NG_SOURCE) $(IPAC-NG_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-confdir=/opt/etc/ipac-ng \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-confdir=$(OPTWARE_PREFIX)etc/ipac-ng \
 		--enable-default-storage=gdbm \
 		--enable-default-agent=iptables \
 		--disable-nls \
@@ -177,26 +177,26 @@ $(IPAC-NG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IPAC-NG_IPK_DIR)/opt/sbin or $(IPAC-NG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IPAC-NG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IPAC-NG_IPK_DIR)/opt/etc/ipac-ng/...
-# Documentation files should be installed in $(IPAC-NG_IPK_DIR)/opt/doc/ipac-ng/...
-# Daemon startup scripts should be installed in $(IPAC-NG_IPK_DIR)/opt/etc/init.d/S??ipac-ng
+# Libraries and include files should be installed into $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/ipac-ng/...
+# Documentation files should be installed in $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)doc/ipac-ng/...
+# Daemon startup scripts should be installed in $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ipac-ng
 #
 # You may need to patch your application to make it use these locations.
 #
 $(IPAC-NG_IPK): $(IPAC-NG_BUILD_DIR)/.built
 	rm -rf $(IPAC-NG_IPK_DIR) $(BUILD_DIR)/ipac-ng_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IPAC-NG_BUILD_DIR) DESTDIR=$(IPAC-NG_IPK_DIR) doinstall
-	sed -i -e 's|^#!/usr/bin/perl|#!/opt/bin/perl|' $(IPAC-NG_IPK_DIR)/opt/sbin/ipacsum
-	install -d $(IPAC-NG_IPK_DIR)/opt/etc/ipac-ng
-	install -m 644 $(IPAC-NG_SOURCE_DIR)/ipac.conf $(IPAC-NG_IPK_DIR)/opt/etc/ipac-ng/
-	install -m 644 $(IPAC-NG_SOURCE_DIR)/rules.conf $(IPAC-NG_IPK_DIR)/opt/etc/ipac-ng/
-	install -d $(IPAC-NG_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(IPAC-NG_SOURCE_DIR)/init $(IPAC-NG_IPK_DIR)/opt/etc/init.d/S25ipac-ng
-	install -d $(IPAC-NG_IPK_DIR)/opt/etc/cron.d
-	install -m 600 $(IPAC-NG_SOURCE_DIR)/crontab $(IPAC-NG_IPK_DIR)/opt/etc/cron.d/ipac-ng
+	sed -i -e 's|^#!/usr/bin/perl|#!$(OPTWARE_PREFIX)bin/perl|' $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)sbin/ipacsum
+	install -d $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/ipac-ng
+	install -m 644 $(IPAC-NG_SOURCE_DIR)/ipac.conf $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/ipac-ng/
+	install -m 644 $(IPAC-NG_SOURCE_DIR)/rules.conf $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/ipac-ng/
+	install -d $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(IPAC-NG_SOURCE_DIR)/init $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S25ipac-ng
+	install -d $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/cron.d
+	install -m 600 $(IPAC-NG_SOURCE_DIR)/crontab $(IPAC-NG_IPK_DIR)$(OPTWARE_PREFIX)etc/cron.d/ipac-ng
 	$(MAKE) $(IPAC-NG_IPK_DIR)/CONTROL/control
 	install -m 755 $(IPAC-NG_SOURCE_DIR)/postinst $(IPAC-NG_IPK_DIR)/CONTROL/postinst
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(IPAC-NG_IPK_DIR)/CONTROL/postinst

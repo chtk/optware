@@ -45,7 +45,7 @@ UTIL_LINUX_NG_IPK_VERSION=2
 
 #
 # UTIL_LINUX_NG_CONFFILES should be a list of user-editable files
-#UTIL_LINUX_NG_CONFFILES=/opt/etc/util-linux-ng.conf /opt/etc/init.d/SXXutil-linux-ng
+#UTIL_LINUX_NG_CONFFILES=$(OPTWARE_PREFIX)etc/util-linux-ng.conf $(OPTWARE_PREFIX)etc/init.d/SXXutil-linux-ng
 
 #
 # UTIL_LINUX_NG_PATCHES should list any patches, in the the order in
@@ -147,7 +147,7 @@ $(UTIL_LINUX_NG_BUILD_DIR)/.configured: $(DL_DIR)/$(UTIL_LINUX_NG_SOURCE) $(UTIL
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(UTIL_LINUX_NG_CONFIG_ARGS) \
 		--disable-use-tty-group \
 		--disable-nls \
@@ -218,12 +218,12 @@ $(GETOPT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UTIL_LINUX_NG_IPK_DIR)/opt/sbin or $(UTIL_LINUX_NG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UTIL_LINUX_NG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UTIL_LINUX_NG_IPK_DIR)/opt/etc/util-linux-ng/...
-# Documentation files should be installed in $(UTIL_LINUX_NG_IPK_DIR)/opt/doc/util-linux-ng/...
-# Daemon startup scripts should be installed in $(UTIL_LINUX_NG_IPK_DIR)/opt/etc/init.d/S??util-linux-ng
+# Libraries and include files should be installed into $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)etc/util-linux-ng/...
+# Documentation files should be installed in $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)doc/util-linux-ng/...
+# Daemon startup scripts should be installed in $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??util-linux-ng
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -231,16 +231,16 @@ $(UTIL_LINUX_NG_IPK) $(GETOPT_IPK): $(UTIL_LINUX_NG_BUILD_DIR)/.built
 	rm -rf $(UTIL_LINUX_NG_IPK_DIR) $(BUILD_DIR)/util-linux-ng_*_$(TARGET_ARCH).ipk
 	rm -rf $(GETOPT_IPK_DIR) $(BUILD_DIR)/getopt_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(UTIL_LINUX_NG_BUILD_DIR) DESTDIR=$(UTIL_LINUX_NG_IPK_DIR) install-strip
-	rm -f $(UTIL_LINUX_NG_IPK_DIR)/opt/bin/linux32 $(UTIL_LINUX_NG_IPK_DIR)/opt/bin/linux64
-	rm -f $(UTIL_LINUX_NG_IPK_DIR)/opt/sbin/swapoff
+	rm -f $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)bin/linux32 $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)bin/linux64
+	rm -f $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)sbin/swapoff
 
-	mkdir -p $(GETOPT_IPK_DIR)/opt/bin/
-	mv $(UTIL_LINUX_NG_IPK_DIR)/opt/bin/getopt $(GETOPT_IPK_DIR)/opt/bin/
+	mkdir -p $(GETOPT_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	mv $(UTIL_LINUX_NG_IPK_DIR)$(OPTWARE_PREFIX)bin/getopt $(GETOPT_IPK_DIR)$(OPTWARE_PREFIX)bin/
 
 	$(MAKE) $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/prerm
-	for d in /opt/sbin /opt/bin /opt/share/man/man1 /opt/share/man/man5 /opt/share/man/man8; do \
+	for d in $(OPTWARE_PREFIX)sbin $(OPTWARE_PREFIX)bin $(OPTWARE_PREFIX)share/man/man1 $(OPTWARE_PREFIX)share/man/man5 $(OPTWARE_PREFIX)share/man/man8; do \
 	    cd $(UTIL_LINUX_NG_IPK_DIR)/$$d; \
 	    for f in *; do \
 		mv $$f util-linux-ng-$$f; \
@@ -250,9 +250,9 @@ $(UTIL_LINUX_NG_IPK) $(GETOPT_IPK): $(UTIL_LINUX_NG_BUILD_DIR)/.built
 			>> $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/prerm; \
 	    done; \
 	done
-	echo "update-alternatives --install /opt/sbin/swapoff swapoff /opt/sbin/util-linux-ng-swapon 85" \
+	echo "update-alternatives --install $(OPTWARE_PREFIX)sbin/swapoff swapoff $(OPTWARE_PREFIX)sbin/util-linux-ng-swapon 85" \
 		>> $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/postinst
-	echo "update-alternatives --remove swapoff /opt/sbin/util-linux-ng-swapon" \
+	echo "update-alternatives --remove swapoff $(OPTWARE_PREFIX)sbin/util-linux-ng-swapon" \
 		>> $(UTIL_LINUX_NG_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
@@ -263,7 +263,7 @@ $(UTIL_LINUX_NG_IPK) $(GETOPT_IPK): $(UTIL_LINUX_NG_BUILD_DIR)/.built
 	$(MAKE) $(GETOPT_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(GETOPT_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(GETOPT_IPK_DIR)/CONTROL/prerm
-	for d in /opt/bin; do \
+	for d in $(OPTWARE_PREFIX)bin; do \
 	    cd $(GETOPT_IPK_DIR)/$$d; \
 	    for f in *; do \
 		mv $$f getopt-$$f; \

@@ -47,7 +47,7 @@ LIBTORRENT-RASTERBAR_IPK_VERSION=1
 
 #
 # LIBTORRENT-RASTERBAR_CONFFILES should be a list of user-editable files
-#LIBTORRENT-RASTERBAR_CONFFILES=/opt/etc/libtorrent-rasterbar.conf /opt/etc/init.d/SXXlibtorrent-rasterbar
+#LIBTORRENT-RASTERBAR_CONFFILES=$(OPTWARE_PREFIX)etc/libtorrent-rasterbar.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibtorrent-rasterbar
 
 #
 # LIBTORRENT-RASTERBAR_PATCHES should list any patches, in the the order in
@@ -129,13 +129,13 @@ $(LIBTORRENT-RASTERBAR_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBTORRENT-RASTERBAR_
 	fi
 	sed -i -e "s|/usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr|$(STAGING_DIR)/opt|" $(@D)/m4/check_ssl.m4
 	sed -i -e "s|/usr/local/ssl\n                            /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /usr|$(STAGING_DIR)/opt|" $(@D)/m4/check_ssl.m4
-	sed -i -e "s|/usr /usr/local /opt /opt/local|$(STAGING_DIR)/opt|" $(@D)/m4/ax_boost_base-fixed.m4
-	sed -i -e "s|/usr/include|$(STAGING_DIR)/opt/include|" $(@D)/m4/ax_boost_python-fixed.m4
+	sed -i -e "s|/usr /usr/local $(OPTWARE_PREFIX)$(OPTWARE_PREFIX)local|$(STAGING_DIR)/opt|" $(@D)/m4/ax_boost_base-fixed.m4
+	sed -i -e "s|/usr/include|$(STAGING_DIR)$(OPTWARE_PREFIX)include|" $(@D)/m4/ax_boost_python-fixed.m4
 	sed -i -e "s|namespace libtorrent|#ifndef IPV6_V6ONLY\n#  define IPV6_V6ONLY 26\n#endif\n\nnamespace libtorrent|" $(@D)/include/libtorrent/socket.hpp
 	sed -i -e "s|namespace libtorrent { namespace|#ifndef IPV6_V6ONLY\n#  define IPV6_V6ONLY 26\n#endif\n\nnamespace libtorrent { namespace|" $(@D)/src/enum_net.cpp
 	sed -i -e "s/#include <vector>/#include <vector>\n#include <list>/" $(@D)/include/libtorrent/udp_socket.hpp
 	autoreconf -vif $(@D)
-	sed -i -e "s|/usr/include|$(STAGING_DIR)/opt/include|" $(@D)/configure
+	sed -i -e "s|/usr/include|$(STAGING_DIR)$(OPTWARE_PREFIX)include|" $(@D)/configure
 	echo $(LIBTORRENT-RASTERBAR_LIBTOOL_CONFI)
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
@@ -147,7 +147,7 @@ $(LIBTORRENT-RASTERBAR_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBTORRENT-RASTERBAR_
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--with-ssl \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--disable-debug \
@@ -210,23 +210,23 @@ $(LIBTORRENT-RASTERBAR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/sbin or $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/libtorrent-rasterbar/...
-# Documentation files should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/doc/libtorrent-rasterbar/...
-# Daemon startup scripts should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/init.d/S??libtorrent-rasterbar
+# Libraries and include files should be installed into $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/libtorrent-rasterbar/...
+# Documentation files should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)doc/libtorrent-rasterbar/...
+# Daemon startup scripts should be installed in $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libtorrent-rasterbar
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBTORRENT-RASTERBAR_IPK): $(LIBTORRENT-RASTERBAR_BUILD_DIR)/.built
 	rm -rf $(LIBTORRENT-RASTERBAR_IPK_DIR) $(BUILD_DIR)/libtorrent-rasterbar_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBTORRENT-RASTERBAR_BUILD_DIR) DESTDIR=$(LIBTORRENT-RASTERBAR_IPK_DIR) install-strip
-#	install -d $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBTORRENT-RASTERBAR_SOURCE_DIR)/libtorrent-rasterbar.conf $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/libtorrent-rasterbar.conf
-#	install -d $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBTORRENT-RASTERBAR_SOURCE_DIR)/rc.libtorrent-rasterbar $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/init.d/SXXlibtorrent-rasterbar
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBTORRENT-RASTERBAR_IPK_DIR)/opt/etc/init.d/SXXlibtorrent-rasterbar
+#	install -d $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBTORRENT-RASTERBAR_SOURCE_DIR)/libtorrent-rasterbar.conf $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/libtorrent-rasterbar.conf
+#	install -d $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBTORRENT-RASTERBAR_SOURCE_DIR)/rc.libtorrent-rasterbar $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibtorrent-rasterbar
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBTORRENT-RASTERBAR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibtorrent-rasterbar
 	$(MAKE) $(LIBTORRENT-RASTERBAR_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBTORRENT-RASTERBAR_SOURCE_DIR)/postinst $(LIBTORRENT-RASTERBAR_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBTORRENT-RASTERBAR_IPK_DIR)/CONTROL/postinst

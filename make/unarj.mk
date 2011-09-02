@@ -117,9 +117,9 @@ $(UNARJ_IPK_DIR)/CONTROL/control:
 
 $(UNARJ_IPK): $(UNARJ_BUILD_DIR)/.built
 	rm -rf $(UNARJ_IPK_DIR) $(BUILD_DIR)/unarj_*_$(TARGET_ARCH).ipk
-	install -d $(UNARJ_IPK_DIR)/opt/bin
-	install -m 755 $(UNARJ_BUILD_DIR)/unarj $(UNARJ_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(UNARJ_IPK_DIR)/opt/bin/unarj
+	install -d $(UNARJ_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(UNARJ_BUILD_DIR)/unarj $(UNARJ_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(UNARJ_IPK_DIR)$(OPTWARE_PREFIX)bin/unarj
 	$(MAKE) $(UNARJ_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(UNARJ_IPK_DIR)
 

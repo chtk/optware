@@ -39,9 +39,9 @@ STUNNEL_IPK_VERSION=2
 #
 # STUNNEL_CONFFILES should be a list of user-editable files
 #
-STUNNEL_CONFFILES=/opt/etc/stunnel/stunnel.conf \
-		  /opt/etc/stunnel/stunnel-cert.cnf \
-		  /opt/etc/init.d/S68stunnel
+STUNNEL_CONFFILES=$(OPTWARE_PREFIX)etc/stunnel/stunnel.conf \
+		  $(OPTWARE_PREFIX)etc/stunnel/stunnel-cert.cnf \
+		  $(OPTWARE_PREFIX)etc/init.d/S68stunnel
 
 #
 # STUNNEL_PATCHES should list any patches, in the the order in
@@ -120,8 +120,8 @@ $(STUNNEL_BUILD_DIR)/.configured: $(DL_DIR)/$(STUNNEL_SOURCE) $(STUNNEL_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-ssl=$(STAGING_DIR)/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-ssl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -147,13 +147,13 @@ stunnel: $(STUNNEL_BUILD_DIR)/.built
 #
 $(STUNNEL_BUILD_DIR)/.staged: $(STUNNEL_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(@D)/stunnel.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(@D)/libstunnel.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(@D)/libstunnel.so.$(STUNNEL_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libstunnel.so.$(STUNNEL_VERSION) libstunnel.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libstunnel.so.$(STUNNEL_VERSION) libstunnel.so
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(@D)/stunnel.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(@D)/libstunnel.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(@D)/libstunnel.so.$(STUNNEL_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libstunnel.so.$(STUNNEL_VERSION) libstunnel.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libstunnel.so.$(STUNNEL_VERSION) libstunnel.so
 	touch $@
 
 stunnel-stage: $(STUNNEL_BUILD_DIR)/.staged
@@ -179,27 +179,27 @@ $(STUNNEL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(STUNNEL_IPK_DIR)/opt/sbin or $(STUNNEL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(STUNNEL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(STUNNEL_IPK_DIR)/opt/etc/stunnel/...
-# Documentation files should be installed in $(STUNNEL_IPK_DIR)/opt/doc/stunnel/...
-# Daemon startup scripts should be installed in $(STUNNEL_IPK_DIR)/opt/etc/init.d/S??stunnel
+# Libraries and include files should be installed into $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/stunnel/...
+# Documentation files should be installed in $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)doc/stunnel/...
+# Daemon startup scripts should be installed in $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??stunnel
 #
 # You may need to patch your application to make it use these locations.
 #
 $(STUNNEL_IPK): $(STUNNEL_BUILD_DIR)/.built
 	rm -rf $(STUNNEL_IPK_DIR) $(BUILD_DIR)/stunnel_*_$(TARGET_ARCH).ipk
-	install -d $(STUNNEL_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(STUNNEL_BUILD_DIR)/src/stunnel -o $(STUNNEL_IPK_DIR)/opt/sbin/stunnel
-	install -d $(STUNNEL_IPK_DIR)/opt/lib
-	$(STRIP_COMMAND) $(STUNNEL_BUILD_DIR)/src/.libs/libstunnel.so -o $(STUNNEL_IPK_DIR)/opt/lib/libstunnel.so
-	install -d $(STUNNEL_IPK_DIR)/opt/var/stunnel
-	install -d $(STUNNEL_IPK_DIR)/opt/etc/stunnel
-	install -m 644 $(STUNNEL_BUILD_DIR)/tools/stunnel.cnf $(STUNNEL_IPK_DIR)/opt/etc/stunnel/stunnel-cert.cnf
-	install -m 644 $(STUNNEL_SOURCE_DIR)/stunnel.conf $(STUNNEL_IPK_DIR)/opt/etc/stunnel/stunnel.conf
-	install -d $(STUNNEL_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(STUNNEL_SOURCE_DIR)/rc.stunnel $(STUNNEL_IPK_DIR)/opt/etc/init.d/S68stunnel
+	install -d $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(STUNNEL_BUILD_DIR)/src/stunnel -o $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)sbin/stunnel
+	install -d $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)lib
+	$(STRIP_COMMAND) $(STUNNEL_BUILD_DIR)/src/.libs/libstunnel.so -o $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)lib/libstunnel.so
+	install -d $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)var/stunnel
+	install -d $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/stunnel
+	install -m 644 $(STUNNEL_BUILD_DIR)/tools/stunnel.cnf $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/stunnel/stunnel-cert.cnf
+	install -m 644 $(STUNNEL_SOURCE_DIR)/stunnel.conf $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/stunnel/stunnel.conf
+	install -d $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(STUNNEL_SOURCE_DIR)/rc.stunnel $(STUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S68stunnel
 	$(MAKE) $(STUNNEL_IPK_DIR)/CONTROL/control
 	install -m 644 $(STUNNEL_SOURCE_DIR)/postinst $(STUNNEL_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(STUNNEL_SOURCE_DIR)/prerm $(STUNNEL_IPK_DIR)/CONTROL/prerm

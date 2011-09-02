@@ -18,7 +18,7 @@ XZ_UTILS_CONFLICTS=
 
 XZ_UTILS_IPK_VERSION=1
 
-#XZ_UTILS_CONFFILES=/opt/etc/xz-utils.conf /opt/etc/init.d/SXXxz-utils
+#XZ_UTILS_CONFFILES=$(OPTWARE_PREFIX)etc/xz-utils.conf $(OPTWARE_PREFIX)etc/init.d/SXXxz-utils
 
 #XZ_UTILS_PATCHES=$(XZ_UTILS_SOURCE_DIR)/configure.patch
 
@@ -59,7 +59,7 @@ $(XZ_UTILS_HOST_BUILD_DIR)/.staged: host/.configured $(DL_DIR)/$(XZ_UTILS_SOURCE
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(GNU_HOST_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--enable-static \
 		--disable-shared \
@@ -91,7 +91,7 @@ $(XZ_UTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(XZ_UTILS_SOURCE) $(XZ_UTILS_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -152,7 +152,7 @@ $(XZ_UTILS_IPK) $(LIBLZMA0_IPK): $(XZ_UTILS_BUILD_DIR)/.built
 		$(BUILD_DIR)/liblzma0_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XZ_UTILS_BUILD_DIR) DESTDIR=$(XZ_UTILS_IPK_DIR) install-strip
 	install -d $(LIBLZMA0_IPK_DIR)/opt
-	mv $(XZ_UTILS_IPK_DIR)/opt/include $(XZ_UTILS_IPK_DIR)/opt/lib $(LIBLZMA0_IPK_DIR)/opt/
+	mv $(XZ_UTILS_IPK_DIR)$(OPTWARE_PREFIX)include $(XZ_UTILS_IPK_DIR)$(OPTWARE_PREFIX)lib $(LIBLZMA0_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) $(XZ_UTILS_IPK_DIR)/CONTROL/control $(LIBLZMA0_IPK_DIR)/CONTROL/control
 #	echo $(XZ_UTILS_CONFFILES) | sed -e 's/ /\n/g' > $(XZ_UTILS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XZ_UTILS_IPK_DIR)

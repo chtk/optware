@@ -40,7 +40,7 @@ RC5PIPE_IPK_VERSION=1
 
 #
 # RC5PIPE_CONFFILES should be a list of user-editable files
-#RC5PIPE_CONFFILES=/opt/etc/rc5pipe.conf /opt/etc/init.d/SXXrc5pipe
+#RC5PIPE_CONFFILES=$(OPTWARE_PREFIX)etc/rc5pipe.conf $(OPTWARE_PREFIX)etc/init.d/SXXrc5pipe
 
 #
 # RC5PIPE_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(RC5PIPE_BUILD_DIR)/.configured: $(DL_DIR)/$(RC5PIPE_SOURCE) $(RC5PIPE_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -183,23 +183,23 @@ $(RC5PIPE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RC5PIPE_IPK_DIR)/opt/sbin or $(RC5PIPE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RC5PIPE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RC5PIPE_IPK_DIR)/opt/etc/rc5pipe/...
-# Documentation files should be installed in $(RC5PIPE_IPK_DIR)/opt/doc/rc5pipe/...
-# Daemon startup scripts should be installed in $(RC5PIPE_IPK_DIR)/opt/etc/init.d/S??rc5pipe
+# Libraries and include files should be installed into $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)etc/rc5pipe/...
+# Documentation files should be installed in $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)doc/rc5pipe/...
+# Daemon startup scripts should be installed in $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??rc5pipe
 #
 # You may need to patch your application to make it use these locations.
 #
 $(RC5PIPE_IPK): $(RC5PIPE_BUILD_DIR)/.built
 	rm -rf $(RC5PIPE_IPK_DIR) $(BUILD_DIR)/rc5pipe_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(RC5PIPE_BUILD_DIR) DESTDIR=$(RC5PIPE_IPK_DIR) install-strip
-	install -d $(RC5PIPE_IPK_DIR)/opt/bin/
-	install -m 755 $(RC5PIPE_BUILD_DIR)/rc5pipe $(RC5PIPE_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(RC5PIPE_IPK_DIR)/opt/bin/rc5pipe
-	install -d $(RC5PIPE_IPK_DIR)/opt/share/doc/rc5pipe
-	install -m 644 $(RC5PIPE_BUILD_DIR)/[CLR]* $(RC5PIPE_IPK_DIR)/opt/share/doc/rc5pipe/
+	install -d $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -m 755 $(RC5PIPE_BUILD_DIR)/rc5pipe $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)bin/rc5pipe
+	install -d $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/rc5pipe
+	install -m 644 $(RC5PIPE_BUILD_DIR)/[CLR]* $(RC5PIPE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/rc5pipe/
 	$(MAKE) $(RC5PIPE_IPK_DIR)/CONTROL/control
 	echo $(RC5PIPE_CONFFILES) | sed -e 's/ /\n/g' > $(RC5PIPE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(RC5PIPE_IPK_DIR)

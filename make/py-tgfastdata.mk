@@ -39,7 +39,7 @@ PY-TGFASTDATA_IPK_VERSION=3
 
 #
 # PY-TGFASTDATA_CONFFILES should be a list of user-editable files
-#PY-TGFASTDATA_CONFFILES=/opt/etc/py-tgfastdata.conf /opt/etc/init.d/SXXpy-tgfastdata
+#PY-TGFASTDATA_CONFFILES=$(OPTWARE_PREFIX)etc/py-tgfastdata.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-tgfastdata
 
 #
 # PY-TGFASTDATA_PATCHES should list any patches, in the the order in
@@ -113,7 +113,7 @@ endif
 	mv $(BUILD_DIR)/$(PY-TGFASTDATA_DIR) $(PY-TGFASTDATA_BUILD_DIR)
 	(cd $(PY-TGFASTDATA_BUILD_DIR); \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python") >> setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python") >> setup.cfg \
 	)
 	touch $(PY-TGFASTDATA_BUILD_DIR)/.configured
 
@@ -163,12 +163,12 @@ $(PY-TGFASTDATA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-TGFASTDATA_IPK_DIR)/opt/sbin or $(PY-TGFASTDATA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-TGFASTDATA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-TGFASTDATA_IPK_DIR)/opt/etc/py-tgfastdata/...
-# Documentation files should be installed in $(PY-TGFASTDATA_IPK_DIR)/opt/doc/py-tgfastdata/...
-# Daemon startup scripts should be installed in $(PY-TGFASTDATA_IPK_DIR)/opt/etc/init.d/S??py-tgfastdata
+# Libraries and include files should be installed into $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX)etc/py-tgfastdata/...
+# Documentation files should be installed in $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX)doc/py-tgfastdata/...
+# Daemon startup scripts should be installed in $(PY-TGFASTDATA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-tgfastdata
 #
 # You may need to patch your application to make it use these locations.
 #

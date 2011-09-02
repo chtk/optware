@@ -40,7 +40,7 @@ MOC_IPK_VERSION=1
 
 #
 # MOC_CONFFILES should be a list of user-editable files
-#MOC_CONFFILES=/opt/etc/moc.conf /opt/etc/init.d/SXXmoc
+#MOC_CONFFILES=$(OPTWARE_PREFIX)etc/moc.conf $(OPTWARE_PREFIX)etc/init.d/SXXmoc
 
 #
 # MOC_PATCHES should list any patches, in the the order in
@@ -145,7 +145,7 @@ $(MOC_BUILD_DIR)/.configured: $(DL_DIR)/$(MOC_SOURCE) $(MOC_PATCHES) make/moc.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--without-ffmpeg \
@@ -203,23 +203,23 @@ $(MOC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MOC_IPK_DIR)/opt/sbin or $(MOC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MOC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MOC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MOC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MOC_IPK_DIR)/opt/etc/moc/...
-# Documentation files should be installed in $(MOC_IPK_DIR)/opt/doc/moc/...
-# Daemon startup scripts should be installed in $(MOC_IPK_DIR)/opt/etc/init.d/S??moc
+# Libraries and include files should be installed into $(MOC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/moc/...
+# Documentation files should be installed in $(MOC_IPK_DIR)$(OPTWARE_PREFIX)doc/moc/...
+# Daemon startup scripts should be installed in $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??moc
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MOC_IPK): $(MOC_BUILD_DIR)/.built
 	rm -rf $(MOC_IPK_DIR) $(BUILD_DIR)/moc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MOC_BUILD_DIR) DESTDIR=$(MOC_IPK_DIR) install-strip
-#	install -d $(MOC_IPK_DIR)/opt/etc/
-#	install -m 644 $(MOC_SOURCE_DIR)/moc.conf $(MOC_IPK_DIR)/opt/etc/moc.conf
-#	install -d $(MOC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MOC_SOURCE_DIR)/rc.moc $(MOC_IPK_DIR)/opt/etc/init.d/SXXmoc
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOC_IPK_DIR)/opt/etc/init.d/SXXmoc
+#	install -d $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MOC_SOURCE_DIR)/moc.conf $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/moc.conf
+#	install -d $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MOC_SOURCE_DIR)/rc.moc $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmoc
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmoc
 	$(MAKE) $(MOC_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MOC_SOURCE_DIR)/postinst $(MOC_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOC_IPK_DIR)/CONTROL/postinst

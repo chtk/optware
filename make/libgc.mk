@@ -45,7 +45,7 @@ LIBGC_IPK_VERSION=1
 
 #
 # LIBGC_CONFFILES should be a list of user-editable files
-#LIBGC_CONFFILES=/opt/etc/libgc.conf /opt/etc/init.d/SXXlibgc
+#LIBGC_CONFFILES=$(OPTWARE_PREFIX)etc/libgc.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibgc
 
 #
 # LIBGC_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(LIBGC_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBGC_SOURCE) $(LIBGC_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--disable-nls \
 	)
@@ -179,22 +179,22 @@ $(LIBGC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBGC_IPK_DIR)/opt/sbin or $(LIBGC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBGC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBGC_IPK_DIR)/opt/etc/libgc/...
-# Documentation files should be installed in $(LIBGC_IPK_DIR)/opt/doc/libgc/...
-# Daemon startup scripts should be installed in $(LIBGC_IPK_DIR)/opt/etc/init.d/S??libgc
+# Libraries and include files should be installed into $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/libgc/...
+# Documentation files should be installed in $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)doc/libgc/...
+# Daemon startup scripts should be installed in $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libgc
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBGC_IPK): $(LIBGC_BUILD_DIR)/.built
 	rm -rf $(LIBGC_IPK_DIR) $(BUILD_DIR)/libgc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBGC_BUILD_DIR) DESTDIR=$(LIBGC_IPK_DIR) install-strip
-#	install -d $(LIBGC_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBGC_SOURCE_DIR)/libgc.conf $(LIBGC_IPK_DIR)/opt/etc/libgc.conf
-#	install -d $(LIBGC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBGC_SOURCE_DIR)/rc.libgc $(LIBGC_IPK_DIR)/opt/etc/init.d/SXXlibgc
+#	install -d $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBGC_SOURCE_DIR)/libgc.conf $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/libgc.conf
+#	install -d $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBGC_SOURCE_DIR)/rc.libgc $(LIBGC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibgc
 	$(MAKE) $(LIBGC_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBGC_SOURCE_DIR)/postinst $(LIBGC_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBGC_SOURCE_DIR)/prerm $(LIBGC_IPK_DIR)/CONTROL/prerm

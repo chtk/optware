@@ -127,7 +127,7 @@ $(X11_BUILD_DIR)/.configured: $(DL_DIR)/x11-$(X11_VERSION).tar.gz $(X11_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -162,12 +162,12 @@ x11-stage: $(X11_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(X11_IPK_DIR)/opt/sbin or $(X11_IPK_DIR)/opt/bin
+# Binaries should be installed into $(X11_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(X11_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(X11_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(X11_IPK_DIR)/opt/etc/x11/...
-# Documentation files should be installed in $(X11_IPK_DIR)/opt/doc/x11/...
-# Daemon startup scripts should be installed in $(X11_IPK_DIR)/opt/etc/init.d/S??x11
+# Libraries and include files should be installed into $(X11_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(X11_IPK_DIR)$(OPTWARE_PREFIX)etc/x11/...
+# Documentation files should be installed in $(X11_IPK_DIR)$(OPTWARE_PREFIX)doc/x11/...
+# Daemon startup scripts should be installed in $(X11_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??x11
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -176,7 +176,7 @@ $(X11_IPK): $(X11_BUILD_DIR)/.built
 	$(MAKE) -C $(X11_BUILD_DIR) DESTDIR=$(X11_IPK_DIR) install-strip
 	$(MAKE) $(X11_IPK_DIR)/CONTROL/control
 	install -m 644 $(X11_SOURCE_DIR)/postinst $(X11_IPK_DIR)/CONTROL/postinst
-	rm -f $(X11_IPK_DIR)/opt/lib/*.la
+	rm -f $(X11_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(X11_IPK_DIR)
 
 #

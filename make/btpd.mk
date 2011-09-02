@@ -37,7 +37,7 @@ BTPD_CONFLICTS=
 
 #
 # BTPD_CONFFILES should be a list of user-editable files
-#BTPD_CONFFILES=/opt/etc/btpd.conf /opt/etc/init.d/SXXbtpd
+#BTPD_CONFFILES=$(OPTWARE_PREFIX)etc/btpd.conf $(OPTWARE_PREFIX)etc/init.d/SXXbtpd
 
 #
 # BTPD_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ $(BTPD_BUILD_DIR)/.configured: $(DL_DIR)/$(BTPD_SOURCE) $(BTPD_PATCHES) make/btp
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -180,20 +180,20 @@ $(BTPD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BTPD_IPK_DIR)/opt/sbin or $(BTPD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BTPD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BTPD_IPK_DIR)/opt/etc/btpd/...
-# Documentation files should be installed in $(BTPD_IPK_DIR)/opt/doc/btpd/...
-# Daemon startup scripts should be installed in $(BTPD_IPK_DIR)/opt/etc/init.d/S??btpd
+# Libraries and include files should be installed into $(BTPD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/btpd/...
+# Documentation files should be installed in $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)doc/btpd/...
+# Daemon startup scripts should be installed in $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??btpd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(BTPD_IPK): $(BTPD_BUILD_DIR)/.built
 	rm -rf $(BTPD_IPK_DIR) $(BUILD_DIR)/btpd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BTPD_BUILD_DIR) DESTDIR=$(BTPD_IPK_DIR) install-strip
-	install -d $(BTPD_IPK_DIR)/opt/share/doc/btpd
-	install $(BTPD_BUILD_DIR)/[CR]* $(BTPD_IPK_DIR)/opt/share/doc/btpd/
+	install -d $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/btpd
+	install $(BTPD_BUILD_DIR)/[CR]* $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/btpd/
 	$(MAKE) $(BTPD_IPK_DIR)/CONTROL/control
 	echo $(BTPD_CONFFILES) | sed -e 's/ /\n/g' > $(BTPD_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BTPD_IPK_DIR)

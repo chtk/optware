@@ -24,7 +24,7 @@ MJSON_IPK_VERSION=1
 
 #
 # MJSON_CONFFILES should be a list of user-editable files
-#MJSON_CONFFILES=/opt/etc/mjson.conf /opt/etc/init.d/SXXmjson
+#MJSON_CONFFILES=$(OPTWARE_PREFIX)etc/mjson.conf $(OPTWARE_PREFIX)etc/init.d/SXXmjson
 
 #
 # MJSON_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(MJSON_BUILD_DIR)/.staged: $(MJSON_BUILD_DIR)/.built
 	CPPFLAGS="$(STAGING_CPPFLAGS) $(MJSON_CPPFLAGS)" \
 	LDFLAGS="$(STAGING_LDFLAGS) $(MJSON_LDFLAGS)" \
 	CUSTOM_BUILD_TYPE=release CUSTOM_PLATFORM=arm \
-	$(MAKE) -C $(@D) -f Makefile.inc LUNA_STAGING=$(STAGING_DIR)/opt install
+	$(MAKE) -C $(@D) -f Makefile.inc LUNA_STAGING=$(STAGING_DIR)$(OPTWARE_PREFIX)install
 	touch $@
 
 mjson-stage: $(MJSON_BUILD_DIR)/.staged
@@ -156,12 +156,12 @@ $(MJSON_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MJSON_IPK_DIR)/opt/sbin or $(MJSON_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MJSON_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MJSON_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MJSON_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MJSON_IPK_DIR)/opt/etc/mjson/...
-# Documentation files should be installed in $(MJSON_IPK_DIR)/opt/doc/mjson/...
-# Daemon startup scripts should be installed in $(MJSON_IPK_DIR)/opt/etc/init.d/S??mjson
+# Libraries and include files should be installed into $(MJSON_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MJSON_IPK_DIR)$(OPTWARE_PREFIX)etc/mjson/...
+# Documentation files should be installed in $(MJSON_IPK_DIR)$(OPTWARE_PREFIX)doc/mjson/...
+# Daemon startup scripts should be installed in $(MJSON_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mjson
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -171,7 +171,7 @@ $(MJSON_IPK): $(MJSON_BUILD_DIR)/.built
 	CPPFLAGS="$(STAGING_CPPFLAGS) $(MJSON_CPPFLAGS)" \
 	LDFLAGS="$(STAGING_LDFLAGS) $(MJSON_LDFLAGS)" \
 	CUSTOM_BUILD_TYPE=release CUSTOM_PLATFORM=arm \
-	$(MAKE) -C $(MJSON_BUILD_DIR) -f Makefile.inc LUNA_STAGING=$(MJSON_IPK_DIR)/opt install
+	$(MAKE) -C $(MJSON_BUILD_DIR) -f Makefile.inc LUNA_STAGING=$(MJSON_IPK_DIR)$(OPTWARE_PREFIX)install
 	$(MAKE) $(MJSON_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MJSON_IPK_DIR)
 

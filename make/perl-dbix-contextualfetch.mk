@@ -41,9 +41,9 @@ $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-DBIX-CONTEX
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.configured
 
@@ -52,7 +52,7 @@ perl-dbix-contextualfetch-unpack: $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.config
 $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.built: $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.configured
 	rm -f $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.built
 
 perl-dbix-contextualfetch: $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/CONTROL/control:
 $(PERL-DBIX-CONTEXTUALFETCH_IPK): $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR)/.built
 	rm -rf $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR) $(BUILD_DIR)/perl-dbix-contextualfetch_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-DBIX-CONTEXTUALFETCH_BUILD_DIR) DESTDIR=$(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR) install
-	find $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/CONTROL/control
 	echo $(PERL-DBIX-CONTEXTUALFETCH_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-DBIX-CONTEXTUALFETCH_IPK_DIR)

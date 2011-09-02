@@ -40,9 +40,9 @@ $(PERL-HTML-TAGSET_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-HTML-TAGSET_SOURCE) 
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-HTML-TAGSET_BUILD_DIR)/.configured
 
@@ -51,7 +51,7 @@ perl-html-tagset-unpack: $(PERL-HTML-TAGSET_BUILD_DIR)/.configured
 $(PERL-HTML-TAGSET_BUILD_DIR)/.built: $(PERL-HTML-TAGSET_BUILD_DIR)/.configured
 	rm -f $(PERL-HTML-TAGSET_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-HTML-TAGSET_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-HTML-TAGSET_BUILD_DIR)/.built
 
 perl-html-tagset: $(PERL-HTML-TAGSET_BUILD_DIR)/.built
@@ -81,13 +81,13 @@ $(PERL-HTML-TAGSET_IPK_DIR)/CONTROL/control:
 $(PERL-HTML-TAGSET_IPK): $(PERL-HTML-TAGSET_BUILD_DIR)/.built
 	rm -rf $(PERL-HTML-TAGSET_IPK_DIR) $(BUILD_DIR)/perl-html-tagset_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-HTML-TAGSET_BUILD_DIR) DESTDIR=$(PERL-HTML-TAGSET_IPK_DIR) install
-	find $(PERL-HTML-TAGSET_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-HTML-TAGSET_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-HTML-TAGSET_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-HTML-TAGSET_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-HTML-TAGSET_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-HTML-TAGSET_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-HTML-TAGSET_IPK_DIR)/CONTROL/control
 	echo $(PERL-HTML-TAGSET_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-HTML-TAGSET_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-HTML-TAGSET_IPK_DIR)

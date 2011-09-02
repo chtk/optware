@@ -41,7 +41,7 @@ PY-PSYCOPG_IPK_VERSION=6
 
 #
 # PY-PSYCOPG_CONFFILES should be a list of user-editable files
-#PY-PSYCOPG_CONFFILES=/opt/etc/py-psycopg.conf /opt/etc/init.d/SXXpy-psycopg
+#PY-PSYCOPG_CONFFILES=$(OPTWARE_PREFIX)etc/py-psycopg.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-psycopg
 
 #
 # PY-PSYCOPG_PATCHES should list any patches, in the the order in
@@ -124,10 +124,10 @@ $(PY-PSYCOPG_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PSYCOPG_SOURCE) $(PY-PSYCOPG
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--with-python=$(HOST_STAGING_PREFIX)/bin/python2.4 \
-		--with-python-prefix=/opt \
+		--with-python-prefix=$(OPTWARE_PREFIX)\
 		--with-postgres-includes=$(STAGING_INCLUDE_DIR)/postgresql \
 		--with-postgres-libraries=$(STAGING_LIB_DIR) \
 		--with-mxdatetime-includes=$(STAGING_LIB_DIR)/python2.4/site-packages/mx/DateTime/mxDateTime/ \
@@ -146,10 +146,10 @@ $(PY-PSYCOPG_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PSYCOPG_SOURCE) $(PY-PSYCOPG
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--with-python=$(HOST_STAGING_PREFIX)/bin/python2.5 \
-		--with-python-prefix=/opt \
+		--with-python-prefix=$(OPTWARE_PREFIX)\
 		--with-postgres-includes=$(STAGING_INCLUDE_DIR)/postgresql \
 		--with-postgres-libraries=$(STAGING_LIB_DIR) \
 		--with-mxdatetime-includes=$(STAGING_LIB_DIR)/python2.5/site-packages/mx/DateTime/mxDateTime/ \
@@ -223,45 +223,45 @@ $(PY25-PSYCOPG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PSYCOPG_IPK_DIR)/opt/sbin or $(PY-PSYCOPG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PSYCOPG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PSYCOPG_IPK_DIR)/opt/etc/py-psycopg/...
-# Documentation files should be installed in $(PY-PSYCOPG_IPK_DIR)/opt/doc/py-psycopg/...
-# Daemon startup scripts should be installed in $(PY-PSYCOPG_IPK_DIR)/opt/etc/init.d/S??py-psycopg
+# Libraries and include files should be installed into $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)etc/py-psycopg/...
+# Documentation files should be installed in $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)doc/py-psycopg/...
+# Daemon startup scripts should be installed in $(PY-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-psycopg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PY24-PSYCOPG_IPK): $(PY-PSYCOPG_BUILD_DIR)/.built
 	rm -rf $(BUILD_DIR)/py-psycopg_*_$(TARGET_ARCH).ipk
 	rm -rf $(PY24-PSYCOPG_IPK_DIR) $(BUILD_DIR)/py24-psycopg_*_$(TARGET_ARCH).ipk
-	install -d $(PY24-PSYCOPG_IPK_DIR)/opt/lib/python2.4/site-packages
+	install -d $(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.4/site-packages
 	PATH="`dirname $(TARGET_CC)`:$$PATH" \
 	$(MAKE) -C $(PY-PSYCOPG_BUILD_DIR)/2.4 \
-		prefix=$(PY24-PSYCOPG_IPK_DIR)/opt \
-		exec_prefix=$(PY24-PSYCOPG_IPK_DIR)/opt \
+		prefix=$(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)\
+		exec_prefix=$(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)\
 		INSTALL=install install
-	for f in `find $(PY24-PSYCOPG_IPK_DIR)/opt/lib -name '*.so'`; do \
+	for f in `find $(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`; do \
 		chmod u+w $$f; $(STRIP_COMMAND) $$f; chmod u-w $$f; \
 	done
-#	install -d $(PY24-PSYCOPG_IPK_DIR)/opt/share/doc/
-#	cp -rp $(PY-PSYCOPG_BUILD_DIR)/2.4/doc $(PY24-PSYCOPG_IPK_DIR)/opt/share/doc/py-psycopg
+#	install -d $(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)share/doc/
+#	cp -rp $(PY-PSYCOPG_BUILD_DIR)/2.4/doc $(PY24-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)share/doc/py-psycopg
 	$(MAKE) $(PY24-PSYCOPG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY24-PSYCOPG_IPK_DIR)
 
 $(PY25-PSYCOPG_IPK): $(PY-PSYCOPG_BUILD_DIR)/.built
 	rm -rf $(PY25-PSYCOPG_IPK_DIR) $(BUILD_DIR)/py25-psycopg_*_$(TARGET_ARCH).ipk
-	install -d $(PY25-PSYCOPG_IPK_DIR)/opt/lib/python2.5/site-packages
+	install -d $(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages
 	PATH="`dirname $(TARGET_CC)`:$$PATH" \
 	$(MAKE) -C $(PY-PSYCOPG_BUILD_DIR)/2.5 \
-		prefix=$(PY25-PSYCOPG_IPK_DIR)/opt \
-		exec_prefix=$(PY25-PSYCOPG_IPK_DIR)/opt \
+		prefix=$(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)\
+		exec_prefix=$(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)\
 		INSTALL=install install
-	for f in `find $(PY25-PSYCOPG_IPK_DIR)/opt/lib -name '*.so'`; do \
+	for f in `find $(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`; do \
 		chmod u+w $$f; $(STRIP_COMMAND) $$f; chmod u-w $$f; \
 	done
-	install -d $(PY25-PSYCOPG_IPK_DIR)/opt/share/doc/
-	cp -rp $(PY-PSYCOPG_BUILD_DIR)/2.5/doc $(PY25-PSYCOPG_IPK_DIR)/opt/share/doc/py-psycopg
+	install -d $(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)share/doc/
+	cp -rp $(PY-PSYCOPG_BUILD_DIR)/2.5/doc $(PY25-PSYCOPG_IPK_DIR)$(OPTWARE_PREFIX)share/doc/py-psycopg
 	$(MAKE) $(PY25-PSYCOPG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-PSYCOPG_IPK_DIR)
 

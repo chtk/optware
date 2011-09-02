@@ -40,7 +40,7 @@ LOUDMOUTH_IPK_VERSION=1
 
 #
 # LOUDMOUTH_CONFFILES should be a list of user-editable files
-#LOUDMOUTH_CONFFILES=/opt/etc/loudmouth.conf /opt/etc/init.d/SXXloudmouth
+#LOUDMOUTH_CONFFILES=$(OPTWARE_PREFIX)etc/loudmouth.conf $(OPTWARE_PREFIX)etc/init.d/SXXloudmouth
 
 #
 # LOUDMOUTH_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(LOUDMOUTH_BUILD_DIR)/.configured: $(DL_DIR)/$(LOUDMOUTH_SOURCE) $(LOUDMOUTH_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
 		--without-check \
 		--disable-nls \
@@ -182,24 +182,24 @@ $(LOUDMOUTH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LOUDMOUTH_IPK_DIR)/opt/sbin or $(LOUDMOUTH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LOUDMOUTH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LOUDMOUTH_IPK_DIR)/opt/etc/loudmouth/...
-# Documentation files should be installed in $(LOUDMOUTH_IPK_DIR)/opt/doc/loudmouth/...
-# Daemon startup scripts should be installed in $(LOUDMOUTH_IPK_DIR)/opt/etc/init.d/S??loudmouth
+# Libraries and include files should be installed into $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/loudmouth/...
+# Documentation files should be installed in $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)doc/loudmouth/...
+# Daemon startup scripts should be installed in $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??loudmouth
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LOUDMOUTH_IPK): $(LOUDMOUTH_BUILD_DIR)/.built
 	rm -rf $(LOUDMOUTH_IPK_DIR) $(BUILD_DIR)/loudmouth_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LOUDMOUTH_BUILD_DIR) DESTDIR=$(LOUDMOUTH_IPK_DIR) install-strip
-	rm -f $(LOUDMOUTH_IPK_DIR)/opt/lib/libloudmouth*.la
-#	install -d $(LOUDMOUTH_IPK_DIR)/opt/etc/
-#	install -m 644 $(LOUDMOUTH_SOURCE_DIR)/loudmouth.conf $(LOUDMOUTH_IPK_DIR)/opt/etc/loudmouth.conf
-#	install -d $(LOUDMOUTH_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LOUDMOUTH_SOURCE_DIR)/rc.loudmouth $(LOUDMOUTH_IPK_DIR)/opt/etc/init.d/SXXloudmouth
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LOUDMOUTH_IPK_DIR)/opt/etc/init.d/SXXloudmouth
+	rm -f $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)lib/libloudmouth*.la
+#	install -d $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LOUDMOUTH_SOURCE_DIR)/loudmouth.conf $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/loudmouth.conf
+#	install -d $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LOUDMOUTH_SOURCE_DIR)/rc.loudmouth $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXloudmouth
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LOUDMOUTH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXloudmouth
 	$(MAKE) $(LOUDMOUTH_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LOUDMOUTH_SOURCE_DIR)/postinst $(LOUDMOUTH_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LOUDMOUTH_IPK_DIR)/CONTROL/postinst

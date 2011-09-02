@@ -63,8 +63,8 @@ $(RDATE_IPK_DIR)/CONTROL/control:
 	@echo "Conflicts: $(RDATE_CONFLICTS)" >>$@
 
 $(RDATE_IPK): $(RDATE_DIR)/.built
-	install -d $(RDATE_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(RDATE_DIR)/rdate -o $(RDATE_IPK_DIR)/opt/bin/rdate
+	install -d $(RDATE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(RDATE_DIR)/rdate -o $(RDATE_IPK_DIR)$(OPTWARE_PREFIX)bin/rdate
 	$(MAKE) $(RDATE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(RDATE_IPK_DIR)
 

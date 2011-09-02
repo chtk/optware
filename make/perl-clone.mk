@@ -42,9 +42,9 @@ $(PERL-CLONE_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-CLONE_SOURCE) $(PERL-CLONE
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -57,7 +57,7 @@ $(PERL-CLONE_BUILD_DIR)/.built: $(PERL-CLONE_BUILD_DIR)/.configured
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		$(PERL_INC) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-clone: $(PERL-CLONE_BUILD_DIR)/.built
@@ -87,13 +87,13 @@ $(PERL-CLONE_IPK_DIR)/CONTROL/control:
 $(PERL-CLONE_IPK): $(PERL-CLONE_BUILD_DIR)/.built
 	rm -rf $(PERL-CLONE_IPK_DIR) $(BUILD_DIR)/perl-clone_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-CLONE_BUILD_DIR) DESTDIR=$(PERL-CLONE_IPK_DIR) install
-	find $(PERL-CLONE_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-CLONE_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-CLONE_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-CLONE_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-CLONE_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-CLONE_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-CLONE_IPK_DIR)/CONTROL/control
 	echo $(PERL-CLONE_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-CLONE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-CLONE_IPK_DIR)

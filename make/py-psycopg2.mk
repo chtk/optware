@@ -41,7 +41,7 @@ PY-PSYCOPG2_IPK_VERSION=1
 
 #
 # PY-PSYCOPG2_CONFFILES should be a list of user-editable files
-#PY-PSYCOPG2_CONFFILES=/opt/etc/py-psycopg2.conf /opt/etc/init.d/SXXpy-psycopg2
+#PY-PSYCOPG2_CONFFILES=$(OPTWARE_PREFIX)etc/py-psycopg2.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-psycopg2
 
 #
 # PY-PSYCOPG2_PATCHES should list any patches, in the the order in
@@ -120,11 +120,11 @@ $(PY-PSYCOPG2_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PSYCOPG2_SOURCE) $(PY-PSYCO
 		echo "#pg_config=$(STAGING_PREFIX)/bin/pg_config"; \
 	        echo "include_dirs=.:$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library_dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	    sed -i -e '/datetime\.h/s/^/if True: #/' \
 		   -e '/^def get_pg_config/a\    return ""' $(@D)/2.5/setup.py; \
@@ -142,11 +142,11 @@ $(PY-PSYCOPG2_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PSYCOPG2_SOURCE) $(PY-PSYCO
 		echo "#pg_config=$(STAGING_PREFIX)/bin/pg_config"; \
 	        echo "include_dirs=.:$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
 	        echo "library_dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.6"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	    sed -i -e '/datetime\.h/s/^/if True: #/' \
 		   -e '/^def get_pg_config/a\    return ""' $(@D)/2.6/setup.py; \
@@ -164,11 +164,11 @@ py-psycopg2-unpack: $(PY-PSYCOPG2_BUILD_DIR)/.configured
 $(PY-PSYCOPG2_BUILD_DIR)/.built: $(PY-PSYCOPG2_BUILD_DIR)/.configured
 	rm -f $@
 	(cd $(@D)/2.5; \
-	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared -Wl,-rpath,/opt/lib' \
+	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared -Wl,-rpath,$(OPTWARE_PREFIX)lib' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py build; \
 	)
 	(cd $(@D)/2.6; \
-	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared -Wl,-rpath,/opt/lib' \
+	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared -Wl,-rpath,$(OPTWARE_PREFIX)lib' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py build; \
 	)
 	touch $@
@@ -223,12 +223,12 @@ $(PY26-PSYCOPG2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PSYCOPG2_IPK_DIR)/opt/sbin or $(PY-PSYCOPG2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PSYCOPG2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PSYCOPG2_IPK_DIR)/opt/etc/py-psycopg2/...
-# Documentation files should be installed in $(PY-PSYCOPG2_IPK_DIR)/opt/doc/py-psycopg2/...
-# Daemon startup scripts should be installed in $(PY-PSYCOPG2_IPK_DIR)/opt/etc/init.d/S??py-psycopg2
+# Libraries and include files should be installed into $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)etc/py-psycopg2/...
+# Documentation files should be installed in $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)doc/py-psycopg2/...
+# Daemon startup scripts should be installed in $(PY-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-psycopg2
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -240,7 +240,7 @@ $(PY25-PSYCOPG2_IPK): $(PY-PSYCOPG2_BUILD_DIR)/.built
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 -c "import setuptools; execfile('setup.py')" install \
 	    --root=$(PY25-PSYCOPG2_IPK_DIR) --prefix=/opt; \
 	)
-	$(STRIP_COMMAND) `find $(PY25-PSYCOPG2_IPK_DIR)/opt/lib -name '*.so'`
+	$(STRIP_COMMAND) `find $(PY25-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`
 	$(MAKE) $(PY25-PSYCOPG2_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-PSYCOPG2_IPK_DIR)
 
@@ -251,7 +251,7 @@ $(PY26-PSYCOPG2_IPK): $(PY-PSYCOPG2_BUILD_DIR)/.built
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 -c "import setuptools; execfile('setup.py')" install \
 	    --root=$(PY26-PSYCOPG2_IPK_DIR) --prefix=/opt; \
 	)
-	$(STRIP_COMMAND) `find $(PY26-PSYCOPG2_IPK_DIR)/opt/lib -name '*.so'`
+	$(STRIP_COMMAND) `find $(PY26-PSYCOPG2_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`
 	$(MAKE) $(PY26-PSYCOPG2_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY26-PSYCOPG2_IPK_DIR)
 

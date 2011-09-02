@@ -10,7 +10,7 @@ STOW_SOURCE=stow-$(STOW_VERSION).tar.gz
 STOW_DIR=stow-$(STOW_VERSION)
 STOW_UNZIP=zcat
 STOW_MAINTAINER=NSLU2 Linux <nslu2-linux@yahoogroups.com>
-STOW_DESCRIPTION=This is GNU Stow, a program for managing the installation of software packages, keeping them separate while making them appear to be installed in the same place (/opt/local).
+STOW_DESCRIPTION=This is GNU Stow, a program for managing the installation of software packages, keeping them separate while making them appear to be installed in the same place ($(OPTWARE_PREFIX)local).
 STOW_SECTION=util
 STOW_PRIORITY=optional
 STOW_DEPENDS=perl
@@ -44,7 +44,7 @@ $(STOW_BUILD_DIR)/.configured: $(DL_DIR)/$(STOW_SOURCE) $(STOW_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(STOW_BUILD_DIR)/.configured
@@ -81,12 +81,12 @@ $(STOW_IPK_DIR)/CONTROL/control:
 
 $(STOW_IPK): $(STOW_BUILD_DIR)/.built
 	rm -rf $(STOW_IPK_DIR) $(BUILD_DIR)/stow_*_$(TARGET_ARCH).ipk
-	install -d $(STOW_IPK_DIR)/opt/bin
-	install -d $(STOW_IPK_DIR)/opt/info
-	install -d $(STOW_IPK_DIR)/opt/man/man8
-	install -d $(STOW_IPK_DIR)/opt/local/stow
+	install -d $(STOW_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(STOW_IPK_DIR)$(OPTWARE_PREFIX)info
+	install -d $(STOW_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(STOW_IPK_DIR)$(OPTWARE_PREFIX)local/stow
 	$(MAKE) -C $(STOW_BUILD_DIR) DESTDIR=$(STOW_IPK_DIR) install
-	rm -f $(STOW_IPK_DIR)/opt/info/dir.old
+	rm -f $(STOW_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
 	$(MAKE) $(STOW_IPK_DIR)/CONTROL/control
 #	install -m 755 $(STOW_SOURCE_DIR)/postinst $(STOW_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(STOW_SOURCE_DIR)/prerm $(STOW_IPK_DIR)/CONTROL/prerm

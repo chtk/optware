@@ -42,7 +42,7 @@ IPYTHON_IPK_VERSION=1
 
 #
 # IPYTHON_CONFFILES should be a list of user-editable files
-#IPYTHON_CONFFILES=/opt/etc/ipython.conf /opt/etc/init.d/SXXipython
+#IPYTHON_CONFFILES=$(OPTWARE_PREFIX)etc/ipython.conf $(OPTWARE_PREFIX)etc/init.d/SXXipython
 
 #
 # IPYTHON_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(IPYTHON_BUILD_DIR)/.configured: $(DL_DIR)/$(IPYTHON_SOURCE) $(IPYTHON_PATCHES)
 	mv $(BUILD_DIR)/$(IPYTHON_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(IPYTHON_DIR)
@@ -130,7 +130,7 @@ $(IPYTHON_BUILD_DIR)/.configured: $(DL_DIR)/$(IPYTHON_SOURCE) $(IPYTHON_PATCHES)
 	mv $(BUILD_DIR)/$(IPYTHON_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -215,12 +215,12 @@ $(IPYTHON_PY26_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IPYTHON_IPK_DIR)/opt/sbin or $(IPYTHON_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IPYTHON_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IPYTHON_IPK_DIR)/opt/etc/ipython/...
-# Documentation files should be installed in $(IPYTHON_IPK_DIR)/opt/doc/ipython/...
-# Daemon startup scripts should be installed in $(IPYTHON_IPK_DIR)/opt/etc/init.d/S??ipython
+# Libraries and include files should be installed into $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/ipython/...
+# Documentation files should be installed in $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX)doc/ipython/...
+# Daemon startup scripts should be installed in $(IPYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ipython
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -231,8 +231,8 @@ $(IPYTHON_PY25_IPK): $(IPYTHON_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.5 -c "import setuptools; execfile('setup.py')" \
 		install --root=$(IPYTHON_PY25_IPK_DIR) --prefix=/opt)
-	rm -rf $(IPYTHON_PY25_IPK_DIR)/opt/share
-	for f in $(IPYTHON_PY25_IPK_DIR)/opt/bin/*; \
+	rm -rf $(IPYTHON_PY25_IPK_DIR)$(OPTWARE_PREFIX)share
+	for f in $(IPYTHON_PY25_IPK_DIR)$(OPTWARE_PREFIX)bin/*; \
 		do mv $$f `echo $$f | sed 's|$$|-2.5|'`; done
 	$(MAKE) $(IPYTHON_PY25_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPYTHON_PY25_IPK_DIR)
@@ -245,7 +245,7 @@ $(IPYTHON_PY26_IPK): $(IPYTHON_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.6/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.6 -c "import setuptools; execfile('setup.py')" \
 		install --root=$(IPYTHON_PY26_IPK_DIR) --prefix=/opt)
-	rm -rf $(IPYTHON_PY26_IPK_DIR)/opt/share
+	rm -rf $(IPYTHON_PY26_IPK_DIR)$(OPTWARE_PREFIX)share
 	$(MAKE) $(IPYTHON_PY26_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPYTHON_PY26_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(IPYTHON_PY26_IPK_DIR)
@@ -255,7 +255,7 @@ $(IPYTHON-COMMON_IPK): $(IPYTHON_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.6/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.6 setup.py \
 		install --root=$(IPYTHON-COMMON_IPK_DIR) --prefix=/opt)
-	rm -rf $(IPYTHON-COMMON_IPK_DIR)/opt/bin $(IPYTHON-COMMON_IPK_DIR)/opt/lib
+	rm -rf $(IPYTHON-COMMON_IPK_DIR)$(OPTWARE_PREFIX)bin $(IPYTHON-COMMON_IPK_DIR)$(OPTWARE_PREFIX)lib
 	$(MAKE) $(IPYTHON-COMMON_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPYTHON-COMMON_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(IPYTHON-COMMON_IPK_DIR)

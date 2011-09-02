@@ -41,7 +41,7 @@ IKSEMEL_IPK_VERSION=1
 
 #
 # IKSEMEL_CONFFILES should be a list of user-editable files
-#IKSEMEL_CONFFILES=/opt/etc/iksemel.conf /opt/etc/init.d/SXXiksemel
+#IKSEMEL_CONFFILES=$(OPTWARE_PREFIX)etc/iksemel.conf $(OPTWARE_PREFIX)etc/init.d/SXXiksemel
 
 #
 # IKSEMEL_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(IKSEMEL_BUILD_DIR)/.configured: $(DL_DIR)/$(IKSEMEL_SOURCE) $(IKSEMEL_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
@@ -181,12 +181,12 @@ $(IKSEMEL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IKSEMEL_IPK_DIR)/opt/sbin or $(IKSEMEL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IKSEMEL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IKSEMEL_IPK_DIR)/opt/etc/iksemel/...
-# Documentation files should be installed in $(IKSEMEL_IPK_DIR)/opt/doc/iksemel/...
-# Daemon startup scripts should be installed in $(IKSEMEL_IPK_DIR)/opt/etc/init.d/S??iksemel
+# Libraries and include files should be installed into $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)etc/iksemel/...
+# Documentation files should be installed in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)doc/iksemel/...
+# Daemon startup scripts should be installed in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??iksemel
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -194,10 +194,10 @@ $(IKSEMEL_IPK): $(IKSEMEL_BUILD_DIR)/.built
 	rm -rf $(IKSEMEL_IPK_DIR) $(BUILD_DIR)/iksemel_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IKSEMEL_BUILD_DIR) DESTDIR=$(IKSEMEL_IPK_DIR) install
 	$(MAKE) $(IKSEMEL_IPK_DIR)/CONTROL/control
-	for filetostrip in $(IKSEMEL_IPK_DIR)/opt/bin/ikslint \
-				$(IKSEMEL_IPK_DIR)/opt/bin/iksperf \
-				$(IKSEMEL_IPK_DIR)/opt/bin/iksroster \
-				$(IKSEMEL_IPK_DIR)/opt/lib/libiksemel.so.* ; do \
+	for filetostrip in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/ikslint \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/iksperf \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/iksroster \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)lib/libiksemel.so.* ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IKSEMEL_IPK_DIR)

@@ -41,7 +41,7 @@ PY-DECORATOR_CONFLICTS=
 
 #
 # PY-DECORATOR_CONFFILES should be a list of user-editable files
-#PY-DECORATOR_CONFFILES=/opt/etc/py-decorator.conf /opt/etc/init.d/SXXpy-decorator
+#PY-DECORATOR_CONFFILES=$(OPTWARE_PREFIX)etc/py-decorator.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-decorator
 
 #
 # PY-DECORATOR_PATCHES should list any patches, in the the order in
@@ -119,7 +119,7 @@ $(PY-DECORATOR_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-DECORATOR_SOURCE) $(PY-DEC
         fi
 	mv $(BUILD_DIR)/$(PY-DECORATOR_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(PY-DECORATOR_DIR)
@@ -130,7 +130,7 @@ $(PY-DECORATOR_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-DECORATOR_SOURCE) $(PY-DEC
         fi
 	mv $(BUILD_DIR)/$(PY-DECORATOR_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -194,12 +194,12 @@ $(PY26-DECORATOR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-DECORATOR_IPK_DIR)/opt/sbin or $(PY-DECORATOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-DECORATOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-DECORATOR_IPK_DIR)/opt/etc/py-decorator/...
-# Documentation files should be installed in $(PY-DECORATOR_IPK_DIR)/opt/doc/py-decorator/...
-# Daemon startup scripts should be installed in $(PY-DECORATOR_IPK_DIR)/opt/etc/init.d/S??py-decorator
+# Libraries and include files should be installed into $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/py-decorator/...
+# Documentation files should be installed in $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX)doc/py-decorator/...
+# Daemon startup scripts should be installed in $(PY-DECORATOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-decorator
 #
 # You may need to patch your application to make it use these locations.
 #

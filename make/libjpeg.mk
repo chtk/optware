@@ -115,7 +115,7 @@ $(LIBJPEG_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBJPEG_SOURCE) $(LIBJPEG_PATCHES)
 		--target=$(GNU_TARGET_NAME) \
 		--enable-shared \
 		--disable-static \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -141,12 +141,12 @@ libjpeg: $(LIBJPEG_BUILD_DIR)/.built
 #
 $(LIBJPEG_BUILD_DIR)/.staged: $(LIBJPEG_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -d $(STAGING_DIR)/opt/bin
-	install -d $(STAGING_DIR)/opt/man/man1
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) -C $(@D) prefix=$(STAGING_PREFIX) install
-	rm -f $(STAGING_DIR)/opt/lib/libjpeg.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libjpeg.la
 	touch $@
 
 libjpeg-stage: $(LIBJPEG_BUILD_DIR)/.staged
@@ -172,27 +172,27 @@ $(LIBJPEG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBJPEG_IPK_DIR)/opt/sbin or $(LIBJPEG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBJPEG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBJPEG_IPK_DIR)/opt/etc/libjpeg/...
-# Documentation files should be installed in $(LIBJPEG_IPK_DIR)/opt/doc/libjpeg/...
-# Daemon startup scripts should be installed in $(LIBJPEG_IPK_DIR)/opt/etc/init.d/S??libjpeg
+# Libraries and include files should be installed into $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/libjpeg/...
+# Documentation files should be installed in $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)doc/libjpeg/...
+# Daemon startup scripts should be installed in $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libjpeg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBJPEG_IPK): $(LIBJPEG_BUILD_DIR)/.built
 	rm -rf $(LIBJPEG_IPK_DIR) $(LIBJPEG_IPK)
-	install -d $(LIBJPEG_IPK_DIR)/opt/include
-	install -d $(LIBJPEG_IPK_DIR)/opt/lib
-	install -d $(LIBJPEG_IPK_DIR)/opt/bin
-	install -d $(LIBJPEG_IPK_DIR)/opt/share/man/man1
-	$(MAKE) -C $(LIBJPEG_BUILD_DIR) prefix=$(LIBJPEG_IPK_DIR)/opt mandir=$(LIBJPEG_IPK_DIR)/opt/share/man/man1 install
-	rm -f $(LIBJPEG_IPK_DIR)/opt/lib/libjpeg.la
-	$(TARGET_STRIP) $(LIBJPEG_IPK_DIR)/opt/bin/*
-	$(TARGET_STRIP) $(LIBJPEG_IPK_DIR)/opt/lib/*.so
-#	install -d $(LIBJPEG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBJPEG_SOURCE_DIR)/rc.libjpeg $(LIBJPEG_IPK_DIR)/opt/etc/init.d/SXXlibjpeg
+	install -d $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -d $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	$(MAKE) -C $(LIBJPEG_BUILD_DIR) prefix=$(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)mandir=$(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1 install
+	rm -f $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/libjpeg.la
+	$(TARGET_STRIP) $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(TARGET_STRIP) $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
+#	install -d $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBJPEG_SOURCE_DIR)/rc.libjpeg $(LIBJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibjpeg
 	$(MAKE) $(LIBJPEG_IPK_DIR)/CONTROL/control
 #	install -m 644 $(LIBJPEG_SOURCE_DIR)/postinst $(LIBJPEG_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(LIBJPEG_SOURCE_DIR)/prerm $(LIBJPEG_IPK_DIR)/CONTROL/prerm

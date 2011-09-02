@@ -40,7 +40,7 @@ FATRESIZE_IPK_VERSION=1
 
 #
 # FATRESIZE_CONFFILES should be a list of user-editable files
-#FATRESIZE_CONFFILES=/opt/etc/fatresize.conf /opt/etc/init.d/SXXfatresize
+#FATRESIZE_CONFFILES=$(OPTWARE_PREFIX)etc/fatresize.conf $(OPTWARE_PREFIX)etc/init.d/SXXfatresize
 
 #
 # FATRESIZE_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(FATRESIZE_BUILD_DIR)/.configured: $(DL_DIR)/$(FATRESIZE_SOURCE) $(FATRESIZE_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,23 +177,23 @@ $(FATRESIZE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FATRESIZE_IPK_DIR)/opt/sbin or $(FATRESIZE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FATRESIZE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FATRESIZE_IPK_DIR)/opt/etc/fatresize/...
-# Documentation files should be installed in $(FATRESIZE_IPK_DIR)/opt/doc/fatresize/...
-# Daemon startup scripts should be installed in $(FATRESIZE_IPK_DIR)/opt/etc/init.d/S??fatresize
+# Libraries and include files should be installed into $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/fatresize/...
+# Documentation files should be installed in $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)doc/fatresize/...
+# Daemon startup scripts should be installed in $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??fatresize
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FATRESIZE_IPK): $(FATRESIZE_BUILD_DIR)/.built
 	rm -rf $(FATRESIZE_IPK_DIR) $(BUILD_DIR)/fatresize_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FATRESIZE_BUILD_DIR) DESTDIR=$(FATRESIZE_IPK_DIR) install-strip
-#	install -d $(FATRESIZE_IPK_DIR)/opt/etc/
-#	install -m 644 $(FATRESIZE_SOURCE_DIR)/fatresize.conf $(FATRESIZE_IPK_DIR)/opt/etc/fatresize.conf
-#	install -d $(FATRESIZE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(FATRESIZE_SOURCE_DIR)/rc.fatresize $(FATRESIZE_IPK_DIR)/opt/etc/init.d/SXXfatresize
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FATRESIZE_IPK_DIR)/opt/etc/init.d/SXXfatresize
+#	install -d $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(FATRESIZE_SOURCE_DIR)/fatresize.conf $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/fatresize.conf
+#	install -d $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(FATRESIZE_SOURCE_DIR)/rc.fatresize $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfatresize
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FATRESIZE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfatresize
 	$(MAKE) $(FATRESIZE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(FATRESIZE_SOURCE_DIR)/postinst $(FATRESIZE_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FATRESIZE_IPK_DIR)/CONTROL/postinst

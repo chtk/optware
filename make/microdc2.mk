@@ -43,7 +43,7 @@ MICRODC2_IPK_VERSION=3
 
 #
 # MICRODC2_CONFFILES should be a list of user-editable files
-#MICRODC2_CONFFILES=/opt/etc/microdc2.conf /opt/etc/init.d/SXXmicrodc2
+#MICRODC2_CONFFILES=$(OPTWARE_PREFIX)etc/microdc2.conf $(OPTWARE_PREFIX)etc/init.d/SXXmicrodc2
 
 #
 # MICRODC2_PATCHES should list any patches, in the the order in
@@ -136,7 +136,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(MICRODC2_CONFIG_OPTS) \
 		--disable-rpath \
 		--disable-nls \
@@ -192,23 +192,23 @@ $(MICRODC2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MICRODC2_IPK_DIR)/opt/sbin or $(MICRODC2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MICRODC2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MICRODC2_IPK_DIR)/opt/etc/microdc2/...
-# Documentation files should be installed in $(MICRODC2_IPK_DIR)/opt/doc/microdc2/...
-# Daemon startup scripts should be installed in $(MICRODC2_IPK_DIR)/opt/etc/init.d/S??microdc2
+# Libraries and include files should be installed into $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/microdc2/...
+# Documentation files should be installed in $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)doc/microdc2/...
+# Daemon startup scripts should be installed in $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??microdc2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MICRODC2_IPK): $(MICRODC2_BUILD_DIR)/.built
 	rm -rf $(MICRODC2_IPK_DIR) $(BUILD_DIR)/microdc2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MICRODC2_BUILD_DIR) DESTDIR=$(MICRODC2_IPK_DIR) install-strip
-#	install -d $(MICRODC2_IPK_DIR)/opt/etc/
-#	install -m 644 $(MICRODC2_SOURCE_DIR)/microdc2.conf $(MICRODC2_IPK_DIR)/opt/etc/microdc2.conf
-#	install -d $(MICRODC2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MICRODC2_SOURCE_DIR)/rc.microdc2 $(MICRODC2_IPK_DIR)/opt/etc/init.d/SXXmicrodc2
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MICRODC2_IPK_DIR)/opt/etc/init.d/SXXmicrodc2
+#	install -d $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MICRODC2_SOURCE_DIR)/microdc2.conf $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/microdc2.conf
+#	install -d $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MICRODC2_SOURCE_DIR)/rc.microdc2 $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmicrodc2
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MICRODC2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmicrodc2
 	$(MAKE) $(MICRODC2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MICRODC2_SOURCE_DIR)/postinst $(MICRODC2_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MICRODC2_IPK_DIR)/CONTROL/postinst

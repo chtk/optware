@@ -118,7 +118,7 @@ make/gift-opennap.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--enable-shared \
 	)
@@ -144,16 +144,16 @@ gift-opennap: $(GIFT_OPENNAP_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libgift-opennap.so.$(GIFT_OPENNAP_VERSION): $(GIFT_OPENNAP_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/gift-opennap.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/libgift-opennap.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/libgift-opennap.so.$(GIFT_OPENNAP_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libgift-opennap.so.$(GIFT_OPENNAP_VERSION) libgift-opennap.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libgift-opennap.so.$(GIFT_OPENNAP_VERSION) libgift-opennap.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgift-opennap.so.$(GIFT_OPENNAP_VERSION): $(GIFT_OPENNAP_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/gift-opennap.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/libgift-opennap.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/libgift-opennap.so.$(GIFT_OPENNAP_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgift-opennap.so.$(GIFT_OPENNAP_VERSION) libgift-opennap.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgift-opennap.so.$(GIFT_OPENNAP_VERSION) libgift-opennap.so
 
-gift-opennap-stage: $(STAGING_DIR)/opt/lib/libgift-opennap.so.$(GIFT_OPENNAP_VERSION)
+gift-opennap-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgift-opennap.so.$(GIFT_OPENNAP_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -176,23 +176,23 @@ $(GIFT_OPENNAP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GIFT_OPENNAP_IPK_DIR)/opt/sbin or $(GIFT_OPENNAP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GIFT_OPENNAP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GIFT_OPENNAP_IPK_DIR)/opt/etc/gift-opennap/...
-# Documentation files should be installed in $(GIFT_OPENNAP_IPK_DIR)/opt/doc/gift-opennap/...
-# Daemon startup scripts should be installed in $(GIFT_OPENNAP_IPK_DIR)/opt/etc/init.d/S??gift-opennap
+# Libraries and include files should be installed into $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)etc/gift-opennap/...
+# Documentation files should be installed in $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)doc/gift-opennap/...
+# Daemon startup scripts should be installed in $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gift-opennap
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GIFT_OPENNAP_IPK): $(GIFT_OPENNAP_BUILD_DIR)/.built
 	rm -rf $(GIFT_OPENNAP_IPK_DIR) $(BUILD_DIR)/gift-opennap_*_$(TARGET_ARCH).ipk
-	install -d $(GIFT_OPENNAP_IPK_DIR)/opt/lib/giFT
-	$(STRIP_COMMAND) $(GIFT_OPENNAP_BUILD_DIR)/src/.libs/libOpenNap.so -o $(GIFT_OPENNAP_IPK_DIR)/opt/lib/giFT/libOpenNap.so
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/src/.libs/libOpenNap.la $(GIFT_OPENNAP_IPK_DIR)/opt/lib/giFT/libOpenNap.la
-	install -d $(GIFT_OPENNAP_IPK_DIR)/opt/share/giFT/OpenNap
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/data/OpenNap.conf.template $(GIFT_OPENNAP_IPK_DIR)/opt/share/giFT/OpenNap/OpenNap.conf.template
-	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/data/nodelist $(GIFT_OPENNAP_IPK_DIR)/opt/share/giFT/OpenNap/nodelist
+	install -d $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT
+	$(STRIP_COMMAND) $(GIFT_OPENNAP_BUILD_DIR)/src/.libs/libOpenNap.so -o $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libOpenNap.so
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/src/.libs/libOpenNap.la $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libOpenNap.la
+	install -d $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/OpenNap
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/data/OpenNap.conf.template $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/OpenNap/OpenNap.conf.template
+	install -m 644 $(GIFT_OPENNAP_BUILD_DIR)/data/nodelist $(GIFT_OPENNAP_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/OpenNap/nodelist
 	install -d $(GIFT_OPENNAP_IPK_DIR)/CONTROL
 	$(MAKE) $(GIFT_OPENNAP_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFT_OPENNAP_IPK_DIR)

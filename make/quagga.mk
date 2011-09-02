@@ -131,9 +131,9 @@ $(QUAGGA_BUILD_DIR)/.configured: $(DL_DIR)/$(QUAGGA_SOURCE) $(QUAGGA_PATCHES) ma
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc/quagga \
-		--localstatedir=/opt/var/run/quagga \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc/quagga \
+		--localstatedir=$(OPTWARE_PREFIX)var/run/quagga \
 		--disable-nls \
 		--disable-isisd \
 		--disable-static \
@@ -188,24 +188,24 @@ $(QUAGGA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(QUAGGA_IPK_DIR)/opt/sbin or $(QUAGGA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(QUAGGA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(QUAGGA_IPK_DIR)/opt/etc/quagga/...
-# Documentation files should be installed in $(QUAGGA_IPK_DIR)/opt/doc/quagga/...
-# Daemon startup scripts should be installed in $(QUAGGA_IPK_DIR)/opt/etc/init.d/S??quagga
+# Libraries and include files should be installed into $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)etc/quagga/...
+# Documentation files should be installed in $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)doc/quagga/...
+# Daemon startup scripts should be installed in $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??quagga
 #
 # You may need to patch your application to make it use these locations.
 #
 $(QUAGGA_IPK): $(QUAGGA_BUILD_DIR)/.built
 	rm -rf $(QUAGGA_IPK_DIR) $(BUILD_DIR)/quagga_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(QUAGGA_BUILD_DIR) DESTDIR=$(QUAGGA_IPK_DIR) install
-	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)/opt/sbin/*
-	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)/opt/bin/*
-	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)/opt/lib/*.so*
-	install -d $(QUAGGA_IPK_DIR)/opt/var/run/quagga
-	install -d $(QUAGGA_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(QUAGGA_SOURCE_DIR)/rc.quagga $(QUAGGA_IPK_DIR)/opt/etc/init.d/S50quagga
+	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
+	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so*
+	install -d $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)var/run/quagga
+	install -d $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(QUAGGA_SOURCE_DIR)/rc.quagga $(QUAGGA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S50quagga
 	$(MAKE) $(QUAGGA_IPK_DIR)/CONTROL/control
 	install -m 755 $(QUAGGA_SOURCE_DIR)/postinst $(QUAGGA_IPK_DIR)/CONTROL/postinst
 	#echo $(QUAGGA_CONFFILES) | sed -e 's/ /\n/g' > $(QUAGGA_IPK_DIR)/CONTROL/conffiles

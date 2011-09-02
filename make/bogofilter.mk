@@ -21,7 +21,7 @@ BOGOFILTER_DEPENDS+=, libiconv
 endif
 
 
-BOGOFILTER_CONFFILES=/opt/etc/bogofilter.conf
+BOGOFILTER_CONFFILES=$(OPTWARE_PREFIX)etc/bogofilter.conf
 
 ifeq ($(HOSTCC), $(TARGET_CC))
 BOGOFILTER_PATCHES=
@@ -86,7 +86,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-libdb-prefix=$(STAGING_PREFIX) \
 		--program-prefix= \
 		$(BOGOFILTER_CONFIGURE_OPTIONS) \
@@ -112,28 +112,28 @@ bogofilter: $(BOGOFILTER_BUILD_DIR)/.built
 
 $(BOGOFILTER_IPK): $(BOGOFILTER_BUILD_DIR)/.built
 	rm -rf $(BOGOFILTER_IPK_DIR) $(BUILD_DIR)/bogofilter_*_$(TARGET_ARCH).ipk
-	install -d $(BOGOFILTER_IPK_DIR)/opt/bin/
-	install -d $(BOGOFILTER_IPK_DIR)/opt/sbin/
-	install -d $(BOGOFILTER_IPK_DIR)/opt/doc/bogofilter/
-	install -d $(BOGOFILTER_IPK_DIR)/opt/etc/
-	install -d $(BOGOFILTER_IPK_DIR)/opt/man/man1/
-	install -d $(BOGOFILTER_IPK_DIR)/opt/var/spool/bogofilter
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)doc/bogofilter/
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
+	install -d $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)var/spool/bogofilter
 	$(MAKE) -C $(BOGOFILTER_BUILD_DIR) DESTDIR=$(BOGOFILTER_IPK_DIR) install
-	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)/opt/bin/bogofilter
-	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)/opt/bin/bogolexer
-	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)/opt/bin/bogotune
-	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)/opt/bin/bogoutil
+	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)bin/bogofilter
+	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)bin/bogolexer
+	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)bin/bogotune
+	$(STRIP_COMMAND) $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)bin/bogoutil
 	for i in "README.db" "README.sqlite" "README.tdb" "README.validation" \
 		 "bogofilter-faq.html" "bogofilter-tuning.HOWTO.html" \
 		 "bogofilter.html" "bogolexer.html" "bogotune-faq.html" \
 		 "bogotune.html" "bogoupgrade.html" "bogoutil.html" \
 		 "integrating-with-postfix" "integrating-with-qmail" ; do \
-	    install -m 644 $(BOGOFILTER_BUILD_DIR)/doc/$$i $(BOGOFILTER_IPK_DIR)/opt/doc/bogofilter/$$i ; \
+	    install -m 644 $(BOGOFILTER_BUILD_DIR)/doc/$$i $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)doc/bogofilter/$$i ; \
 	done
-	install -m 644 $(BOGOFILTER_SOURCE_DIR)/master.cf.patch $(BOGOFILTER_IPK_DIR)/opt/doc/bogofilter/master.cf.patch
-	mv $(BOGOFILTER_IPK_DIR)/opt/etc/bogofilter.cf.example $(BOGOFILTER_IPK_DIR)/opt/doc/bogofilter/bogofilter.cf.example
-	install -m 644 $(BOGOFILTER_SOURCE_DIR)/bogofilter.conf $(BOGOFILTER_IPK_DIR)/opt/etc/bogofilter.conf
-	install -m 755 $(BOGOFILTER_SOURCE_DIR)/postfix-bogofilter.sh $(BOGOFILTER_IPK_DIR)/opt/sbin/postfix-bogofilter.sh
+	install -m 644 $(BOGOFILTER_SOURCE_DIR)/master.cf.patch $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)doc/bogofilter/master.cf.patch
+	mv $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)etc/bogofilter.cf.example $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)doc/bogofilter/bogofilter.cf.example
+	install -m 644 $(BOGOFILTER_SOURCE_DIR)/bogofilter.conf $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)etc/bogofilter.conf
+	install -m 755 $(BOGOFILTER_SOURCE_DIR)/postfix-bogofilter.sh $(BOGOFILTER_IPK_DIR)$(OPTWARE_PREFIX)sbin/postfix-bogofilter.sh
 
 	$(MAKE) $(BOGOFILTER_IPK_DIR)/CONTROL/control
 	install -m 755 $(BOGOFILTER_SOURCE_DIR)/postinst $(BOGOFILTER_IPK_DIR)/CONTROL/postinst

@@ -40,7 +40,7 @@ LIBHID_IPK_VERSION=2
 
 #
 # LIBHID_CONFFILES should be a list of user-editable files
-#LIBHID_CONFFILES=/opt/etc/libhid.conf /opt/etc/init.d/SXXlibhid
+#LIBHID_CONFFILES=$(OPTWARE_PREFIX)etc/libhid.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibhid
 
 #
 # LIBHID_PATCHES should list any patches, in the the order in
@@ -131,7 +131,7 @@ $(LIBHID_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBHID_SOURCE) $(LIBHID_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-swig \
 		--disable-nls \
 		--disable-static \
@@ -188,23 +188,23 @@ $(LIBHID_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBHID_IPK_DIR)/opt/sbin or $(LIBHID_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBHID_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBHID_IPK_DIR)/opt/etc/libhid/...
-# Documentation files should be installed in $(LIBHID_IPK_DIR)/opt/doc/libhid/...
-# Daemon startup scripts should be installed in $(LIBHID_IPK_DIR)/opt/etc/init.d/S??libhid
+# Libraries and include files should be installed into $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/libhid/...
+# Documentation files should be installed in $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)doc/libhid/...
+# Daemon startup scripts should be installed in $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libhid
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBHID_IPK): $(LIBHID_BUILD_DIR)/.built
 	rm -rf $(LIBHID_IPK_DIR) $(BUILD_DIR)/libhid_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBHID_BUILD_DIR) DESTDIR=$(LIBHID_IPK_DIR) install-strip
-#	install -d $(LIBHID_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBHID_SOURCE_DIR)/libhid.conf $(LIBHID_IPK_DIR)/opt/etc/libhid.conf
-#	install -d $(LIBHID_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBHID_SOURCE_DIR)/rc.libhid $(LIBHID_IPK_DIR)/opt/etc/init.d/SXXlibhid
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBHID_IPK_DIR)/opt/etc/init.d/SXXlibhid
+#	install -d $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBHID_SOURCE_DIR)/libhid.conf $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/libhid.conf
+#	install -d $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBHID_SOURCE_DIR)/rc.libhid $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibhid
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBHID_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibhid
 	$(MAKE) $(LIBHID_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBHID_SOURCE_DIR)/postinst $(LIBHID_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBHID_IPK_DIR)/CONTROL/postinst

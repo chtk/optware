@@ -49,7 +49,7 @@ CLINKCC_IPK_VERSION=1
 
 #
 # CLINKCC_CONFFILES should be a list of user-editable files
-#CLINKCC_CONFFILES=/opt/etc/clinkcc.conf /opt/etc/init.d/SXXclinkcc
+#CLINKCC_CONFFILES=$(OPTWARE_PREFIX)etc/clinkcc.conf $(OPTWARE_PREFIX)etc/init.d/SXXclinkcc
 
 #
 # CLINKCC_PATCHES should list any patches, in the the order in
@@ -142,7 +142,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--enable-shared=clink \
 		--enable-static=no \
@@ -187,7 +187,7 @@ clinkcc: $(CLINKCC_BUILD_DIR)/.built
 # If you are building a library, then you need to stage it too.
 #
 $(CLINKCC_BUILD_DIR)/.staged: $(CLINKCC_BUILD_DIR)/.built
-	rm -f $@ $(STAGING_DIR)/opt/lib/libclink.a
+	rm -f $@ $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libclink.a
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
 	touch $@
 
@@ -215,23 +215,23 @@ $(CLINKCC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CLINKCC_IPK_DIR)/opt/sbin or $(CLINKCC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CLINKCC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CLINKCC_IPK_DIR)/opt/etc/clinkcc/...
-# Documentation files should be installed in $(CLINKCC_IPK_DIR)/opt/doc/clinkcc/...
-# Daemon startup scripts should be installed in $(CLINKCC_IPK_DIR)/opt/etc/init.d/S??clinkcc
+# Libraries and include files should be installed into $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/clinkcc/...
+# Documentation files should be installed in $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)doc/clinkcc/...
+# Daemon startup scripts should be installed in $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??clinkcc
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CLINKCC_IPK): $(CLINKCC_BUILD_DIR)/.built
 	rm -rf $(CLINKCC_IPK_DIR) $(BUILD_DIR)/clinkcc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CLINKCC_BUILD_DIR) DESTDIR=$(CLINKCC_IPK_DIR) install-strip
-#	install -d $(CLINKCC_IPK_DIR)/opt/etc/
-#	install -m 644 $(CLINKCC_SOURCE_DIR)/clinkcc.conf $(CLINKCC_IPK_DIR)/opt/etc/clinkcc.conf
-#	install -d $(CLINKCC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(CLINKCC_SOURCE_DIR)/rc.clinkcc $(CLINKCC_IPK_DIR)/opt/etc/init.d/SXXclinkcc
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLINKCC_IPK_DIR)/opt/etc/init.d/SXXclinkcc
+#	install -d $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(CLINKCC_SOURCE_DIR)/clinkcc.conf $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/clinkcc.conf
+#	install -d $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(CLINKCC_SOURCE_DIR)/rc.clinkcc $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXclinkcc
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLINKCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXclinkcc
 	$(MAKE) $(CLINKCC_IPK_DIR)/CONTROL/control
 #	install -m 755 $(CLINKCC_SOURCE_DIR)/postinst $(CLINKCC_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLINKCC_IPK_DIR)/CONTROL/postinst

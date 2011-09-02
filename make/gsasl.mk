@@ -47,7 +47,7 @@ GSASL_IPK_VERSION=1
 
 #
 # GSASL_CONFFILES should be a list of user-editable files
-#GSASL_CONFFILES=/opt/etc/gsasl.conf /opt/etc/init.d/SXXgsasl
+#GSASL_CONFFILES=$(OPTWARE_PREFIX)etc/gsasl.conf $(OPTWARE_PREFIX)etc/init.d/SXXgsasl
 
 #
 # GSASL_PATCHES should list any patches, in the the order in
@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(GSASL_CONFIG_OPTS) \
 		--disable-rpath \
 		--disable-nls \
@@ -217,19 +217,19 @@ $(GSASL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GSASL_IPK_DIR)/opt/sbin or $(GSASL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GSASL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GSASL_IPK_DIR)/opt/etc/gsasl/...
-# Documentation files should be installed in $(GSASL_IPK_DIR)/opt/doc/gsasl/...
-# Daemon startup scripts should be installed in $(GSASL_IPK_DIR)/opt/etc/init.d/S??gsasl
+# Libraries and include files should be installed into $(GSASL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)etc/gsasl/...
+# Documentation files should be installed in $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)doc/gsasl/...
+# Daemon startup scripts should be installed in $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gsasl
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBGSASL_IPK): $(GSASL_BUILD_DIR)/.built
 	rm -rf $(LIBGSASL_IPK_DIR) $(BUILD_DIR)/libgsasl_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GSASL_BUILD_DIR)/lib install-strip DESTDIR=$(LIBGSASL_IPK_DIR)
-	rm -f $(LIBGSASL_IPK_DIR)/opt/lib/*.la
+	rm -f $(LIBGSASL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(LIBGSASL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBGSASL_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(LIBGSASL_IPK_DIR)
@@ -239,7 +239,7 @@ $(GSASL_IPK): $(GSASL_BUILD_DIR)/.built
 	$(MAKE) -C $(GSASL_BUILD_DIR) install-strip \
 		DESTDIR=$(GSASL_IPK_DIR)
 #		SUBDIRS=`sed -n -e '/^SUBDIRS *=/{s/^.*= //;s/lib //;p}' $(GSASL_BUILD_DIR)/Makefile`
-	rm -rf $(GSASL_IPK_DIR)/opt/include $(GSASL_IPK_DIR)/opt/lib
+	rm -rf $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)include $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)lib
 	$(MAKE) $(GSASL_IPK_DIR)/CONTROL/control
 	echo $(GSASL_CONFFILES) | sed -e 's/ /\n/g' > $(GSASL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GSASL_IPK_DIR)

@@ -40,7 +40,7 @@ FDUPES_IPK_VERSION=1
 
 #
 # FDUPES_CONFFILES should be a list of user-editable files
-#FDUPES_CONFFILES=/opt/etc/fdupes.conf /opt/etc/init.d/SXXfdupes
+#FDUPES_CONFFILES=$(OPTWARE_PREFIX)etc/fdupes.conf $(OPTWARE_PREFIX)etc/init.d/SXXfdupes
 
 #
 # FDUPES_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(FDUPES_BUILD_DIR)/.configured: $(DL_DIR)/$(FDUPES_SOURCE) $(FDUPES_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -140,8 +140,8 @@ $(FDUPES_BUILD_DIR)/.built: $(FDUPES_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) fdupes \
 		$(TARGET_CONFIGURE_OPTS) \
-		INSTALLDIR=/opt/bin \
-		MANPAGEDIR=/opt/man \
+		INSTALLDIR=$(OPTWARE_PREFIX)bin \
+		MANPAGEDIR=$(OPTWARE_PREFIX)man \
 		;
 	touch $@
 
@@ -182,29 +182,29 @@ $(FDUPES_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FDUPES_IPK_DIR)/opt/sbin or $(FDUPES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FDUPES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FDUPES_IPK_DIR)/opt/etc/fdupes/...
-# Documentation files should be installed in $(FDUPES_IPK_DIR)/opt/doc/fdupes/...
-# Daemon startup scripts should be installed in $(FDUPES_IPK_DIR)/opt/etc/init.d/S??fdupes
+# Libraries and include files should be installed into $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/fdupes/...
+# Documentation files should be installed in $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)doc/fdupes/...
+# Daemon startup scripts should be installed in $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??fdupes
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FDUPES_IPK): $(FDUPES_BUILD_DIR)/.built
 	rm -rf $(FDUPES_IPK_DIR) $(BUILD_DIR)/fdupes_*_$(TARGET_ARCH).ipk
-	install -d $(FDUPES_IPK_DIR)/opt/bin $(FDUPES_IPK_DIR)/opt/man/man1
+	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) -C $(FDUPES_BUILD_DIR) install \
-		INSTALLDIR=$(FDUPES_IPK_DIR)/opt/bin \
-		MANPAGEDIR=$(FDUPES_IPK_DIR)/opt/man \
+		INSTALLDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin \
+		MANPAGEDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)man \
 		;
-	$(STRIP_COMMAND) $(FDUPES_IPK_DIR)/opt/bin/*
-	install -d $(FDUPES_IPK_DIR)/opt/share/doc/fdupes
-	install -m644 $(FDUPES_BUILD_DIR)/[CIRT]* $(FDUPES_IPK_DIR)/opt/share/doc/fdupes/
-#	install -m 644 $(FDUPES_SOURCE_DIR)/fdupes.conf $(FDUPES_IPK_DIR)/opt/etc/fdupes.conf
-#	install -d $(FDUPES_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(FDUPES_SOURCE_DIR)/rc.fdupes $(FDUPES_IPK_DIR)/opt/etc/init.d/SXXfdupes
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FDUPES_IPK_DIR)/opt/etc/init.d/SXXfdupes
+	$(STRIP_COMMAND) $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fdupes
+	install -m644 $(FDUPES_BUILD_DIR)/[CIRT]* $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fdupes/
+#	install -m 644 $(FDUPES_SOURCE_DIR)/fdupes.conf $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/fdupes.conf
+#	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(FDUPES_SOURCE_DIR)/rc.fdupes $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfdupes
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfdupes
 	$(MAKE) $(FDUPES_IPK_DIR)/CONTROL/control
 #	install -m 755 $(FDUPES_SOURCE_DIR)/postinst $(FDUPES_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(FDUPES_IPK_DIR)/CONTROL/postinst

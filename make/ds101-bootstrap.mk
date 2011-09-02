@@ -58,26 +58,26 @@ ds101-bootstrap: $(DS101_BOOTSTRAP_BUILD_DIR)/.built
 
 $(DS101_BOOTSTRAP_BUILD_DIR)/.staged: $(DS101_BOOTSTRAP_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/lib
-	install -d $(STAGING_DIR)/opt/sbin
-	install -d $(STAGING_DIR)/opt/etc
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)etc
 	install -d $(STAGING_DIR)/writeable/lib
 ifeq ($(OPTWARE_TARGET),ds101)
-	install -d $(STAGING_DIR)/opt/lib/gconv
-	install -d $(STAGING_DIR)/opt/lib/ldscripts
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/*crt* $(STAGING_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/lib* $(STAGING_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/gconv/* $(STAGING_DIR)/opt/lib/gconv
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(STAGING_DIR)/opt/lib/ldscripts	
-	rm -f $(STAGING_DIR)/opt/lib/libc\.* $(STAGING_DIR)/opt/lib/libpthread* $(STAGING_DIR)/opt/lib/libnss_files*
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib/ldscripts
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/*crt* $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/lib* $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/gconv/* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/ldscripts	
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libc\.* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpthread* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libnss_files*
 else
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libpthread-0.*.so $(STAGING_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/librt-$(DS101_GLIBC_VERSION).so $(STAGING_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libutil-$(DS101_GLIBC_VERSION).so $(STAGING_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libgcc_s.so.1 $(STAGING_DIR)/opt/lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libpthread-0.*.so $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/librt-$(DS101_GLIBC_VERSION).so $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libutil-$(DS101_GLIBC_VERSION).so $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libgcc_s.so.1 $(STAGING_DIR)$(OPTWARE_PREFIX)lib
 endif
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldconfig $(STAGING_DIR)/opt/sbin
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/rc.optware $(STAGING_DIR)/opt/etc
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldconfig $(STAGING_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/rc.optware $(STAGING_DIR)$(OPTWARE_PREFIX)etc
 	touch $@
 
 ds101-bootstrap-stage: $(DS101_BOOTSTRAP_BUILD_DIR)/.staged
@@ -98,28 +98,28 @@ $(DS101_BOOTSTRAP_IPK_DIR)/CONTROL/control:
 
 $(DS101_BOOTSTRAP_IPK): $(DS101_BOOTSTRAP_BUILD_DIR)/.built
 	rm -rf $(DS101_BOOTSTRAP_IPK_DIR) $(BUILD_DIR)/ds101-bootstrap_*_$(TARGET_ARCH).ipk
-	install -d $(DS101_BOOTSTRAP_IPK_DIR)/opt/sbin
-	install -d $(DS101_BOOTSTRAP_IPK_DIR)/opt/etc
+	install -d $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
 	install -d $(DS101_BOOTSTRAP_IPK_DIR)/writeable/lib
-	install -d $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib
+	install -d $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
 ifeq ($(OPTWARE_TARGET),ds101)
-	install -d $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/gconv
-	install -d $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/*crt* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/lib* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/gconv/* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/gconv/
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts/
-	rm -f $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/libc* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/libpthread* $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/libnss_files*
+	install -d $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -d $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/*crt* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/lib* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/gconv/* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv/
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts/
+	rm -f $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/libc* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/libpthread* $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/libnss_files*
 else	
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libpthread-0.*.so $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/librt-$(DS101_GLIBC_VERSION).so $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libutil-$(DS101_GLIBC_VERSION).so $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libgcc_s.so.1 $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libpthread-0.*.so $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/librt-$(DS101_GLIBC_VERSION).so $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libutil-$(DS101_GLIBC_VERSION).so $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/libgcc_s.so.1 $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
 endif
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldconfig $(DS101_BOOTSTRAP_IPK_DIR)/opt/sbin
-	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/rc.optware $(DS101_BOOTSTRAP_IPK_DIR)/opt/etc
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/ldconfig $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(DS101_BOOTSTRAP_BUILD_DIR)/rc.optware $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
 
-	$(STRIP_COMMAND) $(DS101_BOOTSTRAP_IPK_DIR)/opt/lib/*.so
+	$(STRIP_COMMAND) $(DS101_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
 	$(MAKE) $(DS101_BOOTSTRAP_IPK_DIR)/CONTROL/control
 	install -m 644 $(DS101_BOOTSTRAP_SOURCE_DIR)/preinst $(DS101_BOOTSTRAP_IPK_DIR)/CONTROL/preinst
 	install -m 644 $(DS101_BOOTSTRAP_SOURCE_DIR)/postinst $(DS101_BOOTSTRAP_IPK_DIR)/CONTROL/postinst

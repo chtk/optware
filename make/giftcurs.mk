@@ -39,7 +39,7 @@ GIFTCURS_IPK_VERSION=2
 
 #
 # GIFTCURS_CONFFILES should be a list of user-editable files
-GIFTCURS_CONFFILES=/opt/etc/giFTcurs.conf /opt/etc/init.d/SXXgiFTcurs
+GIFTCURS_CONFFILES=$(OPTWARE_PREFIX)etc/giFTcurs.conf $(OPTWARE_PREFIX)etc/init.d/SXXgiFTcurs
 
 #
 # GIFTCURS_PATCHES should list any patches, in the the order in
@@ -114,8 +114,8 @@ $(GIFTCURS_BUILD_DIR)/.configured: $(DL_DIR)/$(GIFTCURS_SOURCE) $(GIFTCURS_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-ncurses=$(STAGING_DIR)/opt \
-		--prefix=/opt \
+		--with-ncurses=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(GIFTCURS_BUILD_DIR)/.configured
@@ -138,16 +138,16 @@ giftcurs: $(GIFTCURS_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libgiFTcurs.so.$(GIFTCURS_VERSION): $(GIFTCURS_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(GIFTCURS_BUILD_DIR)/giFTcurs.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(GIFTCURS_BUILD_DIR)/libgiFTcurs.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(GIFTCURS_BUILD_DIR)/libgiFTcurs.so.$(GIFTCURS_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libgiFTcurs.so.$(GIFTCURS_VERSION) libgiFTcurs.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libgiFTcurs.so.$(GIFTCURS_VERSION) libgiFTcurs.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiFTcurs.so.$(GIFTCURS_VERSION): $(GIFTCURS_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(GIFTCURS_BUILD_DIR)/giFTcurs.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(GIFTCURS_BUILD_DIR)/libgiFTcurs.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(GIFTCURS_BUILD_DIR)/libgiFTcurs.so.$(GIFTCURS_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgiFTcurs.so.$(GIFTCURS_VERSION) libgiFTcurs.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgiFTcurs.so.$(GIFTCURS_VERSION) libgiFTcurs.so
 
-giFTcurs-stage: $(STAGING_DIR)/opt/lib/libgiFTcurs.so.$(GIFTCURS_VERSION)
+giFTcurs-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiFTcurs.so.$(GIFTCURS_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -171,19 +171,19 @@ $(GIFTCURS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GIFTCURS_IPK_DIR)/opt/sbin or $(GIFTCURS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GIFTCURS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GIFTCURS_IPK_DIR)/opt/etc/giFTcurs/...
-# Documentation files should be installed in $(GIFTCURS_IPK_DIR)/opt/doc/giFTcurs/...
-# Daemon startup scripts should be installed in $(GIFTCURS_IPK_DIR)/opt/etc/init.d/S??giFTcurs
+# Libraries and include files should be installed into $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)etc/giFTcurs/...
+# Documentation files should be installed in $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)doc/giFTcurs/...
+# Daemon startup scripts should be installed in $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??giFTcurs
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GIFTCURS_IPK): $(GIFTCURS_BUILD_DIR)/.built
 	rm -rf $(GIFTCURS_IPK_DIR) $(BUILD_DIR)/giftcurs_*_$(TARGET_ARCH).ipk
-	install -d $(GIFTCURS_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(GIFTCURS_BUILD_DIR)/src/giFTcurs -o $(GIFTCURS_IPK_DIR)/opt/bin/giFTcurs
+	install -d $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(GIFTCURS_BUILD_DIR)/src/giFTcurs -o $(GIFTCURS_IPK_DIR)$(OPTWARE_PREFIX)bin/giFTcurs
 	$(MAKE) $(GIFTCURS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFTCURS_IPK_DIR)
 

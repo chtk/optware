@@ -46,7 +46,7 @@ MEMCACHED_IPK_VERSION=2
 
 #
 # MEMCACHED_CONFFILES should be a list of user-editable files
-#MEMCACHED_CONFFILES=/opt/etc/memcached.conf /opt/etc/init.d/SXXmemcached
+#MEMCACHED_CONFFILES=$(OPTWARE_PREFIX)etc/memcached.conf $(OPTWARE_PREFIX)etc/init.d/SXXmemcached
 
 #
 # MEMCACHED_PATCHES should list any patches, in the the order in
@@ -138,7 +138,7 @@ $(MEMCACHED_BUILD_DIR)/.configured: $(DL_DIR)/$(MEMCACHED_SOURCE) $(MEMCACHED_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-libevent=$(STAGING_PREFIX) \
@@ -193,19 +193,19 @@ $(MEMCACHED_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MEMCACHED_IPK_DIR)/opt/sbin or $(MEMCACHED_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MEMCACHED_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MEMCACHED_IPK_DIR)/opt/etc/memcached/...
-# Documentation files should be installed in $(MEMCACHED_IPK_DIR)/opt/doc/memcached/...
-# Daemon startup scripts should be installed in $(MEMCACHED_IPK_DIR)/opt/etc/init.d/S??memcached
+# Libraries and include files should be installed into $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)etc/memcached/...
+# Documentation files should be installed in $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)doc/memcached/...
+# Daemon startup scripts should be installed in $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??memcached
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MEMCACHED_IPK): $(MEMCACHED_BUILD_DIR)/.built
 	rm -rf $(MEMCACHED_IPK_DIR) $(BUILD_DIR)/memcached_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MEMCACHED_BUILD_DIR) DESTDIR=$(MEMCACHED_IPK_DIR) transform="" install
-	$(STRIP_COMMAND) $(MEMCACHED_IPK_DIR)/opt/bin/memcached*
+	$(STRIP_COMMAND) $(MEMCACHED_IPK_DIR)$(OPTWARE_PREFIX)bin/memcached*
 	$(MAKE) $(MEMCACHED_IPK_DIR)/CONTROL/control
 	echo $(MEMCACHED_CONFFILES) | sed -e 's/ /\n/g' > $(MEMCACHED_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MEMCACHED_IPK_DIR)

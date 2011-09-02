@@ -41,7 +41,7 @@ VSFTPD_IPK_VERSION=1
 
 
 # VSFTPD_CONFFILES should be a list of user-editable files
-VSFTPD_CONFFILES=/opt/etc/vsftpd.conf
+VSFTPD_CONFFILES=$(OPTWARE_PREFIX)etc/vsftpd.conf
 
 #
 # VSFTPD_PATCHES should list any patches, in the the order in
@@ -133,7 +133,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -161,13 +161,13 @@ vsftpd: $(VSFTPD_BUILD_DIR)/.built
 # If you are building a library, then you need to stage it too.
 #
 #$(VSFTPD_BUILD_DIR)/.staged: $(VSFTPD_BUILD_DIR)/.built
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(VSFTPD_BUILD_DIR)/libvsftpd.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(VSFTPD_BUILD_DIR)/libvsftpd.so.$(VSFTPD_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libvsftpd.so.$(VSFTPD_VERSION) libvsftpd.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libvsftpd.so.$(VSFTPD_VERSION) libvsftpd.so
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(VSFTPD_BUILD_DIR)/libvsftpd.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(VSFTPD_BUILD_DIR)/libvsftpd.so.$(VSFTPD_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libvsftpd.so.$(VSFTPD_VERSION) libvsftpd.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libvsftpd.so.$(VSFTPD_VERSION) libvsftpd.so
 #
 #vsftpd-stage: $(VSFTPD_BUILD_DIR)/.staged
 
@@ -189,25 +189,25 @@ $(VSFTPD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(VSFTPD_IPK_DIR)/opt/sbin or $(VSFTPD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(VSFTPD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(VSFTPD_IPK_DIR)/opt/etc/vsftpd/...
-# Documentation files should be installed in $(VSFTPD_IPK_DIR)/opt/doc/vsftpd/...
-# Daemon startup scripts should be installed in $(VSFTPD_IPK_DIR)/opt/etc/init.d/S??vsftpd
+# Libraries and include files should be installed into $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/vsftpd/...
+# Documentation files should be installed in $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)doc/vsftpd/...
+# Daemon startup scripts should be installed in $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??vsftpd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(VSFTPD_IPK): $(VSFTPD_BUILD_DIR)/.built
 	rm -rf $(VSFTPD_IPK_DIR) $(BUILD_DIR)/vsftpd_*_$(TARGET_ARCH).ipk
-	install -d $(VSFTPD_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(VSFTPD_BUILD_DIR)/vsftpd -o $(VSFTPD_IPK_DIR)/opt/sbin/vsftpd
-	install -d $(VSFTPD_IPK_DIR)/opt/etc
-	install -m 644 $(VSFTPD_SOURCE_DIR)/vsftpd.conf $(VSFTPD_IPK_DIR)/opt/etc/vsftpd.conf
-	install -d $(VSFTPD_IPK_DIR)/opt/share/man/man5
-	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.conf.5 $(VSFTPD_IPK_DIR)/opt/share/man/man5
-	install -d $(VSFTPD_IPK_DIR)/opt/share/man/man8
-	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.8 $(VSFTPD_IPK_DIR)/opt/share/man/man8
+	install -d $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(VSFTPD_BUILD_DIR)/vsftpd -o $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/vsftpd
+	install -d $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(VSFTPD_SOURCE_DIR)/vsftpd.conf $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/vsftpd.conf
+	install -d $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)share/man/man5
+	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.conf.5 $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)share/man/man5
+	install -d $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
+	install -m 644 $(VSFTPD_BUILD_DIR)/vsftpd.8 $(VSFTPD_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
 	$(MAKE) $(VSFTPD_IPK_DIR)/CONTROL/control
 	install -m 644 $(VSFTPD_SOURCE_DIR)/postinst $(VSFTPD_IPK_DIR)/CONTROL/postinst
 	echo $(VSFTPD_CONFFILES) | sed -e 's/ /\n/g' > $(VSFTPD_IPK_DIR)/CONTROL/conffiles

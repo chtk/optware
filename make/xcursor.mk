@@ -122,7 +122,7 @@ $(XCURSOR_BUILD_DIR)/.configured: $(DL_DIR)/xcursor-$(XCURSOR_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -157,12 +157,12 @@ xcursor-stage: $(XCURSOR_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XCURSOR_IPK_DIR)/opt/sbin or $(XCURSOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XCURSOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XCURSOR_IPK_DIR)/opt/etc/xcursor/...
-# Documentation files should be installed in $(XCURSOR_IPK_DIR)/opt/doc/xcursor/...
-# Daemon startup scripts should be installed in $(XCURSOR_IPK_DIR)/opt/etc/init.d/S??xcursor
+# Libraries and include files should be installed into $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)etc/xcursor/...
+# Documentation files should be installed in $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)doc/xcursor/...
+# Daemon startup scripts should be installed in $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xcursor
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -170,7 +170,7 @@ $(XCURSOR_IPK): $(XCURSOR_BUILD_DIR)/.built
 	rm -rf $(XCURSOR_IPK_DIR) $(BUILD_DIR)/xcursor_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XCURSOR_BUILD_DIR) DESTDIR=$(XCURSOR_IPK_DIR) install-strip
 	$(MAKE) $(XCURSOR_IPK_DIR)/CONTROL/control
-	rm -f $(XCURSOR_IPK_DIR)/opt/lib/*.la
+	rm -f $(XCURSOR_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XCURSOR_IPK_DIR)
 
 #

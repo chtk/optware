@@ -40,9 +40,9 @@ $(PERL-IP-COUNTRY_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-IP-COUNTRY_SOURCE) $(
 #	cat $(PERL-IP-COUNTRY_PATCHES) | patch -d $(BUILD_DIR)/$(PERL-IP-COUNTRY_DIR) -p1
 	mv $(BUILD_DIR)/$(PERL-IP-COUNTRY_DIR) $(PERL-IP-COUNTRY_BUILD_DIR)
 	(cd $(PERL-IP-COUNTRY_BUILD_DIR); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL -d\
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-IP-COUNTRY_BUILD_DIR)/.configured
 
@@ -51,7 +51,7 @@ perl-ip-country-unpack: $(PERL-IP-COUNTRY_BUILD_DIR)/.configured
 $(PERL-IP-COUNTRY_BUILD_DIR)/.built: $(PERL-IP-COUNTRY_BUILD_DIR)/.configured
 	rm -f $(PERL-IP-COUNTRY_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-IP-COUNTRY_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" 
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" 
 	touch $(PERL-IP-COUNTRY_BUILD_DIR)/.built
 
 perl-ip-country: $(PERL-IP-COUNTRY_BUILD_DIR)/.built
@@ -81,13 +81,13 @@ $(PERL-IP-COUNTRY_IPK_DIR)/CONTROL/control:
 $(PERL-IP-COUNTRY_IPK): $(PERL-IP-COUNTRY_BUILD_DIR)/.built
 	rm -rf $(PERL-IP-COUNTRY_IPK_DIR) $(BUILD_DIR)/perl-ip-country_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-IP-COUNTRY_BUILD_DIR) DESTDIR=$(PERL-IP-COUNTRY_IPK_DIR) install
-	find $(PERL-IP-COUNTRY_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-IP-COUNTRY_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-IP-COUNTRY_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-IP-COUNTRY_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-IP-COUNTRY_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-IP-COUNTRY_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-IP-COUNTRY_IPK_DIR)/CONTROL/control
 	echo $(PERL-IP-COUNTRY_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-IP-COUNTRY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-IP-COUNTRY_IPK_DIR)

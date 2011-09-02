@@ -40,7 +40,7 @@ MPC_IPK_VERSION=1
 
 #
 # MPC_CONFFILES should be a list of user-editable files
-#MPC_CONFFILES=/opt/etc/mpc.conf /opt/etc/init.d/SXXmpc
+#MPC_CONFFILES=$(OPTWARE_PREFIX)etc/mpc.conf $(OPTWARE_PREFIX)etc/init.d/SXXmpc
 
 #
 # MPC_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(MPC_BUILD_DIR)/.configured: $(DL_DIR)/$(MPC_SOURCE) $(MPC_PATCHES) make/mpc.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(MPC_CONFIG_ARGS) \
 		--disable-nls \
 		--disable-static \
@@ -184,23 +184,23 @@ $(MPC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MPC_IPK_DIR)/opt/sbin or $(MPC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MPC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MPC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MPC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MPC_IPK_DIR)/opt/etc/mpc/...
-# Documentation files should be installed in $(MPC_IPK_DIR)/opt/doc/mpc/...
-# Daemon startup scripts should be installed in $(MPC_IPK_DIR)/opt/etc/init.d/S??mpc
+# Libraries and include files should be installed into $(MPC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/mpc/...
+# Documentation files should be installed in $(MPC_IPK_DIR)$(OPTWARE_PREFIX)doc/mpc/...
+# Daemon startup scripts should be installed in $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mpc
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MPC_IPK): $(MPC_BUILD_DIR)/.built
 	rm -rf $(MPC_IPK_DIR) $(BUILD_DIR)/mpc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MPC_BUILD_DIR) DESTDIR=$(MPC_IPK_DIR) install-strip
-#	install -d $(MPC_IPK_DIR)/opt/etc/
-#	install -m 644 $(MPC_SOURCE_DIR)/mpc.conf $(MPC_IPK_DIR)/opt/etc/mpc.conf
-#	install -d $(MPC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MPC_SOURCE_DIR)/rc.mpc $(MPC_IPK_DIR)/opt/etc/init.d/SXXmpc
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXmpc
+#	install -d $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MPC_SOURCE_DIR)/mpc.conf $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/mpc.conf
+#	install -d $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MPC_SOURCE_DIR)/rc.mpc $(MPC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmpc
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmpc
 	$(MAKE) $(MPC_IPK_DIR)/CONTROL/control
 	echo $(MPC_CONFFILES) | sed -e 's/ /\n/g' > $(MPC_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MPC_IPK_DIR)

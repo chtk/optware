@@ -75,19 +75,19 @@ $(NTPCLIENT_IPK_DIR)/CONTROL/control:
 	@echo "Conflicts: $(NTPCLIENT_CONFLICTS)" >>$@
 
 $(NTPCLIENT_IPK): $(NTPCLIENT_BUILD_DIR)/.built
-	install -d $(NTPCLIENT_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(NTPCLIENT_BUILD_DIR)/ntpclient -o $(NTPCLIENT_IPK_DIR)/opt/bin/ntpclient
-	install -d $(NTPCLIENT_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(NTPCLIENT_BUILD_DIR)/adjtimex -o $(NTPCLIENT_IPK_DIR)/opt/sbin/adjtimex
-	install -d $(NTPCLIENT_IPK_DIR)/opt/share/man/man1
-	install $(NTPCLIENT_BUILD_DIR)/ntpclient.1 $(NTPCLIENT_IPK_DIR)/opt/share/man/man1
-	install $(NTPCLIENT_BUILD_DIR)/adjtimex.1 $(NTPCLIENT_IPK_DIR)/opt/share/man/man1
-	install -d $(NTPCLIENT_IPK_DIR)/opt/share/doc/ntpclient
+	install -d $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(NTPCLIENT_BUILD_DIR)/ntpclient -o $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)bin/ntpclient
+	install -d $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(NTPCLIENT_BUILD_DIR)/adjtimex -o $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)sbin/adjtimex
+	install -d $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	install $(NTPCLIENT_BUILD_DIR)/ntpclient.1 $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	install $(NTPCLIENT_BUILD_DIR)/adjtimex.1 $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	install -d $(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ntpclient
 	install $(NTPCLIENT_BUILD_DIR)/[RH]* \
 		$(NTPCLIENT_BUILD_DIR)/*.awk \
 		$(NTPCLIENT_BUILD_DIR)/*.pl \
 		$(NTPCLIENT_BUILD_DIR)/test.dat \
-		$(NTPCLIENT_IPK_DIR)/opt/share/doc/ntpclient
+		$(NTPCLIENT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ntpclient
 	$(MAKE) $(NTPCLIENT_IPK_DIR)/CONTROL/control
 	install -m 755 $(NTPCLIENT_SOURCE_DIR)/postinst $(NTPCLIENT_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(NTPCLIENT_SOURCE_DIR)/prerm $(NTPCLIENT_IPK_DIR)/CONTROL/prerm

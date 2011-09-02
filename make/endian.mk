@@ -40,7 +40,7 @@ ENDIAN_IPK_VERSION=1
 
 #
 # ENDIAN_CONFFILES should be a list of user-editable files
-#ENDIAN_CONFFILES=/opt/etc/endian.conf /opt/etc/init.d/SXXendian
+#ENDIAN_CONFFILES=$(OPTWARE_PREFIX)etc/endian.conf $(OPTWARE_PREFIX)etc/init.d/SXXendian
 
 #
 # ENDIAN_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(ENDIAN_BUILD_DIR)/.configured: $(DL_DIR)/$(ENDIAN_SOURCE) $(ENDIAN_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -181,22 +181,22 @@ $(ENDIAN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ENDIAN_IPK_DIR)/opt/sbin or $(ENDIAN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ENDIAN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ENDIAN_IPK_DIR)/opt/etc/endian/...
-# Documentation files should be installed in $(ENDIAN_IPK_DIR)/opt/doc/endian/...
-# Daemon startup scripts should be installed in $(ENDIAN_IPK_DIR)/opt/etc/init.d/S??endian
+# Libraries and include files should be installed into $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)etc/endian/...
+# Documentation files should be installed in $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)doc/endian/...
+# Daemon startup scripts should be installed in $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??endian
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ENDIAN_IPK): $(ENDIAN_BUILD_DIR)/.built
 	rm -rf $(ENDIAN_IPK_DIR) $(BUILD_DIR)/endian_*_$(TARGET_ARCH).ipk
-	install -d $(ENDIAN_IPK_DIR)/opt/bin
-	install -d $(ENDIAN_IPK_DIR)/opt/man/man1
+	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) -C $(ENDIAN_BUILD_DIR) install \
 		DESTDIR=$(ENDIAN_IPK_DIR) PREFIX=$(ENDIAN_IPK_DIR)/opt
-	$(STRIP_COMMAND) $(ENDIAN_IPK_DIR)/opt/bin/endian
+	$(STRIP_COMMAND) $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)bin/endian
 	$(MAKE) $(ENDIAN_IPK_DIR)/CONTROL/control
 #	echo $(ENDIAN_CONFFILES) | sed -e 's/ /\n/g' > $(ENDIAN_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ENDIAN_IPK_DIR)

@@ -1,6 +1,7 @@
 LIBC_STYLE=glibc
 TARGET_ARCH=mipsel
 TARGET_OS=linux-gnu
+OPTWARE_PREFIX=/usr/local/
 
 #LIBNSL_VERSION=0.9.19
 

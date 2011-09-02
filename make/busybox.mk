@@ -212,12 +212,12 @@ $(BUSYBOX_IPK_DIR)-links/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BUSYBOX_IPK_DIR)/opt/sbin or $(BUSYBOX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BUSYBOX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BUSYBOX_IPK_DIR)/opt/etc/busybox/...
-# Documentation files should be installed in $(BUSYBOX_IPK_DIR)/opt/doc/busybox/...
-# Daemon startup scripts should be installed in $(BUSYBOX_IPK_DIR)/opt/etc/init.d/S??busybox
+# Libraries and include files should be installed into $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/busybox/...
+# Documentation files should be installed in $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)doc/busybox/...
+# Daemon startup scripts should be installed in $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??busybox
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -231,28 +231,28 @@ $(BUSYBOX_IPK): $(BUSYBOX_BUILD_DIR)/.built
 		HOSTCC=$(HOSTCC) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" -C $(BUSYBOX_BUILD_DIR) install
 	rm -rf $(BUSYBOX_IPK_DIR)-base
-	install -d $(BUSYBOX_IPK_DIR)-base/opt/bin
-	mv $(BUSYBOX_IPK_DIR)/opt/bin/busybox $(BUSYBOX_IPK_DIR)-base/opt/bin
+	install -d $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)bin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)bin/busybox $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)bin
 	$(MAKE) $(BUSYBOX_IPK_DIR)-base/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BUSYBOX_IPK_DIR)-base
 	rm -rf $(BUSYBOX_IPK_DIR)-links
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/bin
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/libexec
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/sbin
-	mv $(BUSYBOX_IPK_DIR)/opt/bin/* $(BUSYBOX_IPK_DIR)-links/opt/bin
-	mv $(BUSYBOX_IPK_DIR)/opt/sbin/* $(BUSYBOX_IPK_DIR)-links/opt/sbin
-	mv $(BUSYBOX_IPK_DIR)-links/opt/sbin/chroot $(BUSYBOX_IPK_DIR)-links/opt/bin/
-	mv $(BUSYBOX_IPK_DIR)-links/opt/sbin/ifconfig $(BUSYBOX_IPK_DIR)-links/opt/bin/
-	mv $(BUSYBOX_IPK_DIR)-links/opt/sbin/syslogd $(BUSYBOX_IPK_DIR)-links/opt/libexec/
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)bin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)sbin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/chroot $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin/
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/ifconfig $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin/
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/syslogd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec/
 	$(MAKE) $(BUSYBOX_IPK_DIR)-links/CONTROL/control
 	echo "#!/bin/sh" > $(BUSYBOX_IPK_DIR)-links/CONTROL/postinst
 	echo "#!/bin/sh" > $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm
 	for d in bin libexec sbin; do \
-	    cd $(BUSYBOX_IPK_DIR)-links/opt/$$d; \
+	    cd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)$$d; \
 	    for l in *; do \
-		echo "update-alternatives --install '/opt/$$d/$$l' '$$l' /opt/bin/busybox 30" \
+		echo "update-alternatives --install '$(OPTWARE_PREFIX)$$d/$$l' '$$l' $(OPTWARE_PREFIX)bin/busybox 30" \
 		    >> $(BUSYBOX_IPK_DIR)-links/CONTROL/postinst; \
-		echo "update-alternatives --remove '$$l' /opt/bin/busybox" \
+		echo "update-alternatives --remove '$$l' $(OPTWARE_PREFIX)bin/busybox" \
 		    >> $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm; \
 	    done; \
 	done
@@ -261,9 +261,9 @@ $(BUSYBOX_IPK): $(BUSYBOX_BUILD_DIR)/.built
 			$(BUSYBOX_IPK_DIR)-links/CONTROL/postinst $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm; \
 	fi
 	rm -rf $(BUSYBOX_IPK_DIR)-links/opt
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/bin
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/libexec
-	install -d $(BUSYBOX_IPK_DIR)-links/opt/sbin
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BUSYBOX_IPK_DIR)-links
 	rm -rf $(BUSYBOX_IPK_DIR)/opt
 	$(MAKE) $(BUSYBOX_IPK_DIR)/CONTROL/control

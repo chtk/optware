@@ -114,7 +114,7 @@ $(LIBTIFF_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBTIFF_SOURCE) $(LIBTIFF_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -146,16 +146,16 @@ libtiff: $(LIBTIFF_BUILD_DIR)/.built
 #
 $(LIBTIFF_BUILD_DIR)/.staged: $(LIBTIFF_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiff.h $(STAGING_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffio.h $(STAGING_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffconf.h $(STAGING_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffvers.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/.libs/libtiff.so.$(LIBTIFF_VERSION) $(STAGING_DIR)/opt/lib
-	rm -f $(STAGING_DIR)/opt/lib/libtiff*.la
-	cd $(STAGING_DIR)/opt/lib && ln -fs libtiff.so.$(LIBTIFF_VERSION) libtiff.so.3
-	cd $(STAGING_DIR)/opt/lib && ln -fs libtiff.so.$(LIBTIFF_VERSION) libtiff.so
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiff.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffio.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffconf.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffvers.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/.libs/libtiff.so.$(LIBTIFF_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtiff*.la
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libtiff.so.$(LIBTIFF_VERSION) libtiff.so.3
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libtiff.so.$(LIBTIFF_VERSION) libtiff.so
 	touch -f $@
 
 libtiff-stage: $(LIBTIFF_BUILD_DIR)/.staged
@@ -182,30 +182,30 @@ $(LIBTIFF_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBTIFF_IPK_DIR)/opt/sbin or $(LIBTIFF_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBTIFF_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBTIFF_IPK_DIR)/opt/etc/libtiff/...
-# Documentation files should be installed in $(LIBTIFF_IPK_DIR)/opt/doc/libtiff/...
-# Daemon startup scripts should be installed in $(LIBTIFF_IPK_DIR)/opt/etc/init.d/S??libtiff
+# Libraries and include files should be installed into $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)etc/libtiff/...
+# Documentation files should be installed in $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)doc/libtiff/...
+# Daemon startup scripts should be installed in $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libtiff
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBTIFF_IPK): $(LIBTIFF_BUILD_DIR)/.built
 	rm -rf $(LIBTIFF_IPK_DIR) $(LIBTIFF_IPK)
-	install -d $(LIBTIFF_IPK_DIR)/opt/bin
+	install -d $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)bin
 	$(MAKE) -C $(LIBTIFF_BUILD_DIR) DESTDIR=$(LIBTIFF_IPK_DIR) install-exec transform=''
-	$(STRIP_COMMAND) $(LIBTIFF_IPK_DIR)/opt/bin/*
+	$(STRIP_COMMAND) $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)bin/*
 
-	install -d $(LIBTIFF_IPK_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiff.h $(LIBTIFF_IPK_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffio.h $(LIBTIFF_IPK_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffconf.h $(LIBTIFF_IPK_DIR)/opt/include
-	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffvers.h $(LIBTIFF_IPK_DIR)/opt/include
+	install -d $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiff.h $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffio.h $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffconf.h $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(LIBTIFF_BUILD_DIR)/libtiff/tiffvers.h $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)include
 
-	rm -f $(LIBTIFF_IPK_DIR)/opt/lib/lib*.a
-	rm -f $(LIBTIFF_IPK_DIR)/opt/lib/lib*.la
-	$(STRIP_COMMAND) $(LIBTIFF_IPK_DIR)/opt/lib/lib*.so
+	rm -f $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.a
+	rm -f $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.la
+	$(STRIP_COMMAND) $(LIBTIFF_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so
 	$(MAKE) $(LIBTIFF_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBTIFF_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(LIBTIFF_IPK_DIR)

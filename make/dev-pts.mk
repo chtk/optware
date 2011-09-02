@@ -86,8 +86,8 @@ $(DEV-PTS_IPK_DIR)/CONTROL/control:
 #
 $(DEV-PTS_IPK):
 	rm -rf $(DEV-PTS_IPK_DIR) $(BUILD_DIR)/dev-pts_*_$(TARGET_ARCH).ipk
-	install -d $(DEV-PTS_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(DEV-PTS_SOURCE_DIR)/S05devpts $(DEV-PTS_IPK_DIR)/opt/etc/init.d/S05devpts
+	install -d $(DEV-PTS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(DEV-PTS_SOURCE_DIR)/S05devpts $(DEV-PTS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05devpts
 	$(MAKE) $(DEV-PTS_IPK_DIR)/CONTROL/control
 	install -m 755 $(DEV-PTS_SOURCE_DIR)/postinst $(DEV-PTS_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DEV-PTS_IPK_DIR)

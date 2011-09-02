@@ -41,10 +41,10 @@ HIAWATHA_IPK_VERSION=1
 #
 # HIAWATHA_CONFFILES should be a list of user-editable files
 HIAWATHA_CONFFILES=\
-/opt/etc/hiawatha/mimetype.conf \
-/opt/etc/hiawatha/hiawatha.conf \
-/opt/etc/hiawatha/php-fcgi.conf \
-/opt/etc/hiawatha/cgi-wrapper.conf \
+$(OPTWARE_PREFIX)etc/hiawatha/mimetype.conf \
+$(OPTWARE_PREFIX)etc/hiawatha/hiawatha.conf \
+$(OPTWARE_PREFIX)etc/hiawatha/php-fcgi.conf \
+$(OPTWARE_PREFIX)etc/hiawatha/cgi-wrapper.conf \
 
 #
 # HIAWATHA_PATCHES should list any patches, in the the order in
@@ -125,13 +125,13 @@ $(HIAWATHA_BUILD_DIR)/.configured: $(DL_DIR)/$(HIAWATHA_SOURCE) $(HIAWATHA_PATCH
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(HIAWATHA_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(HIAWATHA_LDFLAGS)" \
 		ac_cv_file__dev_urandom=/dev/urandom \
-		webrootdir=/opt/share/www/hiawatha \
+		webrootdir=$(OPTWARE_PREFIX)share/www/hiawatha \
                 ac_cv_lib_xslt_xsltApplyStylesheet=yes \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -186,23 +186,23 @@ $(HIAWATHA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(HIAWATHA_IPK_DIR)/opt/sbin or $(HIAWATHA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(HIAWATHA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(HIAWATHA_IPK_DIR)/opt/etc/hiawatha/...
-# Documentation files should be installed in $(HIAWATHA_IPK_DIR)/opt/doc/hiawatha/...
-# Daemon startup scripts should be installed in $(HIAWATHA_IPK_DIR)/opt/etc/init.d/S??hiawatha
+# Libraries and include files should be installed into $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/hiawatha/...
+# Documentation files should be installed in $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)doc/hiawatha/...
+# Daemon startup scripts should be installed in $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??hiawatha
 #
 # You may need to patch your application to make it use these locations.
 #
 $(HIAWATHA_IPK): $(HIAWATHA_BUILD_DIR)/.built
 	rm -rf $(HIAWATHA_IPK_DIR) $(BUILD_DIR)/hiawatha_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HIAWATHA_BUILD_DIR) DESTDIR=$(HIAWATHA_IPK_DIR) program_transform_name='' install-strip
-#	install -d $(HIAWATHA_IPK_DIR)/opt/etc/
-#	install -m 644 $(HIAWATHA_SOURCE_DIR)/hiawatha.conf $(HIAWATHA_IPK_DIR)/opt/etc/hiawatha.conf
-#	install -d $(HIAWATHA_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(HIAWATHA_SOURCE_DIR)/rc.hiawatha $(HIAWATHA_IPK_DIR)/opt/etc/init.d/SXXhiawatha
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HIAWATHA_IPK_DIR)/opt/etc/init.d/SXXhiawatha
+#	install -d $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(HIAWATHA_SOURCE_DIR)/hiawatha.conf $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/hiawatha.conf
+#	install -d $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(HIAWATHA_SOURCE_DIR)/rc.hiawatha $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhiawatha
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HIAWATHA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhiawatha
 	$(MAKE) $(HIAWATHA_IPK_DIR)/CONTROL/control
 #	install -m 755 $(HIAWATHA_SOURCE_DIR)/postinst $(HIAWATHA_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HIAWATHA_IPK_DIR)/CONTROL/postinst

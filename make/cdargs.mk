@@ -100,7 +100,7 @@ $(CDARGS_BUILD_DIR)/.configured: $(DL_DIR)/$(CDARGS_SOURCE)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,24 +150,24 @@ $(CDARGS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CDARGS_IPK_DIR)/opt/sbin or $(CDARGS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CDARGS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CDARGS_IPK_DIR)/opt/etc/cdargs/...
-# Documentation files should be installed in $(CDARGS_IPK_DIR)/opt/doc/cdargs/...
-# Daemon startup scripts should be installed in $(CDARGS_IPK_DIR)/opt/etc/init.d/S??cdargs
+# Libraries and include files should be installed into $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)etc/cdargs/...
+# Documentation files should be installed in $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)doc/cdargs/...
+# Daemon startup scripts should be installed in $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cdargs
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CDARGS_IPK): $(CDARGS_BUILD_DIR)/.built
 	rm -rf $(CDARGS_IPK_DIR) $(BUILD_DIR)/cdargs_*_$(TARGET_ARCH).ipk
-	install -d $(CDARGS_IPK_DIR)/opt/var/lib/cdargs
-	install -m 755 $(CDARGS_BUILD_DIR)/contrib/cdargs-bash.sh $(CDARGS_IPK_DIR)/opt/var/lib/cdargs	
-	install -d $(CDARGS_IPK_DIR)/opt/bin
-	install -m 755 $(CDARGS_BUILD_DIR)/src/cdargs $(CDARGS_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(CDARGS_IPK_DIR)/opt/bin/*
-	install -d $(CDARGS_IPK_DIR)/opt/man/man1
-	install -m 644 $(CDARGS_BUILD_DIR)/doc/cdargs.1 $(CDARGS_IPK_DIR)/opt/man/man1
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)var/lib/cdargs
+	install -m 755 $(CDARGS_BUILD_DIR)/contrib/cdargs-bash.sh $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)var/lib/cdargs	
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(CDARGS_BUILD_DIR)/src/cdargs $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -m 644 $(CDARGS_BUILD_DIR)/doc/cdargs.1 $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) $(CDARGS_IPK_DIR)/CONTROL/control
 	echo $(CDARGS_CONFFILES) | sed -e 's/ /\n/g' > $(CDARGS_IPK_DIR)/CONTROL/conffiles
 	install -m 644 $(CDARGS_SOURCE_DIR)/postinst $(CDARGS_IPK_DIR)/CONTROL/postinst

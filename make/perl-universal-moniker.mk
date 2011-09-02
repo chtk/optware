@@ -41,9 +41,9 @@ $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-UNIVERSAL-MONI
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.configured
 
@@ -52,7 +52,7 @@ perl-universal-moniker-unpack: $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.configured
 $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.built: $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.configured
 	rm -f $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-UNIVERSAL-MONIKER_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.built
 
 perl-universal-moniker: $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/CONTROL/control:
 $(PERL-UNIVERSAL-MONIKER_IPK): $(PERL-UNIVERSAL-MONIKER_BUILD_DIR)/.built
 	rm -rf $(PERL-UNIVERSAL-MONIKER_IPK_DIR) $(BUILD_DIR)/perl-universal-moniker_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-UNIVERSAL-MONIKER_BUILD_DIR) DESTDIR=$(PERL-UNIVERSAL-MONIKER_IPK_DIR) install
-	find $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-UNIVERSAL-MONIKER_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-UNIVERSAL-MONIKER_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-UNIVERSAL-MONIKER_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/CONTROL/control
 	echo $(PERL-UNIVERSAL-MONIKER_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-UNIVERSAL-MONIKER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-UNIVERSAL-MONIKER_IPK_DIR)

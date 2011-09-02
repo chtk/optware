@@ -40,7 +40,7 @@ NETRIK_IPK_VERSION=1
 
 #
 # NETRIK_CONFFILES should be a list of user-editable files
-#NETRIK_CONFFILES=/opt/etc/netrik.conf /opt/etc/init.d/SXXnetrik
+#NETRIK_CONFFILES=$(OPTWARE_PREFIX)etc/netrik.conf $(OPTWARE_PREFIX)etc/init.d/SXXnetrik
 
 #
 # NETRIK_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(NETRIK_BUILD_DIR)/.configured: $(DL_DIR)/$(NETRIK_SOURCE) $(NETRIK_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,23 +177,23 @@ $(NETRIK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NETRIK_IPK_DIR)/opt/sbin or $(NETRIK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NETRIK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NETRIK_IPK_DIR)/opt/etc/netrik/...
-# Documentation files should be installed in $(NETRIK_IPK_DIR)/opt/doc/netrik/...
-# Daemon startup scripts should be installed in $(NETRIK_IPK_DIR)/opt/etc/init.d/S??netrik
+# Libraries and include files should be installed into $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/netrik/...
+# Documentation files should be installed in $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)doc/netrik/...
+# Daemon startup scripts should be installed in $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??netrik
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NETRIK_IPK): $(NETRIK_BUILD_DIR)/.built
 	rm -rf $(NETRIK_IPK_DIR) $(BUILD_DIR)/netrik_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NETRIK_BUILD_DIR) DESTDIR=$(NETRIK_IPK_DIR) install-strip
-#	install -d $(NETRIK_IPK_DIR)/opt/etc/
-#	install -m 644 $(NETRIK_SOURCE_DIR)/netrik.conf $(NETRIK_IPK_DIR)/opt/etc/netrik.conf
-#	install -d $(NETRIK_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NETRIK_SOURCE_DIR)/rc.netrik $(NETRIK_IPK_DIR)/opt/etc/init.d/SXXnetrik
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETRIK_IPK_DIR)/opt/etc/init.d/SXXnetrik
+#	install -d $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NETRIK_SOURCE_DIR)/netrik.conf $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/netrik.conf
+#	install -d $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NETRIK_SOURCE_DIR)/rc.netrik $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnetrik
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETRIK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnetrik
 	$(MAKE) $(NETRIK_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NETRIK_SOURCE_DIR)/postinst $(NETRIK_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NETRIK_IPK_DIR)/CONTROL/postinst

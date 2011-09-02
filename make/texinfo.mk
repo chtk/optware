@@ -40,7 +40,7 @@ TEXINFO_IPK_VERSION=1
 
 #
 # TEXINFO_CONFFILES should be a list of user-editable files
-#TEXINFO_CONFFILES=/opt/etc/texinfo.conf /opt/etc/init.d/SXXtexinfo
+#TEXINFO_CONFFILES=$(OPTWARE_PREFIX)etc/texinfo.conf $(OPTWARE_PREFIX)etc/init.d/SXXtexinfo
 
 #
 # TEXINFO_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(TEXINFO_BUILD_DIR)/.configured: $(DL_DIR)/$(TEXINFO_SOURCE) $(TEXINFO_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,23 +179,23 @@ $(TEXINFO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TEXINFO_IPK_DIR)/opt/sbin or $(TEXINFO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TEXINFO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TEXINFO_IPK_DIR)/opt/etc/texinfo/...
-# Documentation files should be installed in $(TEXINFO_IPK_DIR)/opt/doc/texinfo/...
-# Daemon startup scripts should be installed in $(TEXINFO_IPK_DIR)/opt/etc/init.d/S??texinfo
+# Libraries and include files should be installed into $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/texinfo/...
+# Documentation files should be installed in $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)doc/texinfo/...
+# Daemon startup scripts should be installed in $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??texinfo
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TEXINFO_IPK): $(TEXINFO_BUILD_DIR)/.built
 	rm -rf $(TEXINFO_IPK_DIR) $(BUILD_DIR)/texinfo_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TEXINFO_BUILD_DIR) DESTDIR=$(TEXINFO_IPK_DIR) install-strip
-#	install -d $(TEXINFO_IPK_DIR)/opt/etc/
-#	install -m 644 $(TEXINFO_SOURCE_DIR)/texinfo.conf $(TEXINFO_IPK_DIR)/opt/etc/texinfo.conf
-#	install -d $(TEXINFO_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(TEXINFO_SOURCE_DIR)/rc.texinfo $(TEXINFO_IPK_DIR)/opt/etc/init.d/SXXtexinfo
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(TEXINFO_IPK_DIR)/opt/etc/init.d/SXXtexinfo
+#	install -d $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(TEXINFO_SOURCE_DIR)/texinfo.conf $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/texinfo.conf
+#	install -d $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(TEXINFO_SOURCE_DIR)/rc.texinfo $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtexinfo
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(TEXINFO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtexinfo
 	$(MAKE) $(TEXINFO_IPK_DIR)/CONTROL/control
 #	install -m 755 $(TEXINFO_SOURCE_DIR)/postinst $(TEXINFO_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(TEXINFO_IPK_DIR)/CONTROL/postinst

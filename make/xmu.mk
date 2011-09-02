@@ -121,7 +121,7 @@ $(XMU_BUILD_DIR)/.configured: $(DL_DIR)/xmu-$(XMU_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(XMU_BUILD_DIR)/libtool
@@ -159,12 +159,12 @@ xmu-stage: $(XMU_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XMU_IPK_DIR)/opt/sbin or $(XMU_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XMU_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XMU_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XMU_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XMU_IPK_DIR)/opt/etc/xmu/...
-# Documentation files should be installed in $(XMU_IPK_DIR)/opt/doc/xmu/...
-# Daemon startup scripts should be installed in $(XMU_IPK_DIR)/opt/etc/init.d/S??xmu
+# Libraries and include files should be installed into $(XMU_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XMU_IPK_DIR)$(OPTWARE_PREFIX)etc/xmu/...
+# Documentation files should be installed in $(XMU_IPK_DIR)$(OPTWARE_PREFIX)doc/xmu/...
+# Daemon startup scripts should be installed in $(XMU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xmu
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -172,7 +172,7 @@ $(XMU_IPK): $(XMU_BUILD_DIR)/.built
 	rm -rf $(XMU_IPK_DIR) $(BUILD_DIR)/xmu_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XMU_BUILD_DIR) DESTDIR=$(XMU_IPK_DIR) install-strip
 	$(MAKE) $(XMU_IPK_DIR)/CONTROL/control
-	rm -f $(XMU_IPK_DIR)/opt/lib/*.la
+	rm -f $(XMU_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XMU_IPK_DIR)
 
 #

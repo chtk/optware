@@ -41,7 +41,7 @@ LTRACE_IPK_VERSION=1
 
 #
 # LTRACE_CONFFILES should be a list of user-editable files
-#LTRACE_CONFFILES=/opt/etc/ltrace.conf /opt/etc/init.d/SXXltrace
+#LTRACE_CONFFILES=$(OPTWARE_PREFIX)etc/ltrace.conf $(OPTWARE_PREFIX)etc/init.d/SXXltrace
 
 #
 # LTRACE_PATCHES should list any patches, in the the order in
@@ -144,7 +144,7 @@ $(LTRACE_BUILD_DIR)/.configured: $(DL_DIR)/$(LTRACE_SOURCE) $(LTRACE_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 ifeq (0.4, $(LTRACE_VERSION))
@@ -201,12 +201,12 @@ $(LTRACE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LTRACE_IPK_DIR)/opt/sbin or $(LTRACE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LTRACE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LTRACE_IPK_DIR)/opt/etc/ltrace/...
-# Documentation files should be installed in $(LTRACE_IPK_DIR)/opt/doc/ltrace/...
-# Daemon startup scripts should be installed in $(LTRACE_IPK_DIR)/opt/etc/init.d/S??ltrace
+# Libraries and include files should be installed into $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/ltrace/...
+# Documentation files should be installed in $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)doc/ltrace/...
+# Daemon startup scripts should be installed in $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ltrace
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -215,12 +215,12 @@ $(LTRACE_IPK): $(LTRACE_BUILD_DIR)/.built
 	$(MAKE) -C $(LTRACE_BUILD_DIR) \
 		DESTDIR=$(LTRACE_IPK_DIR) ARCH=$(LTRACE_ARCH) OS=linux-gnu \
 		install
-	$(STRIP_COMMAND) $(LTRACE_IPK_DIR)/opt/bin/ltrace
-#	install -d $(LTRACE_IPK_DIR)/opt/etc/
-#	install -m 644 $(LTRACE_SOURCE_DIR)/ltrace.conf $(LTRACE_IPK_DIR)/opt/etc/ltrace.conf
-#	install -d $(LTRACE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LTRACE_SOURCE_DIR)/rc.ltrace $(LTRACE_IPK_DIR)/opt/etc/init.d/SXXltrace
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LTRACE_IPK_DIR)/opt/etc/init.d/SXXltrace
+	$(STRIP_COMMAND) $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)bin/ltrace
+#	install -d $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LTRACE_SOURCE_DIR)/ltrace.conf $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/ltrace.conf
+#	install -d $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LTRACE_SOURCE_DIR)/rc.ltrace $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXltrace
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LTRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXltrace
 	$(MAKE) $(LTRACE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LTRACE_SOURCE_DIR)/postinst $(LTRACE_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LTRACE_IPK_DIR)/CONTROL/postinst

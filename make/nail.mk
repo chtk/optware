@@ -134,16 +134,16 @@ nail: $(NAIL_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libnail.so.$(NAIL_VERSION): $(NAIL_BUILD_DIR)/.built
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(NAIL_BUILD_DIR)/nail.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(NAIL_BUILD_DIR)/libnail.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(NAIL_BUILD_DIR)/libnail.so.$(NAIL_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libnail.so.$(NAIL_VERSION) libnail.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libnail.so.$(NAIL_VERSION) libnail.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libnail.so.$(NAIL_VERSION): $(NAIL_BUILD_DIR)/.built
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(NAIL_BUILD_DIR)/nail.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(NAIL_BUILD_DIR)/libnail.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(NAIL_BUILD_DIR)/libnail.so.$(NAIL_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnail.so.$(NAIL_VERSION) libnail.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnail.so.$(NAIL_VERSION) libnail.so
 
-#nail-stage: $(STAGING_DIR)/opt/lib/libnail.so.$(NAIL_VERSION)
+#nail-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libnail.so.$(NAIL_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -168,23 +168,23 @@ $(NAIL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NAIL_IPK_DIR)/opt/sbin or $(NAIL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NAIL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NAIL_IPK_DIR)/opt/etc/nail/...
-# Documentation files should be installed in $(NAIL_IPK_DIR)/opt/doc/nail/...
-# Daemon startup scripts should be installed in $(NAIL_IPK_DIR)/opt/etc/init.d/S??nail
+# Libraries and include files should be installed into $(NAIL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/nail/...
+# Documentation files should be installed in $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)doc/nail/...
+# Daemon startup scripts should be installed in $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nail
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NAIL_IPK): $(NAIL_BUILD_DIR)/.built
 	rm -rf $(NAIL_IPK_DIR) $(BUILD_DIR)/nail_*_$(TARGET_ARCH).ipk
-	install -d $(NAIL_IPK_DIR)/opt/bin
-	install -d $(NAIL_IPK_DIR)/opt/doc/nail
-	$(STRIP_COMMAND) $(NAIL_BUILD_DIR)/nail -o $(NAIL_IPK_DIR)/opt/bin/nail
-	install -m 644 $(NAIL_BUILD_DIR)/nail.rc $(NAIL_IPK_DIR)/opt/doc/nail/nail.rc
-#	install -d $(NAIL_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NAIL_SOURCE_DIR)/rc.nail $(NAIL_IPK_DIR)/opt/etc/init.d/SXXnail
+	install -d $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)doc/nail
+	$(STRIP_COMMAND) $(NAIL_BUILD_DIR)/nail -o $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)bin/nail
+	install -m 644 $(NAIL_BUILD_DIR)/nail.rc $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)doc/nail/nail.rc
+#	install -d $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NAIL_SOURCE_DIR)/rc.nail $(NAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnail
 	$(MAKE) $(NAIL_IPK_DIR)/CONTROL/control
 	install -m 644 $(NAIL_SOURCE_DIR)/postinst $(NAIL_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(NAIL_SOURCE_DIR)/prerm $(NAIL_IPK_DIR)/CONTROL/prerm

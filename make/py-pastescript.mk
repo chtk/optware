@@ -47,7 +47,7 @@ PY-PASTESCRIPT_CONFLICTS=
 
 #
 # PY-PASTESCRIPT_CONFFILES should be a list of user-editable files
-#PY-PASTESCRIPT_CONFFILES=/opt/etc/py-pastescript.conf /opt/etc/init.d/SXXpy-pastescript
+#PY-PASTESCRIPT_CONFFILES=$(OPTWARE_PREFIX)etc/py-pastescript.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-pastescript
 
 #
 # PY-PASTESCRIPT_PATCHES should list any patches, in the the order in
@@ -135,7 +135,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTESCRIPT_DIR) $(@D)/2.4
 	(cd $(@D)/2.4; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.4") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.4") >> setup.cfg \
 	)
 	# 2.5
 	rm -rf $(BUILD_DIR)/$(PY-PASTESCRIPT_DIR)
@@ -151,7 +151,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTESCRIPT_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(PY-PASTESCRIPT_DIR)
@@ -167,7 +167,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTESCRIPT_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -253,12 +253,12 @@ $(PY26-PASTESCRIPT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PASTESCRIPT_IPK_DIR)/opt/sbin or $(PY-PASTESCRIPT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PASTESCRIPT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PASTESCRIPT_IPK_DIR)/opt/etc/py-pastescript/...
-# Documentation files should be installed in $(PY-PASTESCRIPT_IPK_DIR)/opt/doc/py-pastescript/...
-# Daemon startup scripts should be installed in $(PY-PASTESCRIPT_IPK_DIR)/opt/etc/init.d/S??py-pastescript
+# Libraries and include files should be installed into $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)etc/py-pastescript/...
+# Documentation files should be installed in $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)doc/py-pastescript/...
+# Daemon startup scripts should be installed in $(PY-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-pastescript
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -269,7 +269,7 @@ $(PY24-PASTESCRIPT_IPK): $(PY-PASTESCRIPT_BUILD_DIR)/.built
 	PYTHONPATH=$(STAGING_LIB_DIR)/python2.4/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.4 setup.py install \
 		--root=$(PY24-PASTESCRIPT_IPK_DIR) --prefix=/opt)
-	for f in $(PY24-PASTESCRIPT_IPK_DIR)/opt/bin/*; \
+	for f in $(PY24-PASTESCRIPT_IPK_DIR)$(OPTWARE_PREFIX)bin/*; \
 		do mv $$f `echo $$f | sed 's|$$|-2.4|'`; done
 	$(MAKE) $(PY24-PASTESCRIPT_IPK_DIR)/CONTROL/control
 #	echo $(PY-PASTESCRIPT_CONFFILES) | sed -e 's/ /\n/g' > $(PY24-PASTESCRIPT_IPK_DIR)/CONTROL/conffiles

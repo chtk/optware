@@ -40,7 +40,7 @@ LINKS2_IPK_VERSION=1
 
 #
 # LINKS2_CONFFILES should be a list of user-editable files
-#LINKS2_CONFFILES=/opt/etc/links2.conf /opt/etc/init.d/SXXlinks2
+#LINKS2_CONFFILES=$(OPTWARE_PREFIX)etc/links2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlinks2
 
 #
 # LINKS2_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LINKS2_BUILD_DIR)/.configured: $(DL_DIR)/$(LINKS2_SOURCE) $(LINKS2_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-graphics \
 		--without-x \
 		--disable-nls \
@@ -179,24 +179,24 @@ $(LINKS2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LINKS2_IPK_DIR)/opt/sbin or $(LINKS2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LINKS2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LINKS2_IPK_DIR)/opt/etc/links2/...
-# Documentation files should be installed in $(LINKS2_IPK_DIR)/opt/doc/links2/...
-# Daemon startup scripts should be installed in $(LINKS2_IPK_DIR)/opt/etc/init.d/S??links2
+# Libraries and include files should be installed into $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/links2/...
+# Documentation files should be installed in $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)doc/links2/...
+# Daemon startup scripts should be installed in $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??links2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LINKS2_IPK): $(LINKS2_BUILD_DIR)/.built
 	rm -rf $(LINKS2_IPK_DIR) $(BUILD_DIR)/links2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LINKS2_BUILD_DIR) DESTDIR=$(LINKS2_IPK_DIR) install
-	$(STRIP_COMMAND) $(LINKS2_IPK_DIR)/opt/bin/links
-#	install -d $(LINKS2_IPK_DIR)/opt/etc/
-#	install -m 644 $(LINKS2_SOURCE_DIR)/links2.conf $(LINKS2_IPK_DIR)/opt/etc/links2.conf
-#	install -d $(LINKS2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LINKS2_SOURCE_DIR)/rc.links2 $(LINKS2_IPK_DIR)/opt/etc/init.d/SXXlinks2
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LINKS2_IPK_DIR)/opt/etc/init.d/SXXlinks2
+	$(STRIP_COMMAND) $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)bin/links
+#	install -d $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LINKS2_SOURCE_DIR)/links2.conf $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/links2.conf
+#	install -d $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LINKS2_SOURCE_DIR)/rc.links2 $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlinks2
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LINKS2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlinks2
 	$(MAKE) $(LINKS2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LINKS2_SOURCE_DIR)/postinst $(LINKS2_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LINKS2_IPK_DIR)/CONTROL/postinst

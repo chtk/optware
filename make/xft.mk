@@ -124,7 +124,7 @@ $(XFT_BUILD_DIR)/.configured: $(DL_DIR)/xft-$(XFT_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -159,12 +159,12 @@ xft-stage: $(XFT_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XFT_IPK_DIR)/opt/sbin or $(XFT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XFT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XFT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XFT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XFT_IPK_DIR)/opt/etc/xft/...
-# Documentation files should be installed in $(XFT_IPK_DIR)/opt/doc/xft/...
-# Daemon startup scripts should be installed in $(XFT_IPK_DIR)/opt/etc/init.d/S??xft
+# Libraries and include files should be installed into $(XFT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XFT_IPK_DIR)$(OPTWARE_PREFIX)etc/xft/...
+# Documentation files should be installed in $(XFT_IPK_DIR)$(OPTWARE_PREFIX)doc/xft/...
+# Daemon startup scripts should be installed in $(XFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xft
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -172,7 +172,7 @@ $(XFT_IPK): $(XFT_BUILD_DIR)/.built
 	rm -rf $(XFT_IPK_DIR) $(BUILD_DIR)/xft_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XFT_BUILD_DIR) DESTDIR=$(XFT_IPK_DIR) install-strip
 	$(MAKE) $(XFT_IPK_DIR)/CONTROL/control
-	rm -f $(XFT_IPK_DIR)/opt/lib/*.la
+	rm -f $(XFT_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XFT_IPK_DIR)
 
 #

@@ -40,7 +40,7 @@ LIBASSUAN_IPK_VERSION=1
 
 #
 # LIBASSUAN_CONFFILES should be a list of user-editable files
-#LIBASSUAN_CONFFILES=/opt/etc/libassuan.conf /opt/etc/init.d/SXXlibassuan
+#LIBASSUAN_CONFFILES=$(OPTWARE_PREFIX)etc/libassuan.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibassuan
 
 #
 # LIBASSUAN_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LIBASSUAN_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBASSUAN_SOURCE) $(LIBASSUAN_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-pth-prefix=$(STAGING_PREFIX) \
 		--with-gpg-error-prefix=$(STAGING_PREFIX) \
 		--disable-nls \
@@ -180,23 +180,23 @@ $(LIBASSUAN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBASSUAN_IPK_DIR)/opt/sbin or $(LIBASSUAN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBASSUAN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBASSUAN_IPK_DIR)/opt/etc/libassuan/...
-# Documentation files should be installed in $(LIBASSUAN_IPK_DIR)/opt/doc/libassuan/...
-# Daemon startup scripts should be installed in $(LIBASSUAN_IPK_DIR)/opt/etc/init.d/S??libassuan
+# Libraries and include files should be installed into $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/libassuan/...
+# Documentation files should be installed in $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)doc/libassuan/...
+# Daemon startup scripts should be installed in $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libassuan
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBASSUAN_IPK): $(LIBASSUAN_BUILD_DIR)/.built
 	rm -rf $(LIBASSUAN_IPK_DIR) $(BUILD_DIR)/libassuan_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBASSUAN_BUILD_DIR) DESTDIR=$(LIBASSUAN_IPK_DIR) install-strip
-#	install -d $(LIBASSUAN_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBASSUAN_SOURCE_DIR)/libassuan.conf $(LIBASSUAN_IPK_DIR)/opt/etc/libassuan.conf
-#	install -d $(LIBASSUAN_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBASSUAN_SOURCE_DIR)/rc.libassuan $(LIBASSUAN_IPK_DIR)/opt/etc/init.d/SXXlibassuan
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBASSUAN_IPK_DIR)/opt/etc/init.d/SXXlibassuan
+#	install -d $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBASSUAN_SOURCE_DIR)/libassuan.conf $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/libassuan.conf
+#	install -d $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBASSUAN_SOURCE_DIR)/rc.libassuan $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibassuan
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBASSUAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibassuan
 	$(MAKE) $(LIBASSUAN_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBASSUAN_SOURCE_DIR)/postinst $(LIBASSUAN_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBASSUAN_IPK_DIR)/CONTROL/postinst

@@ -40,7 +40,7 @@ CUETOOLS_IPK_VERSION=1
 
 #
 # CUETOOLS_CONFFILES should be a list of user-editable files
-#CUETOOLS_CONFFILES=/opt/etc/cuetools.conf /opt/etc/init.d/SXXcuetools
+#CUETOOLS_CONFFILES=$(OPTWARE_PREFIX)etc/cuetools.conf $(OPTWARE_PREFIX)etc/init.d/SXXcuetools
 
 #
 # CUETOOLS_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(CUETOOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(CUETOOLS_SOURCE) $(CUETOOLS_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,23 +177,23 @@ $(CUETOOLS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CUETOOLS_IPK_DIR)/opt/sbin or $(CUETOOLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CUETOOLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CUETOOLS_IPK_DIR)/opt/etc/cuetools/...
-# Documentation files should be installed in $(CUETOOLS_IPK_DIR)/opt/doc/cuetools/...
-# Daemon startup scripts should be installed in $(CUETOOLS_IPK_DIR)/opt/etc/init.d/S??cuetools
+# Libraries and include files should be installed into $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/cuetools/...
+# Documentation files should be installed in $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)doc/cuetools/...
+# Daemon startup scripts should be installed in $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cuetools
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CUETOOLS_IPK): $(CUETOOLS_BUILD_DIR)/.built
 	rm -rf $(CUETOOLS_IPK_DIR) $(BUILD_DIR)/cuetools_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CUETOOLS_BUILD_DIR) DESTDIR=$(CUETOOLS_IPK_DIR) install-strip
-#	install -d $(CUETOOLS_IPK_DIR)/opt/etc/
-#	install -m 644 $(CUETOOLS_SOURCE_DIR)/cuetools.conf $(CUETOOLS_IPK_DIR)/opt/etc/cuetools.conf
-#	install -d $(CUETOOLS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(CUETOOLS_SOURCE_DIR)/rc.cuetools $(CUETOOLS_IPK_DIR)/opt/etc/init.d/SXXcuetools
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CUETOOLS_IPK_DIR)/opt/etc/init.d/SXXcuetools
+#	install -d $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(CUETOOLS_SOURCE_DIR)/cuetools.conf $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/cuetools.conf
+#	install -d $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(CUETOOLS_SOURCE_DIR)/rc.cuetools $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXcuetools
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CUETOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXcuetools
 	$(MAKE) $(CUETOOLS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(CUETOOLS_SOURCE_DIR)/postinst $(CUETOOLS_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CUETOOLS_IPK_DIR)/CONTROL/postinst

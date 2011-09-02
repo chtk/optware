@@ -40,7 +40,7 @@ LIBKSBA_IPK_VERSION=1
 
 #
 # LIBKSBA_CONFFILES should be a list of user-editable files
-#LIBKSBA_CONFFILES=/opt/etc/libksba.conf /opt/etc/init.d/SXXlibksba
+#LIBKSBA_CONFFILES=$(OPTWARE_PREFIX)etc/libksba.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibksba
 
 #
 # LIBKSBA_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LIBKSBA_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBKSBA_SOURCE) $(LIBKSBA_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-gpg-error-prefix=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
@@ -180,23 +180,23 @@ $(LIBKSBA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBKSBA_IPK_DIR)/opt/sbin or $(LIBKSBA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBKSBA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBKSBA_IPK_DIR)/opt/etc/libksba/...
-# Documentation files should be installed in $(LIBKSBA_IPK_DIR)/opt/doc/libksba/...
-# Daemon startup scripts should be installed in $(LIBKSBA_IPK_DIR)/opt/etc/init.d/S??libksba
+# Libraries and include files should be installed into $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/libksba/...
+# Documentation files should be installed in $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)doc/libksba/...
+# Daemon startup scripts should be installed in $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libksba
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBKSBA_IPK): $(LIBKSBA_BUILD_DIR)/.built
 	rm -rf $(LIBKSBA_IPK_DIR) $(BUILD_DIR)/libksba_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBKSBA_BUILD_DIR) DESTDIR=$(LIBKSBA_IPK_DIR) install-strip
-#	install -d $(LIBKSBA_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBKSBA_SOURCE_DIR)/libksba.conf $(LIBKSBA_IPK_DIR)/opt/etc/libksba.conf
-#	install -d $(LIBKSBA_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBKSBA_SOURCE_DIR)/rc.libksba $(LIBKSBA_IPK_DIR)/opt/etc/init.d/SXXlibksba
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBKSBA_IPK_DIR)/opt/etc/init.d/SXXlibksba
+#	install -d $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBKSBA_SOURCE_DIR)/libksba.conf $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/libksba.conf
+#	install -d $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBKSBA_SOURCE_DIR)/rc.libksba $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibksba
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBKSBA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibksba
 	$(MAKE) $(LIBKSBA_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBKSBA_SOURCE_DIR)/postinst $(LIBKSBA_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIBKSBA_IPK_DIR)/CONTROL/postinst

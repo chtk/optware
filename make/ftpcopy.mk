@@ -40,7 +40,7 @@ FTPCOPY_IPK_VERSION=3
 
 #
 # FTPCOPY_CONFFILES should be a list of user-editable files
-#FTPCOPY_CONFFILES=/opt/etc/ftpcopy.conf /opt/etc/init.d/SXXftpcopy
+#FTPCOPY_CONFFILES=$(OPTWARE_PREFIX)etc/ftpcopy.conf $(OPTWARE_PREFIX)etc/init.d/SXXftpcopy
 
 #
 # FTPCOPY_PATCHES should list any patches, in the the order in
@@ -138,7 +138,7 @@ $(FTPCOPY_BUILD_DIR)/.configured: $(DL_DIR)/$(FTPCOPY_SOURCE) $(FTPCOPY_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -207,21 +207,21 @@ $(FTPCOPY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FTPCOPY_IPK_DIR)/opt/sbin or $(FTPCOPY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FTPCOPY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FTPCOPY_IPK_DIR)/opt/etc/ftpcopy/...
-# Documentation files should be installed in $(FTPCOPY_IPK_DIR)/opt/doc/ftpcopy/...
-# Daemon startup scripts should be installed in $(FTPCOPY_IPK_DIR)/opt/etc/init.d/S??ftpcopy
+# Libraries and include files should be installed into $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)etc/ftpcopy/...
+# Documentation files should be installed in $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)doc/ftpcopy/...
+# Daemon startup scripts should be installed in $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ftpcopy
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FTPCOPY_IPK): $(FTPCOPY_BUILD_DIR)/.built
 	rm -rf $(FTPCOPY_IPK_DIR) $(BUILD_DIR)/ftpcopy_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FTPCOPY_BUILD_DIR) DESTDIR=$(FTPCOPY_IPK_DIR) install-strip
-	install -d $(FTPCOPY_IPK_DIR)/opt/bin/
-	install $(FTPCOPY_BUILD_DIR)/command/* $(FTPCOPY_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(FTPCOPY_IPK_DIR)/opt/bin/ftpcopy $(FTPCOPY_IPK_DIR)/opt/bin/ftpls
+	install -d $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install $(FTPCOPY_BUILD_DIR)/command/* $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/ftpcopy $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/ftpls
 	$(MAKE) $(FTPCOPY_IPK_DIR)/CONTROL/control
 	echo $(FTPCOPY_CONFFILES) | sed -e 's/ /\n/g' > $(FTPCOPY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FTPCOPY_IPK_DIR)

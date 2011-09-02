@@ -41,7 +41,7 @@ FIREDRILL-HTTPTUNNEL_IPK_VERSION=1
 
 #
 # FIREDRILL-HTTPTUNNEL_CONFFILES should be a list of user-editable files
-#FIREDRILL-HTTPTUNNEL_CONFFILES=/opt/etc/firedrill-httptunnel.conf /opt/etc/init.d/SXXfiredrill-httptunnel
+#FIREDRILL-HTTPTUNNEL_CONFFILES=$(OPTWARE_PREFIX)etc/firedrill-httptunnel.conf $(OPTWARE_PREFIX)etc/init.d/SXXfiredrill-httptunnel
 
 #
 # FIREDRILL-HTTPTUNNEL_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(FIREDRILL-HTTPTUNNEL_BUILD_DIR)/.configured: $(DL_DIR)/$(FIREDRILL-HTTPTUNNEL_
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,23 +191,23 @@ $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/sbin or $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/etc/firedrill-httptunnel/...
-# Documentation files should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/doc/firedrill-httptunnel/...
-# Daemon startup scripts should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/etc/init.d/S??firedrill-httptunnel
+# Libraries and include files should be installed into $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/firedrill-httptunnel/...
+# Documentation files should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)doc/firedrill-httptunnel/...
+# Daemon startup scripts should be installed in $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??firedrill-httptunnel
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FIREDRILL-HTTPTUNNEL_IPK): $(FIREDRILL-HTTPTUNNEL_BUILD_DIR)/.built
 	rm -rf $(FIREDRILL-HTTPTUNNEL_IPK_DIR) $(BUILD_DIR)/firedrill-httptunnel_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FIREDRILL-HTTPTUNNEL_BUILD_DIR) DESTDIR=$(FIREDRILL-HTTPTUNNEL_IPK_DIR) install-strip
-	install -d $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/bin
-	install -m 755 $(FIREDRILL-HTTPTUNNEL_BUILD_DIR)/src/httptunnel $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/bin/httptunnel
-	install -d $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/share/doc/firedrill-httptunnel
-	cp -rp $(<D)/docs/* $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/opt/share/doc/firedrill-httptunnel
+	install -d $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(FIREDRILL-HTTPTUNNEL_BUILD_DIR)/src/httptunnel $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin/httptunnel
+	install -d $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)share/doc/firedrill-httptunnel
+	cp -rp $(<D)/docs/* $(FIREDRILL-HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)share/doc/firedrill-httptunnel
 	$(MAKE) $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/CONTROL/control
 	echo $(FIREDRILL-HTTPTUNNEL_CONFFILES) | sed -e 's/ /\n/g' > $(FIREDRILL-HTTPTUNNEL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FIREDRILL-HTTPTUNNEL_IPK_DIR)

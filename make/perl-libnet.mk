@@ -19,7 +19,7 @@ PERL-LIBNET_CONFLICTS=
 
 PERL-LIBNET_IPK_VERSION=1
 
-PERL-LIBNET_CONFFILES=/opt/lib/perl5/$(PERL_VERSION)/Net/libnet.cfg
+PERL-LIBNET_CONFFILES=$(OPTWARE_PREFIX)lib/perl5/$(PERL_VERSION)/Net/libnet.cfg
 
 PERL-LIBNET_BUILD_DIR=$(BUILD_DIR)/perl-libnet
 PERL-LIBNET_SOURCE_DIR=$(SOURCE_DIR)/perl-libnet
@@ -47,9 +47,9 @@ $(PERL-LIBNET_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-LIBNET_SOURCE) $(PERL-LIB
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -58,7 +58,7 @@ perl-libnet-unpack: $(PERL-LIBNET_BUILD_DIR)/.configured
 $(PERL-LIBNET_BUILD_DIR)/.built: $(PERL-LIBNET_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-libnet: $(PERL-LIBNET_BUILD_DIR)/.built
@@ -88,13 +88,13 @@ $(PERL-LIBNET_IPK_DIR)/CONTROL/control:
 $(PERL-LIBNET_IPK): $(PERL-LIBNET_BUILD_DIR)/.built
 	rm -rf $(PERL-LIBNET_IPK_DIR) $(BUILD_DIR)/perl-libnet_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-LIBNET_BUILD_DIR) DESTDIR=$(PERL-LIBNET_IPK_DIR) install
-	find $(PERL-LIBNET_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-LIBNET_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-LIBNET_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-LIBNET_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-LIBNET_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-LIBNET_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-LIBNET_IPK_DIR)/CONTROL/control
 	echo $(PERL-LIBNET_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-LIBNET_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-LIBNET_IPK_DIR)

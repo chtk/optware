@@ -33,8 +33,8 @@ SQUEEZECENTER_CONFLICTS=slimserver
 
 SQUEEZECENTER_IPK_VERSION=1
 
-#SQUEEZECENTER_CONFFILES=/opt/etc/squeezecenter.conf /opt/etc/init.d/S99squeezecenter \
-	/opt/share/squeezecenter/MySQL/my.tt
+#SQUEEZECENTER_CONFFILES=$(OPTWARE_PREFIX)etc/squeezecenter.conf $(OPTWARE_PREFIX)etc/init.d/S99squeezecenter \
+	$(OPTWARE_PREFIX)share/squeezecenter/MySQL/my.tt
 
 SQUEEZECENTER_PATCHES=\
 	$(SQUEEZECENTER_SOURCE_DIR)/build-perl-modules.pl.patch \
@@ -93,7 +93,7 @@ $(SQUEEZECENTER_BUILD_DIR)/.configured: $(DL_DIR)/$(SQUEEZECENTER_SOURCE) $(SQUE
 		$(@D)/CPAN/XML/Parser* \
 		$(@D)/CPAN/YAML \
 		;
-	sed -i -e '1s|/usr/bin/perl|/opt/bin/perl|' \
+	sed -i -e '1s|/usr/bin/perl|$(OPTWARE_PREFIX)bin/perl|' \
 		$(@D)/slimserver.pl \
 		$(@D)/scanner.pl \
 		;
@@ -113,7 +113,7 @@ $(SQUEEZECENTER_BUILD_DIR)/.built: $(SQUEEZECENTER_BUILD_DIR)/.configured
 		STAGING_PREFIX="$(STAGING_PREFIX)" \
 		PERL_ARCH_NAME=$(GNU_TARGET_NAME) \
 		$(PERL_HOSTPERL) build-perl-modules.pl \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -144,31 +144,31 @@ $(SQUEEZECENTER_IPK_DIR)/CONTROL/control:
 
 $(SQUEEZECENTER_IPK): $(SQUEEZECENTER_BUILD_DIR)/.built
 	rm -rf $(SQUEEZECENTER_IPK_DIR) $(BUILD_DIR)/squeezecenter_*_$(TARGET_ARCH).ipk
-	install -d $(SQUEEZECENTER_IPK_DIR)/opt/etc/ $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter
-	cp -rp $(SQUEEZECENTER_BUILD_DIR)/ $(SQUEEZECENTER_IPK_DIR)/opt/share
-	rm -rf	$(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/.configured \
-		$(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/.built
-	rm -rf $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/temp
-	rm -rf $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/Bin/i386-linux
-	rm -rf $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/*-Makefile.PL
-	rm -f $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/Bin/build-perl-modules.pl.*
+	install -d $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)etc/ $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter
+	cp -rp $(SQUEEZECENTER_BUILD_DIR)/ $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share
+	rm -rf	$(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/.configured \
+		$(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/.built
+	rm -rf $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/temp
+	rm -rf $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/Bin/i386-linux
+	rm -rf $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/*-Makefile.PL
+	rm -f $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/Bin/build-perl-modules.pl.*
 ifeq (7.0.1, $(SQUEEZECENTER_VERSION))
-	rm -rf $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/Slim/Plugin/PreventStandby
+	rm -rf $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/Slim/Plugin/PreventStandby
 endif
 # To comply with Licence - only Logitech/Slimdevices can include the firmware bin files
 # in distribution. Slimserver will download bin files at startup.
-	rm -f $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/Firmware/*.bin
-	(cd  $(SQUEEZECENTER_IPK_DIR)/opt/share/squeezecenter/CPAN ; \
+	rm -f $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/Firmware/*.bin
+	(cd  $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)share/squeezecenter/CPAN ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/squeezecenter.conf $(SQUEEZECENTER_IPK_DIR)/opt/etc/squeezecenter.conf
-	install -d $(SQUEEZECENTER_IPK_DIR)/opt/etc/init.d
+	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/squeezecenter.conf $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)etc/squeezecenter.conf
+	install -d $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #ifeq ($(OPTWARE_TARGET),fsg3)
-#	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/rc.squeezecenter.fsg3 $(SQUEEZECENTER_IPK_DIR)/opt/etc/init.d/S99squeezecenter
+#	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/rc.squeezecenter.fsg3 $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S99squeezecenter
 #else
-	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/rc.squeezecenter $(SQUEEZECENTER_IPK_DIR)/opt/etc/init.d/S99squeezecenter
+	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/rc.squeezecenter $(SQUEEZECENTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S99squeezecenter
 #endif
 	$(MAKE) $(SQUEEZECENTER_IPK_DIR)/CONTROL/control
 	install -m 755 $(SQUEEZECENTER_SOURCE_DIR)/postinst $(SQUEEZECENTER_IPK_DIR)/CONTROL/postinst

@@ -91,7 +91,7 @@ $(MXML_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(MXML_SOURCE) make/mx
 	fi
 	(cd $(@D); \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -138,7 +138,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--enable-shared \
 		--disable-static \
@@ -193,21 +193,21 @@ $(MXML_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MXML_IPK_DIR)/opt/sbin or $(MXML_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MXML_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MXML_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MXML_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MXML_IPK_DIR)/opt/etc/mxml/...
-# Documentation files should be installed in $(MXML_IPK_DIR)/opt/doc/mxml/...
-# Daemon startup scripts should be installed in $(MXML_IPK_DIR)/opt/etc/init.d/S??mxml
+# Libraries and include files should be installed into $(MXML_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MXML_IPK_DIR)$(OPTWARE_PREFIX)etc/mxml/...
+# Documentation files should be installed in $(MXML_IPK_DIR)$(OPTWARE_PREFIX)doc/mxml/...
+# Daemon startup scripts should be installed in $(MXML_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mxml
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MXML_IPK): $(MXML_BUILD_DIR)/.built
 	rm -rf $(MXML_IPK_DIR) $(BUILD_DIR)/mxml_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MXML_BUILD_DIR) DESTDIR=$(MXML_IPK_DIR) DSTROOT=$(MXML_IPK_DIR) install
-	rm -f $(MXML_IPK_DIR)/opt/lib/libmxml.a
-	$(STRIP_COMMAND) $(MXML_IPK_DIR)/opt/bin/mxmldoc
-	$(STRIP_COMMAND) $(MXML_IPK_DIR)/opt/lib/libmxml.so*
+	rm -f $(MXML_IPK_DIR)$(OPTWARE_PREFIX)lib/libmxml.a
+	$(STRIP_COMMAND) $(MXML_IPK_DIR)$(OPTWARE_PREFIX)bin/mxmldoc
+	$(STRIP_COMMAND) $(MXML_IPK_DIR)$(OPTWARE_PREFIX)lib/libmxml.so*
 	$(MAKE) $(MXML_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MXML_IPK_DIR)
 

@@ -39,7 +39,7 @@ ION_IPK_VERSION=1
 
 #
 # ION_CONFFILES should be a list of user-editable files
-#ION_CONFFILES=/opt/etc/ion.conf /opt/etc/init.d/SXXion
+#ION_CONFFILES=$(OPTWARE_PREFIX)etc/ion.conf $(OPTWARE_PREFIX)etc/init.d/SXXion
 
 #
 # ION_PATCHES should list any patches, in the the order in
@@ -112,10 +112,10 @@ $(ION_BUILD_DIR)/.configured: $(DL_DIR)/$(ION_SOURCE) $(ION_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
                 --x-includes=$(STAGING_INCLUDE_DIR) \
                 --x-libraries=$(STAGING_LIB_DIR) \
-		--with-lua-prefix=$(LUA_HOST_BUILD_DIR)/opt \
+		--with-lua-prefix=$(LUA_HOST_BUILD_DIR)$(OPTWARE_PREFIX)\
 		--with-lua-includes=$(STAGING_INCLUDE_DIR) \
 		--with-lua-libraries=$(STAGING_LIB_DIR) \
 		--disable-nls \
@@ -167,19 +167,19 @@ $(ION_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ION_IPK_DIR)/opt/sbin or $(ION_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ION_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ION_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ION_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ION_IPK_DIR)/opt/etc/ion/...
-# Documentation files should be installed in $(ION_IPK_DIR)/opt/doc/ion/...
-# Daemon startup scripts should be installed in $(ION_IPK_DIR)/opt/etc/init.d/S??ion
+# Libraries and include files should be installed into $(ION_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ION_IPK_DIR)$(OPTWARE_PREFIX)etc/ion/...
+# Documentation files should be installed in $(ION_IPK_DIR)$(OPTWARE_PREFIX)doc/ion/...
+# Daemon startup scripts should be installed in $(ION_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ion
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ION_IPK): $(ION_BUILD_DIR)/.built
 	rm -rf $(ION_IPK_DIR) $(BUILD_DIR)/ion_*_$(TARGET_ARCH).ipk
 	$(TARGET_CONFIGURE_OPTS) \
-	$(MAKE) -C $(ION_BUILD_DIR) prefix=$(ION_IPK_DIR)/opt LOCALEDIR=$(ION_IPK_DIR)/opt/share/locale install
+	$(MAKE) -C $(ION_BUILD_DIR) prefix=$(ION_IPK_DIR)$(OPTWARE_PREFIX)LOCALEDIR=$(ION_IPK_DIR)$(OPTWARE_PREFIX)share/locale install
 	$(MAKE) $(ION_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ION_IPK_DIR)
 

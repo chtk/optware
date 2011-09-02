@@ -46,7 +46,7 @@ PY-BITTORRENT_IPK_VERSION=2
 
 #
 # PY-BITTORRENT_CONFFILES should be a list of user-editable files
-#PY-BITTORRENT_CONFFILES=/opt/etc/py-bittorrent.conf /opt/etc/init.d/SXXpy-bittorrent
+#PY-BITTORRENT_CONFFILES=$(OPTWARE_PREFIX)etc/py-bittorrent.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-bittorrent
 
 #
 # PY-BITTORRENT_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ $(PY-BITTORRENT_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-BITTORRENT_SOURCE) $(PY-B
 	mv $(BUILD_DIR)/$(PY-BITTORRENT_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.5") > setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.5") > setup.cfg \
 	)
 	$(PY-BITTORRENT_UNZIP) $(DL_DIR)/$(PY-BITTORRENT_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(PY-BITTORRENT_PATCHES)"; then \
@@ -135,7 +135,7 @@ $(PY-BITTORRENT_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-BITTORRENT_SOURCE) $(PY-B
 	mv $(BUILD_DIR)/$(PY-BITTORRENT_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.6") > setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.6") > setup.cfg \
 	)
 	touch $@
 
@@ -218,12 +218,12 @@ $(PY26-BITTORRENT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-BITTORRENT_IPK_DIR)/opt/sbin or $(PY-BITTORRENT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-BITTORRENT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-BITTORRENT_IPK_DIR)/opt/etc/py-bittorrent/...
-# Documentation files should be installed in $(PY-BITTORRENT_IPK_DIR)/opt/doc/py-bittorrent/...
-# Daemon startup scripts should be installed in $(PY-BITTORRENT_IPK_DIR)/opt/etc/init.d/S??py-bittorrent
+# Libraries and include files should be installed into $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/py-bittorrent/...
+# Documentation files should be installed in $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)doc/py-bittorrent/...
+# Daemon startup scripts should be installed in $(PY-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-bittorrent
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -233,7 +233,7 @@ $(PY25-BITTORRENT_IPK): $(PY-BITTORRENT_BUILD_DIR)/.built
 	(cd $(PY-BITTORRENT_BUILD_DIR)/2.5; \
 	PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 	$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-BITTORRENT_IPK_DIR) --prefix=/opt)
-	rm -rf $(PY25-BITTORRENT_IPK_DIR)/opt/share
+	rm -rf $(PY25-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)share
 	$(MAKE) $(PY25-BITTORRENT_IPK_DIR)/CONTROL/control
 #	echo $(PY-BITTORRENT_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-BITTORRENT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-BITTORRENT_IPK_DIR)
@@ -244,10 +244,10 @@ $(PY26-BITTORRENT_IPK) $(PY-BITTORRENT-COMMON_IPK): $(PY-BITTORRENT_BUILD_DIR)/.
 	(cd $(PY-BITTORRENT_BUILD_DIR)/2.6; \
 	PYTHONPATH=$(STAGING_LIB_DIR)/python2.6/site-packages \
 	$(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-BITTORRENT_IPK_DIR) --prefix=/opt)
-	for f in $(PY26-BITTORRENT_IPK_DIR)/opt/*bin/*; \
+	for f in $(PY26-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)*bin/*; \
 	    do mv $$f `echo $$f | sed 's|$$|-2.6|'`; done
 	install -d $(PY-BITTORRENT-COMMON_IPK_DIR)/opt
-	mv $(PY26-BITTORRENT_IPK_DIR)/opt/share $(PY-BITTORRENT-COMMON_IPK_DIR)/opt
+	mv $(PY26-BITTORRENT_IPK_DIR)$(OPTWARE_PREFIX)share $(PY-BITTORRENT-COMMON_IPK_DIR)/opt
 	$(MAKE) $(PY26-BITTORRENT_IPK_DIR)/CONTROL/control
 	$(MAKE) $(PY-BITTORRENT-COMMON_IPK_DIR)/CONTROL/control
 #	echo $(PY-BITTORRENT_CONFFILES) | sed -e 's/ /\n/g' > $(PY26-BITTORRENT_IPK_DIR)/CONTROL/conffiles

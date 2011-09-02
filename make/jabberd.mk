@@ -45,7 +45,7 @@ JABBERD_IPK_VERSION=2
 
 #
 # JABBERD_CONFFILES should be a list of user-editable files
-JABBERD_CONFFILES=/opt/etc/jabber/jabber.xml /opt/etc/jabber/jabber.conf /opt/etc/init.d/S80jabber
+JABBERD_CONFFILES=$(OPTWARE_PREFIX)etc/jabber/jabber.xml $(OPTWARE_PREFIX)etc/jabber/jabber.conf $(OPTWARE_PREFIX)etc/init.d/S80jabber
 
 #
 # JABBERD_PATCHES should list any patches, in the the order in
@@ -124,8 +124,8 @@ $(JABBERD_BUILD_DIR)/.configured: $(DL_DIR)/$(JABBERD_SOURCE) $(JABBERD_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc/jabber \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc/jabber \
 		--enable-debug \
 		--enable-ssl \
 		--without-mysql \
@@ -182,21 +182,21 @@ $(JABBERD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(JABBERD_IPK_DIR)/opt/sbin or $(JABBERD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(JABBERD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(JABBERD_IPK_DIR)/opt/etc/jabber/...
-# Documentation files should be installed in $(JABBERD_IPK_DIR)/opt/doc/jabber/...
-# Daemon startup scripts should be installed in $(JABBERD_IPK_DIR)/opt/etc/init.d/S??jabber
+# Libraries and include files should be installed into $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/jabber/...
+# Documentation files should be installed in $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)doc/jabber/...
+# Daemon startup scripts should be installed in $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??jabber
 #
 # You may need to patch your application to make it use these locations.
 #
 $(JABBERD_IPK): $(JABBERD_BUILD_DIR)/.built
 	rm -rf $(JABBERD_IPK_DIR) $(BUILD_DIR)/jabberd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JABBERD_BUILD_DIR) DESTDIR=$(JABBERD_IPK_DIR) install-strip
-	install -m 644 $(JABBERD_SOURCE_DIR)/jabber.conf $(JABBERD_IPK_DIR)/opt/etc/jabber/jabber.conf
-	install -d $(JABBERD_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(JABBERD_SOURCE_DIR)/rc.jabber $(JABBERD_IPK_DIR)/opt/etc/init.d/S80jabber
+	install -m 644 $(JABBERD_SOURCE_DIR)/jabber.conf $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/jabber/jabber.conf
+	install -d $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(JABBERD_SOURCE_DIR)/rc.jabber $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80jabber
 	$(MAKE) $(JABBERD_IPK_DIR)/CONTROL/control
 	install -m 755 $(JABBERD_SOURCE_DIR)/postinst $(JABBERD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(JABBERD_SOURCE_DIR)/prerm $(JABBERD_IPK_DIR)/CONTROL/prerm

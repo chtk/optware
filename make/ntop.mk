@@ -53,7 +53,7 @@ NTOP_IPK_VERSION=6
 #
 # NTOP_CONFFILES should be a list of user-editable files
 NTOP_CONFFILES=
-#/opt/etc/ntop.conf /opt/etc/init.d/SXXntop
+#$(OPTWARE_PREFIX)etc/ntop.conf $(OPTWARE_PREFIX)etc/init.d/SXXntop
 
 #
 # NTOP_PATCHES should list any patches, in the the order in
@@ -182,7 +182,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-ipv6 \
 		$(NTOP_CONFIGURE_OPTS) \
 		--disable-nls --disable-i18n \
@@ -190,7 +190,7 @@ endif
 	)
 	sed -i -e '/HAVE_LOCALE_H/d' -e '/HAVE_MALLINFO_MALLOC_H/d' \
 		$(@D)/config.status
-	sed -i -e 's| -I/opt/include||' $(@D)/Makefile $(@D)/plugins/Makefile
+	sed -i -e 's| -I$(OPTWARE_PREFIX)include||' $(@D)/Makefile $(@D)/plugins/Makefile
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
 
@@ -222,22 +222,22 @@ ntop-stage: $(NTOP_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NTOP_IPK_DIR)/opt/sbin or $(NTOP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NTOP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NTOP_IPK_DIR)/opt/etc/ntop/...
-# Documentation files should be installed in $(NTOP_IPK_DIR)/opt/doc/ntop/...
-# Daemon startup scripts should be installed in $(NTOP_IPK_DIR)/opt/etc/init.d/S??ntop
+# Libraries and include files should be installed into $(NTOP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/ntop/...
+# Documentation files should be installed in $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)doc/ntop/...
+# Daemon startup scripts should be installed in $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ntop
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NTOP_IPK): $(NTOP_BUILD_DIR)/.built
 	rm -rf $(NTOP_IPK_DIR) $(BUILD_DIR)/ntop_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NTOP_BUILD_DIR) DESTDIR=$(NTOP_IPK_DIR) transform='' install-strip
-	rm -f $(NTOP_IPK_DIR)/opt/lib/lib*.a $(NTOP_IPK_DIR)/opt/lib/lib*.la
-	$(STRIP_COMMAND) $(NTOP_IPK_DIR)/opt/lib/ntop/plugins/*.so
-	install -d $(NTOP_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(NTOP_SOURCE_DIR)/rc.ntop $(NTOP_IPK_DIR)/opt/etc/init.d/S01ntop
+	rm -f $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.a $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.la
+	$(STRIP_COMMAND) $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)lib/ntop/plugins/*.so
+	install -d $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(NTOP_SOURCE_DIR)/rc.ntop $(NTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S01ntop
 	$(MAKE) $(NTOP_IPK_DIR)/CONTROL/control
 	install -m 755 $(NTOP_SOURCE_DIR)/postinst $(NTOP_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(NTOP_SOURCE_DIR)/prerm $(NTOP_IPK_DIR)/CONTROL/prerm
@@ -263,12 +263,12 @@ ntop-dirclean:
 	rm -rf $(BUILD_DIR)/$(NTOP_DIR) $(NTOP_BUILD_DIR) $(NTOP_IPK_DIR) $(NTOP_IPK)
 
 
-#		--with-pcap-root=$(STAGING_DIR)/opt \
-#		--with-gdbm-root=$(STAGING_DIR)/opt \
-#		--with-gd-root=$(STAGING_DIR)/opt \
-#		--with-zlib-root=$(STAGING_DIR)/opt \
-#		--with-libpng-root=$(STAGING_DIR)/opt \
-#		--with-ossl-root=$(STAGING_DIR)/opt \
+#		--with-pcap-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+#		--with-gdbm-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+#		--with-gd-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+#		--with-zlib-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+#		--with-libpng-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+#		--with-ossl-root=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 
 
 #		CVSROOT="$(NTOP_REPOSITORY)" ;\

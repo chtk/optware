@@ -27,7 +27,7 @@ TS101-KERNEL-MODULES_IPK_VERSION=1
 
 #
 # TS101-KERNEL-MODULES_CONFFILES should be a list of user-editable files
-#TS101-KERNEL-MODULES_CONFFILES=/opt/etc/ts101-kernel-modules.conf /opt/etc/init.d/SXXts101-kernel-modules
+#TS101-KERNEL-MODULES_CONFFILES=$(OPTWARE_PREFIX)etc/ts101-kernel-modules.conf $(OPTWARE_PREFIX)etc/init.d/SXXts101-kernel-modules
 
 #
 # TS101-KERNEL-MODULES_PATCHES should list any patches, in the the order in
@@ -143,22 +143,22 @@ $(TS101-KERNEL-MODULES_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TS101-KERNEL-MODULES_IPK_DIR)/opt/sbin or $(TS101-KERNEL-MODULES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TS101-KERNEL-MODULES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)/opt/etc/ts101-kernel-modules/...
-# Documentation files should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)/opt/doc/ts101-kernel-modules/...
-# Daemon startup scripts should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)/opt/etc/init.d/S??ts101-kernel-modules
+# Libraries and include files should be installed into $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)etc/ts101-kernel-modules/...
+# Documentation files should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)doc/ts101-kernel-modules/...
+# Daemon startup scripts should be installed in $(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ts101-kernel-modules
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TS101-KERNEL-MODULES_BUILD_DIR)/.ipkdone: $(TS101-KERNEL-MODULES_BUILD_DIR)/.built
 	rm -rf $(TS101-KERNEL-MODULES_IPK_DIR)* $(BUILD_DIR)/kernel-module_*_$(TARGET_ARCH).ipk
-	INSTALL_MOD_PATH=$(TS101-KERNEL-MODULES_IPK_DIR)/opt \
+	INSTALL_MOD_PATH=$(TS101-KERNEL-MODULES_IPK_DIR)$(OPTWARE_PREFIX)\
 	$(MAKE) -C $(TS101-KERNEL-MODULES_BUILD_DIR) modules_install
 	for m in $(TS101-KERNEL-MODULES); do \
-	  install -d $(TS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/lib/modules; \
-	  install -m 644 `find $(TS101-KERNEL-MODULES_IPK_DIR) -name $$m.ko` $(TS101-KERNEL-MODULES_IPK_DIR)-$$m/opt/lib/modules; \
+	  install -d $(TS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)lib/modules; \
+	  install -m 644 `find $(TS101-KERNEL-MODULES_IPK_DIR) -name $$m.ko` $(TS101-KERNEL-MODULES_IPK_DIR)-$$m$(OPTWARE_PREFIX)lib/modules; \
 	done
 	$(MAKE) $(TS101-KERNEL-MODULES_IPK_DIR)/CONTROL/control
 	for m in $(TS101-KERNEL-MODULES); do \

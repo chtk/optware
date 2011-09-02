@@ -49,7 +49,7 @@ MOTOR_IPK_VERSION=1
 
 #
 # MOTOR_CONFFILES should be a list of user-editable files
-#MOTOR_CONFFILES=/opt/etc/motor.conf /opt/etc/init.d/SXXmotor
+#MOTOR_CONFFILES=$(OPTWARE_PREFIX)etc/motor.conf $(OPTWARE_PREFIX)etc/init.d/SXXmotor
 
 #
 # MOTOR_PATCHES should list any patches, in the the order in
@@ -136,7 +136,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,24 +190,24 @@ $(MOTOR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MOTOR_IPK_DIR)/opt/sbin or $(MOTOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MOTOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MOTOR_IPK_DIR)/opt/etc/motor/...
-# Documentation files should be installed in $(MOTOR_IPK_DIR)/opt/doc/motor/...
-# Daemon startup scripts should be installed in $(MOTOR_IPK_DIR)/opt/etc/init.d/S??motor
+# Libraries and include files should be installed into $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/motor/...
+# Documentation files should be installed in $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)doc/motor/...
+# Daemon startup scripts should be installed in $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??motor
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MOTOR_IPK): $(MOTOR_BUILD_DIR)/.built
 	rm -rf $(MOTOR_IPK_DIR) $(BUILD_DIR)/motor_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MOTOR_BUILD_DIR) DESTDIR=$(MOTOR_IPK_DIR) install
-	$(STRIP_COMMAND) $(MOTOR_IPK_DIR)/opt/bin/motor
-#	install -d $(MOTOR_IPK_DIR)/opt/etc/
-#	install -m 644 $(MOTOR_SOURCE_DIR)/motor.conf $(MOTOR_IPK_DIR)/opt/etc/motor.conf
-#	install -d $(MOTOR_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MOTOR_SOURCE_DIR)/rc.motor $(MOTOR_IPK_DIR)/opt/etc/init.d/SXXmotor
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOTOR_IPK_DIR)/opt/etc/init.d/SXXmotor
+	$(STRIP_COMMAND) $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)bin/motor
+#	install -d $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MOTOR_SOURCE_DIR)/motor.conf $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/motor.conf
+#	install -d $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MOTOR_SOURCE_DIR)/rc.motor $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmotor
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmotor
 	$(MAKE) $(MOTOR_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MOTOR_SOURCE_DIR)/postinst $(MOTOR_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MOTOR_IPK_DIR)/CONTROL/postinst

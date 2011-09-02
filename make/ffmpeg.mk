@@ -42,7 +42,7 @@ FFMPEG_IPK_VERSION=3
 
 #
 # FFMPEG_CONFFILES should be a list of user-editable files
-#FFMPEG_CONFFILES=/opt/etc/ffmpeg.conf /opt/etc/init.d/SXXffmpeg
+#FFMPEG_CONFFILES=$(OPTWARE_PREFIX)etc/ffmpeg.conf $(OPTWARE_PREFIX)etc/init.d/SXXffmpeg
 
 #
 ## FFMPEG_PATCHES should list any patches, in the the order in
@@ -151,7 +151,7 @@ $(FFMPEG_BUILD_DIR)/.configured: $(DL_DIR)/$(FFMPEG_SOURCE) $(FFMPEG_PATCHES) ma
 		--disable-static \
 		--enable-gpl \
 		--enable-postproc \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 ifeq ($(LIBC_STYLE), uclibc)
 #	No lrintf() support in uClibc 0.9.28
@@ -188,9 +188,9 @@ $(FFMPEG_BUILD_DIR)/.staged: $(FFMPEG_BUILD_DIR)/.built
 	rm -f $@
 	rm -rf $(STAGING_INCLUDE_DIR)/ffmpeg $(STAGING_INCLUDE_DIR)/postproc
 	$(MAKE) -C $(@D) install \
-		mandir=$(STAGING_DIR)/opt/man \
-		bindir=$(STAGING_DIR)/opt/bin \
-		prefix=$(STAGING_DIR)/opt \
+		mandir=$(STAGING_DIR)$(OPTWARE_PREFIX)man \
+		bindir=$(STAGING_DIR)$(OPTWARE_PREFIX)bin \
+		prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		DESTDIR=$(STAGING_DIR)
 	install -d $(STAGING_INCLUDE_DIR)/ffmpeg $(STAGING_INCLUDE_DIR)/postproc
 	cp -p	$(STAGING_INCLUDE_DIR)/libavcodec/* \
@@ -230,25 +230,25 @@ $(FFMPEG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FFMPEG_IPK_DIR)/opt/sbin or $(FFMPEG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FFMPEG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FFMPEG_IPK_DIR)/opt/etc/ffmpeg/...
-# Documentation files should be installed in $(FFMPEG_IPK_DIR)/opt/doc/ffmpeg/...
-# Daemon startup scripts should be installed in $(FFMPEG_IPK_DIR)/opt/etc/init.d/S??ffmpeg
+# Libraries and include files should be installed into $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/ffmpeg/...
+# Documentation files should be installed in $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)doc/ffmpeg/...
+# Daemon startup scripts should be installed in $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ffmpeg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FFMPEG_IPK): $(FFMPEG_BUILD_DIR)/.built
 	rm -rf $(FFMPEG_IPK_DIR) $(BUILD_DIR)/ffmpeg_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(FFMPEG_BUILD_DIR) mandir=$(FFMPEG_IPK_DIR)/opt/man \
-		bindir=$(FFMPEG_IPK_DIR)/opt/bin libdir=$(FFMPEG_IPK_DIR)/opt/lib \
-		prefix=$(FFMPEG_IPK_DIR)/opt DESTDIR=$(FFMPEG_IPK_DIR) \
+	$(MAKE) -C $(FFMPEG_BUILD_DIR) mandir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)man \
+		bindir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin libdir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib \
+		prefix=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)DESTDIR=$(FFMPEG_IPK_DIR) \
 		LDCONFIG='$$(warning ldconfig disabled when building package)' install
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)/opt/bin/ffmpeg
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)/opt/bin/ffserver
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)/opt/lib/*.so
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)/opt/lib/vhook/*.so
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin/ffmpeg
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin/ffserver
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/vhook/*.so
 	$(MAKE) $(FFMPEG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FFMPEG_IPK_DIR)
 

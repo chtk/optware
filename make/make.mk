@@ -108,7 +108,7 @@ $(MAKE_BUILD_DIR)/.configured: $(DL_DIR)/$(MAKE_SOURCE) $(MAKE_PATCHES) make/mak
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-rpath \
 		--disable-nls \
 		--disable-static \
@@ -135,16 +135,16 @@ make: $(MAKE_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libmake.so.$(MAKE_VERSION): $(MAKE_BUILD_DIR)/libmake.so.$(MAKE_VERSION)
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(MAKE_BUILD_DIR)/make.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(MAKE_BUILD_DIR)/libmake.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(MAKE_BUILD_DIR)/libmake.so.$(MAKE_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libmake.so.$(MAKE_VERSION) libmake.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libmake.so.$(MAKE_VERSION) libmake.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libmake.so.$(MAKE_VERSION): $(MAKE_BUILD_DIR)/libmake.so.$(MAKE_VERSION)
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(MAKE_BUILD_DIR)/make.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(MAKE_BUILD_DIR)/libmake.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(MAKE_BUILD_DIR)/libmake.so.$(MAKE_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libmake.so.$(MAKE_VERSION) libmake.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libmake.so.$(MAKE_VERSION) libmake.so
 #
-#make-stage: $(STAGING_DIR)/opt/lib/libmake.so.$(MAKE_VERSION)
+#make-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libmake.so.$(MAKE_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -167,20 +167,20 @@ $(MAKE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MAKE_IPK_DIR)/opt/sbin or $(MAKE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MAKE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MAKE_IPK_DIR)/opt/etc/make/...
-# Documentation files should be installed in $(MAKE_IPK_DIR)/opt/doc/make/...
-# Daemon startup scripts should be installed in $(MAKE_IPK_DIR)/opt/etc/init.d/S??make
+# Libraries and include files should be installed into $(MAKE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)etc/make/...
+# Documentation files should be installed in $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)doc/make/...
+# Daemon startup scripts should be installed in $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??make
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MAKE_IPK): $(MAKE_BUILD_DIR)/.built
 	rm -rf $(MAKE_IPK_DIR) $(MAKE_IPK)
 	$(MAKE) -C $(MAKE_BUILD_DIR) DESTDIR=$(MAKE_IPK_DIR) install-strip
-#	install -d $(MAKE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MAKE_SOURCE_DIR)/rc.make $(MAKE_IPK_DIR)/opt/etc/init.d/SXXmake
+#	install -d $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MAKE_SOURCE_DIR)/rc.make $(MAKE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmake
 	$(MAKE) $(MAKE_IPK_DIR)/CONTROL/control
 #	install -m 644 $(MAKE_SOURCE_DIR)/postinst $(MAKE_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(MAKE_SOURCE_DIR)/prerm $(MAKE_IPK_DIR)/CONTROL/prerm

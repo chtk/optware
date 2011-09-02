@@ -40,7 +40,7 @@ ZILE_IPK_VERSION=1
 
 #
 # ZILE_CONFFILES should be a list of user-editable files
-#ZILE_CONFFILES=/opt/etc/zile.conf /opt/etc/init.d/SXXzile
+#ZILE_CONFFILES=$(OPTWARE_PREFIX)etc/zile.conf $(OPTWARE_PREFIX)etc/init.d/SXXzile
 
 #
 # ZILE_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(ZILE_BUILD_DIR)/.configured: $(DL_DIR)/$(ZILE_SOURCE) $(ZILE_PATCHES) make/zil
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,12 +179,12 @@ $(ZILE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ZILE_IPK_DIR)/opt/sbin or $(ZILE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ZILE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ZILE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ZILE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ZILE_IPK_DIR)/opt/etc/zile/...
-# Documentation files should be installed in $(ZILE_IPK_DIR)/opt/doc/zile/...
-# Daemon startup scripts should be installed in $(ZILE_IPK_DIR)/opt/etc/init.d/S??zile
+# Libraries and include files should be installed into $(ZILE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ZILE_IPK_DIR)$(OPTWARE_PREFIX)etc/zile/...
+# Documentation files should be installed in $(ZILE_IPK_DIR)$(OPTWARE_PREFIX)doc/zile/...
+# Daemon startup scripts should be installed in $(ZILE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??zile
 #
 # You may need to patch your application to make it use these locations.
 #

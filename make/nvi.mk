@@ -46,7 +46,7 @@ NVI_IPK_VERSION=2
 
 #
 # NVI_CONFFILES should be a list of user-editable files
-#NVI_CONFFILES=/opt/etc/nvi.conf /opt/etc/init.d/SXXnvi
+#NVI_CONFFILES=$(OPTWARE_PREFIX)etc/nvi.conf $(OPTWARE_PREFIX)etc/init.d/SXXnvi
 
 #
 # NVI_PATCHES should list any patches, in the the order in
@@ -137,7 +137,7 @@ $(NVI_BUILD_DIR)/.configured: $(DL_DIR)/$(NVI_SOURCE) $(NVI_PATCHES) # make/nvi.
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -193,20 +193,20 @@ $(NVI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NVI_IPK_DIR)/opt/sbin or $(NVI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NVI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NVI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NVI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NVI_IPK_DIR)/opt/etc/nvi/...
-# Documentation files should be installed in $(NVI_IPK_DIR)/opt/doc/nvi/...
-# Daemon startup scripts should be installed in $(NVI_IPK_DIR)/opt/etc/init.d/S??nvi
+# Libraries and include files should be installed into $(NVI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NVI_IPK_DIR)$(OPTWARE_PREFIX)etc/nvi/...
+# Documentation files should be installed in $(NVI_IPK_DIR)$(OPTWARE_PREFIX)doc/nvi/...
+# Daemon startup scripts should be installed in $(NVI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nvi
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NVI_IPK): $(NVI_BUILD_DIR)/.built
 	rm -rf $(NVI_IPK_DIR) $(BUILD_DIR)/nvi_*_$(TARGET_ARCH).ipk
 	install -d $(NVI_IPK_DIR)/opt
-	$(MAKE) -C $(NVI_BUILD_DIR) prefix=$(NVI_IPK_DIR)/opt transform=s/^/n/ strip=$(TARGET_STRIP) install
-	mv $(NVI_IPK_DIR)/opt/share/vi $(NVI_IPK_DIR)/opt/share/nvi
+	$(MAKE) -C $(NVI_BUILD_DIR) prefix=$(NVI_IPK_DIR)$(OPTWARE_PREFIX)transform=s/^/n/ strip=$(TARGET_STRIP) install
+	mv $(NVI_IPK_DIR)$(OPTWARE_PREFIX)share/vi $(NVI_IPK_DIR)$(OPTWARE_PREFIX)share/nvi
 	$(MAKE) $(NVI_IPK_DIR)/CONTROL/control
 	echo $(NVI_CONFFILES) | sed -e 's/ /\n/g' > $(NVI_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NVI_IPK_DIR)

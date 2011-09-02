@@ -40,7 +40,7 @@ DIALOG_IPK_VERSION=1
 
 #
 # DIALOG_CONFFILES should be a list of user-editable files
-#DIALOG_CONFFILES=/opt/etc/dialog.conf /opt/etc/init.d/SXXdialog
+#DIALOG_CONFFILES=$(OPTWARE_PREFIX)etc/dialog.conf $(OPTWARE_PREFIX)etc/init.d/SXXdialog
 
 #
 # DIALOG_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(DIALOG_BUILD_DIR)/.configured: $(DL_DIR)/$(DIALOG_SOURCE) $(DIALOG_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -178,24 +178,24 @@ $(DIALOG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DIALOG_IPK_DIR)/opt/sbin or $(DIALOG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DIALOG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DIALOG_IPK_DIR)/opt/etc/dialog/...
-# Documentation files should be installed in $(DIALOG_IPK_DIR)/opt/doc/dialog/...
-# Daemon startup scripts should be installed in $(DIALOG_IPK_DIR)/opt/etc/init.d/S??dialog
+# Libraries and include files should be installed into $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/dialog/...
+# Documentation files should be installed in $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)doc/dialog/...
+# Daemon startup scripts should be installed in $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??dialog
 #
 # You may need to patch your application to make it use these locations.
 #
 $(DIALOG_IPK): $(DIALOG_BUILD_DIR)/.built
 	rm -rf $(DIALOG_IPK_DIR) $(BUILD_DIR)/dialog_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DIALOG_BUILD_DIR) DESTDIR=$(DIALOG_IPK_DIR) install
-	$(STRIP_COMMAND) $(DIALOG_IPK_DIR)/opt/bin/dialog
-#	install -d $(DIALOG_IPK_DIR)/opt/etc/
-#	install -m 644 $(DIALOG_SOURCE_DIR)/dialog.conf $(DIALOG_IPK_DIR)/opt/etc/dialog.conf
-#	install -d $(DIALOG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(DIALOG_SOURCE_DIR)/rc.dialog $(DIALOG_IPK_DIR)/opt/etc/init.d/SXXdialog
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DIALOG_IPK_DIR)/opt/etc/init.d/SXXdialog
+	$(STRIP_COMMAND) $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)bin/dialog
+#	install -d $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(DIALOG_SOURCE_DIR)/dialog.conf $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/dialog.conf
+#	install -d $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(DIALOG_SOURCE_DIR)/rc.dialog $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdialog
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdialog
 	$(MAKE) $(DIALOG_IPK_DIR)/CONTROL/control
 #	install -m 755 $(DIALOG_SOURCE_DIR)/postinst $(DIALOG_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DIALOG_IPK_DIR)/CONTROL/postinst

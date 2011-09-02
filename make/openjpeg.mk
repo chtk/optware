@@ -43,7 +43,7 @@ OPENJPEG_IPK_VERSION=1
 
 #
 # OPENJPEG_CONFFILES should be a list of user-editable files
-#OPENJPEG_CONFFILES=/opt/etc/openjpeg.conf /opt/etc/init.d/SXXopenjpeg
+#OPENJPEG_CONFFILES=$(OPTWARE_PREFIX)etc/openjpeg.conf $(OPTWARE_PREFIX)etc/init.d/SXXopenjpeg
 
 #
 # OPENJPEG_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,20 +189,20 @@ $(OPENJPEG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(OPENJPEG_IPK_DIR)/opt/sbin or $(OPENJPEG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(OPENJPEG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(OPENJPEG_IPK_DIR)/opt/etc/openjpeg/...
-# Documentation files should be installed in $(OPENJPEG_IPK_DIR)/opt/doc/openjpeg/...
-# Daemon startup scripts should be installed in $(OPENJPEG_IPK_DIR)/opt/etc/init.d/S??openjpeg
+# Libraries and include files should be installed into $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/openjpeg/...
+# Documentation files should be installed in $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)doc/openjpeg/...
+# Daemon startup scripts should be installed in $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??openjpeg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(OPENJPEG_IPK): $(OPENJPEG_BUILD_DIR)/.built
 	rm -rf $(OPENJPEG_IPK_DIR) $(BUILD_DIR)/openjpeg_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<D) install DESTDIR=$(OPENJPEG_IPK_DIR) PREFIX=/opt
-	rm -f $(OPENJPEG_IPK_DIR)/opt/lib/libopenjpeg.a
-	cd $(OPENJPEG_IPK_DIR)/opt/lib; ln -sf libopenjpeg.so.2 libopenjpeg.so
+	rm -f $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/libopenjpeg.a
+	cd $(OPENJPEG_IPK_DIR)$(OPTWARE_PREFIX)lib; ln -sf libopenjpeg.so.2 libopenjpeg.so
 	$(MAKE) $(OPENJPEG_IPK_DIR)/CONTROL/control
 	echo $(OPENJPEG_CONFFILES) | sed -e 's/ /\n/g' > $(OPENJPEG_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(OPENJPEG_IPK_DIR)

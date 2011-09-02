@@ -105,12 +105,12 @@ $(GPHOTO2_BUILD_DIR)/.configured: $(DL_DIR)/$(GPHOTO2_SOURCE) $(GPHOTO2_PATCHES)
 		then mv $(BUILD_DIR)/$(GPHOTO2_DIR) $(GPHOTO2_BUILD_DIR) ; \
 	fi
 	(cd $(GPHOTO2_BUILD_DIR);					\
-		PATH=$(STAGING_DIR)/opt/bin:$${PATH}			\
+		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$${PATH}			\
 		$(TARGET_CONFIGURE_OPTS)				\
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(GPHOTO2_CPPFLAGS)"	\
 		LDFLAGS="$(STAGING_LDFLAGS) $(GPHOTO2_LDFLAGS)"		\
-		POPT_CFLAGS=-I$(STAGING_DIR)/opt/include		\
-		POPT_LIBS="-I$(STAGING_DIR)/opt/lib -lpopt"		\
+		POPT_CFLAGS=-I$(STAGING_DIR)$(OPTWARE_PREFIX)include		\
+		POPT_LIBS="-I$(STAGING_DIR)$(OPTWARE_PREFIX)lib -lpopt"		\
 		./configure						\
 		--build=$(GNU_HOST_NAME)				\
 		--host=$(GNU_TARGET_NAME)				\
@@ -170,22 +170,22 @@ $(GPHOTO2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GPHOTO2_IPK_DIR)/opt/sbin or $(GPHOTO2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GPHOTO2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GPHOTO2_IPK_DIR)/opt/etc/gphoto2/...
-# Documentation files should be installed in $(GPHOTO2_IPK_DIR)/opt/doc/gphoto2/...
-# Daemon startup scripts should be installed in $(GPHOTO2_IPK_DIR)/opt/etc/init.d/S??gphoto2
+# Libraries and include files should be installed into $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/gphoto2/...
+# Documentation files should be installed in $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)doc/gphoto2/...
+# Daemon startup scripts should be installed in $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gphoto2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GPHOTO2_IPK): $(GPHOTO2_BUILD_DIR)/.built
 	rm -rf $(GPHOTO2_IPK_DIR) $(BUILD_DIR)/gphoto2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GPHOTO2_BUILD_DIR) DESTDIR=$(GPHOTO2_IPK_DIR) install-strip
-	install -d $(GPHOTO2_IPK_DIR)/opt/etc/
-#	install -m 644 $(GPHOTO2_SOURCE_DIR)/gphoto2.conf $(GPHOTO2_IPK_DIR)/opt/etc/gphoto2.conf
-#	install -d $(GPHOTO2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(GPHOTO2_SOURCE_DIR)/rc.gphoto2 $(GPHOTO2_IPK_DIR)/opt/etc/init.d/SXXgphoto2
+	install -d $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(GPHOTO2_SOURCE_DIR)/gphoto2.conf $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/gphoto2.conf
+#	install -d $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(GPHOTO2_SOURCE_DIR)/rc.gphoto2 $(GPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgphoto2
 	$(MAKE) $(GPHOTO2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(GPHOTO2_SOURCE_DIR)/postinst $(GPHOTO2_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(GPHOTO2_SOURCE_DIR)/prerm $(GPHOTO2_IPK_DIR)/CONTROL/prerm

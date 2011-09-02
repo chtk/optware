@@ -41,7 +41,7 @@ GNUPG1_IPK_VERSION=1
 
 #
 # GNUPG1_CONFFILES should be a list of user-editable files
-#GNUPG1_CONFFILES=/opt/etc/gnupg1.conf /opt/etc/init.d/SXXgnupg1
+#GNUPG1_CONFFILES=$(OPTWARE_PREFIX)etc/gnupg1.conf $(OPTWARE_PREFIX)etc/init.d/SXXgnupg1
 
 #
 # GNUPG1_PATCHES should list any patches, in the the order in
@@ -125,12 +125,12 @@ $(GNUPG1_BUILD_DIR)/.configured: $(DL_DIR)/$(GNUPG1_SOURCE) $(GNUPG1_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-libusb=$(STAGING_DIR)/opt \
-		--with-zlib=$(STAGING_DIR)/opt \
-		--with-readline=$(STAGING_DIR)/opt \
-		--with-libcurl=$(STAGING_DIR)/opt \
-		--with-ldap=$(STAGING_DIR)/opt \
-		--prefix=/opt \
+		--with-libusb=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-readline=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-libcurl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-ldap=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		$(GNUPG1_CFG_OPTS) \
 	)
@@ -183,19 +183,19 @@ $(GNUPG1_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GNUPG1_IPK_DIR)/opt/sbin or $(GNUPG1_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GNUPG1_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GNUPG1_IPK_DIR)/opt/etc/gnupg1/...
-# Documentation files should be installed in $(GNUPG1_IPK_DIR)/opt/doc/gnupg1/...
-# Daemon startup scripts should be installed in $(GNUPG1_IPK_DIR)/opt/etc/init.d/S??gnupg1
+# Libraries and include files should be installed into $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)etc/gnupg1/...
+# Documentation files should be installed in $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)doc/gnupg1/...
+# Daemon startup scripts should be installed in $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gnupg1
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GNUPG1_IPK): $(GNUPG1_BUILD_DIR)/.built
 	rm -rf $(GNUPG1_IPK_DIR) $(BUILD_DIR)/gnupg1_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<D) DESTDIR=$(GNUPG1_IPK_DIR) install-strip
-	mv $(GNUPG1_IPK_DIR)/opt/share/gnupg $(GNUPG1_IPK_DIR)/opt/share/gnupg1
+	mv $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)share/gnupg $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)share/gnupg1
 	$(MAKE) $(GNUPG1_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GNUPG1_IPK_DIR)
 

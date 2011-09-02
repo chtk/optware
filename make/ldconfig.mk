@@ -38,7 +38,7 @@ LDCONFIG_CONFLICTS=
 
 LDCONFIG_IPK_VERSION=1
 
-LDCONFIG_CONFFILES=/opt/etc/ld.so.conf
+LDCONFIG_CONFFILES=$(OPTWARE_PREFIX)etc/ld.so.conf
 
 LDCONFIG_BUILD_DIR=$(BUILD_DIR)/ldconfig
 LDCONFIG_SOURCE_DIR=$(SOURCE_DIR)/ldconfig
@@ -108,27 +108,27 @@ $(LDCONFIG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LDCONFIG_IPK_DIR)/opt/sbin or $(LDCONFIG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LDCONFIG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LDCONFIG_IPK_DIR)/opt/etc/ldconfig/...
-# Documentation files should be installed in $(LDCONFIG_IPK_DIR)/opt/doc/ldconfig/...
-# Daemon startup scripts should be installed in $(LDCONFIG_IPK_DIR)/opt/etc/init.d/S??ldconfig
+# Libraries and include files should be installed into $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/ldconfig/...
+# Documentation files should be installed in $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)doc/ldconfig/...
+# Daemon startup scripts should be installed in $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ldconfig
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LDCONFIG_IPK): $(LDCONFIG_BUILD_DIR)/.built
 	rm -rf $(LDCONFIG_IPK_DIR) $(BUILD_DIR)/ldconfig_*_$(TARGET_ARCH).ipk
-	install -d $(LDCONFIG_IPK_DIR)/opt/bin
-	install -d $(LDCONFIG_IPK_DIR)/opt/sbin
-	install -m 755 $(LDCONFIG_BUILD_DIR)/ldd $(LDCONFIG_IPK_DIR)/opt/bin/ldd
-	install -m 755 $(LDCONFIG_SOURCE_DIR)/ldconfig.wrapper $(LDCONFIG_IPK_DIR)/opt/sbin/ldconfig
-	$(STRIP_COMMAND) $(LDCONFIG_BUILD_DIR)/ldconfig -o $(LDCONFIG_IPK_DIR)/opt/sbin/ldconfig.bin
-	$(STRIP_COMMAND) $(LDCONFIG_BUILD_DIR)/sprof -o $(LDCONFIG_IPK_DIR)/opt/bin/sprof
-	install -d $(LDCONFIG_IPK_DIR)/opt/etc/
-	install -m 644 $(LDCONFIG_SOURCE_DIR)/ld.so.conf $(LDCONFIG_IPK_DIR)/opt/etc/ld.so.conf
-	install -d $(LDCONFIG_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(LDCONFIG_SOURCE_DIR)/postinst $(LDCONFIG_IPK_DIR)/opt/etc/init.d/S03ldconfig
+	install -d $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(LDCONFIG_BUILD_DIR)/ldd $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)bin/ldd
+	install -m 755 $(LDCONFIG_SOURCE_DIR)/ldconfig.wrapper $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin/ldconfig
+	$(STRIP_COMMAND) $(LDCONFIG_BUILD_DIR)/ldconfig -o $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin/ldconfig.bin
+	$(STRIP_COMMAND) $(LDCONFIG_BUILD_DIR)/sprof -o $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)bin/sprof
+	install -d $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(LDCONFIG_SOURCE_DIR)/ld.so.conf $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/ld.so.conf
+	install -d $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(LDCONFIG_SOURCE_DIR)/postinst $(LDCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S03ldconfig
 	$(MAKE) $(LDCONFIG_IPK_DIR)/CONTROL/control
 	install -m 755 $(LDCONFIG_SOURCE_DIR)/postinst $(LDCONFIG_IPK_DIR)/CONTROL/postinst
 	echo $(LDCONFIG_CONFFILES) | sed -e 's/ /\n/g' > $(LDCONFIG_IPK_DIR)/CONTROL/conffiles

@@ -50,7 +50,7 @@ GCC_IPK_VERSION ?= 5
 
 #
 # GCC_CONFFILES should be a list of user-editable files
-#GCC_CONFFILES=/opt/etc/gcc.conf /opt/etc/init.d/SXXgcc
+#GCC_CONFFILES=$(OPTWARE_PREFIX)etc/gcc.conf $(OPTWARE_PREFIX)etc/init.d/SXXgcc
 
 GCC_BUILD_DIR=$(BUILD_DIR)/gcc
 GCC_SOURCE_DIR=$(SOURCE_DIR)/gcc
@@ -165,7 +165,7 @@ $(GCC_BUILD_DIR)/.configured: $(DL_DIR)/$(GCC_SOURCE) $(GCC_PATCHES) #make/gcc.m
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GCC_TARGET_NAME) \
 		--target=$(GCC_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-as=$(TARGET_AS) \
@@ -228,12 +228,12 @@ $(GCC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GCC_IPK_DIR)/opt/sbin or $(GCC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GCC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GCC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GCC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GCC_IPK_DIR)/opt/etc/gcc/...
-# Documentation files should be installed in $(GCC_IPK_DIR)/opt/doc/gcc/...
-# Daemon startup scripts should be installed in $(GCC_IPK_DIR)/opt/etc/init.d/S??gcc
+# Libraries and include files should be installed into $(GCC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GCC_IPK_DIR)$(OPTWARE_PREFIX)etc/gcc/...
+# Documentation files should be installed in $(GCC_IPK_DIR)$(OPTWARE_PREFIX)doc/gcc/...
+# Daemon startup scripts should be installed in $(GCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gcc
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -242,14 +242,14 @@ $(GCC_IPK): $(GCC_BUILD_DIR)/.built
 	PATH=`dirname $(TARGET_CC)`:$(STAGING_DIR)/bin:$(PATH) \
 	$(GCC_BUILD_EXTRA_ENV) \
 		$(MAKE) -C $(GCC_BUILD_DIR) DESTDIR=$(GCC_IPK_DIR) install
-	rm -f $(GCC_IPK_DIR)/opt/lib/libiberty.a $(GCC_IPK_DIR)/opt/info/dir $(GCC_IPK_DIR)/opt/info/dir.old
-	rm -f $(GCC_IPK_DIR)/opt/lib/libstdc++.so*
+	rm -f $(GCC_IPK_DIR)$(OPTWARE_PREFIX)lib/libiberty.a $(GCC_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GCC_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	rm -f $(GCC_IPK_DIR)$(OPTWARE_PREFIX)lib/libstdc++.so*
 ifeq (wdtv, $(OPTWARE_TARGET))
-	rm -f $(GCC_IPK_DIR)/opt/lib/lib*.so* $(GCC_IPK_DIR)/opt/include/*.h
+	rm -f $(GCC_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so* $(GCC_IPK_DIR)$(OPTWARE_PREFIX)include/*.h
 endif
-	-cd $(GCC_IPK_DIR)/opt/libexec/gcc/`$(TARGET_CC) -dumpmachine`/$(GCC_VERSION); \
+	-cd $(GCC_IPK_DIR)$(OPTWARE_PREFIX)libexec/gcc/`$(TARGET_CC) -dumpmachine`/$(GCC_VERSION); \
 		$(STRIP_COMMAND) c* install-tools/fixincl
-	-cd $(GCC_IPK_DIR)/opt/bin; $(STRIP_COMMAND) cpp gcc g++ gcov
+	-cd $(GCC_IPK_DIR)$(OPTWARE_PREFIX)bin; $(STRIP_COMMAND) cpp gcc g++ gcov
 	$(MAKE) $(GCC_IPK_DIR)/CONTROL/control
 	echo $(GCC_CONFFILES) | sed -e 's/ /\n/g' > $(GCC_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GCC_IPK_DIR)

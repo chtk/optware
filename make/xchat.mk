@@ -35,7 +35,7 @@ XCHAT_LOCALES=
 
 #
 # XCHAT_CONFFILES should be a list of user-editable files
-#XCHAT_CONFFILES=/opt/etc/xchat.conf /opt/etc/init.d/SXXxchat
+#XCHAT_CONFFILES=$(OPTWARE_PREFIX)etc/xchat.conf $(OPTWARE_PREFIX)etc/init.d/SXXxchat
 
 #
 # XCHAT_PATCHES should list any patches, in the the order in
@@ -118,7 +118,7 @@ $(XCHAT_BUILD_DIR)/.configured: $(DL_DIR)/$(XCHAT_SOURCE) \
 	#cat $(XCHAT_PATCHES) |patch -p0 -d$(XCHAT_BUILD_DIR)
 	(cd $(XCHAT_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
-		PATH="$(STAGING_DIR)/opt/bin:$$PATH" \
+		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$$PATH" \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(XCHAT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(XCHAT_LDFLAGS)" \
 		PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
@@ -130,7 +130,7 @@ $(XCHAT_BUILD_DIR)/.configured: $(DL_DIR)/$(XCHAT_SOURCE) \
 		--target=$(GNU_TARGET_NAME) \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-gtk-doc \
 		--disable-static \
 		--disable-glibtest \
@@ -165,19 +165,19 @@ xchat: $(XCHAT_BUILD_DIR)/.built
 #
 $(XCHAT_BUILD_DIR)/.staged: $(XCHAT_BUILD_DIR)/.built
 	$(MAKE) -C $(XCHAT_BUILD_DIR) install-strip DESTDIR=$(STAGING_DIR)
-	rm -rf $(STAGING_DIR)/opt/lib/libxchat.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libxchat.la
 
 xchat-stage: $(XCHAT_BUILD_DIR)/.staged
 
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XCHAT_IPK_DIR)/opt/sbin or $(XCHAT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XCHAT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XCHAT_IPK_DIR)/opt/etc/xchat/...
-# Documentation files should be installed in $(XCHAT_IPK_DIR)/opt/doc/xchat/...
-# Daemon startup scripts should be installed in $(XCHAT_IPK_DIR)/opt/etc/init.d/S??xchat
+# Libraries and include files should be installed into $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX)etc/xchat/...
+# Documentation files should be installed in $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX)doc/xchat/...
+# Daemon startup scripts should be installed in $(XCHAT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xchat
 #
 # You may need to patch your application to make it use these locations.
 #

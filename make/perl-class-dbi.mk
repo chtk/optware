@@ -48,9 +48,9 @@ endif
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL -n \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 ifneq ($(TARGET_CC),$(HOSTCC))
 	cp -pf $(PERL-CLASS-DBI_BUILD_DIR)/DBI.pm.orig $(PERL-CLASS-DBI_BUILD_DIR)/lib/Class/DBI.pm
@@ -62,7 +62,7 @@ perl-class-dbi-unpack: $(PERL-CLASS-DBI_BUILD_DIR)/.configured
 $(PERL-CLASS-DBI_BUILD_DIR)/.built: $(PERL-CLASS-DBI_BUILD_DIR)/.configured
 	rm -f $(PERL-CLASS-DBI_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-CLASS-DBI_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-CLASS-DBI_BUILD_DIR)/.built
 
 perl-class-dbi: $(PERL-CLASS-DBI_BUILD_DIR)/.built
@@ -92,13 +92,13 @@ $(PERL-CLASS-DBI_IPK_DIR)/CONTROL/control:
 $(PERL-CLASS-DBI_IPK): $(PERL-CLASS-DBI_BUILD_DIR)/.built
 	rm -rf $(PERL-CLASS-DBI_IPK_DIR) $(BUILD_DIR)/perl-class-dbi_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-CLASS-DBI_BUILD_DIR) DESTDIR=$(PERL-CLASS-DBI_IPK_DIR) install
-	find $(PERL-CLASS-DBI_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-CLASS-DBI_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-CLASS-DBI_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-CLASS-DBI_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-CLASS-DBI_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-CLASS-DBI_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-CLASS-DBI_IPK_DIR)/CONTROL/control
 	echo $(PERL-CLASS-DBI_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-CLASS-DBI_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-CLASS-DBI_IPK_DIR)

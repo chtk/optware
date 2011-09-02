@@ -35,7 +35,7 @@ TCL_CONFLICTS=
 TCL_IPK_VERSION=2
 
 #
-# TCL_CONFFILES should be a list of user-editable files #TCL_CONFFILES=/opt/etc/tcl.conf /opt/etc/init.d/SXXtcl
+# TCL_CONFFILES should be a list of user-editable files #TCL_CONFFILES=$(OPTWARE_PREFIX)etc/tcl.conf $(OPTWARE_PREFIX)etc/init.d/SXXtcl
 
 #
 # TCL_PATCHES should list any patches, in the the order in
@@ -96,7 +96,7 @@ $(TCL_BUILD_DIR)/.configured: $(DL_DIR)/$(TCL_SOURCE) $(TCL_PATCHES)
 		--enable-gcc \
 		--enable-threads \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -146,18 +146,18 @@ tcl-stage: $(TCL_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TCL_IPK_DIR)/opt/sbin or $(TCL_IPK_DIR)/opt/bin # (use the location in a well-known Linux distro as a guide for choosing sbin or bin). # Libraries and include files should be installed into $(TCL_IPK_DIR)/opt/{lib,include} # Configuration files should be installed in $(TCL_IPK_DIR)/opt/etc/tcl/... # Documentation files should be installed in $(TCL_IPK_DIR)/opt/doc/tcl/... # Daemon startup scripts should be installed in $(TCL_IPK_DIR)/opt/etc/init.d/S??tcl
+# Binaries should be installed into $(TCL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TCL_IPK_DIR)$(OPTWARE_PREFIX)bin # (use the location in a well-known Linux distro as a guide for choosing sbin or bin). # Libraries and include files should be installed into $(TCL_IPK_DIR)$(OPTWARE_PREFIX){lib,include} # Configuration files should be installed in $(TCL_IPK_DIR)$(OPTWARE_PREFIX)etc/tcl/... # Documentation files should be installed in $(TCL_IPK_DIR)$(OPTWARE_PREFIX)doc/tcl/... # Daemon startup scripts should be installed in $(TCL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??tcl
 #
 # You may need to patch your application to make it use these locations. #
 $(TCL_IPK): $(TCL_BUILD_DIR)/.built
 	rm -rf $(TCL_IPK_DIR) $(BUILD_DIR)/tcl_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TCL_BUILD_DIR)/unix INSTALL_ROOT=$(TCL_IPK_DIR) install
 	for f in \
-		$(TCL_IPK_DIR)/opt/lib/`echo libtcl$(TCL_VERSION).so | sed -e 's/[0-9]\{1,\}.so$$/so/'` \
-		$(TCL_IPK_DIR)/opt/bin/`echo tclsh$(TCL_VERSION) | sed -e 's/\.[0-9]\{1,\}$$//'`; \
+		$(TCL_IPK_DIR)$(OPTWARE_PREFIX)lib/`echo libtcl$(TCL_VERSION).so | sed -e 's/[0-9]\{1,\}.so$$/so/'` \
+		$(TCL_IPK_DIR)$(OPTWARE_PREFIX)bin/`echo tclsh$(TCL_VERSION) | sed -e 's/\.[0-9]\{1,\}$$//'`; \
 	do chmod +w $$f; $(STRIP_COMMAND) $$f; chmod -w $$f; done
-	cd $(TCL_IPK_DIR)/opt/lib && ln -fs `echo libtcl$(TCL_VERSION).so | sed -e 's/[0-9]\{1,\}.so$$/so/'` libtcl.so
-	cd $(TCL_IPK_DIR)/opt/bin && ln -fs `echo tclsh$(TCL_VERSION) | sed -e 's/\.[0-9]\{1,\}$$//'` tclsh
+	cd $(TCL_IPK_DIR)$(OPTWARE_PREFIX)lib && ln -fs `echo libtcl$(TCL_VERSION).so | sed -e 's/[0-9]\{1,\}.so$$/so/'` libtcl.so
+	cd $(TCL_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs `echo tclsh$(TCL_VERSION) | sed -e 's/\.[0-9]\{1,\}$$//'` tclsh
 	$(MAKE) $(TCL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TCL_IPK_DIR)
 

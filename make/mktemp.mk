@@ -120,7 +120,7 @@ $(MKTEMP_BUILD_DIR)/.configured: $(DL_DIR)/$(MKTEMP_SOURCE) $(MKTEMP_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -171,26 +171,26 @@ $(MKTEMP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MKTEMP_IPK_DIR)/opt/sbin or $(MKTEMP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MKTEMP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MKTEMP_IPK_DIR)/opt/etc/mktemp/...
-# Documentation files should be installed in $(MKTEMP_IPK_DIR)/opt/doc/mktemp/...
-# Daemon startup scripts should be installed in $(MKTEMP_IPK_DIR)/opt/etc/init.d/S??mktemp
+# Libraries and include files should be installed into $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)etc/mktemp/...
+# Documentation files should be installed in $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)doc/mktemp/...
+# Daemon startup scripts should be installed in $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mktemp
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MKTEMP_IPK): $(MKTEMP_BUILD_DIR)/.built
 	rm -rf $(MKTEMP_IPK_DIR) $(BUILD_DIR)/mktemp_*_$(TARGET_ARCH).ipk
-	install -d $(MKTEMP_IPK_DIR)/opt/bin
-	install -m 755 $(MKTEMP_BUILD_DIR)/mktemp $(MKTEMP_IPK_DIR)/opt/bin/mktemp-mktemp
-	$(STRIP_COMMAND) $(MKTEMP_IPK_DIR)/opt/bin/mktemp-mktemp
+	install -d $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(MKTEMP_BUILD_DIR)/mktemp $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)bin/mktemp-mktemp
+	$(STRIP_COMMAND) $(MKTEMP_IPK_DIR)$(OPTWARE_PREFIX)bin/mktemp-mktemp
 	$(MAKE) $(MKTEMP_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --install /opt/bin/mktemp mktemp /opt/bin/mktemp-mktemp 50" ; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/mktemp mktemp $(OPTWARE_PREFIX)bin/mktemp-mktemp 50" ; \
 	) > $(MKTEMP_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --remove mktemp /opt/bin/mktemp-mktemp" ; \
+	 echo "update-alternatives --remove mktemp $(OPTWARE_PREFIX)bin/mktemp-mktemp" ; \
 	) > $(MKTEMP_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

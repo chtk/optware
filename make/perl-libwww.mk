@@ -42,9 +42,9 @@ $(PERL-LIBWWW_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-LIBWWW_SOURCE) $(PERL-LIB
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-libwww-unpack: $(PERL-LIBWWW_BUILD_DIR)/.configured
 
 $(PERL-LIBWWW_BUILD_DIR)/.built: $(PERL-LIBWWW_BUILD_DIR)/.configured
 	rm -f $@
-	$(MAKE) -C $(@D) PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	$(MAKE) -C $(@D) PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-libwww: $(PERL-LIBWWW_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-LIBWWW_IPK_DIR)/CONTROL/control:
 $(PERL-LIBWWW_IPK): $(PERL-LIBWWW_BUILD_DIR)/.built
 	rm -rf $(PERL-LIBWWW_IPK_DIR) $(BUILD_DIR)/perl-libwww_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-LIBWWW_BUILD_DIR) DESTDIR=$(PERL-LIBWWW_IPK_DIR) install
-	find $(PERL-LIBWWW_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-LIBWWW_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-LIBWWW_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-LIBWWW_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-LIBWWW_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-LIBWWW_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-LIBWWW_IPK_DIR)/CONTROL/control
 	echo $(PERL-LIBWWW_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-LIBWWW_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-LIBWWW_IPK_DIR)

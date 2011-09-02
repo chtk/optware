@@ -24,7 +24,7 @@ MONIT_IPK_VERSION=1
 
 #
 # MONIT_CONFFILES should be a list of user-editable files
-MONIT_CONFFILES=/opt/etc/monitrc /opt/etc/init.d/S99monit
+MONIT_CONFFILES=$(OPTWARE_PREFIX)etc/monitrc $(OPTWARE_PREFIX)etc/init.d/S99monit
 
 #
 # MONIT_PATCHES should list any patches, in the the order in
@@ -102,7 +102,7 @@ $(MONIT_BUILD_DIR)/.configured: $(DL_DIR)/$(MONIT_SOURCE) $(MONIT_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-ssl-incl-dir=$(STAGING_PREFIX)/include \
@@ -150,14 +150,14 @@ $(MONIT_IPK_DIR)/CONTROL/control:
 $(MONIT_IPK): $(MONIT_BUILD_DIR)/.built
 	rm -rf $(MONIT_IPK_DIR) $(BUILD_DIR)/monit_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MONIT_BUILD_DIR) DESTDIR=$(MONIT_IPK_DIR) install
-	chmod 755 $(MONIT_IPK_DIR)/opt/bin/monit
-	$(STRIP_COMMAND) $(MONIT_IPK_DIR)/opt/bin/monit
-	rm -rf $(MONIT_IPK_DIR)/opt/man
-	install -d $(MONIT_IPK_DIR)/opt/etc/
-	install -d $(MONIT_IPK_DIR)/opt/var/run
-	install -d $(MONIT_IPK_DIR)/opt/etc/init.d
-	install -m 700 $(MONIT_BUILD_DIR)/monitrc $(MONIT_IPK_DIR)/opt/etc/monitrc
-	install -m 755 $(MONIT_SOURCE_DIR)/rc.monit $(MONIT_IPK_DIR)/opt/etc/init.d/S99monit
+	chmod 755 $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)bin/monit
+	$(STRIP_COMMAND) $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)bin/monit
+	rm -rf $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)man
+	install -d $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)var/run
+	install -d $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 700 $(MONIT_BUILD_DIR)/monitrc $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)etc/monitrc
+	install -m 755 $(MONIT_SOURCE_DIR)/rc.monit $(MONIT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S99monit
 	$(MAKE) $(MONIT_IPK_DIR)/CONTROL/control
 	install -m 755 $(MONIT_SOURCE_DIR)/postinst $(MONIT_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(MONIT_SOURCE_DIR)/prerm $(MONIT_IPK_DIR)/CONTROL/prerm

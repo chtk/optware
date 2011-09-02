@@ -40,7 +40,7 @@ LIBSOUP_IPK_VERSION=1
 
 #
 # LIBSOUP_CONFFILES should be a list of user-editable files
-#LIBSOUP_CONFFILES=/opt/etc/libsoup.conf /opt/etc/init.d/SXXlibsoup
+#LIBSOUP_CONFFILES=$(OPTWARE_PREFIX)etc/libsoup.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibsoup
 
 #
 # LIBSOUP_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(LIBSOUP_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBSOUP_SOURCE) $(LIBSOUP_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
@@ -181,19 +181,19 @@ $(LIBSOUP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBSOUP_IPK_DIR)/opt/sbin or $(LIBSOUP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBSOUP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBSOUP_IPK_DIR)/opt/etc/libsoup/...
-# Documentation files should be installed in $(LIBSOUP_IPK_DIR)/opt/doc/libsoup/...
-# Daemon startup scripts should be installed in $(LIBSOUP_IPK_DIR)/opt/etc/init.d/S??libsoup
+# Libraries and include files should be installed into $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)etc/libsoup/...
+# Documentation files should be installed in $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)doc/libsoup/...
+# Daemon startup scripts should be installed in $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libsoup
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBSOUP_IPK): $(LIBSOUP_BUILD_DIR)/.built
 	rm -rf $(LIBSOUP_IPK_DIR) $(BUILD_DIR)/libsoup_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBSOUP_BUILD_DIR) DESTDIR=$(LIBSOUP_IPK_DIR) SUBDIRS=libsoup install-strip
-	rm -f $(LIBSOUP_IPK_DIR)/opt/lib/libsoup-2.2.la
+	rm -f $(LIBSOUP_IPK_DIR)$(OPTWARE_PREFIX)lib/libsoup-2.2.la
 	$(MAKE) $(LIBSOUP_IPK_DIR)/CONTROL/control
 	echo $(LIBSOUP_CONFFILES) | sed -e 's/ /\n/g' > $(LIBSOUP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBSOUP_IPK_DIR)

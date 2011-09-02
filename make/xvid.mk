@@ -128,7 +128,7 @@ $(XVID_BUILD_DIR)/.configured: $(DL_DIR)/$(XVID_SOURCE) $(XVID_PATCHES) make/xvi
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--enable-shared \
 	)
@@ -189,21 +189,21 @@ endif
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XVID_IPK_DIR)/opt/sbin or $(XVID_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XVID_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XVID_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XVID_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XVID_IPK_DIR)/opt/etc/xvid/...
-# Documentation files should be installed in $(XVID_IPK_DIR)/opt/doc/xvid/...
-# Daemon startup scripts should be installed in $(XVID_IPK_DIR)/opt/etc/init.d/S??xvid
+# Libraries and include files should be installed into $(XVID_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XVID_IPK_DIR)$(OPTWARE_PREFIX)etc/xvid/...
+# Documentation files should be installed in $(XVID_IPK_DIR)$(OPTWARE_PREFIX)doc/xvid/...
+# Daemon startup scripts should be installed in $(XVID_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xvid
 #
 # You may need to patch your application to make it use these locations.
 #
 $(XVID_IPK): $(XVID_BUILD_DIR)/.built
 	rm -rf $(XVID_IPK_DIR) $(BUILD_DIR)/xvid_*_$(TARGET_ARCH).ipk
 	$(MAKE) DESTDIR=$(XVID_IPK_DIR) -C $(XVID_BUILD_DIR)/build/generic install
-	rm -f $(XVID_IPK_DIR)/opt/lib/libxvidcore.a
-	$(STRIP_COMMAND) $(XVID_IPK_DIR)/opt/lib/libxvidcore.so.$(XVID_LIB_VER)
-	ln -s $(XVID_IPK_DIR)/opt/lib/libxvidcore.so.$(XVID_LIB_VER) $(XVID_IPK_DIR)/opt/lib/libxvidcore.so
+	rm -f $(XVID_IPK_DIR)$(OPTWARE_PREFIX)lib/libxvidcore.a
+	$(STRIP_COMMAND) $(XVID_IPK_DIR)$(OPTWARE_PREFIX)lib/libxvidcore.so.$(XVID_LIB_VER)
+	ln -s $(XVID_IPK_DIR)$(OPTWARE_PREFIX)lib/libxvidcore.so.$(XVID_LIB_VER) $(XVID_IPK_DIR)$(OPTWARE_PREFIX)lib/libxvidcore.so
 	$(MAKE) $(XVID_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XVID_IPK_DIR)
 

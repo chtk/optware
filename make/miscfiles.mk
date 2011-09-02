@@ -40,7 +40,7 @@ MISCFILES_IPK_VERSION=1
 
 #
 # MISCFILES_CONFFILES should be a list of user-editable files
-#MISCFILES_CONFFILES=/opt/etc/miscfiles.conf /opt/etc/init.d/SXXmiscfiles
+#MISCFILES_CONFFILES=$(OPTWARE_PREFIX)etc/miscfiles.conf $(OPTWARE_PREFIX)etc/init.d/SXXmiscfiles
 
 #
 # MISCFILES_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(MISCFILES_BUILD_DIR)/.configured: $(DL_DIR)/$(MISCFILES_SOURCE) $(MISCFILES_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,18 +177,18 @@ $(MISCFILES_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MISCFILES_IPK_DIR)/opt/sbin or $(MISCFILES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MISCFILES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MISCFILES_IPK_DIR)/opt/etc/miscfiles/...
-# Documentation files should be installed in $(MISCFILES_IPK_DIR)/opt/doc/miscfiles/...
-# Daemon startup scripts should be installed in $(MISCFILES_IPK_DIR)/opt/etc/init.d/S??miscfiles
+# Libraries and include files should be installed into $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)etc/miscfiles/...
+# Documentation files should be installed in $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)doc/miscfiles/...
+# Daemon startup scripts should be installed in $(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??miscfiles
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MISCFILES_IPK): $(MISCFILES_BUILD_DIR)/.built
 	rm -rf $(MISCFILES_IPK_DIR) $(BUILD_DIR)/miscfiles_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(MISCFILES_BUILD_DIR) prefix=$(MISCFILES_IPK_DIR)/opt install-strip
+	$(MAKE) -C $(MISCFILES_BUILD_DIR) prefix=$(MISCFILES_IPK_DIR)$(OPTWARE_PREFIX)install-strip
 	$(MAKE) $(MISCFILES_IPK_DIR)/CONTROL/control
 	echo $(MISCFILES_CONFFILES) | sed -e 's/ /\n/g' > $(MISCFILES_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MISCFILES_IPK_DIR)

@@ -35,7 +35,7 @@ LIBGD_LOCALES=
 
 #
 # LIBGD_CONFFILES should be a list of user-editable files
-#LIBGD_CONFFILES=/opt/etc/libgd.conf /opt/etc/init.d/SXXlibgd
+#LIBGD_CONFFILES=$(OPTWARE_PREFIX)etc/libgd.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibgd
 
 #
 # LIBGD_PATCHES should list any patches, in the the order in
@@ -126,14 +126,14 @@ $(LIBGD_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBGD_SOURCE) $(LIBGD_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--without-x \
 		--without-libiconv-prefix \
-		--with-png=$(STAGING_DIR)/opt \
-		--with-jpeg=$(STAGING_DIR)/opt \
-		--with-freetype=$(STAGING_DIR)/opt \
-		--with-fontconfig=$(STAGING_DIR)/opt \
+		--with-png=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-jpeg=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-freetype=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-fontconfig=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		--without-xpm \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -165,7 +165,7 @@ $(LIBGD_BUILD_DIR)/.staged: $(LIBGD_BUILD_DIR)/.built
 		DESTDIR=$(STAGING_DIR) transform=''
 	rm -rf $(STAGING_LIB_DIR)/libgd.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' \
-	       -e 's| -L/opt/lib||g' $(STAGING_PREFIX)/bin/gdlib-config
+	       -e 's| -L$(OPTWARE_PREFIX)lib||g' $(STAGING_PREFIX)/bin/gdlib-config
 	touch $@
 
 libgd-stage: $(LIBGD_BUILD_DIR)/.staged
@@ -173,19 +173,19 @@ libgd-stage: $(LIBGD_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBGD_IPK_DIR)/opt/sbin or $(LIBGD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBGD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBGD_IPK_DIR)/opt/etc/libgd/...
-# Documentation files should be installed in $(LIBGD_IPK_DIR)/opt/doc/libgd/...
-# Daemon startup scripts should be installed in $(LIBGD_IPK_DIR)/opt/etc/init.d/S??libgd
+# Libraries and include files should be installed into $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)etc/libgd/...
+# Documentation files should be installed in $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)doc/libgd/...
+# Daemon startup scripts should be installed in $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libgd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBGD_IPK): $(LIBGD_BUILD_DIR)/.built
 	rm -rf $(LIBGD_IPK_DIR) $(BUILD_DIR)/libgd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBGD_BUILD_DIR) DESTDIR=$(LIBGD_IPK_DIR) install-strip transform=''
-	rm -f $(LIBGD_IPK_DIR)/opt/lib/*.la
+	rm -f $(LIBGD_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(LIBGD_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBGD_IPK_DIR)
 

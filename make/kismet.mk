@@ -40,13 +40,13 @@ KISMET_IPK_VERSION=4
 
 #
 # KISMET_CONFFILES should be a list of user-editable files
-KISMET_CONFFILES=/opt/etc/kismet/ap_manuf \
-		/opt/etc/kismet/client_manuf \
-		/opt//etc/kismet/kismet.conf \
-		/opt/etc/kismet/kismet_ui.conf \
-		/opt/etc/kismet/kismet_drone.conf
+KISMET_CONFFILES=$(OPTWARE_PREFIX)etc/kismet/ap_manuf \
+		$(OPTWARE_PREFIX)etc/kismet/client_manuf \
+		$(OPTWARE_PREFIX)/etc/kismet/kismet.conf \
+		$(OPTWARE_PREFIX)etc/kismet/kismet_ui.conf \
+		$(OPTWARE_PREFIX)etc/kismet/kismet_drone.conf
 
-#/opt/etc/init.d/SXXkismet
+#$(OPTWARE_PREFIX)etc/init.d/SXXkismet
 
 #
 # KISMET_PATCHES should list any patches, in the the order in
@@ -133,8 +133,8 @@ $(KISMET_BUILD_DIR)/.configured: $(DL_DIR)/$(KISMET_SOURCE) $(KISMET_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--sysconfdir=/opt/etc/kismet \
-		--prefix=/opt \
+		--sysconfdir=$(OPTWARE_PREFIX)etc/kismet \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--enable-syspcap=yes \
@@ -192,32 +192,32 @@ $(KISMET_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(KISMET_IPK_DIR)/opt/sbin or $(KISMET_IPK_DIR)/opt/bin
+# Binaries should be installed into $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(KISMET_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(KISMET_IPK_DIR)/opt/etc/kismet/...
-# Documentation files should be installed in $(KISMET_IPK_DIR)/opt/doc/kismet/...
-# Daemon startup scripts should be installed in $(KISMET_IPK_DIR)/opt/etc/init.d/S??kismet
+# Libraries and include files should be installed into $(KISMET_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/...
+# Documentation files should be installed in $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)doc/kismet/...
+# Daemon startup scripts should be installed in $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??kismet
 #
 # You may need to patch your application to make it use these locations.
 #
 $(KISMET_IPK): $(KISMET_BUILD_DIR)/.built
 	rm -rf $(KISMET_IPK_DIR) $(BUILD_DIR)/kismet_*_$(TARGET_ARCH).ipk
-	install -d $(KISMET_IPK_DIR)/opt/bin/
-	install -d $(KISMET_IPK_DIR)/opt/man/
+	install -d $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)man/
 	$(MAKE) -C $(KISMET_BUILD_DIR) DESTDIR=$(KISMET_IPK_DIR) install
-	$(STRIP_COMMAND) $(KISMET_IPK_DIR)/opt/bin/kismet_server
-	$(STRIP_COMMAND) $(KISMET_IPK_DIR)/opt/bin/kismet_client
-	$(STRIP_COMMAND) $(KISMET_IPK_DIR)/opt/bin/kismet_drone
-	install -d $(KISMET_IPK_DIR)/opt/etc/kismet
-	install -m 644 $(KISMET_SOURCE_DIR)/kismet.conf $(KISMET_IPK_DIR)/opt/etc/kismet/
-	install -m 644 $(KISMET_SOURCE_DIR)/ap_manuf $(KISMET_IPK_DIR)/opt/etc/kismet/
-	install -m 644 $(KISMET_SOURCE_DIR)/client_manuf $(KISMET_IPK_DIR)/opt/etc/kismet/
-	install -m 644 $(KISMET_SOURCE_DIR)/kismet_ui.conf $(KISMET_IPK_DIR)/opt/etc/kismet/
-	install -m 644 $(KISMET_SOURCE_DIR)/kismet_drone.conf $(KISMET_IPK_DIR)/opt/etc/kismet/
-#	install -d $(KISMET_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(KISMET_SOURCE_DIR)/rc.kismet $(KISMET_IPK_DIR)/opt/etc/init.d/SXXkismet
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXkismet
+	$(STRIP_COMMAND) $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)bin/kismet_server
+	$(STRIP_COMMAND) $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)bin/kismet_client
+	$(STRIP_COMMAND) $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)bin/kismet_drone
+	install -d $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet
+	install -m 644 $(KISMET_SOURCE_DIR)/kismet.conf $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/
+	install -m 644 $(KISMET_SOURCE_DIR)/ap_manuf $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/
+	install -m 644 $(KISMET_SOURCE_DIR)/client_manuf $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/
+	install -m 644 $(KISMET_SOURCE_DIR)/kismet_ui.conf $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/
+	install -m 644 $(KISMET_SOURCE_DIR)/kismet_drone.conf $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/kismet/
+#	install -d $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(KISMET_SOURCE_DIR)/rc.kismet $(KISMET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXkismet
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXkismet
 	$(MAKE) $(KISMET_IPK_DIR)/CONTROL/control
 #	install -m 755 $(KISMET_SOURCE_DIR)/postinst $(KISMET_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

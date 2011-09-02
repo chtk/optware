@@ -114,7 +114,7 @@ $(W3CAM_BUILD_DIR)/.configured: $(DL_DIR)/$(W3CAM_SOURCE) $(W3CAM_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--without-ttf-inc \
 	)
@@ -165,31 +165,31 @@ $(W3CAM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(W3CAM_IPK_DIR)/opt/sbin or $(W3CAM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(W3CAM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(W3CAM_IPK_DIR)/opt/etc/w3cam/...
-# Documentation files should be installed in $(W3CAM_IPK_DIR)/opt/doc/w3cam/...
-# Daemon startup scripts should be installed in $(W3CAM_IPK_DIR)/opt/etc/init.d/S??w3cam
+# Libraries and include files should be installed into $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)etc/w3cam/...
+# Documentation files should be installed in $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)doc/w3cam/...
+# Daemon startup scripts should be installed in $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??w3cam
 #
 # You may need to patch your application to make it use these locations.
 #
 $(W3CAM_IPK): $(W3CAM_BUILD_DIR)/.built
 	rm -rf $(W3CAM_IPK_DIR) $(BUILD_DIR)/w3cam_*_$(TARGET_ARCH).ipk
 
-	install -d $(W3CAM_IPK_DIR)/opt/bin/
-	install -d $(W3CAM_IPK_DIR)/opt/sbin/
-	install -d $(W3CAM_IPK_DIR)/opt/man/man1
-	install -d $(W3CAM_IPK_DIR)/opt/share/apache2/htdocs/cgi-bin/
-	install -m 755 $(W3CAM_BUILD_DIR)/w3camd/w3camd $(W3CAM_IPK_DIR)/opt/sbin/w3camd
-	install -m 755 $(W3CAM_BUILD_DIR)/w3cam.cgi $(W3CAM_IPK_DIR)/opt/share/apache2/htdocs/cgi-bin/w3cam.cgi
-	install -m 755 $(W3CAM_BUILD_DIR)/vidcat $(W3CAM_IPK_DIR)/opt/bin/vidcat
-	install -m 644 $(W3CAM_BUILD_DIR)/vidcat.1 $(W3CAM_IPK_DIR)/opt/man/man1/vidcat.1
+	install -d $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -d $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)share/apache2/htdocs/cgi-bin/
+	install -m 755 $(W3CAM_BUILD_DIR)/w3camd/w3camd $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)sbin/w3camd
+	install -m 755 $(W3CAM_BUILD_DIR)/w3cam.cgi $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)share/apache2/htdocs/cgi-bin/w3cam.cgi
+	install -m 755 $(W3CAM_BUILD_DIR)/vidcat $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)bin/vidcat
+	install -m 644 $(W3CAM_BUILD_DIR)/vidcat.1 $(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)man/man1/vidcat.1
 	$(MAKE) $(W3CAM_IPK_DIR)/CONTROL/control
 	$(STRIP_COMMAND) \
-		$(W3CAM_IPK_DIR)/opt/bin/vidcat \
-		$(W3CAM_IPK_DIR)/opt/sbin/w3camd \
-		$(W3CAM_IPK_DIR)/opt/share/apache2/htdocs/cgi-bin/w3cam.cgi
+		$(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)bin/vidcat \
+		$(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)sbin/w3camd \
+		$(W3CAM_IPK_DIR)$(OPTWARE_PREFIX)share/apache2/htdocs/cgi-bin/w3cam.cgi
 #	install -m 755 $(W3CAM_SOURCE_DIR)/postinst $(W3CAM_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(W3CAM_SOURCE_DIR)/prerm $(W3CAM_IPK_DIR)/CONTROL/prerm
 	echo $(W3CAM_CONFFILES) | sed -e 's/ /\n/g' > $(W3CAM_IPK_DIR)/CONTROL/conffiles

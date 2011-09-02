@@ -41,7 +41,7 @@ VIM_IPK_VERSION=2
 
 #
 # VIM_CONFFILES should be a list of user-editable files
-#VIM_CONFFILES=/opt/etc/vim.conf /opt/etc/init.d/SXXvim
+#VIM_CONFFILES=$(OPTWARE_PREFIX)etc/vim.conf $(OPTWARE_PREFIX)etc/init.d/SXXvim
 VIM_CONFFILES=
 
 #
@@ -134,7 +134,7 @@ $(VIM_BUILD_DIR)/.configured: $(DL_DIR)/$(VIM_SOURCE) $(VIM_PATCHES) make/vim.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-gui=no \
 		--disable-selinux \
 		--without-x \
@@ -191,12 +191,12 @@ $(VIM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(VIM_IPK_DIR)/opt/sbin or $(VIM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(VIM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(VIM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(VIM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(VIM_IPK_DIR)/opt/etc/vim/...
-# Documentation files should be installed in $(VIM_IPK_DIR)/opt/doc/vim/...
-# Daemon startup scripts should be installed in $(VIM_IPK_DIR)/opt/etc/init.d/S??vim
+# Libraries and include files should be installed into $(VIM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(VIM_IPK_DIR)$(OPTWARE_PREFIX)etc/vim/...
+# Documentation files should be installed in $(VIM_IPK_DIR)$(OPTWARE_PREFIX)doc/vim/...
+# Daemon startup scripts should be installed in $(VIM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??vim
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -205,9 +205,9 @@ $(VIM_IPK): $(VIM_BUILD_DIR)/.built
 	cd $(VIM_BUILD_DIR)/src
 	$(MAKE) -C $(VIM_BUILD_DIR) DESTDIR=$(VIM_IPK_DIR) install
 #	Fix the $VIM directory
-	mv $(VIM_IPK_DIR)/opt/share/vim $(VIM_IPK_DIR)/opt/share/vim-temp
-	mv $(VIM_IPK_DIR)/opt/share/vim-temp/vim* $(VIM_IPK_DIR)/opt/share/vim
-	rm -rf $(VIM_IPK_DIR)/opt/share/vim-temp
+	mv $(VIM_IPK_DIR)$(OPTWARE_PREFIX)share/vim $(VIM_IPK_DIR)$(OPTWARE_PREFIX)share/vim-temp
+	mv $(VIM_IPK_DIR)$(OPTWARE_PREFIX)share/vim-temp/vim* $(VIM_IPK_DIR)$(OPTWARE_PREFIX)share/vim
+	rm -rf $(VIM_IPK_DIR)$(OPTWARE_PREFIX)share/vim-temp
 	$(MAKE) $(VIM_IPK_DIR)/CONTROL/control
 #	install -m 644 $(VIM_SOURCE_DIR)/prerm $(VIM_IPK_DIR)/CONTROL/prerm
 #	install -m 644 $(VIM_SOURCE_DIR)/postinst $(VIM_IPK_DIR)/CONTROL/postinst

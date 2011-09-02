@@ -40,7 +40,7 @@ SYX_IPK_VERSION=1
 
 #
 # SYX_CONFFILES should be a list of user-editable files
-#SYX_CONFFILES=/opt/etc/syx.conf /opt/etc/init.d/SXXsyx
+#SYX_CONFFILES=$(OPTWARE_PREFIX)etc/syx.conf $(OPTWARE_PREFIX)etc/init.d/SXXsyx
 
 #
 # SYX_PATCHES should list any patches, in the the order in
@@ -133,7 +133,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -154,7 +154,7 @@ $(SYX_BUILD_DIR)/.built: $(SYX_BUILD_DIR)/.configured
 		LDFLAGS="$(STAGING_LDFLAGS) $(SYX_LDFLAGS)" \
 	$(HOST_STAGING_PREFIX)/bin/scons \
 		-C $(SYX_BUILD_DIR) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		GTK=false \
 		host=`echo $(TARGET_CROSS) | sed 's/-$$//'` \
 		endianness=$$ENDIANNESS \
@@ -176,7 +176,7 @@ $(SYX_HOST_BUILD_DIR)/.built: host/.configured make/syx.mk
 	fi
 	$(HOST_STAGING_PREFIX)/bin/scons \
 		-C $(SYX_HOST_BUILD_DIR) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		GTK=false \
 		;
 	touch $@
@@ -215,12 +215,12 @@ $(SYX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SYX_IPK_DIR)/opt/sbin or $(SYX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SYX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SYX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SYX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SYX_IPK_DIR)/opt/etc/syx/...
-# Documentation files should be installed in $(SYX_IPK_DIR)/opt/doc/syx/...
-# Daemon startup scripts should be installed in $(SYX_IPK_DIR)/opt/etc/init.d/S??syx
+# Libraries and include files should be installed into $(SYX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SYX_IPK_DIR)$(OPTWARE_PREFIX)etc/syx/...
+# Documentation files should be installed in $(SYX_IPK_DIR)$(OPTWARE_PREFIX)doc/syx/...
+# Daemon startup scripts should be installed in $(SYX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??syx
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -232,13 +232,13 @@ $(SYX_IPK): $(SYX_BUILD_DIR)/.built
 		LDFLAGS="$(STAGING_LDFLAGS) $(SYX_LDFLAGS)" \
 	$(HOST_STAGING_PREFIX)/bin/scons \
 		-C $(SYX_BUILD_DIR) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		GTK=false \
 		bdist
 	install -d $(SYX_IPK_DIR)
-	cp -rp $(SYX_BUILD_DIR)/syx-$(SYX_VERSION)/opt $(SYX_IPK_DIR)/
-	rm -f $(SYX_IPK_DIR)/opt/lib/libsyx.a
-	$(STRIP_COMMAND) $(SYX_IPK_DIR)/opt/lib/libsyx.so $(SYX_IPK_DIR)/opt/bin/syx
+	cp -rp $(SYX_BUILD_DIR)/syx-$(SYX_VERSION)$(OPTWARE_PREFIX)$(SYX_IPK_DIR)/
+	rm -f $(SYX_IPK_DIR)$(OPTWARE_PREFIX)lib/libsyx.a
+	$(STRIP_COMMAND) $(SYX_IPK_DIR)$(OPTWARE_PREFIX)lib/libsyx.so $(SYX_IPK_DIR)$(OPTWARE_PREFIX)bin/syx
 	$(MAKE) $(SYX_IPK_DIR)/CONTROL/control
 	echo $(SYX_CONFFILES) | sed -e 's/ /\n/g' > $(SYX_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SYX_IPK_DIR)

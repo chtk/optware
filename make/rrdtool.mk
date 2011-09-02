@@ -52,7 +52,7 @@ RRDTOOL_IPK_VERSION=1
 
 #
 # RRDTOOL_CONFFILES should be a list of user-editable files
-#RRDTOOL_CONFFILES=/opt/etc/rrdtool.conf /opt/etc/init.d/SXXrrdtool
+#RRDTOOL_CONFFILES=$(OPTWARE_PREFIX)etc/rrdtool.conf $(OPTWARE_PREFIX)etc/init.d/SXXrrdtool
 
 #
 # RRDTOOL_PATCHES should list any patches, in the the order in
@@ -146,7 +146,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-tcl \
 		$(RRDTOOL_PERL) \
@@ -165,13 +165,13 @@ ifneq (,$(filter perl, $(PACKAGES)))
 	    cd $(@D)/bindings/$$m; \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
 		$(TARGET_CONFIGURE_OPTS) \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 		; \
 	    sed -i -e '/^PERLRUN *=/s|$$| -I$(STAGING_LIB_DIR)/perl5/site_perl/$(PERL_VERSION)|' \
-	           -e '/^LDDLFLAGS *=/s|=.*|= -shared -rpath /opt/lib -L$(STAGING_LIB_DIR) $(PERL_LDFLAGS_EXTRA)|' \
+	           -e '/^LDDLFLAGS *=/s|=.*|= -shared -rpath $(OPTWARE_PREFIX)lib -L$(STAGING_LIB_DIR) $(PERL_LDFLAGS_EXTRA)|' \
 	    	Makefile; \
 	done
 endif   
@@ -227,30 +227,30 @@ $(RRDTOOL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RRDTOOL_IPK_DIR)/opt/sbin or $(RRDTOOL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RRDTOOL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RRDTOOL_IPK_DIR)/opt/etc/rrdtool/...
-# Documentation files should be installed in $(RRDTOOL_IPK_DIR)/opt/doc/rrdtool/...
-# Daemon startup scripts should be installed in $(RRDTOOL_IPK_DIR)/opt/etc/init.d/S??rrdtool
+# Libraries and include files should be installed into $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/rrdtool/...
+# Documentation files should be installed in $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)doc/rrdtool/...
+# Daemon startup scripts should be installed in $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??rrdtool
 #
 # You may need to patch your application to make it use these locations.
 #
 $(RRDTOOL_IPK): $(RRDTOOL_BUILD_DIR)/.built
 	rm -rf $(RRDTOOL_IPK_DIR) $(BUILD_DIR)/rrdtool_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RRDTOOL_BUILD_DIR) DESTDIR=$(RRDTOOL_IPK_DIR) install-strip
-	rm -f $(RRDTOOL_IPK_DIR)/opt/lib/librrd.la $(RRDTOOL_IPK_DIR)/opt/lib/librrd_th.la
-	rm -f $(RRDTOOL_IPK_DIR)/opt/lib/librrd.a $(RRDTOOL_IPK_DIR)/opt/lib/librrd_th.a
+	rm -f $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)lib/librrd.la $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)lib/librrd_th.la
+	rm -f $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)lib/librrd.a $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)lib/librrd_th.a
 ifneq (,$(filter perl, $(PACKAGES)))
-	cd $(RRDTOOL_IPK_DIR)/opt/lib/perl5; \
+	cd $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \;
 endif
-#	install -d $(RRDTOOL_IPK_DIR)/opt/etc/
-#	install -m 644 $(RRDTOOL_SOURCE_DIR)/rrdtool.conf $(RRDTOOL_IPK_DIR)/opt/etc/rrdtool.conf
-#	install -d $(RRDTOOL_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(RRDTOOL_SOURCE_DIR)/rc.rrdtool $(RRDTOOL_IPK_DIR)/opt/etc/init.d/SXXrrdtool
+#	install -d $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(RRDTOOL_SOURCE_DIR)/rrdtool.conf $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/rrdtool.conf
+#	install -d $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(RRDTOOL_SOURCE_DIR)/rc.rrdtool $(RRDTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXrrdtool
 	$(MAKE) $(RRDTOOL_IPK_DIR)/CONTROL/control
 #	install -m 755 $(RRDTOOL_SOURCE_DIR)/postinst $(RRDTOOL_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(RRDTOOL_SOURCE_DIR)/prerm $(RRDTOOL_IPK_DIR)/CONTROL/prerm

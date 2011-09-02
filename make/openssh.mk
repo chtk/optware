@@ -21,11 +21,11 @@ OPENSSH_CONFLICTS=
 OPENSSH_IPK_VERSION=1
 
 OPENSSH_CONFFILES=\
-	/opt/etc/openssh/ssh_config \
-	/opt/etc/openssh/sshd_config \
-	/opt/etc/openssh/moduli \
-	/opt/etc/default/openssh \
-	/opt/etc/init.d/S40sshd
+	$(OPTWARE_PREFIX)etc/openssh/ssh_config \
+	$(OPTWARE_PREFIX)etc/openssh/sshd_config \
+	$(OPTWARE_PREFIX)etc/openssh/moduli \
+	$(OPTWARE_PREFIX)etc/default/openssh \
+	$(OPTWARE_PREFIX)etc/init.d/S40sshd
 
 OPENSSH_PATCHES=$(OPENSSH_SOURCE_DIR)/Makefile.patch
 
@@ -113,22 +113,22 @@ $(OPENSSH_BUILD_DIR)/.configured: $(DL_DIR)/$(OPENSSH_SOURCE) $(OPENSSH_PATCHES)
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		$(OPENSSH_CONFIG_OPTS) \
-		--prefix=/opt \
-		--with-pid-dir=/opt/var/run \
-		--with-prngd-socket=/opt/var/run/egd-pool \
-		--with-privsep-path=/opt/var/empty \
-		--sysconfdir=/opt/etc/openssh \
-		--with-zlib=$(STAGING_DIR)/opt \
-		--with-ssl-dir=$(STAGING_DIR)/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-pid-dir=$(OPTWARE_PREFIX)var/run \
+		--with-prngd-socket=$(OPTWARE_PREFIX)var/run/egd-pool \
+		--with-privsep-path=$(OPTWARE_PREFIX)var/empty \
+		--sysconfdir=$(OPTWARE_PREFIX)etc/openssh \
+		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-ssl-dir=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		--with-md5-passwords \
 		--disable-etc-default-login \
-		--with-default-path="/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+		--with-default-path="$(OPTWARE_PREFIX)sbin:$(OPTWARE_PREFIX)bin:/usr/sbin:/usr/bin:/sbin:/bin" \
 		--with-privsep-user=nobody \
 		--disable-lastlog --disable-utmp \
 		--disable-utmpx --disable-wtmp --disable-wtmpx \
 		--without-x \
-		--with-tcp-wrappers=$(STAGING_DIR)/opt \
-		--with-xauth=/opt/bin/xauth \
+		--with-tcp-wrappers=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-xauth=$(OPTWARE_PREFIX)bin/xauth \
 	)
 	touch $@
 
@@ -199,21 +199,21 @@ $(OPENSSH_SFTP_SERVER_IPK_DIR)/CONTROL/control:
 $(OPENSSH_IPK) $(OPENSSH_SFTP_SERVER_IPK): $(OPENSSH_BUILD_DIR)/.built
 	rm -rf $(OPENSSH_IPK_DIR) $(BUILD_DIR)/openssh_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(OPENSSH_BUILD_DIR) DESTDIR=$(OPENSSH_IPK_DIR) install-nokeys
-	mv $(OPENSSH_IPK_DIR)/opt/bin/scp $(OPENSSH_IPK_DIR)/opt/bin/openssh-scp
-	mv $(OPENSSH_IPK_DIR)/opt/bin/ssh $(OPENSSH_IPK_DIR)/opt/bin/openssh-ssh
-	rm -rf $(OPENSSH_IPK_DIR)/opt/share
-	rm -rf $(OPENSSH_IPK_DIR)/opt/man
-	install -d $(OPENSSH_IPK_DIR)/opt/etc/init.d/
-	install -d $(OPENSSH_IPK_DIR)/opt/var/run/
+	mv $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)bin/scp $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)bin/openssh-scp
+	mv $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)bin/ssh $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)bin/openssh-ssh
+	rm -rf $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)share
+	rm -rf $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)man
+	install -d $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/
+	install -d $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)var/run/
 	rm -rf $(OPENSSH_SFTP_SERVER_IPK_DIR) \
 		$(BUILD_DIR)/openssh-sftp-server_*_$(TARGET_ARCH).ipk
-	install -d $(OPENSSH_SFTP_SERVER_IPK_DIR)/opt/libexec/
-	install -m 775 $(OPENSSH_IPK_DIR)/opt/libexec/sftp-server \
-		$(OPENSSH_SFTP_SERVER_IPK_DIR)/opt/libexec/
-	rm -f $(OPENSSH_IPK_DIR)/opt/libexec/sftp-server
-	install -m 755 $(OPENSSH_SOURCE_DIR)/rc.openssh $(OPENSSH_IPK_DIR)/opt/etc/init.d/S40sshd
-	install -d $(OPENSSH_IPK_DIR)/opt/etc/default
-	install -m 755 $(OPENSSH_SOURCE_DIR)/openssh.default $(OPENSSH_IPK_DIR)/opt/etc/default/openssh
+	install -d $(OPENSSH_SFTP_SERVER_IPK_DIR)$(OPTWARE_PREFIX)libexec/
+	install -m 775 $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)libexec/sftp-server \
+		$(OPENSSH_SFTP_SERVER_IPK_DIR)$(OPTWARE_PREFIX)libexec/
+	rm -f $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)libexec/sftp-server
+	install -m 755 $(OPENSSH_SOURCE_DIR)/rc.openssh $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S40sshd
+	install -d $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)etc/default
+	install -m 755 $(OPENSSH_SOURCE_DIR)/openssh.default $(OPENSSH_IPK_DIR)$(OPTWARE_PREFIX)etc/default/openssh
 	$(MAKE) $(OPENSSH_IPK_DIR)/CONTROL/control
 	install -m 755 $(OPENSSH_SOURCE_DIR)/postinst $(OPENSSH_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(OPENSSH_SOURCE_DIR)/prerm $(OPENSSH_IPK_DIR)/CONTROL/prerm

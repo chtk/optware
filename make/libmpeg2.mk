@@ -42,7 +42,7 @@ LIBMPEG2_IPK_VERSION=2
 
 #
 # LIBMPEG2_CONFFILES should be a list of user-editable files
-#LIBMPEG2_CONFFILES=/opt/etc/libmpeg2.conf /opt/etc/init.d/SXXlibmpeg2
+#LIBMPEG2_CONFFILES=$(OPTWARE_PREFIX)etc/libmpeg2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibmpeg2
 
 #
 # LIBMPEG2_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ $(LIBMPEG2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBMPEG2_SOURCE) $(LIBMPEG2_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		--disable-sdl \
 		--enable-shared \
@@ -201,12 +201,12 @@ $(MPEG2DEC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBMPEG2_IPK_DIR)/opt/sbin or $(LIBMPEG2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBMPEG2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBMPEG2_IPK_DIR)/opt/etc/libmpeg2/...
-# Documentation files should be installed in $(LIBMPEG2_IPK_DIR)/opt/doc/libmpeg2/...
-# Daemon startup scripts should be installed in $(LIBMPEG2_IPK_DIR)/opt/etc/init.d/S??libmpeg2
+# Libraries and include files should be installed into $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)etc/libmpeg2/...
+# Documentation files should be installed in $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)doc/libmpeg2/...
+# Daemon startup scripts should be installed in $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libmpeg2
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -214,9 +214,9 @@ $(LIBMPEG2_IPK): $(LIBMPEG2_BUILD_DIR)/.built
 	rm -rf $(LIBMPEG2_IPK_DIR) $(BUILD_DIR)/libmpeg2_*_$(TARGET_ARCH).ipk
 	rm -rf $(MPEG2DEC_IPK_DIR) $(BUILD_DIR)/mpeg2dec_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBMPEG2_BUILD_DIR) DESTDIR=$(LIBMPEG2_IPK_DIR) install-strip
-	install -d $(MPEG2DEC_IPK_DIR)/opt/share
-	mv $(LIBMPEG2_IPK_DIR)/opt/bin $(MPEG2DEC_IPK_DIR)/opt/
-	mv $(LIBMPEG2_IPK_DIR)/opt/man $(MPEG2DEC_IPK_DIR)/opt/share/
+	install -d $(MPEG2DEC_IPK_DIR)$(OPTWARE_PREFIX)share
+	mv $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)bin $(MPEG2DEC_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(LIBMPEG2_IPK_DIR)$(OPTWARE_PREFIX)man $(MPEG2DEC_IPK_DIR)$(OPTWARE_PREFIX)share/
 	$(MAKE) $(LIBMPEG2_IPK_DIR)/CONTROL/control
 	$(MAKE) $(MPEG2DEC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBMPEG2_IPK_DIR)

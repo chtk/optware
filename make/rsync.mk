@@ -22,10 +22,10 @@ RSYNC_CONFLICTS=
 RSYNC_IPK_VERSION=1
 
 RSYNC_CONFFILES= \
-	/opt/etc/rsyncd.conf \
-	/opt/etc/init.d/S57rsyncd \
-	/opt/etc/rsyncd.secrets \
-	/opt/etc/default/rsync
+	$(OPTWARE_PREFIX)etc/rsyncd.conf \
+	$(OPTWARE_PREFIX)etc/init.d/S57rsyncd \
+	$(OPTWARE_PREFIX)etc/rsyncd.secrets \
+	$(OPTWARE_PREFIX)etc/default/rsync
 
 RSYNC_PATCHES=$(RSYNC_SOURCE_DIR)/rsync.patch
 
@@ -79,9 +79,9 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-included-popt \
-		--with-rsyncd-conf=/opt/etc/rsyncd.conf \
+		--with-rsyncd-conf=$(OPTWARE_PREFIX)etc/rsyncd.conf \
 		--disable-nls \
 	)
 	touch $@
@@ -98,7 +98,7 @@ rsync: $(RSYNC_BUILD_DIR)/.built
 $(RSYNC_BUILD_DIR)/.staged: $(RSYNC_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
-	$(STRIP_COMMAND) $(STAGING_DIR)/opt/bin/rsync
+	$(STRIP_COMMAND) $(STAGING_DIR)$(OPTWARE_PREFIX)bin/rsync
 	touch $@
 
 rsync-stage: $(RSYNC_BUILD_DIR)/.staged
@@ -120,16 +120,16 @@ $(RSYNC_IPK_DIR)/CONTROL/control:
 $(RSYNC_IPK): $(RSYNC_BUILD_DIR)/.built
 	rm -rf $(RSYNC_IPK_DIR) $(BUILD_DIR)/rsync_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RSYNC_BUILD_DIR) DESTDIR=$(RSYNC_IPK_DIR) install
-	$(STRIP_COMMAND) $(RSYNC_IPK_DIR)/opt/bin/rsync
-	find $(RSYNC_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
-	install -d $(RSYNC_IPK_DIR)/opt/etc
-	install -m 644 $(RSYNC_SOURCE_DIR)/rsyncd.conf $(RSYNC_IPK_DIR)/opt/etc/rsyncd.conf
-	install -d $(RSYNC_IPK_DIR)/opt/etc/default
-	install -m 644 $(RSYNC_SOURCE_DIR)/rsync.default $(RSYNC_IPK_DIR)/opt/etc/default/rsync
-	touch $(RSYNC_IPK_DIR)/opt/etc/rsyncd.secrets
-	chmod 600 $(RSYNC_IPK_DIR)/opt/etc/rsyncd.secrets
-	install -d $(RSYNC_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(RSYNC_SOURCE_DIR)/rc.rsyncd $(RSYNC_IPK_DIR)/opt/etc/init.d/S57rsyncd
+	$(STRIP_COMMAND) $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)bin/rsync
+	find $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
+	install -d $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(RSYNC_SOURCE_DIR)/rsyncd.conf $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/rsyncd.conf
+	install -d $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/default
+	install -m 644 $(RSYNC_SOURCE_DIR)/rsync.default $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/default/rsync
+	touch $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/rsyncd.secrets
+	chmod 600 $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/rsyncd.secrets
+	install -d $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(RSYNC_SOURCE_DIR)/rc.rsyncd $(RSYNC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S57rsyncd
 	$(MAKE) $(RSYNC_IPK_DIR)/CONTROL/control
 	install -m 755 $(RSYNC_SOURCE_DIR)/postinst $(RSYNC_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(RSYNC_SOURCE_DIR)/prerm $(RSYNC_IPK_DIR)/CONTROL/prerm

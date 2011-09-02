@@ -46,7 +46,7 @@ ECL_IPK_VERSION=2
 
 #
 # ECL_CONFFILES should be a list of user-editable files
-#ECL_CONFFILES=/opt/etc/ecl.conf /opt/etc/init.d/SXXecl
+#ECL_CONFFILES=$(OPTWARE_PREFIX)etc/ecl.conf $(OPTWARE_PREFIX)etc/init.d/SXXecl
 
 #
 # ECL_PATCHES should list any patches, in the the order in
@@ -157,7 +157,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--enable-boehm=included \
@@ -216,24 +216,24 @@ $(ECL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ECL_IPK_DIR)/opt/sbin or $(ECL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ECL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ECL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ECL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ECL_IPK_DIR)/opt/etc/ecl/...
-# Documentation files should be installed in $(ECL_IPK_DIR)/opt/doc/ecl/...
-# Daemon startup scripts should be installed in $(ECL_IPK_DIR)/opt/etc/init.d/S??ecl
+# Libraries and include files should be installed into $(ECL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/ecl/...
+# Documentation files should be installed in $(ECL_IPK_DIR)$(OPTWARE_PREFIX)doc/ecl/...
+# Daemon startup scripts should be installed in $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ecl
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ECL_IPK): $(ECL_BUILD_DIR)/.built
 	rm -rf $(ECL_IPK_DIR) $(BUILD_DIR)/ecl_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ECL_BUILD_DIR) DESTDIR=$(ECL_IPK_DIR) install
-	$(STRIP_COMMAND) $(ECL_IPK_DIR)/opt/bin/ecl
-	$(STRIP_COMMAND) $(ECL_IPK_DIR)/opt/lib/ecl/{*.so,*.fas}
-#	install -d $(ECL_IPK_DIR)/opt/etc/
-#	install -m 644 $(ECL_SOURCE_DIR)/ecl.conf $(ECL_IPK_DIR)/opt/etc/ecl.conf
-#	install -d $(ECL_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(ECL_SOURCE_DIR)/rc.ecl $(ECL_IPK_DIR)/opt/etc/init.d/SXXecl
+	$(STRIP_COMMAND) $(ECL_IPK_DIR)$(OPTWARE_PREFIX)bin/ecl
+	$(STRIP_COMMAND) $(ECL_IPK_DIR)$(OPTWARE_PREFIX)lib/ecl/{*.so,*.fas}
+#	install -d $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(ECL_SOURCE_DIR)/ecl.conf $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/ecl.conf
+#	install -d $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(ECL_SOURCE_DIR)/rc.ecl $(ECL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXecl
 	$(MAKE) $(ECL_IPK_DIR)/CONTROL/control
 #	install -m 755 $(ECL_SOURCE_DIR)/postinst $(ECL_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(ECL_SOURCE_DIR)/prerm $(ECL_IPK_DIR)/CONTROL/prerm

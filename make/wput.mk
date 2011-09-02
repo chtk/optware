@@ -40,7 +40,7 @@ WPUT_IPK_VERSION=1
 
 #
 # WPUT_CONFFILES should be a list of user-editable files
-#WPUT_CONFFILES=/opt/etc/wput.conf /opt/etc/init.d/SXXwput
+#WPUT_CONFFILES=$(OPTWARE_PREFIX)etc/wput.conf $(OPTWARE_PREFIX)etc/init.d/SXXwput
 
 #
 # WPUT_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(WPUT_BUILD_DIR)/.configured: $(DL_DIR)/$(WPUT_SOURCE) $(WPUT_PATCHES) make/wpu
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ssl \
 		--with-gnutls-includes=$(STAGING_INCLUDE_DIR) \
 		--with-gnutls-libs=$(STAGING_LIB_DIR) \
@@ -187,28 +187,28 @@ $(WPUT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WPUT_IPK_DIR)/opt/sbin or $(WPUT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WPUT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WPUT_IPK_DIR)/opt/etc/wput/...
-# Documentation files should be installed in $(WPUT_IPK_DIR)/opt/doc/wput/...
-# Daemon startup scripts should be installed in $(WPUT_IPK_DIR)/opt/etc/init.d/S??wput
+# Libraries and include files should be installed into $(WPUT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/wput/...
+# Documentation files should be installed in $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)doc/wput/...
+# Daemon startup scripts should be installed in $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??wput
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WPUT_IPK): $(WPUT_BUILD_DIR)/.built
 	rm -rf $(WPUT_IPK_DIR) $(BUILD_DIR)/wput_*_$(TARGET_ARCH).ipk
-	install -d $(WPUT_IPK_DIR)/opt/bin/
-	install -d $(WPUT_IPK_DIR)/opt/share/man/man1
+	install -d $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(WPUT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(WPUT_LDFLAGS)" \
-	$(MAKE) -C $(WPUT_BUILD_DIR) prefix=$(WPUT_IPK_DIR)/opt install
-	$(STRIP_COMMAND) $(WPUT_IPK_DIR)/opt/bin/*
-#	install -d $(WPUT_IPK_DIR)/opt/etc/
-#	install -m 644 $(WPUT_SOURCE_DIR)/wput.conf $(WPUT_IPK_DIR)/opt/etc/wput.conf
-#	install -d $(WPUT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(WPUT_SOURCE_DIR)/rc.wput $(WPUT_IPK_DIR)/opt/etc/init.d/SXXwput
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXwput
+	$(MAKE) -C $(WPUT_BUILD_DIR) prefix=$(WPUT_IPK_DIR)$(OPTWARE_PREFIX)install
+	$(STRIP_COMMAND) $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+#	install -d $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(WPUT_SOURCE_DIR)/wput.conf $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/wput.conf
+#	install -d $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(WPUT_SOURCE_DIR)/rc.wput $(WPUT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXwput
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXwput
 	$(MAKE) $(WPUT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(WPUT_SOURCE_DIR)/postinst $(WPUT_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

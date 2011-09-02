@@ -93,7 +93,7 @@ jove-unpack: $(JOVE_BUILD_DIR)/.configured
 # directly to the main binary which is built.
 #
 $(JOVE_BUILD_DIR)/jjove: $(JOVE_BUILD_DIR)/.configured
-	$(MAKE) LDFLAGS="$(STAGING_LDFLAGS) -Xlinker -rpath -Xlinker /opt/lib" LOCALCC=gcc CC=$(TARGET_CC) -C $(JOVE_BUILD_DIR)
+	$(MAKE) LDFLAGS="$(STAGING_LDFLAGS) -Xlinker -rpath -Xlinker $(OPTWARE_PREFIX)lib" LOCALCC=gcc CC=$(TARGET_CC) -C $(JOVE_BUILD_DIR)
 
 #
 # You should change the dependency to refer directly to the main binary
@@ -123,19 +123,19 @@ $(JOVE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(JOVE_IPK_DIR)/opt/sbin or $(JOVE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(JOVE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(JOVE_IPK_DIR)/opt/etc/jove/...
-# Documentation files should be installed in $(JOVE_IPK_DIR)/opt/doc/jove/...
-# Daemon startup scripts should be installed in $(JOVE_IPK_DIR)/opt/etc/init.d/S??jove
+# Libraries and include files should be installed into $(JOVE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)etc/jove/...
+# Documentation files should be installed in $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)doc/jove/...
+# Daemon startup scripts should be installed in $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??jove
 #
 # You may need to patch your application to make it use these locations.
 #
 $(JOVE_IPK): $(JOVE_BUILD_DIR)/jjove
 	rm -rf $(JOVE_IPK_DIR) $(JOVE_IPK)
-	install -d $(JOVE_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(JOVE_BUILD_DIR)/jjove -o $(JOVE_IPK_DIR)/opt/bin/jove
+	install -d $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(JOVE_BUILD_DIR)/jjove -o $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)bin/jove
 	$(MAKE) $(JOVE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JOVE_IPK_DIR)
 

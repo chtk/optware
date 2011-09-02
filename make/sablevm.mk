@@ -41,7 +41,7 @@ SABLEVM_IPK_VERSION=2
 
 #
 # SABLEVM_CONFFILES should be a list of user-editable files
-#SABLEVM_CONFFILES=/opt/etc/sablevm.conf /opt/etc/init.d/SXXsablevm
+#SABLEVM_CONFFILES=$(OPTWARE_PREFIX)etc/sablevm.conf $(OPTWARE_PREFIX)etc/init.d/SXXsablevm
 
 #
 # SABLEVM_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(SABLEVM_BUILD_DIR)/.configured: $(DL_DIR)/$(SABLEVM_SOURCE) $(SABLEVM_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(SABLEVM_INTERNAL_LIBFFI) \
 		--disable-nls \
 		--disable-static \
@@ -138,7 +138,7 @@ $(SABLEVM_BUILD_DIR)/.configured: $(DL_DIR)/$(SABLEVM_SOURCE) $(SABLEVM_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-gtk-peer \
 		--disable-qt-peer \
 		--without-x \
@@ -196,12 +196,12 @@ $(SABLEVM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SABLEVM_IPK_DIR)/opt/sbin or $(SABLEVM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SABLEVM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SABLEVM_IPK_DIR)/opt/etc/sablevm/...
-# Documentation files should be installed in $(SABLEVM_IPK_DIR)/opt/doc/sablevm/...
-# Daemon startup scripts should be installed in $(SABLEVM_IPK_DIR)/opt/etc/init.d/S??sablevm
+# Libraries and include files should be installed into $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/sablevm/...
+# Documentation files should be installed in $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)doc/sablevm/...
+# Daemon startup scripts should be installed in $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??sablevm
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -210,15 +210,15 @@ $(SABLEVM_IPK): $(SABLEVM_BUILD_DIR)/.built
 	$(MAKE) -C $(SABLEVM_BUILD_DIR)/sablevm \
 	    DESTDIR=$(SABLEVM_IPK_DIR) \
 	    install
-	$(STRIP_COMMAND) $(SABLEVM_IPK_DIR)/opt/bin/sablevm $(SABLEVM_IPK_DIR)/opt/lib/libsablevm*.so
+	$(STRIP_COMMAND) $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)bin/sablevm $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)lib/libsablevm*.so
 	$(MAKE) -C $(SABLEVM_BUILD_DIR)/sablevm-classpath \
 	    DESTDIR=$(SABLEVM_IPK_DIR) \
 	    INSTALL_STRIP_PROGRAM="$(STRIP_COMMAND)" \
 	    install-strip
-#	install -d $(SABLEVM_IPK_DIR)/opt/etc/
-#	install -m 644 $(SABLEVM_SOURCE_DIR)/sablevm.conf $(SABLEVM_IPK_DIR)/opt/etc/sablevm.conf
-#	install -d $(SABLEVM_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SABLEVM_SOURCE_DIR)/rc.sablevm $(SABLEVM_IPK_DIR)/opt/etc/init.d/SXXsablevm
+#	install -d $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SABLEVM_SOURCE_DIR)/sablevm.conf $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/sablevm.conf
+#	install -d $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SABLEVM_SOURCE_DIR)/rc.sablevm $(SABLEVM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXsablevm
 	$(MAKE) $(SABLEVM_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SABLEVM_SOURCE_DIR)/postinst $(SABLEVM_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(SABLEVM_SOURCE_DIR)/prerm $(SABLEVM_IPK_DIR)/CONTROL/prerm

@@ -33,7 +33,7 @@ MAN_IPK_VERSION=1
 
 #
 # MAN_CONFFILES should be a list of user-editable files
-MAN_CONFFILES=/opt/etc/man.conf
+MAN_CONFFILES=$(OPTWARE_PREFIX)etc/man.conf
 
 #
 # MAN_PATCHES should list any patches, in the the order in
@@ -104,8 +104,8 @@ $(MAN_BUILD_DIR)/.configured: $(DL_DIR)/$(MAN_SOURCE) $(MAN_PATCHES)
 		LDFLAGS="$(STAGING_LDFLAGS) $(MAN_LDFLAGS)" \
 		BUILD_CC=$(HOSTCC) \
 		./configure \
-		--prefix=/opt \
-		-confdir /opt/etc \
+		--prefix=$(OPTWARE_PREFIX)\
+		-confdir $(OPTWARE_PREFIX)etc \
 	)
 	touch $@
 
@@ -156,23 +156,23 @@ $(MAN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MAN_IPK_DIR)/opt/sbin or $(MAN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MAN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MAN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MAN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MAN_IPK_DIR)/opt/etc/man/...
-# Documentation files should be installed in $(MAN_IPK_DIR)/opt/doc/man/...
-# Daemon startup scripts should be installed in $(MAN_IPK_DIR)/opt/etc/init.d/S??man
+# Libraries and include files should be installed into $(MAN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/man/...
+# Documentation files should be installed in $(MAN_IPK_DIR)$(OPTWARE_PREFIX)doc/man/...
+# Daemon startup scripts should be installed in $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??man
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MAN_IPK): $(MAN_BUILD_DIR)/.built
 	rm -rf $(MAN_IPK_DIR) $(BUILD_DIR)/man_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MAN_BUILD_DIR) DESTDIR=$(MAN_IPK_DIR) install
-	$(STRIP_COMMAND) $(MAN_IPK_DIR)/opt/bin/man2html
-	install -d $(MAN_IPK_DIR)/opt/etc/
-	install -m 644 $(MAN_SOURCE_DIR)/man.conf $(MAN_IPK_DIR)/opt/etc/man.conf
-#	install -d $(MAN_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MAN_SOURCE_DIR)/rc.man $(MAN_IPK_DIR)/opt/etc/init.d/SXXman
+	$(STRIP_COMMAND) $(MAN_IPK_DIR)$(OPTWARE_PREFIX)bin/man2html
+	install -d $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(MAN_SOURCE_DIR)/man.conf $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/man.conf
+#	install -d $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MAN_SOURCE_DIR)/rc.man $(MAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXman
 	$(MAKE) $(MAN_IPK_DIR)/CONTROL/control
 #	install -m 644 $(MAN_SOURCE_DIR)/postinst $(MAN_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(MAN_SOURCE_DIR)/prerm $(MAN_IPK_DIR)/CONTROL/prerm

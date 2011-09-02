@@ -40,7 +40,7 @@ UNRTF_IPK_VERSION=1
 
 #
 # UNRTF_CONFFILES should be a list of user-editable files
-#UNRTF_CONFFILES=/opt/etc/unrtf.conf /opt/etc/init.d/SXXunrtf
+#UNRTF_CONFFILES=$(OPTWARE_PREFIX)etc/unrtf.conf $(OPTWARE_PREFIX)etc/init.d/SXXunrtf
 
 #
 # UNRTF_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(UNRTF_BUILD_DIR)/.configured: $(DL_DIR)/$(UNRTF_SOURCE) $(UNRTF_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -178,23 +178,23 @@ $(UNRTF_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UNRTF_IPK_DIR)/opt/sbin or $(UNRTF_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UNRTF_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UNRTF_IPK_DIR)/opt/etc/unrtf/...
-# Documentation files should be installed in $(UNRTF_IPK_DIR)/opt/doc/unrtf/...
-# Daemon startup scripts should be installed in $(UNRTF_IPK_DIR)/opt/etc/init.d/S??unrtf
+# Libraries and include files should be installed into $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/unrtf/...
+# Documentation files should be installed in $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)doc/unrtf/...
+# Daemon startup scripts should be installed in $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??unrtf
 #
 # You may need to patch your application to make it use these locations.
 #
 $(UNRTF_IPK): $(UNRTF_BUILD_DIR)/.built
 	rm -rf $(UNRTF_IPK_DIR) $(BUILD_DIR)/unrtf_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(UNRTF_BUILD_DIR) DESTDIR=$(UNRTF_IPK_DIR) install-strip
-#	install -d $(UNRTF_IPK_DIR)/opt/etc/
-#	install -m 644 $(UNRTF_SOURCE_DIR)/unrtf.conf $(UNRTF_IPK_DIR)/opt/etc/unrtf.conf
-#	install -d $(UNRTF_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(UNRTF_SOURCE_DIR)/rc.unrtf $(UNRTF_IPK_DIR)/opt/etc/init.d/SXXunrtf
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UNRTF_IPK_DIR)/opt/etc/init.d/SXXunrtf
+#	install -d $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(UNRTF_SOURCE_DIR)/unrtf.conf $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/unrtf.conf
+#	install -d $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(UNRTF_SOURCE_DIR)/rc.unrtf $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXunrtf
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UNRTF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXunrtf
 	$(MAKE) $(UNRTF_IPK_DIR)/CONTROL/control
 #	install -m 755 $(UNRTF_SOURCE_DIR)/postinst $(UNRTF_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UNRTF_IPK_DIR)/CONTROL/postinst

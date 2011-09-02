@@ -40,8 +40,8 @@ NAGG_IPK_VERSION=1
 
 #
 # NAGG_CONFFILES should be a list of user-editable files
-NAGG_CONFFILES=/opt/lib/nagg/nagg.conf /opt/lib/nagg/nagg.css \
-	/opt/lib/nagg/indextemplate.html /opt/lib/nagg/slidetemplate.html
+NAGG_CONFFILES=$(OPTWARE_PREFIX)lib/nagg/nagg.conf $(OPTWARE_PREFIX)lib/nagg/nagg.css \
+	$(OPTWARE_PREFIX)lib/nagg/indextemplate.html $(OPTWARE_PREFIX)lib/nagg/slidetemplate.html
 
 #
 # NAGG_PATCHES should list any patches, in the the order in
@@ -118,8 +118,8 @@ $(NAGG_BUILD_DIR)/.configured: $(DL_DIR)/$(NAGG_SOURCE) $(NAGG_PATCHES) make/nag
 	fi
 	(cd $(NAGG_BUILD_DIR); \
 		sed -i -e '/^DESTDIR/d' Makefile; \
-		sed -i -e '/^libdir=/s|.*|libdir=/opt/lib/nagg|' \
-			-e 's|/bin/bash|/opt/bin/bash|' nagg \
+		sed -i -e '/^libdir=/s|.*|libdir=$(OPTWARE_PREFIX)lib/nagg|' \
+			-e 's|/bin/bash|$(OPTWARE_PREFIX)bin/bash|' nagg \
 	)
 	touch $@
 
@@ -170,23 +170,23 @@ $(NAGG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NAGG_IPK_DIR)/opt/sbin or $(NAGG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NAGG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NAGG_IPK_DIR)/opt/etc/nagg/...
-# Documentation files should be installed in $(NAGG_IPK_DIR)/opt/doc/nagg/...
-# Daemon startup scripts should be installed in $(NAGG_IPK_DIR)/opt/etc/init.d/S??nagg
+# Libraries and include files should be installed into $(NAGG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/nagg/...
+# Documentation files should be installed in $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)doc/nagg/...
+# Daemon startup scripts should be installed in $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nagg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NAGG_IPK): $(NAGG_BUILD_DIR)/.built
 	rm -rf $(NAGG_IPK_DIR) $(BUILD_DIR)/nagg_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(NAGG_BUILD_DIR) DESTDIR=$(NAGG_IPK_DIR)/opt install
-#	install -d $(NAGG_IPK_DIR)/opt/etc/
-#	install -m 644 $(NAGG_SOURCE_DIR)/nagg.conf $(NAGG_IPK_DIR)/opt/etc/nagg.conf
-#	install -d $(NAGG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NAGG_SOURCE_DIR)/rc.nagg $(NAGG_IPK_DIR)/opt/etc/init.d/SXXnagg
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NAGG_IPK_DIR)/opt/etc/init.d/SXXnagg
+	$(MAKE) -C $(NAGG_BUILD_DIR) DESTDIR=$(NAGG_IPK_DIR)$(OPTWARE_PREFIX)install
+#	install -d $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NAGG_SOURCE_DIR)/nagg.conf $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/nagg.conf
+#	install -d $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NAGG_SOURCE_DIR)/rc.nagg $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnagg
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NAGG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnagg
 	$(MAKE) $(NAGG_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NAGG_SOURCE_DIR)/postinst $(NAGG_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(NAGG_IPK_DIR)/CONTROL/postinst

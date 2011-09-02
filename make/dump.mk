@@ -40,7 +40,7 @@ DUMP_IPK_VERSION=3
 
 #
 # DUMP_CONFFILES should be a list of user-editable files
-#DUMP_CONFFILES=/opt/etc/dump.conf /opt/etc/init.d/SXXdump
+#DUMP_CONFFILES=$(OPTWARE_PREFIX)etc/dump.conf $(OPTWARE_PREFIX)etc/init.d/SXXdump
 
 #
 # DUMP_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(DUMP_BUILD_DIR)/.configured: $(DL_DIR)/$(DUMP_SOURCE) $(DUMP_PATCHES) make/dum
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	);
 #	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
@@ -177,22 +177,22 @@ $(DUMP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DUMP_IPK_DIR)/opt/sbin or $(DUMP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DUMP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DUMP_IPK_DIR)/opt/etc/dump/...
-# Documentation files should be installed in $(DUMP_IPK_DIR)/opt/doc/dump/...
-# Daemon startup scripts should be installed in $(DUMP_IPK_DIR)/opt/etc/init.d/S??dump
+# Libraries and include files should be installed into $(DUMP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)etc/dump/...
+# Documentation files should be installed in $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)doc/dump/...
+# Daemon startup scripts should be installed in $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??dump
 #
 # You may need to patch your application to make it use these locations.
 #
 $(DUMP_IPK): $(DUMP_BUILD_DIR)/.built
 	rm -rf $(DUMP_IPK_DIR) $(BUILD_DIR)/dump_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DUMP_BUILD_DIR) install \
-	    prefix=$(DUMP_IPK_DIR)/opt \
+	    prefix=$(DUMP_IPK_DIR)$(OPTWARE_PREFIX)\
 	    INSTALLBIN='/usr/bin/install -m 0755' \
 	    INSTALLMAN='/usr/bin/install -m 0644'
-	$(STRIP_COMMAND) $(DUMP_IPK_DIR)/opt/sbin/dump $(DUMP_IPK_DIR)/opt/sbin/restore $(DUMP_IPK_DIR)/opt/sbin/rmt
+	$(STRIP_COMMAND) $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/dump $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/restore $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/rmt
 	$(MAKE) $(DUMP_IPK_DIR)/CONTROL/control
 	echo $(DUMP_CONFFILES) | sed -e 's/ /\n/g' > $(DUMP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DUMP_IPK_DIR)

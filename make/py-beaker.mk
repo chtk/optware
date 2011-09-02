@@ -41,7 +41,7 @@ PY-BEAKER_CONFLICTS=
 
 #
 # PY-BEAKER_CONFFILES should be a list of user-editable files
-#PY-BEAKER_CONFFILES=/opt/etc/py-beaker.conf /opt/etc/init.d/SXXpy-beaker
+#PY-BEAKER_CONFFILES=$(OPTWARE_PREFIX)etc/py-beaker.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-beaker
 
 #
 # PY-BEAKER_PATCHES should list any patches, in the the order in
@@ -118,7 +118,7 @@ $(PY-BEAKER_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-BEAKER_SOURCE) $(PY-BEAKER_PA
         fi
 	mv $(BUILD_DIR)/$(PY-BEAKER_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(PY-BEAKER_DIR)
@@ -128,7 +128,7 @@ $(PY-BEAKER_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-BEAKER_SOURCE) $(PY-BEAKER_PA
         fi
 	mv $(BUILD_DIR)/$(PY-BEAKER_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -192,12 +192,12 @@ $(PY26-BEAKER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-BEAKER_IPK_DIR)/opt/sbin or $(PY-BEAKER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-BEAKER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-BEAKER_IPK_DIR)/opt/etc/py-beaker/...
-# Documentation files should be installed in $(PY-BEAKER_IPK_DIR)/opt/doc/py-beaker/...
-# Daemon startup scripts should be installed in $(PY-BEAKER_IPK_DIR)/opt/etc/init.d/S??py-beaker
+# Libraries and include files should be installed into $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX)etc/py-beaker/...
+# Documentation files should be installed in $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX)doc/py-beaker/...
+# Daemon startup scripts should be installed in $(PY-BEAKER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-beaker
 #
 # You may need to patch your application to make it use these locations.
 #

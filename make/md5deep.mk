@@ -40,7 +40,7 @@ MD5DEEP_IPK_VERSION=1
 
 #
 # MD5DEEP_CONFFILES should be a list of user-editable files
-#MD5DEEP_CONFFILES=/opt/etc/md5deep.conf /opt/etc/init.d/SXXmd5deep
+#MD5DEEP_CONFFILES=$(OPTWARE_PREFIX)etc/md5deep.conf $(OPTWARE_PREFIX)etc/init.d/SXXmd5deep
 
 #
 # MD5DEEP_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -180,24 +180,24 @@ $(MD5DEEP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MD5DEEP_IPK_DIR)/opt/sbin or $(MD5DEEP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MD5DEEP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MD5DEEP_IPK_DIR)/opt/etc/md5deep/...
-# Documentation files should be installed in $(MD5DEEP_IPK_DIR)/opt/doc/md5deep/...
-# Daemon startup scripts should be installed in $(MD5DEEP_IPK_DIR)/opt/etc/init.d/S??md5deep
+# Libraries and include files should be installed into $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/md5deep/...
+# Documentation files should be installed in $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)doc/md5deep/...
+# Daemon startup scripts should be installed in $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??md5deep
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MD5DEEP_IPK): $(MD5DEEP_BUILD_DIR)/.built
 	rm -rf $(MD5DEEP_IPK_DIR) $(BUILD_DIR)/md5deep_*_$(TARGET_ARCH).ipk
-	install -d $(MD5DEEP_BUILD_DIR)/opt/bin $(MD5DEEP_BUILD_DIR)/opt/man/man1
+	install -d $(MD5DEEP_BUILD_DIR)$(OPTWARE_PREFIX)bin $(MD5DEEP_BUILD_DIR)$(OPTWARE_PREFIX)man/man1
 	$(MAKE) -C $(MD5DEEP_BUILD_DIR) install-strip DESTDIR=$(MD5DEEP_IPK_DIR)
-#	install -d $(MD5DEEP_IPK_DIR)/opt/etc/
-#	install -m 644 $(MD5DEEP_SOURCE_DIR)/md5deep.conf $(MD5DEEP_IPK_DIR)/opt/etc/md5deep.conf
-#	install -d $(MD5DEEP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MD5DEEP_SOURCE_DIR)/rc.md5deep $(MD5DEEP_IPK_DIR)/opt/etc/init.d/SXXmd5deep
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MD5DEEP_IPK_DIR)/opt/etc/init.d/SXXmd5deep
+#	install -d $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MD5DEEP_SOURCE_DIR)/md5deep.conf $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/md5deep.conf
+#	install -d $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MD5DEEP_SOURCE_DIR)/rc.md5deep $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmd5deep
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MD5DEEP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmd5deep
 	$(MAKE) $(MD5DEEP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MD5DEEP_SOURCE_DIR)/postinst $(MD5DEEP_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MD5DEEP_IPK_DIR)/CONTROL/postinst

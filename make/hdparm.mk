@@ -35,7 +35,7 @@ HDPARM_LOCALES=
 
 #
 # HDPARM_CONFFILES should be a list of user-editable files
-#HDPARM_CONFFILES=/opt/etc/hdparm.conf /opt/etc/init.d/SXXhdparm
+#HDPARM_CONFFILES=$(OPTWARE_PREFIX)etc/hdparm.conf $(OPTWARE_PREFIX)etc/init.d/SXXhdparm
 
 #
 # HDPARM_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ hdparm-unpack: $(HDPARM_BUILD_DIR)/.configured
 $(HDPARM_BUILD_DIR)/.built: $(HDPARM_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		binprefix=/opt manprefix=/opt \
+		binprefix=$(OPTWARE_PREFIX)manprefix=$(OPTWARE_PREFIX)\
 		CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(HDPARM_LDFLAGS)" \
 		STRIP=$(TARGET_STRIP)
@@ -139,29 +139,29 @@ hdparm: $(HDPARM_BUILD_DIR)/.built
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(HDPARM_IPK_DIR)/opt/sbin or $(HDPARM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(HDPARM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(HDPARM_IPK_DIR)/opt/etc/hdparm/...
-# Documentation files should be installed in $(HDPARM_IPK_DIR)/opt/doc/hdparm/...
-# Daemon startup scripts should be installed in $(HDPARM_IPK_DIR)/opt/etc/init.d/S??hdparm
+# Libraries and include files should be installed into $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/hdparm/...
+# Documentation files should be installed in $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)doc/hdparm/...
+# Daemon startup scripts should be installed in $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??hdparm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(HDPARM_IPK): $(HDPARM_BUILD_DIR)/.built
 	rm -rf $(HDPARM_IPK_DIR) $(BUILD_DIR)/hdparm_*_$(TARGET_ARCH).ipk
-	install -d $(HDPARM_IPK_DIR)/opt/sbin
+	install -d $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	$(MAKE) -C $(HDPARM_BUILD_DIR) DESTDIR=$(HDPARM_IPK_DIR) install \
-		binprefix=/opt manprefix=/opt \
+		binprefix=$(OPTWARE_PREFIX)manprefix=$(OPTWARE_PREFIX)\
 		CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
-	$(STRIP_COMMAND) $(HDPARM_IPK_DIR)/opt/sbin/hdparm
-	mv $(HDPARM_IPK_DIR)/opt/sbin/hdparm $(HDPARM_IPK_DIR)/opt/sbin/hdparm-hdparm
+	$(STRIP_COMMAND) $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm
+	mv $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm-hdparm
 	$(MAKE) $(HDPARM_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --install /opt/sbin/hdparm hdparm /opt/sbin/hdparm-hdparm 50" ; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)sbin/hdparm hdparm $(OPTWARE_PREFIX)sbin/hdparm-hdparm 50" ; \
 	) > $(HDPARM_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --remove hdparm /opt/sbin/hdparm-hdparm" ; \
+	 echo "update-alternatives --remove hdparm $(OPTWARE_PREFIX)sbin/hdparm-hdparm" ; \
 	) > $(HDPARM_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

@@ -46,7 +46,7 @@ MINIUPNPD_IPK_VERSION=1
 #
 # MINIUPNPD_CONFFILES should be a list of user-editable files
 #
-MINIUPNPD_CONFFILES=/opt/etc/miniupnpd/minupnpd.conf 
+MINIUPNPD_CONFFILES=$(OPTWARE_PREFIX)etc/miniupnpd/minupnpd.conf 
 
 #
 # MINIUPNPD_PATCHES should list any patches, in the the order in
@@ -175,20 +175,20 @@ $(MINIUPNPD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MINIUPNPD_IPK_DIR)/opt/sbin or $(MINIUPNPD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MINIUPNPD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MINIUPNPD_IPK_DIR)/opt/etc/MINIUPNPD/...
-# Documentation files should be installed in $(MINIUPNPD_IPK_DIR)/opt/doc/MINIUPNPD/...
-# Daemon startup scripts should be installed in $(MINIUPNPD_IPK_DIR)/opt/etc/init.d/S??MINIUPNPD
+# Libraries and include files should be installed into $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)etc/MINIUPNPD/...
+# Documentation files should be installed in $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)doc/MINIUPNPD/...
+# Daemon startup scripts should be installed in $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??MINIUPNPD
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MINIUPNPD_IPK): $(MINIUPNPD_BUILD_DIR)/.built
 	rm -rf $(MINIUPNPD_IPK_DIR) $(BUILD_DIR)/miniupnpd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MINIUPNPD_BUILD_DIR) -f Makefile.optware DESTDIR=$(MINIUPNPD_IPK_DIR) install
-	rm -f $(MINIUPNPD_IPK_DIR)/opt/info/dir $(MINIUPNPD_IPK_DIR)/opt/info/dir.old
-	$(STRIP_COMMAND) $(MINIUPNPD_IPK_DIR)/opt/sbin/miniupnpd
+	rm -f $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	$(STRIP_COMMAND) $(MINIUPNPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/miniupnpd
 	$(MAKE) $(MINIUPNPD_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MINIUPNPD_IPK_DIR)
 

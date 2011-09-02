@@ -41,9 +41,9 @@ $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-EMAIL-ADDRESS_SOUR
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-email-address-unpack: $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.configured
 $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.built: $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-email-address: $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.built
@@ -82,7 +82,7 @@ $(PERL-EMAIL-ADDRESS_IPK_DIR)/CONTROL/control:
 $(PERL-EMAIL-ADDRESS_IPK): $(PERL-EMAIL-ADDRESS_BUILD_DIR)/.built
 	rm -rf $(PERL-EMAIL-ADDRESS_IPK_DIR) $(BUILD_DIR)/perl-email-address_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-EMAIL-ADDRESS_BUILD_DIR) DESTDIR=$(PERL-EMAIL-ADDRESS_IPK_DIR) install
-	find $(PERL-EMAIL-ADDRESS_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
+	find $(PERL-EMAIL-ADDRESS_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
 	$(MAKE) $(PERL-EMAIL-ADDRESS_IPK_DIR)/CONTROL/control
 	echo $(PERL-EMAIL-ADDRESS_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-EMAIL-ADDRESS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-EMAIL-ADDRESS_IPK_DIR)

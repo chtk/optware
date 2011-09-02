@@ -18,9 +18,9 @@ MIAU_CONFLICTS=
 
 MIAU_IPK_VERSION=2
 
-MIAU_CONFFILES= /opt/etc/miau.conf \
-		/opt/etc/init.d/S52miau \
-		/opt/etc/logrotate.d/miau
+MIAU_CONFFILES= $(OPTWARE_PREFIX)etc/miau.conf \
+		$(OPTWARE_PREFIX)etc/init.d/S52miau \
+		$(OPTWARE_PREFIX)etc/logrotate.d/miau
 
 #MIAU_PATCHES=$(MIAU_SOURCE_DIR)/paths.patch
 MIAU_PATCHES=$(MIAU_SOURCE_DIR)/paths.patch.0.6.1
@@ -109,15 +109,15 @@ $(MIAU_IPK_DIR)/CONTROL/control:
 
 $(MIAU_IPK): $(MIAU_BUILD_DIR)/src/miau
 	rm -rf $(MIAU_IPK_DIR) $(BUILD_DIR)/miau_*_$(TARGET_ARCH).ipk
-	install -d $(MIAU_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(MIAU_BUILD_DIR)/src/miau -o $(MIAU_IPK_DIR)/opt/bin/miau
-	install -d $(MIAU_IPK_DIR)/opt/etc
-#	install -m 644 $(MIAU_SOURCE_DIR)/miau.conf $(MIAU_IPK_DIR)/opt/etc/miau.conf
-	install -m 644 $(MIAU_SOURCE_DIR)/miau.conf.0.6 $(MIAU_IPK_DIR)/opt/etc/miau.conf
-	install -d $(MIAU_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(MIAU_SOURCE_DIR)/rc.miau $(MIAU_IPK_DIR)/opt/etc/init.d/S52miau
-	install -d $(MIAU_IPK_DIR)/opt/etc/logrotate.d
-	install -m 755 $(MIAU_SOURCE_DIR)/logrotate.miau $(MIAU_IPK_DIR)/opt/etc/logrotate.d/miau
+	install -d $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(MIAU_BUILD_DIR)/src/miau -o $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)bin/miau
+	install -d $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc
+#	install -m 644 $(MIAU_SOURCE_DIR)/miau.conf $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/miau.conf
+	install -m 644 $(MIAU_SOURCE_DIR)/miau.conf.0.6 $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/miau.conf
+	install -d $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(MIAU_SOURCE_DIR)/rc.miau $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52miau
+	install -d $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/logrotate.d
+	install -m 755 $(MIAU_SOURCE_DIR)/logrotate.miau $(MIAU_IPK_DIR)$(OPTWARE_PREFIX)etc/logrotate.d/miau
 	$(MAKE) $(MIAU_IPK_DIR)/CONTROL/control
 	install -m 644 $(MIAU_SOURCE_DIR)/postinst $(MIAU_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(MIAU_SOURCE_DIR)/prerm $(MIAU_IPK_DIR)/CONTROL/prerm

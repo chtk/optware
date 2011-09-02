@@ -72,7 +72,7 @@ $(AUTOMAKE_BUILD_DIR)/.configured: $(DL_DIR)/$(AUTOMAKE_SOURCE) $(AUTOMAKE_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -109,16 +109,16 @@ $(AUTOMAKE_IPK_DIR)/CONTROL/control:
 
 $(AUTOMAKE_IPK): $(AUTOMAKE_BUILD_DIR)/.built
 	rm -rf $(AUTOMAKE_IPK_DIR) $(BUILD_DIR)/automake_*_$(TARGET_ARCH).ipk
-	install -d $(AUTOMAKE_IPK_DIR)/opt/bin
-	install -d $(AUTOMAKE_IPK_DIR)/opt/info
-	install -d $(AUTOMAKE_IPK_DIR)/opt/share/aclocal-$(AUTOMAKE_VER)
-	install -d $(AUTOMAKE_IPK_DIR)/opt/share/automake-$(AUTOMAKE_VER)/Automake
-	install -d $(AUTOMAKE_IPK_DIR)/opt/share/automake-$(AUTOMAKE_VER)/am
+	install -d $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)info
+	install -d $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)share/aclocal-$(AUTOMAKE_VER)
+	install -d $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)share/automake-$(AUTOMAKE_VER)/Automake
+	install -d $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)share/automake-$(AUTOMAKE_VER)/am
 	$(MAKE) -C $(AUTOMAKE_BUILD_DIR) DESTDIR=$(AUTOMAKE_IPK_DIR) install
-	sed -i -e 's|/usr/bin/perl|/opt/bin/perl|g' $(AUTOMAKE_IPK_DIR)/opt/bin/*
+	sed -i -e 's|/usr/bin/perl|$(OPTWARE_PREFIX)bin/perl|g' $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)bin/*
 	$(MAKE) $(AUTOMAKE_IPK_DIR)/CONTROL/control
-	rm -f $(AUTOMAKE_IPK_DIR)/opt/info/dir
-	(cd $(AUTOMAKE_IPK_DIR)/opt/bin; \
+	rm -f $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)info/dir
+	(cd $(AUTOMAKE_IPK_DIR)$(OPTWARE_PREFIX)bin; \
 		rm automake aclocal; \
 		ln -s automake-$(AUTOMAKE_VER) automake; \
 		ln -s aclocal-$(AUTOMAKE_VER) aclocal; \

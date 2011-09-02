@@ -40,7 +40,7 @@ IVORBIS_TOOLS_IPK_VERSION=7
 
 #
 # IVORBIS-TOOLS_CONFFILES should be a list of user-editable files
-#IVORBIS_TOOLS_CONFFILES=/opt/etc/ivorbis-tools.conf /opt/etc/init.d/SXXivorbis-tools
+#IVORBIS_TOOLS_CONFFILES=$(OPTWARE_PREFIX)etc/ivorbis-tools.conf $(OPTWARE_PREFIX)etc/init.d/SXXivorbis-tools
 
 #
 # IVORBIS-TOOLS_PATCHES should list any patches, in the the order in
@@ -116,7 +116,7 @@ $(IVORBIS_TOOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(IVORBIS_TOOLS_SOURCE) $(IVOR
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ao=$(STAGING_PREFIX) \
 		--with-curl=$(STAGING_PREFIX) \
 		--with-ogg=$(STAGING_PREFIX) \
@@ -177,19 +177,19 @@ $(IVORBIS_TOOLS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IVORBIS_TOOLS_IPK_DIR)/opt/sbin or $(IVORBIS_TOOLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IVORBIS_TOOLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IVORBIS_TOOLS_IPK_DIR)/opt/etc/ivorbis-tools/...
-# Documentation files should be installed in $(IVORBIS_TOOLS_IPK_DIR)/opt/doc/ivorbis-tools/...
-# Daemon startup scripts should be installed in $(IVORBIS_TOOLS_IPK_DIR)/opt/etc/init.d/S??ivorbis-tools
+# Libraries and include files should be installed into $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/ivorbis-tools/...
+# Documentation files should be installed in $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)doc/ivorbis-tools/...
+# Daemon startup scripts should be installed in $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ivorbis-tools
 #
 # You may need to patch your application to make it use these locations.
 #
 $(IVORBIS_TOOLS_IPK): $(IVORBIS_TOOLS_BUILD_DIR)/.built
 	rm -rf $(IVORBIS_TOOLS_IPK_DIR) $(BUILD_DIR)/ivorbis-tools_*_${TARGET_ARCH}.ipk
 	$(MAKE) -C $(IVORBIS_TOOLS_BUILD_DIR) DESTDIR=$(IVORBIS_TOOLS_IPK_DIR) install
-	$(STRIP_COMMAND) $(IVORBIS_TOOLS_IPK_DIR)/opt/bin/*
+	$(STRIP_COMMAND) $(IVORBIS_TOOLS_IPK_DIR)$(OPTWARE_PREFIX)bin/*
 	$(MAKE) $(IVORBIS_TOOLS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IVORBIS_TOOLS_IPK_DIR)
 

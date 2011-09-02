@@ -45,7 +45,7 @@ GLIB_LOCALES=
 
 #
 # GLIB_CONFFILES should be a list of user-editable files
-#GLIB_CONFFILES=/opt/etc/glib.conf /opt/etc/init.d/SXXglib
+#GLIB_CONFFILES=$(OPTWARE_PREFIX)etc/glib.conf $(OPTWARE_PREFIX)etc/init.d/SXXglib
 
 #
 # GLIB_PATCHES should list any patches, in the the order in
@@ -166,7 +166,7 @@ endif
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--cache-file=arm.cache \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(GLIB_CONFIG_OPT) \
 		--disable-nls \
 		--disable-static \
@@ -199,11 +199,11 @@ $(GLIB_BUILD_DIR)/.staged: $(GLIB_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) install-strip prefix=$(STAGING_DIR)/opt
 	install $(@D)/glibconfig.h $(STAGING_INCLUDE_DIR)/glib-2.0/
-	rm -rf $(STAGING_DIR)/opt/lib/libgio-2.0.la
-	rm -rf $(STAGING_DIR)/opt/lib/libglib-2.0.la
-	rm -rf $(STAGING_DIR)/opt/lib/libgmodule-2.0.la
-	rm -rf $(STAGING_DIR)/opt/lib/libgobject-2.0.la
-	rm -rf $(STAGING_DIR)/opt/lib/libgthread-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgio-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libglib-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgmodule-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgobject-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgthread-2.0.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' \
                -e 's|glib_mkenums=.*|glib_mkenums=$${prefix}/bin/glib-mkenums|' \
 		$(STAGING_LIB_DIR)/pkgconfig/gio*-2.0.pc \
@@ -237,20 +237,20 @@ $(GLIB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GLIB_IPK_DIR)/opt/sbin or $(GLIB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GLIB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GLIB_IPK_DIR)/opt/etc/glib/...
-# Documentation files should be installed in $(GLIB_IPK_DIR)/opt/doc/glib/...
-# Daemon startup scripts should be installed in $(GLIB_IPK_DIR)/opt/etc/init.d/S??glib
+# Libraries and include files should be installed into $(GLIB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)etc/glib/...
+# Documentation files should be installed in $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)doc/glib/...
+# Daemon startup scripts should be installed in $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??glib
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GLIB_IPK): $(GLIB_BUILD_DIR)/.built
 	rm -rf $(GLIB_IPK_DIR) $(BUILD_DIR)/glib_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GLIB_BUILD_DIR) install-strip prefix=$(GLIB_IPK_DIR)/opt
-	rm -rf $(GLIB_IPK_DIR)/opt/share/gtk-doc
-	rm -rf $(GLIB_IPK_DIR)/opt/man
+	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
+	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)man
 	$(MAKE) $(GLIB_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GLIB_IPK_DIR)
 

@@ -46,7 +46,7 @@ GKRELLMD_IPK_VERSION=3
 
 #
 # GKRELLMD_CONFFILES should be a list of user-editable files
-GKRELLMD_CONFFILES=/opt/etc/init.d/S60gkrellmd
+GKRELLMD_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S60gkrellmd
 
 #
 # GKRELLMD_PATCHES should list any patches, in the the order in
@@ -172,25 +172,25 @@ $(GKRELLMD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GKRELLMD_IPK_DIR)/opt/sbin or $(GKRELLMD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GKRELLMD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GKRELLMD_IPK_DIR)/opt/etc/gkrellmd/...
-# Documentation files should be installed in $(GKRELLMD_IPK_DIR)/opt/doc/gkrellmd/...
-# Daemon startup scripts should be installed in $(GKRELLMD_IPK_DIR)/opt/etc/init.d/S??gkrellmd
+# Libraries and include files should be installed into $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/gkrellmd/...
+# Documentation files should be installed in $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)doc/gkrellmd/...
+# Daemon startup scripts should be installed in $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gkrellmd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GKRELLMD_IPK): $(GKRELLMD_BUILD_DIR)/.built
 	rm -rf $(GKRELLMD_IPK_DIR) $(BUILD_DIR)/gkrellmd_*_$(TARGET_ARCH).ipk
-	install -d $(GKRELLMD_IPK_DIR)/opt/sbin $(GKRELLMD_IPK_DIR)/opt/etc/init.d
-	$(STRIP_COMMAND) $(GKRELLMD_BUILD_DIR)/server/gkrellmd -o $(GKRELLMD_IPK_DIR)/opt/sbin/gkrellmd
-	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)/opt/etc/init.d/S60gkrellmd
-#	install -d $(GKRELLMD_IPK_DIR)/opt/etc/
-#	install -m 644 $(GKRELLMD_SOURCE_DIR)/gkrellmd.conf $(GKRELLMD_IPK_DIR)/opt/etc/gkrellmd.conf
-#	install -d $(GKRELLMD_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)/opt/etc/init.d/SXXgkrellmd
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GKRELLMD_IPK_DIR)/opt/etc/init.d/SXXgkrellmd
+	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)sbin $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	$(STRIP_COMMAND) $(GKRELLMD_BUILD_DIR)/server/gkrellmd -o $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)sbin/gkrellmd
+	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S60gkrellmd
+#	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(GKRELLMD_SOURCE_DIR)/gkrellmd.conf $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/gkrellmd.conf
+#	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgkrellmd
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgkrellmd
 	$(MAKE) $(GKRELLMD_IPK_DIR)/CONTROL/control
 #	install -m 755 $(GKRELLMD_SOURCE_DIR)/postinst $(GKRELLMD_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GKRELLMD_IPK_DIR)/CONTROL/postinst

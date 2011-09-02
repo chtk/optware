@@ -46,7 +46,7 @@ AUDIOFILE_IPK_VERSION=6
 
 #
 # AUDIOFILE_CONFFILES should be a list of user-editable files
-AUDIOFILE_CONFFILES=#/opt/etc/audiofile.conf /opt/etc/init.d/SXXaudiofile
+AUDIOFILE_CONFFILES=#$(OPTWARE_PREFIX)etc/audiofile.conf $(OPTWARE_PREFIX)etc/init.d/SXXaudiofile
 
 #
 # AUDIOFILE_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(AUDIOFILE_BUILD_DIR)/.configured: $(DL_DIR)/$(AUDIOFILE_SOURCE) $(AUDIOFILE_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,7 +150,7 @@ $(AUDIOFILE_BUILD_DIR)/.staged: $(AUDIOFILE_BUILD_DIR)/.built
 	rm -f $(AUDIOFILE_BUILD_DIR)/.staged
 	$(MAKE) -C $(AUDIOFILE_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
 	sed -i -e 's|echo $$includes|echo -I$(STAGING_INCLUDE_DIR)|' $(STAGING_PREFIX)/bin/audiofile-config
-	cp $(STAGING_DIR)/opt/bin/audiofile-config $(STAGING_DIR)/bin/audiofile-config
+	cp $(STAGING_DIR)$(OPTWARE_PREFIX)bin/audiofile-config $(STAGING_DIR)/bin/audiofile-config
 	sed -ie 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/audiofile.pc
 	rm -f $(STAGING_LIB_DIR)/libaudiofile.la
 	touch $(AUDIOFILE_BUILD_DIR)/.staged
@@ -178,12 +178,12 @@ $(AUDIOFILE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(AUDIOFILE_IPK_DIR)/opt/sbin or $(AUDIOFILE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(AUDIOFILE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(AUDIOFILE_IPK_DIR)/opt/etc/audiofile/...
-# Documentation files should be installed in $(AUDIOFILE_IPK_DIR)/opt/doc/audiofile/...
-# Daemon startup scripts should be installed in $(AUDIOFILE_IPK_DIR)/opt/etc/init.d/S??audiofile
+# Libraries and include files should be installed into $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX)etc/audiofile/...
+# Documentation files should be installed in $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX)doc/audiofile/...
+# Daemon startup scripts should be installed in $(AUDIOFILE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??audiofile
 #
 # You may need to patch your application to make it use these locations.
 #

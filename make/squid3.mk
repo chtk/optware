@@ -38,7 +38,7 @@ SQUID3_IPK_VERSION ?= 1
 
 #
 ## SQUID3_CONFFILES should be a list of user-editable files
-SQUID3_CONFFILES=/opt/etc/squid/squid.conf /opt/etc/init.d/S80squid
+SQUID3_CONFFILES=$(OPTWARE_PREFIX)etc/squid/squid.conf $(OPTWARE_PREFIX)etc/init.d/S80squid
 
 #
 # SQUID3_PATCHES should list any patches, in the the order in
@@ -142,7 +142,7 @@ $(SQUID3_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(SQUID3_SOURCE) mak
 	fi
 	(cd $(@D); \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 	$(MAKE) -C $(@D)
 	touch $@
@@ -250,12 +250,12 @@ $(SQUID3_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SQUID3_IPK_DIR)/opt/sbin or $(SQUID3_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SQUID3_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SQUID3_IPK_DIR)/opt/etc/squid3/...
-# Documentation files should be installed in $(SQUID3_IPK_DIR)/opt/doc/squid3/...
-# Daemon startup scripts should be installed in $(SQUID3_IPK_DIR)/opt/etc/init.d/S??squid3
+# Libraries and include files should be installed into $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)etc/squid3/...
+# Documentation files should be installed in $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)doc/squid3/...
+# Daemon startup scripts should be installed in $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??squid3
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -272,9 +272,9 @@ $(SQUID3_IPK): $(SQUID3_BUILD_DIR)/.built
 		libexec/ntlm_smb_lm_auth \
 		libexec/squid_unix_group \
 		;
-	install -d $(SQUID3_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(SQUID3_SOURCE_DIR)/rc.squid $(SQUID3_IPK_DIR)/opt/etc/init.d/S80squid
-	ln -sf /opt/etc/init.d/S80squid $(SQUID3_IPK_DIR)/opt/etc/init.d/K80squid 
+	install -d $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(SQUID3_SOURCE_DIR)/rc.squid $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80squid
+	ln -sf $(OPTWARE_PREFIX)etc/init.d/S80squid $(SQUID3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/K80squid 
 	install -m 755 $(SQUID3_SOURCE_DIR)/squid.delay-start.sh $(SQUID3_IPK_DIR)$(SQUID3_SYSCONF_DIR)/squid.delay-start.sh
 	install -d $(SQUID3_IPK_DIR)/CONTROL
 	$(MAKE) $(SQUID3_IPK_DIR)/CONTROL/control

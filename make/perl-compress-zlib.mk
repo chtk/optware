@@ -42,9 +42,9 @@ $(PERL-COMPRESS-ZLIB_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-COMPRESS-ZLIB_SOUR
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -57,7 +57,7 @@ $(PERL-COMPRESS-ZLIB_BUILD_DIR)/.built: $(PERL-COMPRESS-ZLIB_BUILD_DIR)/.configu
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		$(PERL_INC) \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-compress-zlib: $(PERL-COMPRESS-ZLIB_BUILD_DIR)/.built
@@ -88,15 +88,15 @@ $(PERL-COMPRESS-ZLIB_IPK): $(PERL-COMPRESS-ZLIB_BUILD_DIR)/.built
 	rm -rf $(PERL-COMPRESS-ZLIB_IPK_DIR) $(BUILD_DIR)/perl-compress-zlib_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-COMPRESS-ZLIB_BUILD_DIR) DESTDIR=$(PERL-COMPRESS-ZLIB_IPK_DIR) install
 ifeq (5.10, $(PERL_MAJOR_VER))
-	rm -f $(PERL-COMPRESS-ZLIB_IPK_DIR)/opt/man/man3/Compress::Zlib.3
+	rm -f $(PERL-COMPRESS-ZLIB_IPK_DIR)$(OPTWARE_PREFIX)man/man3/Compress::Zlib.3
 endif
-	find $(PERL-COMPRESS-ZLIB_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-COMPRESS-ZLIB_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-COMPRESS-ZLIB_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-COMPRESS-ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-COMPRESS-ZLIB_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-COMPRESS-ZLIB_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-COMPRESS-ZLIB_IPK_DIR)/CONTROL/control
 	echo $(PERL-COMPRESS-ZLIB_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-COMPRESS-ZLIB_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-COMPRESS-ZLIB_IPK_DIR)

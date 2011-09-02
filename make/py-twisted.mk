@@ -41,7 +41,7 @@ PY-TWISTED_IPK_VERSION=1
 
 #
 # PY-TWISTED_CONFFILES should be a list of user-editable files
-#PY-TWISTED_CONFFILES=/opt/etc/py-twisted.conf /opt/etc/init.d/SXXpy-twisted
+#PY-TWISTED_CONFFILES=$(OPTWARE_PREFIX)etc/py-twisted.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-twisted
 
 #
 # PY-TWISTED_PATCHES should list any patches, in the the order in
@@ -118,11 +118,11 @@ $(PY-TWISTED_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-TWISTED_SOURCE) $(PY-TWISTED
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	$(PY-TWISTED_UNZIP) $(DL_DIR)/$(PY-TWISTED_SOURCE) | tar -C $(BUILD_DIR) -xvf -
@@ -133,11 +133,11 @@ $(PY-TWISTED_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-TWISTED_SOURCE) $(PY-TWISTED
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	touch $@
@@ -216,12 +216,12 @@ $(PY26-TWISTED_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-TWISTED_IPK_DIR)/opt/sbin or $(PY-TWISTED_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-TWISTED_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-TWISTED_IPK_DIR)/opt/etc/py-twisted/...
-# Documentation files should be installed in $(PY-TWISTED_IPK_DIR)/opt/doc/py-twisted/...
-# Daemon startup scripts should be installed in $(PY-TWISTED_IPK_DIR)/opt/etc/init.d/S??py-twisted
+# Libraries and include files should be installed into $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)etc/py-twisted/...
+# Documentation files should be installed in $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)doc/py-twisted/...
+# Daemon startup scripts should be installed in $(PY-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-twisted
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -231,7 +231,7 @@ $(PY25-TWISTED_IPK): $(PY-TWISTED_BUILD_DIR)/.built
 	(cd $(PY-TWISTED_BUILD_DIR)/2.5; \
 		CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared' \
 		$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-TWISTED_IPK_DIR) --prefix=/opt)
-	$(STRIP_COMMAND) `find $(PY25-TWISTED_IPK_DIR)/opt/lib -name '*.so'`
+	$(STRIP_COMMAND) `find $(PY25-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`
 	$(MAKE) $(PY25-TWISTED_IPK_DIR)/CONTROL/control
 	echo $(PY-TWISTED_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-TWISTED_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-TWISTED_IPK_DIR)
@@ -241,8 +241,8 @@ $(PY26-TWISTED_IPK): $(PY-TWISTED_BUILD_DIR)/.built
 	(cd $(PY-TWISTED_BUILD_DIR)/2.6; \
 		CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared' \
 		$(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-TWISTED_IPK_DIR) --prefix=/opt)
-	$(STRIP_COMMAND) `find $(PY26-TWISTED_IPK_DIR)/opt/lib -name '*.so'`
-	for f in $(PY26-TWISTED_IPK_DIR)/opt/*bin/*; \
+	$(STRIP_COMMAND) `find $(PY26-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`
+	for f in $(PY26-TWISTED_IPK_DIR)$(OPTWARE_PREFIX)*bin/*; \
 	    do mv $$f `echo $$f | sed 's|$$|-2.6|'`; done
 	$(MAKE) $(PY26-TWISTED_IPK_DIR)/CONTROL/control
 	echo $(PY-TWISTED_CONFFILES) | sed -e 's/ /\n/g' > $(PY26-TWISTED_IPK_DIR)/CONTROL/conffiles

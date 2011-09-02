@@ -44,7 +44,7 @@ EMACS22_IPK_VERSION=1
 
 #
 # EMACS22_CONFFILES should be a list of user-editable files
-#EMACS22_CONFFILES=/opt/etc/emacs22.conf /opt/etc/init.d/SXXemacs22
+#EMACS22_CONFFILES=$(OPTWARE_PREFIX)etc/emacs22.conf $(OPTWARE_PREFIX)etc/init.d/SXXemacs22
 
 #
 # EMACS22_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(EMACS22_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(EMACS22_SOURCE) #
 	fi
 	(cd $(EMACS22_HOST_BUILD_DIR); \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		--without-sound \
 		--disable-nls \
@@ -159,7 +159,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		--without-sound \
 		--disable-nls \
@@ -219,12 +219,12 @@ $(EMACS22_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(EMACS22_IPK_DIR)/opt/sbin or $(EMACS22_IPK_DIR)/opt/bin
+# Binaries should be installed into $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(EMACS22_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(EMACS22_IPK_DIR)/opt/etc/emacs22/...
-# Documentation files should be installed in $(EMACS22_IPK_DIR)/opt/doc/emacs22/...
-# Daemon startup scripts should be installed in $(EMACS22_IPK_DIR)/opt/etc/init.d/S??emacs22
+# Libraries and include files should be installed into $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)etc/emacs22/...
+# Documentation files should be installed in $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)doc/emacs22/...
+# Daemon startup scripts should be installed in $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??emacs22
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -236,18 +236,18 @@ $(EMACS22_IPK): $(EMACS22_BUILD_DIR)/.built
 		BUILT-EMACS=$(EMACS22_HOST_BUILD_DIR)/src/emacs \
 		TARGET_LIBDIR=$(TARGET_USRLIBDIR) \
 		;
-	mv $(EMACS22_IPK_DIR)/opt/bin/ctags $(EMACS22_IPK_DIR)/opt/bin/ctags-emacs
-	mv $(EMACS22_IPK_DIR)/opt/share/man/man1/ctags.1 $(EMACS22_IPK_DIR)/opt/share/man/man1/ctags-emacs.1
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/ctags $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/ctags-emacs
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/ctags.1 $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/ctags-emacs.1
 	$(STRIP_COMMAND) `echo \
-		$(EMACS22_IPK_DIR)/opt/bin/* \
-		$(EMACS22_IPK_DIR)/opt/libexec/emacs/$(EMACS22_VERSION)/$(GNU_TARGET_NAME)/* \
+		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/* \
+		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)libexec/emacs/$(EMACS22_VERSION)/$(GNU_TARGET_NAME)/* \
 		| tr ' ' '\n' \
 		| egrep -v '/grep-changelog$$|/rcs-checkin$$|/rcs2log$$|/vcdiff$$'`
-	mv $(EMACS22_IPK_DIR)/opt/bin/emacs-$(EMACS22_VERSION) $(EMACS22_IPK_DIR)/opt/share/emacs/$(EMACS22_VERSION)/lisp/temacs
-	rm -rf $(EMACS22_IPK_DIR)/opt/share/info/dir*
-	rm -rf $(EMACS22_IPK_DIR)/opt/share/emacs/$(EMACS22_VERSION)/etc/images
-	rm -rf $(EMACS22_IPK_DIR)/opt/share/emacs/$(EMACS22_VERSION)/etc/tree-widget
-	rm -rf $(EMACS22_IPK_DIR)/opt/share/emacs/$(EMACS22_VERSION)/lisp/obsolete
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/emacs-$(EMACS22_VERSION) $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/lisp/temacs
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/info/dir*
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/etc/images
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/etc/tree-widget
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/lisp/obsolete
 	$(MAKE) $(EMACS22_IPK_DIR)/CONTROL/control
 	install -m 644 $(EMACS22_SOURCE_DIR)/postinst $(EMACS22_IPK_DIR)/CONTROL/
 	sed -i -e 's/$${EMACS_VERSION}/$(EMACS22_VERSION)/g' $(EMACS22_IPK_DIR)/CONTROL/postinst

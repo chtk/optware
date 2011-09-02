@@ -41,7 +41,7 @@ BLUEZ-HCIDUMP_IPK_VERSION=1
 
 #
 # BLUEZ-HCIDUMP_CONFFILES should be a list of user-editable files
-#BLUEZ-HCIDUMP_CONFFILES=/opt/etc/bluez-hcidump.conf /opt/etc/init.d/SXXbluez-hcidump
+#BLUEZ-HCIDUMP_CONFFILES=$(OPTWARE_PREFIX)etc/bluez-hcidump.conf $(OPTWARE_PREFIX)etc/init.d/SXXbluez-hcidump
 
 #
 # BLUEZ-HCIDUMP_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(BLUEZ-HCIDUMP_BUILD_DIR)/.configured: $(DL_DIR)/$(BLUEZ-HCIDUMP_SOURCE) $(BLUE
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(BLUEZ-HCIDUMP_CONFIG_ARGS) \
 		--disable-nls \
 	)
@@ -176,12 +176,12 @@ $(BLUEZ-HCIDUMP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BLUEZ-HCIDUMP_IPK_DIR)/opt/sbin or $(BLUEZ-HCIDUMP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BLUEZ-HCIDUMP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)/opt/etc/bluez-hcidump/...
-# Documentation files should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)/opt/doc/bluez-hcidump/...
-# Daemon startup scripts should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)/opt/etc/init.d/S??bluez-hcidump
+# Libraries and include files should be installed into $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX)etc/bluez-hcidump/...
+# Documentation files should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX)doc/bluez-hcidump/...
+# Daemon startup scripts should be installed in $(BLUEZ-HCIDUMP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bluez-hcidump
 #
 # You may need to patch your application to make it use these locations.
 #

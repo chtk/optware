@@ -40,7 +40,7 @@ OPEN2300_IPK_VERSION=1
 
 #
 # OPEN2300_CONFFILES should be a list of user-editable files
-#OPEN2300_CONFFILES=/opt/etc/open2300.conf /opt/etc/init.d/SXXopen2300
+#OPEN2300_CONFFILES=$(OPTWARE_PREFIX)etc/open2300.conf $(OPTWARE_PREFIX)etc/init.d/SXXopen2300
 
 #
 # OPEN2300_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ $(OPEN2300_BUILD_DIR)/.configured: $(DL_DIR)/$(OPEN2300_SOURCE) $(OPEN2300_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -144,7 +144,7 @@ $(OPEN2300_BUILD_DIR)/.built: $(OPEN2300_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(OPEN2300_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(OPEN2300_LDFLAGS)" \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		;
 	touch $@
 
@@ -185,29 +185,29 @@ $(OPEN2300_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(OPEN2300_IPK_DIR)/opt/sbin or $(OPEN2300_IPK_DIR)/opt/bin
+# Binaries should be installed into $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(OPEN2300_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(OPEN2300_IPK_DIR)/opt/etc/open2300/...
-# Documentation files should be installed in $(OPEN2300_IPK_DIR)/opt/doc/open2300/...
-# Daemon startup scripts should be installed in $(OPEN2300_IPK_DIR)/opt/etc/init.d/S??open2300
+# Libraries and include files should be installed into $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/open2300/...
+# Documentation files should be installed in $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)doc/open2300/...
+# Daemon startup scripts should be installed in $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??open2300
 #
 # You may need to patch your application to make it use these locations.
 #
 $(OPEN2300_IPK): $(OPEN2300_BUILD_DIR)/.built
 	rm -rf $(OPEN2300_IPK_DIR) $(BUILD_DIR)/open2300_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(OPEN2300_BUILD_DIR) install \
-		prefix=$(OPEN2300_IPK_DIR)/opt \
+		prefix=$(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)\
 		;
-	install -m 755 $(OPEN2300_BUILD_DIR)/mysql2300 $(OPEN2300_IPK_DIR)/opt/bin
-	install -m 755 $(OPEN2300_BUILD_DIR)/pgsql2300 $(OPEN2300_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(OPEN2300_IPK_DIR)/opt/bin/*2300
-	install -d $(OPEN2300_IPK_DIR)/opt/etc/
-	install -m 644 $(OPEN2300_BUILD_DIR)/open2300-dist.conf $(OPEN2300_IPK_DIR)/opt/etc/
-#	install -m 644 $(OPEN2300_SOURCE_DIR)/open2300.conf $(OPEN2300_IPK_DIR)/opt/etc/open2300.conf
-#	install -d $(OPEN2300_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(OPEN2300_SOURCE_DIR)/rc.open2300 $(OPEN2300_IPK_DIR)/opt/etc/init.d/SXXopen2300
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(OPEN2300_IPK_DIR)/opt/etc/init.d/SXXopen2300
+	install -m 755 $(OPEN2300_BUILD_DIR)/mysql2300 $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(OPEN2300_BUILD_DIR)/pgsql2300 $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)bin/*2300
+	install -d $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(OPEN2300_BUILD_DIR)/open2300-dist.conf $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(OPEN2300_SOURCE_DIR)/open2300.conf $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/open2300.conf
+#	install -d $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(OPEN2300_SOURCE_DIR)/rc.open2300 $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXopen2300
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(OPEN2300_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXopen2300
 	$(MAKE) $(OPEN2300_IPK_DIR)/CONTROL/control
 #	install -m 755 $(OPEN2300_SOURCE_DIR)/postinst $(OPEN2300_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(OPEN2300_IPK_DIR)/CONTROL/postinst

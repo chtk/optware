@@ -24,7 +24,7 @@ DELEGATE_IPK_VERSION=1
 
 #
 # DELEGATE_CONFFILES should be a list of user-editable files
-#DELEGATE_CONFFILES=/opt/etc/delegate.conf /opt/etc/init.d/SXXdelegate
+#DELEGATE_CONFFILES=$(OPTWARE_PREFIX)etc/delegate.conf $(OPTWARE_PREFIX)etc/init.d/SXXdelegate
 
 #
 # DELEGATE_PATCHES should list any patches, in the the order in
@@ -177,25 +177,25 @@ $(DELEGATE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DELEGATE_IPK_DIR)/opt/sbin or $(DELEGATE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DELEGATE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DELEGATE_IPK_DIR)/opt/etc/delegate/...
-# Documentation files should be installed in $(DELEGATE_IPK_DIR)/opt/doc/delegate/...
-# Daemon startup scripts should be installed in $(DELEGATE_IPK_DIR)/opt/etc/init.d/S??delegate
+# Libraries and include files should be installed into $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/delegate/...
+# Documentation files should be installed in $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)doc/delegate/...
+# Daemon startup scripts should be installed in $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??delegate
 #
 # You may need to patch your application to make it use these locations.
 #
 $(DELEGATE_IPK): $(DELEGATE_BUILD_DIR)/.built
 	rm -rf $(DELEGATE_IPK_DIR) $(BUILD_DIR)/delegate_*_$(TARGET_ARCH).ipk
-	install -d $(DELEGATE_IPK_DIR)/opt/sbin/
-	install -m 0755 $(DELEGATE_BUILD_DIR)/src/delegated $(DELEGATE_IPK_DIR)/opt/sbin/delegated
+	install -d $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -m 0755 $(DELEGATE_BUILD_DIR)/src/delegated $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)sbin/delegated
 #	$(MAKE) -C $(DELEGATE_BUILD_DIR) DESTDIR=$(DELEGATE_IPK_DIR) install-strip
-#	install -d $(DELEGATE_IPK_DIR)/opt/etc/
-#	install -m 644 $(DELEGATE_SOURCE_DIR)/delegate.conf $(DELEGATE_IPK_DIR)/opt/etc/delegate.conf
-#	install -d $(DELEGATE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(DELEGATE_SOURCE_DIR)/rc.delegate $(DELEGATE_IPK_DIR)/opt/etc/init.d/SXXdelegate
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DELEGATE_IPK_DIR)/opt/etc/init.d/SXXdelegate
+#	install -d $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(DELEGATE_SOURCE_DIR)/delegate.conf $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/delegate.conf
+#	install -d $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(DELEGATE_SOURCE_DIR)/rc.delegate $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdelegate
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DELEGATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdelegate
 	$(MAKE) $(DELEGATE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(DELEGATE_SOURCE_DIR)/postinst $(DELEGATE_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DELEGATE_IPK_DIR)/CONTROL/postinst

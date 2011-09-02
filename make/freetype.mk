@@ -37,7 +37,7 @@ FREETYPE_IPK_VERSION=1
 
 #
 # FREETYPE_CONFFILES should be a list of user-editable files
-FREETYPE_CONFFILES=/opt/etc/freetype.conf /opt/etc/init.d/SXXfreetype
+FREETYPE_CONFFILES=$(OPTWARE_PREFIX)etc/freetype.conf $(OPTWARE_PREFIX)etc/init.d/SXXfreetype
 
 #
 # FREETYPE_PATCHES should list any patches, in the the order in
@@ -127,7 +127,7 @@ $(FREETYPE_BUILD_DIR)/.configured: $(DL_DIR)/$(FREETYPE_SOURCE) $(FREETYPE_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/builds/unix/libtool
@@ -156,7 +156,7 @@ $(FREETYPE_BUILD_DIR)/.staged: $(FREETYPE_BUILD_DIR)/.built
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
 	sed -ie 's%includedir=$${*prefix}*/include%includedir=$(STAGING_INCLUDE_DIR)%' $(STAGING_PREFIX)/bin/freetype-config
 	install -d $(STAGING_DIR)/bin
-	cp $(STAGING_DIR)/opt/bin/freetype-config $(STAGING_DIR)/bin/freetype-config
+	cp $(STAGING_DIR)$(OPTWARE_PREFIX)bin/freetype-config $(STAGING_DIR)/bin/freetype-config
 	rm -f $(STAGING_LIB_DIR)/libfreetype.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/freetype2.pc
 	touch $@
@@ -166,20 +166,20 @@ freetype-stage: $(FREETYPE_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FREETYPE_IPK_DIR)/opt/sbin or $(FREETYPE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FREETYPE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FREETYPE_IPK_DIR)/opt/etc/freetype/...
-# Documentation files should be installed in $(FREETYPE_IPK_DIR)/opt/doc/freetype/...
-# Daemon startup scripts should be installed in $(FREETYPE_IPK_DIR)/opt/etc/init.d/S??freetype
+# Libraries and include files should be installed into $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)etc/freetype/...
+# Documentation files should be installed in $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)doc/freetype/...
+# Daemon startup scripts should be installed in $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??freetype
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FREETYPE_IPK): $(FREETYPE_BUILD_DIR)/.built
 	rm -rf $(FREETYPE_IPK_DIR) $(BUILD_DIR)/freetype_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FREETYPE_BUILD_DIR) DESTDIR=$(FREETYPE_IPK_DIR) install
-	$(STRIP_COMMAND) $(FREETYPE_IPK_DIR)/opt/lib/*.so
-	rm -f $(FREETYPE_IPK_DIR)/opt/lib/*.la
+	$(STRIP_COMMAND) $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
+	rm -f $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(FREETYPE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FREETYPE_IPK_DIR)
 

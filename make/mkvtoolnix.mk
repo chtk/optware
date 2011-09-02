@@ -46,7 +46,7 @@ MKVTOOLNIX_IPK_VERSION?=1
 
 #
 # MKVTOOLNIX_CONFFILES should be a list of user-editable files
-#MKVTOOLNIX_CONFFILES=/opt/etc/mkvtoolnix.conf /opt/etc/init.d/SXXmkvtoolnix
+#MKVTOOLNIX_CONFFILES=$(OPTWARE_PREFIX)etc/mkvtoolnix.conf $(OPTWARE_PREFIX)etc/init.d/SXXmkvtoolnix
 
 #
 # MKVTOOLNIX_PATCHES should list any patches, in the the order in
@@ -136,7 +136,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-boost=$(STAGING_PREFIX) \
 		--disable-gui \
 		--disable-nls \
@@ -192,19 +192,19 @@ $(MKVTOOLNIX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MKVTOOLNIX_IPK_DIR)/opt/sbin or $(MKVTOOLNIX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MKVTOOLNIX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MKVTOOLNIX_IPK_DIR)/opt/etc/mkvtoolnix/...
-# Documentation files should be installed in $(MKVTOOLNIX_IPK_DIR)/opt/doc/mkvtoolnix/...
-# Daemon startup scripts should be installed in $(MKVTOOLNIX_IPK_DIR)/opt/etc/init.d/S??mkvtoolnix
+# Libraries and include files should be installed into $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)etc/mkvtoolnix/...
+# Documentation files should be installed in $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)doc/mkvtoolnix/...
+# Daemon startup scripts should be installed in $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mkvtoolnix
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MKVTOOLNIX_IPK): $(MKVTOOLNIX_BUILD_DIR)/.built
 	rm -rf $(MKVTOOLNIX_IPK_DIR) $(BUILD_DIR)/mkvtoolnix_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MKVTOOLNIX_BUILD_DIR) DESTDIR=$(MKVTOOLNIX_IPK_DIR) install
-	$(STRIP_COMMAND) $(MKVTOOLNIX_IPK_DIR)/opt/bin/mkv*
+	$(STRIP_COMMAND) $(MKVTOOLNIX_IPK_DIR)$(OPTWARE_PREFIX)bin/mkv*
 	$(MAKE) $(MKVTOOLNIX_IPK_DIR)/CONTROL/control
 	echo $(MKVTOOLNIX_CONFFILES) | sed -e 's/ /\n/g' > $(MKVTOOLNIX_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MKVTOOLNIX_IPK_DIR)

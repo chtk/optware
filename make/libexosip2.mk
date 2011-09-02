@@ -40,7 +40,7 @@ LIBEXOSIP2_IPK_VERSION=1
 
 #
 # LIBEXOSIP2_CONFFILES should be a list of user-editable files
-#LIBEXOSIP2_CONFFILES=/opt/etc/libexosip2.conf /opt/etc/init.d/SXXlibexosip2
+#LIBEXOSIP2_CONFFILES=$(OPTWARE_PREFIX)etc/libexosip2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibexosip2
 
 #
 # LIBEXOSIP2_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(LIBEXOSIP2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBEXOSIP2_SOURCE) $(LIBEXOSIP2
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,12 +179,12 @@ $(LIBEXOSIP2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBEXOSIP2_IPK_DIR)/opt/sbin or $(LIBEXOSIP2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBEXOSIP2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBEXOSIP2_IPK_DIR)/opt/etc/libexosip2/...
-# Documentation files should be installed in $(LIBEXOSIP2_IPK_DIR)/opt/doc/libexosip2/...
-# Daemon startup scripts should be installed in $(LIBEXOSIP2_IPK_DIR)/opt/etc/init.d/S??libexosip2
+# Libraries and include files should be installed into $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/libexosip2/...
+# Documentation files should be installed in $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX)doc/libexosip2/...
+# Daemon startup scripts should be installed in $(LIBEXOSIP2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libexosip2
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -94,7 +94,7 @@ $(LESS_BUILD_DIR)/.configured: $(DL_DIR)/$(LESS_SOURCE) $(LESS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -137,25 +137,25 @@ $(LESS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LESS_IPK_DIR)/opt/sbin or $(LESS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LESS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LESS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LESS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LESS_IPK_DIR)/opt/etc/less/...
-# Documentation files should be installed in $(LESS_IPK_DIR)/opt/doc/less/...
-# Daemon startup scripts should be installed in $(LESS_IPK_DIR)/opt/etc/init.d/S??less
+# Libraries and include files should be installed into $(LESS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LESS_IPK_DIR)$(OPTWARE_PREFIX)etc/less/...
+# Documentation files should be installed in $(LESS_IPK_DIR)$(OPTWARE_PREFIX)doc/less/...
+# Daemon startup scripts should be installed in $(LESS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??less
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LESS_IPK): $(LESS_BUILD_DIR)/.built
 	rm -rf $(LESS_IPK_DIR) $(BUILD_DIR)/less_*_$(TARGET_ARCH).ipk
-	install -d $(LESS_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(LESS_BUILD_DIR)/less -o $(LESS_IPK_DIR)/opt/bin/less-less
+	install -d $(LESS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(LESS_BUILD_DIR)/less -o $(LESS_IPK_DIR)$(OPTWARE_PREFIX)bin/less-less
 	$(MAKE) $(LESS_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install /opt/bin/less less /opt/bin/less-less 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/less less $(OPTWARE_PREFIX)bin/less-less 80"; \
 	) > $(LESS_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove less /opt/bin/less-less"; \
+	 echo "update-alternatives --remove less $(OPTWARE_PREFIX)bin/less-less"; \
 	) > $(LESS_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

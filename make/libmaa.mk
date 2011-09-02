@@ -40,7 +40,7 @@ LIBMAA_IPK_VERSION=1
 
 #
 # LIBMAA_CONFFILES should be a list of user-editable files
-#LIBMAA_CONFFILES=/opt/etc/libmaa.conf /opt/etc/init.d/SXXlibmaa
+#LIBMAA_CONFFILES=$(OPTWARE_PREFIX)etc/libmaa.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibmaa
 
 #
 # LIBMAA_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LIBMAA_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBMAA_SOURCE) $(LIBMAA_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,12 +179,12 @@ $(LIBMAA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBMAA_IPK_DIR)/opt/sbin or $(LIBMAA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBMAA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBMAA_IPK_DIR)/opt/etc/libmaa/...
-# Documentation files should be installed in $(LIBMAA_IPK_DIR)/opt/doc/libmaa/...
-# Daemon startup scripts should be installed in $(LIBMAA_IPK_DIR)/opt/etc/init.d/S??libmaa
+# Libraries and include files should be installed into $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)etc/libmaa/...
+# Documentation files should be installed in $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)doc/libmaa/...
+# Daemon startup scripts should be installed in $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libmaa
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -192,8 +192,8 @@ $(LIBMAA_IPK): $(LIBMAA_BUILD_DIR)/.built
 	rm -rf $(LIBMAA_IPK_DIR) $(BUILD_DIR)/libmaa_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<D) install \
 		DESTDIR=$(LIBMAA_IPK_DIR) LIBTOOL="$(STAGING_PREFIX)/bin/libtool"
-	$(STRIP_COMMAND) $(LIBMAA_IPK_DIR)/opt/lib/libmaa.so.[0-9]*.[0-9]*.[0-9]*
-	rm -f $(LIBMAA_IPK_DIR)/opt/lib/libmaa.a
+	$(STRIP_COMMAND) $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)lib/libmaa.so.[0-9]*.[0-9]*.[0-9]*
+	rm -f $(LIBMAA_IPK_DIR)$(OPTWARE_PREFIX)lib/libmaa.a
 	$(MAKE) $(LIBMAA_IPK_DIR)/CONTROL/control
 	echo $(LIBMAA_CONFFILES) | sed -e 's/ /\n/g' > $(LIBMAA_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBMAA_IPK_DIR)

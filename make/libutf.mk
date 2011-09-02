@@ -40,7 +40,7 @@ LIBUTF_IPK_VERSION=1
 
 #
 # LIBUTF_CONFFILES should be a list of user-editable files
-#LIBUTF_CONFFILES=/opt/etc/libutf.conf /opt/etc/init.d/SXXlibutf
+#LIBUTF_CONFFILES=$(OPTWARE_PREFIX)etc/libutf.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibutf
 
 #
 # LIBUTF_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LIBUTF_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBUTF_SOURCE) $(LIBUTF_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,7 +150,7 @@ libutf: $(LIBUTF_BUILD_DIR)/.built
 #
 $(LIBUTF_BUILD_DIR)/.staged: $(LIBUTF_BUILD_DIR)/.built
 	rm -f $@
-	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) prefix=$(STAGING_DIR)/opt install
+	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)install
 	touch $@
 
 libutf-stage: $(LIBUTF_BUILD_DIR)/.staged
@@ -177,12 +177,12 @@ $(LIBUTF_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBUTF_IPK_DIR)/opt/sbin or $(LIBUTF_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBUTF_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBUTF_IPK_DIR)/opt/etc/libutf/...
-# Documentation files should be installed in $(LIBUTF_IPK_DIR)/opt/doc/libutf/...
-# Daemon startup scripts should be installed in $(LIBUTF_IPK_DIR)/opt/etc/init.d/S??libutf
+# Libraries and include files should be installed into $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX)etc/libutf/...
+# Documentation files should be installed in $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX)doc/libutf/...
+# Daemon startup scripts should be installed in $(LIBUTF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libutf
 #
 # You may need to patch your application to make it use these locations.
 #

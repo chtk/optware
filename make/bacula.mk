@@ -40,7 +40,7 @@ BACULA_IPK_VERSION=1
 
 #
 # BACULA_CONFFILES should be a list of user-editable files
-#BACULA_CONFFILES=/opt/etc/bacula.conf /opt/etc/init.d/SXXbacula
+#BACULA_CONFFILES=$(OPTWARE_PREFIX)etc/bacula.conf $(OPTWARE_PREFIX)etc/init.d/SXXbacula
 
 #
 # BACULA_PATCHES should list any patches, in the the order in
@@ -134,9 +134,9 @@ $(BACULA_BUILD_DIR)/.configured: $(DL_DIR)/$(BACULA_SOURCE) $(BACULA_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc/bacula \
-		--with-scriptdir=/opt/etc/bacula/scripts \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc/bacula \
+		--with-scriptdir=$(OPTWARE_PREFIX)etc/bacula/scripts \
 		--enable-smartalloc \
 		--disable-conio --enable-readline \
 		--with-readline=$(STAGING_PREFIX) \
@@ -198,20 +198,20 @@ $(BACULA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BACULA_IPK_DIR)/opt/sbin or $(BACULA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BACULA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BACULA_IPK_DIR)/opt/etc/bacula/...
-# Documentation files should be installed in $(BACULA_IPK_DIR)/opt/doc/bacula/...
-# Daemon startup scripts should be installed in $(BACULA_IPK_DIR)/opt/etc/init.d/S??bacula
+# Libraries and include files should be installed into $(BACULA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)etc/bacula/...
+# Documentation files should be installed in $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)doc/bacula/...
+# Daemon startup scripts should be installed in $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bacula
 #
 # You may need to patch your application to make it use these locations.
 #
 $(BACULA_IPK): $(BACULA_BUILD_DIR)/.built
 	rm -rf $(BACULA_IPK_DIR) $(BUILD_DIR)/bacula_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BACULA_BUILD_DIR) DESTDIR=$(BACULA_IPK_DIR) install
-	find $(BACULA_IPK_DIR)/opt/sbin -type f \! -name btraceback \! -name bacula | xargs $(STRIP_COMMAND)
-	$(STRIP_COMMAND) $(BACULA_IPK_DIR)/opt/lib/lib*.so.*.* $(BACULA_IPK_DIR)/opt/lib/bpipe-fd.so
+	find $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)sbin -type f \! -name btraceback \! -name bacula | xargs $(STRIP_COMMAND)
+	$(STRIP_COMMAND) $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so.*.* $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)lib/bpipe-fd.so
 	$(MAKE) $(BACULA_IPK_DIR)/CONTROL/control
 	echo $(BACULA_CONFFILES) | sed -e 's/ /\n/g' > $(BACULA_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BACULA_IPK_DIR)

@@ -40,7 +40,7 @@ SDPARM_IPK_VERSION=1
 
 #
 # SDPARM_CONFFILES should be a list of user-editable files
-#SDPARM_CONFFILES=/opt/etc/sdparm.conf /opt/etc/init.d/SXXsdparm
+#SDPARM_CONFFILES=$(OPTWARE_PREFIX)etc/sdparm.conf $(OPTWARE_PREFIX)etc/init.d/SXXsdparm
 
 #
 # SDPARM_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(SDPARM_BUILD_DIR)/.configured: $(DL_DIR)/$(SDPARM_SOURCE) $(SDPARM_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -175,22 +175,22 @@ $(SDPARM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SDPARM_IPK_DIR)/opt/sbin or $(SDPARM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SDPARM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SDPARM_IPK_DIR)/opt/etc/sdparm/...
-# Documentation files should be installed in $(SDPARM_IPK_DIR)/opt/doc/sdparm/...
-# Daemon startup scripts should be installed in $(SDPARM_IPK_DIR)/opt/etc/init.d/S??sdparm
+# Libraries and include files should be installed into $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/sdparm/...
+# Documentation files should be installed in $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)doc/sdparm/...
+# Daemon startup scripts should be installed in $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??sdparm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SDPARM_IPK): $(SDPARM_BUILD_DIR)/.built
 	rm -rf $(SDPARM_IPK_DIR) $(BUILD_DIR)/sdparm_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SDPARM_BUILD_DIR) DESTDIR=$(SDPARM_IPK_DIR) install-strip
-#	install -d $(SDPARM_IPK_DIR)/opt/etc/
-#	install -m 644 $(SDPARM_SOURCE_DIR)/sdparm.conf $(SDPARM_IPK_DIR)/opt/etc/sdparm.conf
-#	install -d $(SDPARM_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SDPARM_SOURCE_DIR)/rc.sdparm $(SDPARM_IPK_DIR)/opt/etc/init.d/SXXsdparm
+#	install -d $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SDPARM_SOURCE_DIR)/sdparm.conf $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/sdparm.conf
+#	install -d $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SDPARM_SOURCE_DIR)/rc.sdparm $(SDPARM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXsdparm
 	$(MAKE) $(SDPARM_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SDPARM_SOURCE_DIR)/postinst $(SDPARM_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(SDPARM_SOURCE_DIR)/prerm $(SDPARM_IPK_DIR)/CONTROL/prerm

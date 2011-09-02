@@ -109,7 +109,7 @@ $(WAKELAN_BUILD_DIR)/.configured: $(DL_DIR)/$(WAKELAN_SOURCE) $(WAKELAN_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(WAKELAN_BUILD_DIR)/.configured
@@ -150,20 +150,20 @@ $(WAKELAN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WAKELAN_IPK_DIR)/opt/sbin or $(WAKELAN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WAKELAN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WAKELAN_IPK_DIR)/opt/etc/wakelan/...
-# Documentation files should be installed in $(WAKELAN_IPK_DIR)/opt/doc/wakelan/...
-# Daemon startup scripts should be installed in $(WAKELAN_IPK_DIR)/opt/etc/init.d/S??wakelan
+# Libraries and include files should be installed into $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)etc/wakelan/...
+# Documentation files should be installed in $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)doc/wakelan/...
+# Daemon startup scripts should be installed in $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??wakelan
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WAKELAN_IPK): $(WAKELAN_BUILD_DIR)/.built
 	rm -rf $(WAKELAN_IPK_DIR) $(BUILD_DIR)/wakelan_*_$(TARGET_ARCH).ipk
-	install -d $(WAKELAN_IPK_DIR)/opt/bin
-	install -d $(WAKELAN_IPK_DIR)/opt/man/man1
-	$(MAKE) -C $(WAKELAN_BUILD_DIR) prefix=$(WAKELAN_IPK_DIR)/opt install
+	install -d $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	$(MAKE) -C $(WAKELAN_BUILD_DIR) prefix=$(WAKELAN_IPK_DIR)$(OPTWARE_PREFIX)install
 	$(MAKE) $(WAKELAN_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(WAKELAN_IPK_DIR)
 

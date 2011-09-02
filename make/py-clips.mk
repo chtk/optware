@@ -44,7 +44,7 @@ PY-CLIPS_IPK_VERSION=1
 
 #
 # PY-CLIPS_CONFFILES should be a list of user-editable files
-#PY-CLIPS_CONFFILES=/opt/etc/py-clips.conf /opt/etc/init.d/SXXpy-clips
+#PY-CLIPS_CONFFILES=$(OPTWARE_PREFIX)etc/py-clips.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-clips
 
 #
 # PY-CLIPS_PATCHES should list any patches, in the the order in
@@ -128,9 +128,9 @@ $(PY-CLIPS_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-CLIPS_SOURCE) $(DL_DIR)/$(PY-C
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.4" \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.4" \
 	    ) >> setup.cfg; \
 	    cp $(DL_DIR)/$(PY-CLIPS_CLIPS_SOURCE) ./clipssrc.zip \
 	)
@@ -145,9 +145,9 @@ $(PY-CLIPS_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-CLIPS_SOURCE) $(DL_DIR)/$(PY-C
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5" \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5" \
 	    ) >> setup.cfg; \
 	    cp $(DL_DIR)/$(PY-CLIPS_CLIPS_SOURCE) ./clipssrc.zip \
 	)
@@ -222,12 +222,12 @@ $(PY25-CLIPS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-CLIPS_IPK_DIR)/opt/sbin or $(PY-CLIPS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-CLIPS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-CLIPS_IPK_DIR)/opt/etc/py-clips/...
-# Documentation files should be installed in $(PY-CLIPS_IPK_DIR)/opt/doc/py-clips/...
-# Daemon startup scripts should be installed in $(PY-CLIPS_IPK_DIR)/opt/etc/init.d/S??py-clips
+# Libraries and include files should be installed into $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)etc/py-clips/...
+# Documentation files should be installed in $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)doc/py-clips/...
+# Daemon startup scripts should be installed in $(PY-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-clips
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -239,7 +239,7 @@ $(PY24-CLIPS_IPK): $(PY-CLIPS_BUILD_DIR)/.built
             $(HOST_STAGING_PREFIX)/bin/python2.4 setup.py \
 	    install --root=$(PY24-CLIPS_IPK_DIR) --prefix=/opt; \
         )
-	$(STRIP_COMMAND) $(PY24-CLIPS_IPK_DIR)/opt/lib/python2.4/site-packages/clips/_clips.so
+	$(STRIP_COMMAND) $(PY24-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.4/site-packages/clips/_clips.so
 	$(MAKE) $(PY24-CLIPS_IPK_DIR)/CONTROL/control
 #	echo $(PY-CLIPS_CONFFILES) | sed -e 's/ /\n/g' > $(PY24-CLIPS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY24-CLIPS_IPK_DIR)
@@ -251,7 +251,7 @@ $(PY25-CLIPS_IPK): $(PY-CLIPS_BUILD_DIR)/.built
             $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py \
 	    install --root=$(PY25-CLIPS_IPK_DIR) --prefix=/opt; \
         )
-	$(STRIP_COMMAND) $(PY25-CLIPS_IPK_DIR)/opt/lib/python2.5/site-packages/clips/_clips.so
+	$(STRIP_COMMAND) $(PY25-CLIPS_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/clips/_clips.so
 	$(MAKE) $(PY25-CLIPS_IPK_DIR)/CONTROL/control
 #	echo $(PY-CLIPS_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-CLIPS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-CLIPS_IPK_DIR)

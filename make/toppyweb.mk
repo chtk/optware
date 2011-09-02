@@ -24,7 +24,7 @@ TOPPYWEB_IPK_VERSION=2
 
 #
 # TOPPYWEB_CONFFILES should be a list of user-editable files
-TOPPYWEB_CONFFILES=/opt/etc/toppyweb/config.ini
+TOPPYWEB_CONFFILES=$(OPTWARE_PREFIX)etc/toppyweb/config.ini
 
 #
 # TOPPYWEB_PATCHES should list any patches, in the the order in
@@ -146,25 +146,25 @@ $(TOPPYWEB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TOPPYWEB_IPK_DIR)/opt/sbin or $(TOPPYWEB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TOPPYWEB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TOPPYWEB_IPK_DIR)/opt/etc/toppyweb/...
-# Documentation files should be installed in $(TOPPYWEB_IPK_DIR)/opt/doc/toppyweb/...
-# Daemon startup scripts should be installed in $(TOPPYWEB_IPK_DIR)/opt/etc/init.d/S??toppyweb
+# Libraries and include files should be installed into $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/toppyweb/...
+# Documentation files should be installed in $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)doc/toppyweb/...
+# Daemon startup scripts should be installed in $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??toppyweb
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TOPPYWEB_IPK): $(TOPPYWEB_BUILD_DIR)/.built
 	rm -rf $(TOPPYWEB_IPK_DIR) $(BUILD_DIR)/toppyweb_*_$(TARGET_ARCH).ipk
-	install -d $(TOPPYWEB_IPK_DIR)/opt/share/www/toppyweb
-	cp -r $(TOPPYWEB_BUILD_DIR)/* $(TOPPYWEB_IPK_DIR)/opt/share/www/toppyweb/
-	rm -f $(TOPPYWEB_IPK_DIR)/opt/share/www/toppyweb/config*.ini
-	install -d $(TOPPYWEB_IPK_DIR)/opt/etc/toppyweb/
-	echo "[General]" > $(TOPPYWEB_IPK_DIR)/opt/share/www/toppyweb/config.ini
-	echo "ConfigFolder=/opt/etc/toppyweb" >> $(TOPPYWEB_IPK_DIR)/opt/share/www/toppyweb/config.ini
-	install -m 644 $(TOPPYWEB_SOURCE_DIR)/config.ini $(TOPPYWEB_IPK_DIR)/opt/etc/toppyweb/config.ini
-	install -d $(TOPPYWEB_IPK_DIR)/opt/var/toppyweb/
+	install -d $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)share/www/toppyweb
+	cp -r $(TOPPYWEB_BUILD_DIR)/* $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)share/www/toppyweb/
+	rm -f $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)share/www/toppyweb/config*.ini
+	install -d $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/toppyweb/
+	echo "[General]" > $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)share/www/toppyweb/config.ini
+	echo "ConfigFolder=$(OPTWARE_PREFIX)etc/toppyweb" >> $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)share/www/toppyweb/config.ini
+	install -m 644 $(TOPPYWEB_SOURCE_DIR)/config.ini $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/toppyweb/config.ini
+	install -d $(TOPPYWEB_IPK_DIR)$(OPTWARE_PREFIX)var/toppyweb/
 	$(MAKE) $(TOPPYWEB_IPK_DIR)/CONTROL/control
 #	install -m 755 $(TOPPYWEB_SOURCE_DIR)/postinst $(TOPPYWEB_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(TOPPYWEB_IPK_DIR)/CONTROL/postinst

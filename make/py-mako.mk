@@ -41,7 +41,7 @@ PY-MAKO_CONFLICTS=
 
 #
 # PY-MAKO_CONFFILES should be a list of user-editable files
-#PY-MAKO_CONFFILES=/opt/etc/py-mako.conf /opt/etc/init.d/SXXpy-mako
+#PY-MAKO_CONFFILES=$(OPTWARE_PREFIX)etc/py-mako.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-mako
 
 #
 # PY-MAKO_PATCHES should list any patches, in the the order in
@@ -118,7 +118,7 @@ $(PY-MAKO_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-MAKO_SOURCE) $(PY-MAKO_PATCHES)
         fi
 	mv $(BUILD_DIR)/$(PY-MAKO_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(PY-MAKO_DIR)
@@ -128,7 +128,7 @@ $(PY-MAKO_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-MAKO_SOURCE) $(PY-MAKO_PATCHES)
         fi
 	mv $(BUILD_DIR)/$(PY-MAKO_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -197,12 +197,12 @@ $(PY26-MAKO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-MAKO_IPK_DIR)/opt/sbin or $(PY-MAKO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-MAKO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-MAKO_IPK_DIR)/opt/etc/py-mako/...
-# Documentation files should be installed in $(PY-MAKO_IPK_DIR)/opt/doc/py-mako/...
-# Daemon startup scripts should be installed in $(PY-MAKO_IPK_DIR)/opt/etc/init.d/S??py-mako
+# Libraries and include files should be installed into $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX)etc/py-mako/...
+# Documentation files should be installed in $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX)doc/py-mako/...
+# Daemon startup scripts should be installed in $(PY-MAKO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-mako
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -213,7 +213,7 @@ $(PY25-MAKO_IPK): $(PY-MAKO_BUILD_DIR)/.built
 	    PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
 	    --root=$(PY25-MAKO_IPK_DIR) --prefix=/opt)
-	for f in $(PY25-MAKO_IPK_DIR)/opt/bin/*; \
+	for f in $(PY25-MAKO_IPK_DIR)$(OPTWARE_PREFIX)bin/*; \
 		do mv $$f `echo $$f | sed 's|$$|-py2.5|'`; done
 	$(MAKE) $(PY25-MAKO_IPK_DIR)/CONTROL/control
 #	echo $(PY-MAKO_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-MAKO_IPK_DIR)/CONTROL/conffiles

@@ -41,7 +41,7 @@ PY-AXIOM_IPK_VERSION=1
 
 #
 # PY-AXIOM_CONFFILES should be a list of user-editable files
-#PY-AXIOM_CONFFILES=/opt/etc/py-axiom.conf /opt/etc/init.d/SXXpy-axiom
+#PY-AXIOM_CONFFILES=$(OPTWARE_PREFIX)etc/py-axiom.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-axiom
 
 #
 # PY-AXIOM_PATCHES should list any patches, in the the order in
@@ -118,9 +118,9 @@ $(PY-AXIOM_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-AXIOM_SOURCE) $(PY-AXIOM_PATCH
 	(cd $(@D)/2.5; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.5"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	# 2.6
@@ -131,9 +131,9 @@ $(PY-AXIOM_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-AXIOM_SOURCE) $(PY-AXIOM_PATCH
 	(cd $(@D)/2.6; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.6"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg \
 	)
 	touch $@
@@ -203,12 +203,12 @@ $(PY26-AXIOM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-AXIOM_IPK_DIR)/opt/sbin or $(PY-AXIOM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-AXIOM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-AXIOM_IPK_DIR)/opt/etc/py-axiom/...
-# Documentation files should be installed in $(PY-AXIOM_IPK_DIR)/opt/doc/py-axiom/...
-# Daemon startup scripts should be installed in $(PY-AXIOM_IPK_DIR)/opt/etc/init.d/S??py-axiom
+# Libraries and include files should be installed into $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)etc/py-axiom/...
+# Documentation files should be installed in $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)doc/py-axiom/...
+# Daemon startup scripts should be installed in $(PY-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-axiom
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -219,8 +219,8 @@ $(PY25-AXIOM_IPK): $(PY-AXIOM_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
 		--root=$(PY25-AXIOM_IPK_DIR) --prefix=/opt)
-	rm -rf $(PY25-AXIOM_IPK_DIR)/opt/lib/python2.5/site-packages/build
-	mv $(PY25-AXIOM_IPK_DIR)/opt/bin/axiomatic $(PY25-AXIOM_IPK_DIR)/opt/bin/py25-axiomatic
+	rm -rf $(PY25-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/build
+	mv $(PY25-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)bin/axiomatic $(PY25-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)bin/py25-axiomatic
 	$(MAKE) $(PY25-AXIOM_IPK_DIR)/CONTROL/control
 	echo $(PY-AXIOM_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-AXIOM_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-AXIOM_IPK_DIR)
@@ -231,8 +231,8 @@ $(PY26-AXIOM_IPK): $(PY-AXIOM_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.6/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install \
 		--root=$(PY26-AXIOM_IPK_DIR) --prefix=/opt)
-	rm -rf $(PY26-AXIOM_IPK_DIR)/opt/lib/python2.6/site-packages/build
-	mv $(PY26-AXIOM_IPK_DIR)/opt/bin/axiomatic $(PY26-AXIOM_IPK_DIR)/opt/bin/py26-axiomatic
+	rm -rf $(PY26-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.6/site-packages/build
+	mv $(PY26-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)bin/axiomatic $(PY26-AXIOM_IPK_DIR)$(OPTWARE_PREFIX)bin/py26-axiomatic
 	$(MAKE) $(PY26-AXIOM_IPK_DIR)/CONTROL/control
 	echo $(PY-AXIOM_CONFFILES) | sed -e 's/ /\n/g' > $(PY26-AXIOM_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY26-AXIOM_IPK_DIR)

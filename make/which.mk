@@ -183,27 +183,27 @@ $(WHICH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WHICH_IPK_DIR)/opt/sbin or $(WHICH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WHICH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WHICH_IPK_DIR)/opt/etc/which/...
-# Documentation files should be installed in $(WHICH_IPK_DIR)/opt/doc/which/...
-# Daemon startup scripts should be installed in $(WHICH_IPK_DIR)/opt/etc/init.d/S??which
+# Libraries and include files should be installed into $(WHICH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)etc/which/...
+# Documentation files should be installed in $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)doc/which/...
+# Daemon startup scripts should be installed in $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??which
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WHICH_IPK): $(WHICH_BUILD_DIR)/.built
 	rm -rf $(WHICH_IPK_DIR) $(BUILD_DIR)/which_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(WHICH_BUILD_DIR) DESTDIR=$(WHICH_IPK_DIR) install
-	rm -f $(WHICH_IPK_DIR)/opt/info/dir $(WHICH_IPK_DIR)/opt/info/dir.old
-	$(STRIP_COMMAND) $(WHICH_IPK_DIR)/opt/bin/which
-	mv $(WHICH_IPK_DIR)/opt/bin/which $(WHICH_IPK_DIR)/opt/bin/which-which
+	rm -f $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	$(STRIP_COMMAND) $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)bin/which
+	mv $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)bin/which $(WHICH_IPK_DIR)$(OPTWARE_PREFIX)bin/which-which
 	$(MAKE) $(WHICH_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install /opt/bin/which which /opt/bin/which-which 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/which which $(OPTWARE_PREFIX)bin/which-which 80"; \
 	) > $(WHICH_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove which /opt/bin/which-which"; \
+	 echo "update-alternatives --remove which $(OPTWARE_PREFIX)bin/which-which"; \
 	) > $(WHICH_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

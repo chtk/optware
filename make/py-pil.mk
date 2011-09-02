@@ -41,7 +41,7 @@ PY-PIL_IPK_VERSION=1
 
 #
 # PY-PIL_CONFFILES should be a list of user-editable files
-#PY-PIL_CONFFILES=/opt/etc/py-pil.conf /opt/etc/init.d/SXXpy-pil
+#PY-PIL_CONFFILES=$(OPTWARE_PREFIX)etc/py-pil.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-pil
 
 #
 # PY-PIL_PATCHES should list any patches, in the the order in
@@ -122,9 +122,9 @@ $(PY-PIL_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PIL_SOURCE) $(PY-PIL_PATCHES) ma
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5" \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5" \
 	    ) >> setup.cfg; \
 	)
 	# 2.6
@@ -139,9 +139,9 @@ $(PY-PIL_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PIL_SOURCE) $(PY-PIL_PATCHES) ma
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.6" \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.6" \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -213,12 +213,12 @@ $(PY26-PIL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PIL_IPK_DIR)/opt/sbin or $(PY-PIL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PIL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PIL_IPK_DIR)/opt/etc/py-pil/...
-# Documentation files should be installed in $(PY-PIL_IPK_DIR)/opt/doc/py-pil/...
-# Daemon startup scripts should be installed in $(PY-PIL_IPK_DIR)/opt/etc/init.d/S??py-pil
+# Libraries and include files should be installed into $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX)etc/py-pil/...
+# Documentation files should be installed in $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX)doc/py-pil/...
+# Daemon startup scripts should be installed in $(PY-PIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-pil
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -229,7 +229,7 @@ $(PY25-PIL_IPK): $(PY-PIL_BUILD_DIR)/.built
 	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-PIL_IPK_DIR) --prefix=/opt; \
 	)
-	for so in `find $(PY25-PIL_IPK_DIR)/opt/lib/python2.5/site-packages -name '*.so'`; do \
+	for so in `find $(PY25-PIL_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages -name '*.so'`; do \
 	    $(STRIP_COMMAND) $$so; \
 	done
 	$(MAKE) $(PY25-PIL_IPK_DIR)/CONTROL/control
@@ -241,9 +241,9 @@ $(PY26-PIL_IPK): $(PY-PIL_BUILD_DIR)/.built
 	 CC='$(TARGET_CC)' LDSHARED='$(TARGET_CC) -shared' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-PIL_IPK_DIR) --prefix=/opt; \
 	)
-	for f in $(PY26-PIL_IPK_DIR)/opt/*bin/*; \
+	for f in $(PY26-PIL_IPK_DIR)$(OPTWARE_PREFIX)*bin/*; \
 		do mv $$f `echo $$f | sed 's|$$|-2.6|'`; done
-	for so in `find $(PY26-PIL_IPK_DIR)/opt/lib/python2.6/site-packages -name '*.so'`; do \
+	for so in `find $(PY26-PIL_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.6/site-packages -name '*.so'`; do \
 	    $(STRIP_COMMAND) $$so; \
 	done
 	$(MAKE) $(PY26-PIL_IPK_DIR)/CONTROL/control

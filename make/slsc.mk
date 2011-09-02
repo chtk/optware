@@ -40,7 +40,7 @@ SLSC_IPK_VERSION=1
 
 #
 # SLSC_CONFFILES should be a list of user-editable files
-#SLSC_CONFFILES=/opt/etc/slsc.conf /opt/etc/init.d/SXXslsc
+#SLSC_CONFFILES=$(OPTWARE_PREFIX)etc/slsc.conf $(OPTWARE_PREFIX)etc/init.d/SXXslsc
 
 #
 # SLSC_PATCHES should list any patches, in the the order in
@@ -127,7 +127,7 @@ $(SLSC_BUILD_DIR)/.configured: $(DL_DIR)/$(SLSC_SOURCE) $(SLSC_PATCHES) make/sls
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-slang-includes=$(STAGING_INCLUDE_DIR)/slang1 \
 		--with-slang-libraries=$(STAGING_LIB_DIR)/slang1 \
 		--disable-nls \
@@ -144,8 +144,8 @@ slsc-unpack: $(SLSC_BUILD_DIR)/.configured
 $(SLSC_BUILD_DIR)/.built: $(SLSC_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(SLSC_BUILD_DIR) \
-		SLSC_ROOT=/opt/lib/slsc \
-		SLSC_BIN=/opt/bin \
+		SLSC_ROOT=$(OPTWARE_PREFIX)lib/slsc \
+		SLSC_BIN=$(OPTWARE_PREFIX)bin \
 		;
 	touch $@
 
@@ -186,23 +186,23 @@ $(SLSC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SLSC_IPK_DIR)/opt/sbin or $(SLSC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SLSC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SLSC_IPK_DIR)/opt/etc/slsc/...
-# Documentation files should be installed in $(SLSC_IPK_DIR)/opt/doc/slsc/...
-# Daemon startup scripts should be installed in $(SLSC_IPK_DIR)/opt/etc/init.d/S??slsc
+# Libraries and include files should be installed into $(SLSC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)etc/slsc/...
+# Documentation files should be installed in $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)doc/slsc/...
+# Daemon startup scripts should be installed in $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??slsc
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SLSC_IPK): $(SLSC_BUILD_DIR)/.built
 	rm -rf $(SLSC_IPK_DIR) $(BUILD_DIR)/slsc_*_$(TARGET_ARCH).ipk
-	install -d $(SLSC_IPK_DIR)/opt/lib
+	install -d $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)lib
 	$(MAKE) -C $(SLSC_BUILD_DIR) DESTDIR=$(SLSC_IPK_DIR) install \
-		SLSC_ROOT=$(SLSC_IPK_DIR)/opt/lib/slsc \
-		SLSC_BIN=$(SLSC_IPK_DIR)/opt/bin \
+		SLSC_ROOT=$(SLSC_IPK_DIR)$(OPTWARE_PREFIX)lib/slsc \
+		SLSC_BIN=$(SLSC_IPK_DIR)$(OPTWARE_PREFIX)bin \
 		;
-	$(STRIP_COMMAND) $(SLSC_IPK_DIR)/opt/bin/slsc $(SLSC_IPK_DIR)/opt/lib/slsc/vprint
+	$(STRIP_COMMAND) $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)bin/slsc $(SLSC_IPK_DIR)$(OPTWARE_PREFIX)lib/slsc/vprint
 	$(MAKE) $(SLSC_IPK_DIR)/CONTROL/control
 	echo $(SLSC_CONFFILES) | sed -e 's/ /\n/g' > $(SLSC_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SLSC_IPK_DIR)

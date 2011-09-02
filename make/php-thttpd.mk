@@ -51,7 +51,7 @@ PHP_THTTPD_IPK_VERSION=1
 
 #
 # PHP_THTTPD_CONFFILES should be a list of user-editable files
-PHP_THTTPD_CONFFILES=/opt/etc/init.d/S80thttpd /opt/etc/thttpd.conf 
+PHP_THTTPD_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S80thttpd $(OPTWARE_PREFIX)etc/thttpd.conf 
 
 #
 # PHP_THTTPD_PATCHES should list any patches, in the the order in
@@ -122,15 +122,15 @@ $(PHP_THTTPD_LIBPHP_BUILD_DIR)/.configured: $(DL_DIR)/$(PHP_THTTPD_SOURCE) $(DL_
 		CFLAGS="$(TARGET_CFLAGS) $(STAGING_LDFLAGS) $(PHP_THTTPD_LIBPHP_LDFLAGS)" \
 		PATH="$(STAGING_PREFIX)/bin:$$PATH" \
 		PHP_LIBXML_DIR=$(STAGING_PREFIX) \
-		EXTENSION_DIR=/opt/lib/php/extensions \
+		EXTENSION_DIR=$(OPTWARE_PREFIX)lib/php/extensions \
 		ac_cv_func_memcmp_working=yes \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
-		--with-config-file-scan-dir=/opt/etc/php.d \
+		--with-config-file-scan-dir=$(OPTWARE_PREFIX)etc/php.d \
 		--with-layout=GNU \
 		$(PHP_CONFIGURE_THREAD_ARGS) \
 		--disable-static \
@@ -158,7 +158,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(PHP_THTTPD_BUILD_DIR)/.configured
@@ -205,32 +205,32 @@ $(PHP_THTTPD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PHP_THTTPD_IPK_DIR)/opt/sbin or $(PHP_THTTPD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PHP_THTTPD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PHP_THTTPD_IPK_DIR)/opt/etc/php-thttpd/...
-# Documentation files should be installed in $(PHP_THTTPD_IPK_DIR)/opt/doc/php-thttpd/...
-# Daemon startup scripts should be installed in $(PHP_THTTPD_IPK_DIR)/opt/etc/init.d/S??php-thttpd
+# Libraries and include files should be installed into $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/php-thttpd/...
+# Documentation files should be installed in $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)doc/php-thttpd/...
+# Daemon startup scripts should be installed in $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??php-thttpd
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PHP_THTTPD_IPK): $(PHP_THTTPD_BUILD_DIR)/.built
 	rm -rf $(PHP_THTTPD_IPK_DIR) $(BUILD_DIR)/php-thttpd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PHP_THTTPD_BUILD_DIR) DESTDIR=$(PHP_THTTPD_IPK_DIR) install
-	chmod u+rw $(PHP_THTTPD_IPK_DIR)/opt/sbin/*
-	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)/opt/sbin/thttpd
-	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)/opt/sbin/makeweb
-	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)/opt/sbin/htpasswd
-	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)/opt/share/www/cgi-bin/*
-	mv $(PHP_THTTPD_IPK_DIR)/opt/sbin/htpasswd $(PHP_THTTPD_IPK_DIR)/opt/sbin/php-thttpd-htpasswd
-	install -d $(PHP_THTTPD_IPK_DIR)/opt/var/run/
-	install -d $(PHP_THTTPD_IPK_DIR)/opt/var/log/
-	install -d $(PHP_THTTPD_IPK_DIR)/opt/etc/
-	#install -m 644 $(PHP_SOURCE_DIR)/php.ini $(PHP_THTTPD_IPK_DIR)/opt/etc/php.ini
-	#sed -i  -e 's/extension=dom.so/; extension=dom.so/' $(PHP_THTTPD_IPK_DIR)/opt/etc/php.ini
-	install -m 644 $(PHP_THTTPD_SOURCE_DIR)/thttpd.conf $(PHP_THTTPD_IPK_DIR)/opt/etc/thttpd.conf
-	install -d $(PHP_THTTPD_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(PHP_THTTPD_SOURCE_DIR)/rc.thttpd $(PHP_THTTPD_IPK_DIR)/opt/etc/init.d/S80thttpd
+	chmod u+rw $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
+	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/thttpd
+	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/makeweb
+	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/htpasswd
+	$(STRIP_COMMAND) $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/www/cgi-bin/*
+	mv $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/htpasswd $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/php-thttpd-htpasswd
+	install -d $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)var/run/
+	install -d $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)var/log/
+	install -d $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	#install -m 644 $(PHP_SOURCE_DIR)/php.ini $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/php.ini
+	#sed -i  -e 's/extension=dom.so/; extension=dom.so/' $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/php.ini
+	install -m 644 $(PHP_THTTPD_SOURCE_DIR)/thttpd.conf $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/thttpd.conf
+	install -d $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(PHP_THTTPD_SOURCE_DIR)/rc.thttpd $(PHP_THTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80thttpd
 	$(MAKE) $(PHP_THTTPD_IPK_DIR)/CONTROL/control
 	install -m 755 $(PHP_THTTPD_SOURCE_DIR)/postinst $(PHP_THTTPD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(PHP_THTTPD_SOURCE_DIR)/prerm $(PHP_THTTPD_IPK_DIR)/CONTROL/prerm

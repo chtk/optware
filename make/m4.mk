@@ -138,7 +138,7 @@ $(M4_BUILD_DIR)/.configured: $(DL_DIR)/$(M4_SOURCE) $(M4_PATCHES) make/m4.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -180,20 +180,20 @@ $(M4_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(M4_IPK_DIR)/opt/sbin or $(M4_IPK_DIR)/opt/bin
+# Binaries should be installed into $(M4_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(M4_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(M4_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(M4_IPK_DIR)/opt/etc/m4/...
-# Documentation files should be installed in $(M4_IPK_DIR)/opt/doc/m4/...
-# Daemon startup scripts should be installed in $(M4_IPK_DIR)/opt/etc/init.d/S??m4
+# Libraries and include files should be installed into $(M4_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(M4_IPK_DIR)$(OPTWARE_PREFIX)etc/m4/...
+# Documentation files should be installed in $(M4_IPK_DIR)$(OPTWARE_PREFIX)doc/m4/...
+# Daemon startup scripts should be installed in $(M4_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??m4
 #
 # You may need to patch your application to make it use these locations.
 #
 $(M4_IPK): $(M4_BUILD_DIR)/.built
 	rm -rf $(M4_IPK_DIR) $(M4_IPK)
 	$(MAKE) -C $(M4_BUILD_DIR) DESTDIR=$(M4_IPK_DIR) install-strip
-#	install -d $(M4_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(M4_SOURCE_DIR)/rc.m4 $(M4_IPK_DIR)/opt/etc/init.d/SXXm4
+#	install -d $(M4_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(M4_SOURCE_DIR)/rc.m4 $(M4_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXm4
 	$(MAKE) $(M4_IPK_DIR)/CONTROL/control
 #	install -m 644 $(M4_SOURCE_DIR)/postinst $(M4_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(M4_SOURCE_DIR)/prerm $(M4_IPK_DIR)/CONTROL/prerm

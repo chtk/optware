@@ -108,7 +108,7 @@ $(PORTMAP_BUILD_DIR)/.configured: $(DL_DIR)/$(PORTMAP_SOURCE) $(PORTMAP_PATCHES)
 #		--build=$(GNU_HOST_NAME) \
 #		--host=$(GNU_TARGET_NAME) \
 #		--target=$(GNU_TARGET_NAME) \
-#		--prefix=/opt \
+#		--prefix=$(OPTWARE_PREFIX)\
 #		--disable-nls \
 #	)
 	make -C $(PORTMAP_BUILD_DIR) CC=$(TARGET_CC) LD=$(TARGET_LD) AR=$(TARGET_AR) RANLIB=$(TARGET_RANLIB)
@@ -135,16 +135,16 @@ portmap: $(PORTMAP_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libportmap.so.$(PORTMAP_VERSION): $(PORTMAP_BUILD_DIR)/.built
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(PORTMAP_BUILD_DIR)/portmap.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(PORTMAP_BUILD_DIR)/libportmap.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(PORTMAP_BUILD_DIR)/libportmap.so.$(PORTMAP_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libportmap.so.$(PORTMAP_VERSION) libportmap.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libportmap.so.$(PORTMAP_VERSION) libportmap.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libportmap.so.$(PORTMAP_VERSION): $(PORTMAP_BUILD_DIR)/.built
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(PORTMAP_BUILD_DIR)/portmap.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(PORTMAP_BUILD_DIR)/libportmap.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(PORTMAP_BUILD_DIR)/libportmap.so.$(PORTMAP_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libportmap.so.$(PORTMAP_VERSION) libportmap.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libportmap.so.$(PORTMAP_VERSION) libportmap.so
 #
-#portmap-stage: $(STAGING_DIR)/opt/lib/libportmap.so.$(PORTMAP_VERSION)
+#portmap-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libportmap.so.$(PORTMAP_VERSION)
 #
 
 # This rule creates a control file for ipkg.  It is no longer
@@ -167,21 +167,21 @@ $(PORTMAP_IPK_DIR)/CONTROL/control:
 
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PORTMAP_IPK_DIR)/opt/sbin or $(PORTMAP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PORTMAP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PORTMAP_IPK_DIR)/opt/etc/portmap/...
-# Documentation files should be installed in $(PORTMAP_IPK_DIR)/opt/doc/portmap/...
-# Daemon startup scripts should be installed in $(PORTMAP_IPK_DIR)/opt/etc/init.d/S??portmap
+# Libraries and include files should be installed into $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/portmap/...
+# Documentation files should be installed in $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)doc/portmap/...
+# Daemon startup scripts should be installed in $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??portmap
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PORTMAP_IPK): $(PORTMAP_BUILD_DIR)/.built
 	rm -rf $(PORTMAP_IPK_DIR) $(BUILD_DIR)/portmap_*_$(TARGET_ARCH).ipk
-	install -d $(PORTMAP_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(PORTMAP_BUILD_DIR)/portmap -o $(PORTMAP_IPK_DIR)/opt/sbin/portmap
-	install -d $(PORTMAP_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(PORTMAP_SOURCE_DIR)/rc.portmap $(PORTMAP_IPK_DIR)/opt/etc/init.d/S55portmap
+	install -d $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(PORTMAP_BUILD_DIR)/portmap -o $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin/portmap
+	install -d $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(PORTMAP_SOURCE_DIR)/rc.portmap $(PORTMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S55portmap
 	$(MAKE) $(PORTMAP_IPK_DIR)/CONTROL/control
 	install -m 644 $(PORTMAP_SOURCE_DIR)/postinst $(PORTMAP_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(PORTMAP_SOURCE_DIR)/prerm $(PORTMAP_IPK_DIR)/CONTROL/prerm

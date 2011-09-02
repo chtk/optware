@@ -109,7 +109,7 @@ mdadm-unpack: $(MDADM_BUILD_DIR)/.configured
 # directly to the main binary which is built.
 #
 $(MDADM_BUILD_DIR)/mdadm: $(MDADM_BUILD_DIR)/.configured
-	$(MAKE) -C $(MDADM_BUILD_DIR) CC=$(TARGET_CC) DESTDIR="$(MDADM_BUILD_DIR)/opt/"
+	$(MAKE) -C $(MDADM_BUILD_DIR) CC=$(TARGET_CC) DESTDIR="$(MDADM_BUILD_DIR)$(OPTWARE_PREFIX)"
 
 #
 # You should change the dependency to refer directly to the main binary
@@ -143,26 +143,26 @@ $(MDADM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MDADM_IPK_DIR)/opt/sbin or $(MDADM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MDADM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MDADM_IPK_DIR)/opt/etc/mdadm/...
-# Documentation files should be installed in $(MDADM_IPK_DIR)/opt/doc/mdadm/...
-# Daemon startup scripts should be installed in $(MDADM_IPK_DIR)/opt/etc/init.d/S??mdadm
+# Libraries and include files should be installed into $(MDADM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)etc/mdadm/...
+# Documentation files should be installed in $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)doc/mdadm/...
+# Daemon startup scripts should be installed in $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mdadm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MDADM_IPK): $(MDADM_BUILD_DIR)/mdadm
 	rm -rf $(MDADM_IPK_DIR) $(MDADM_IPK)
-	install -d $(MDADM_IPK_DIR)/opt/sbin
-	install -d $(MDADM_IPK_DIR)/opt/man/man8
-	install -d $(MDADM_IPK_DIR)/opt/man/man4
-	install -d $(MDADM_IPK_DIR)/opt/man/man5
-	$(STRIP_COMMAND) $(MDADM_BUILD_DIR)/mdadm -o $(MDADM_IPK_DIR)/opt/sbin/mdadm
+	install -d $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man4
+	install -d $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man5
+	$(STRIP_COMMAND) $(MDADM_BUILD_DIR)/mdadm -o $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)sbin/mdadm
 	$(MAKE) $(MDADM_IPK_DIR)/CONTROL/control
-	install -m 644 $(MDADM_BUILD_DIR)/mdadm.8 $(MDADM_IPK_DIR)/opt/man/man8
-	install -m 644 $(MDADM_BUILD_DIR)/md.4 $(MDADM_IPK_DIR)/opt/man/man4
-	install -m 644 $(MDADM_BUILD_DIR)/mdadm.conf.5 $(MDADM_IPK_DIR)/opt/man/man5/mdadm.c
+	install -m 644 $(MDADM_BUILD_DIR)/mdadm.8 $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -m 644 $(MDADM_BUILD_DIR)/md.4 $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man4
+	install -m 644 $(MDADM_BUILD_DIR)/mdadm.conf.5 $(MDADM_IPK_DIR)$(OPTWARE_PREFIX)man/man5/mdadm.c
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MDADM_IPK_DIR)
 
 #

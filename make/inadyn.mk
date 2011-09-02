@@ -40,7 +40,7 @@ INADYN_IPK_VERSION=1
 
 #
 # INADYN_CONFFILES should be a list of user-editable files
-#INADYN_CONFFILES=/opt/etc/inadyn.conf /opt/etc/init.d/SXXinadyn
+#INADYN_CONFFILES=$(OPTWARE_PREFIX)etc/inadyn.conf $(OPTWARE_PREFIX)etc/init.d/SXXinadyn
 
 #
 # INADYN_PATCHES should list any patches, in the the order in
@@ -127,7 +127,7 @@ $(INADYN_BUILD_DIR)/.configured: $(DL_DIR)/$(INADYN_SOURCE) $(INADYN_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -145,7 +145,7 @@ $(INADYN_BUILD_DIR)/.built: $(INADYN_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(INADYN_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(INADYN_LDFLAGS)" \
-		prefix=/opt sysconfdir=/opt/etc \
+		prefix=$(OPTWARE_PREFIX)sysconfdir=$(OPTWARE_PREFIX)etc \
 		TARGET_ARCH=linux
 	touch $@
 
@@ -186,29 +186,29 @@ $(INADYN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(INADYN_IPK_DIR)/opt/sbin or $(INADYN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(INADYN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(INADYN_IPK_DIR)/opt/etc/inadyn/...
-# Documentation files should be installed in $(INADYN_IPK_DIR)/opt/doc/inadyn/...
-# Daemon startup scripts should be installed in $(INADYN_IPK_DIR)/opt/etc/init.d/S??inadyn
+# Libraries and include files should be installed into $(INADYN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)etc/inadyn/...
+# Documentation files should be installed in $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)doc/inadyn/...
+# Daemon startup scripts should be installed in $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??inadyn
 #
 # You may need to patch your application to make it use these locations.
 #
 $(INADYN_IPK): $(INADYN_BUILD_DIR)/.built
 	rm -rf $(INADYN_IPK_DIR) $(BUILD_DIR)/inadyn_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(INADYN_BUILD_DIR) DESTDIR=$(INADYN_IPK_DIR) install-strip
-	install -d $(INADYN_IPK_DIR)/opt/bin
-	install -m 755 $(<D)/src/inadyn $(INADYN_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(INADYN_IPK_DIR)/opt/bin/inadyn
-	install -d $(INADYN_IPK_DIR)/opt/man/man5
-	install -m 644 $(<D)/man/*.5 $(INADYN_IPK_DIR)/opt/man/man5
-	install -d $(INADYN_IPK_DIR)/opt/man/man8
-	install -m 644 $(<D)/man/*.8 $(INADYN_IPK_DIR)/opt/man/man8
-	install -d $(INADYN_IPK_DIR)/opt/share/doc/inadyn
-	install -m 644 $(<D)/[CLR]* $(<D)/debian/inadyn.conf $(INADYN_IPK_DIR)/opt/share/doc/inadyn/
-#	install -d $(INADYN_IPK_DIR)/opt/etc/
-#	install -m 644 $(INADYN_SOURCE_DIR)/inadyn.conf $(INADYN_IPK_DIR)/opt/etc/inadyn.conf
+	install -d $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(<D)/src/inadyn $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)bin/inadyn
+	install -d $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)man/man5
+	install -m 644 $(<D)/man/*.5 $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)man/man5
+	install -d $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -m 644 $(<D)/man/*.8 $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)share/doc/inadyn
+	install -m 644 $(<D)/[CLR]* $(<D)/debian/inadyn.conf $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)share/doc/inadyn/
+#	install -d $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(INADYN_SOURCE_DIR)/inadyn.conf $(INADYN_IPK_DIR)$(OPTWARE_PREFIX)etc/inadyn.conf
 	$(MAKE) $(INADYN_IPK_DIR)/CONTROL/control
 #	install -m 755 $(INADYN_SOURCE_DIR)/postinst $(INADYN_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(INADYN_IPK_DIR)/CONTROL/postinst

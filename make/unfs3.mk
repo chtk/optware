@@ -60,16 +60,16 @@ $(UNFS3_DIR)/.configured: $(DL_DIR)/$(UNFS3_SOURCE)
 unfs3-unpack: $(UNFS3_DIR)/.configured
 
 $(UNFS3_DIR)/unfsd: $(UNFS3_DIR)/.configured
-	make -C $(UNFS3_DIR) CC=$(TARGET_CC) AR=$(TARGET_AR) RANLIB=$(TARGET_RANLIB) LDFLAGS="-L$(STAGING_DIR)/opt/lib -lfl"
+	make -C $(UNFS3_DIR) CC=$(TARGET_CC) AR=$(TARGET_AR) RANLIB=$(TARGET_RANLIB) LDFLAGS="-L$(STAGING_DIR)$(OPTWARE_PREFIX)lib -lfl"
 
 unfs3: $(UNFS3_DIR)/unfsd
 
 $(UNFS3_IPK): $(UNFS3_DIR)/unfsd
 	rm -rf $(UNFS3_IPK_DIR) $(UNFS3_IPK)
 	$(MAKE) $(UNFS3_IPK_DIR)/CONTROL/control
-	install -d $(UNFS3_IPK_DIR)/opt/sbin $(UNFS3_IPK_DIR)/opt/etc/init.d
-	$(STRIP_COMMAND) $(UNFS3_DIR)/unfsd -o $(UNFS3_IPK_DIR)/opt/sbin/unfsd
-	install -m 755 $(SOURCE_DIR)/unfs3.rc $(UNFS3_IPK_DIR)/opt/etc/init.d/S56unfsd
+	install -d $(UNFS3_IPK_DIR)$(OPTWARE_PREFIX)sbin $(UNFS3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	$(STRIP_COMMAND) $(UNFS3_DIR)/unfsd -o $(UNFS3_IPK_DIR)$(OPTWARE_PREFIX)sbin/unfsd
+	install -m 755 $(SOURCE_DIR)/unfs3.rc $(UNFS3_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S56unfsd
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(UNFS3_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(UNFS3_IPK_DIR)
 

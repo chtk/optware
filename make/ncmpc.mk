@@ -40,7 +40,7 @@ NCMPC_IPK_VERSION=1
 
 #
 # NCMPC_CONFFILES should be a list of user-editable files
-#NCMPC_CONFFILES=/opt/etc/ncmpc.conf /opt/etc/init.d/SXXncmpc
+#NCMPC_CONFFILES=$(OPTWARE_PREFIX)etc/ncmpc.conf $(OPTWARE_PREFIX)etc/init.d/SXXncmpc
 
 #
 # NCMPC_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(NCMPC_BUILD_DIR)/.configured: $(DL_DIR)/$(NCMPC_SOURCE) $(NCMPC_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -178,12 +178,12 @@ $(NCMPC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NCMPC_IPK_DIR)/opt/sbin or $(NCMPC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NCMPC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NCMPC_IPK_DIR)/opt/etc/ncmpc/...
-# Documentation files should be installed in $(NCMPC_IPK_DIR)/opt/doc/ncmpc/...
-# Daemon startup scripts should be installed in $(NCMPC_IPK_DIR)/opt/etc/init.d/S??ncmpc
+# Libraries and include files should be installed into $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX)etc/ncmpc/...
+# Documentation files should be installed in $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX)doc/ncmpc/...
+# Daemon startup scripts should be installed in $(NCMPC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ncmpc
 #
 # You may need to patch your application to make it use these locations.
 #

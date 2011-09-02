@@ -121,9 +121,9 @@ $(GITOSIS_BUILD_DIR)/.configured: $(DL_DIR)/gitosis-$(GITOSIS_VERSION).tar.gz ma
 	(cd $(@D)/2.5; \
 		( \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 		) > setup.cfg \
 	)
 	touch $@
@@ -177,12 +177,12 @@ $(GITOSIS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GITOSIS_IPK_DIR)/opt/sbin or $(GITOSIS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GITOSIS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GITOSIS_IPK_DIR)/opt/etc/gitosis/...
-# Documentation files should be installed in $(GITOSIS_IPK_DIR)/opt/doc/gitosis/...
-# Daemon startup scripts should be installed in $(GITOSIS_IPK_DIR)/opt/etc/init.d/S??gitosis
+# Libraries and include files should be installed into $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)etc/gitosis/...
+# Documentation files should be installed in $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)doc/gitosis/...
+# Daemon startup scripts should be installed in $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gitosis
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -192,8 +192,8 @@ $(GITOSIS_IPK): $(GITOSIS_BUILD_DIR)/.built
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
 		--root=$(GITOSIS_IPK_DIR) --prefix=/opt
-	install -d $(GITOSIS_IPK_DIR)/opt/share/doc/gitosis
-	install $(<D)/2.5/[CMRT]* $(<D)/2.5/example.conf $(GITOSIS_IPK_DIR)/opt/share/doc/gitosis/
+	install -d $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/gitosis
+	install $(<D)/2.5/[CMRT]* $(<D)/2.5/example.conf $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/gitosis/
 	$(MAKE) $(GITOSIS_IPK_DIR)/CONTROL/control
 	install -m 755 $(GITOSIS_SOURCE_DIR)/postinst $(GITOSIS_IPK_DIR)/CONTROL/postinst
 	echo $(GITOSIS_CONFFILES) | sed -e 's/ /\n/g' > $(GITOSIS_IPK_DIR)/CONTROL/conffiles

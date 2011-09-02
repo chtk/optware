@@ -43,9 +43,9 @@ $(COLORDIFF_BUILD_DIR)/.configured: $(DL_DIR)/$(COLORDIFF_SOURCE) $(COLORDIFF_PA
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -81,14 +81,14 @@ $(COLORDIFF_IPK_DIR)/CONTROL/control:
 
 $(COLORDIFF_IPK): $(COLORDIFF_BUILD_DIR)/.built
 	rm -rf $(COLORDIFF_IPK_DIR) $(BUILD_DIR)/colordiff_*_$(TARGET_ARCH).ipk
-	install -d $(COLORDIFF_IPK_DIR)/opt/etc
+	install -d $(COLORDIFF_IPK_DIR)$(OPTWARE_PREFIX)etc
 	$(MAKE) -C $(COLORDIFF_BUILD_DIR) install \
 		DESTDIR=$(COLORDIFF_IPK_DIR) \
-		INSTALL_DIR=/opt/bin \
-		MAN_DIR=/opt/man/man1 \
-		ETC_DIR=/opt/etc \
+		INSTALL_DIR=$(OPTWARE_PREFIX)bin \
+		MAN_DIR=$(OPTWARE_PREFIX)man/man1 \
+		ETC_DIR=$(OPTWARE_PREFIX)etc \
 		;
-	sed -i -e '/^#!/s|/usr/bin/perl|/opt/bin/perl|' $(COLORDIFF_IPK_DIR)/opt/bin/colordiff
+	sed -i -e '/^#!/s|/usr/bin/perl|$(OPTWARE_PREFIX)bin/perl|' $(COLORDIFF_IPK_DIR)$(OPTWARE_PREFIX)bin/colordiff
 	$(MAKE) $(COLORDIFF_IPK_DIR)/CONTROL/control
 	echo $(COLORDIFF_CONFFILES) | sed -e 's/ /\n/g' > $(COLORDIFF_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(COLORDIFF_IPK_DIR)

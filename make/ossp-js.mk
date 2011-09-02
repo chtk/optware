@@ -40,7 +40,7 @@ OSSP_JS_IPK_VERSION=1
 
 #
 # OSSP_JS_CONFFILES should be a list of user-editable files
-#OSSP_JS_CONFFILES=/opt/etc/ossp-js.conf /opt/etc/init.d/SXXossp-js
+#OSSP_JS_CONFFILES=$(OPTWARE_PREFIX)etc/ossp-js.conf $(OPTWARE_PREFIX)etc/init.d/SXXossp-js
 
 #
 # OSSP_JS_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(OSSP_JS_BUILD_DIR)/.configured: $(DL_DIR)/$(OSSP_JS_SOURCE) $(OSSP_JS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -188,24 +188,24 @@ $(OSSP_JS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(OSSP_JS_IPK_DIR)/opt/sbin or $(OSSP_JS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(OSSP_JS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(OSSP_JS_IPK_DIR)/opt/etc/ossp-js/...
-# Documentation files should be installed in $(OSSP_JS_IPK_DIR)/opt/doc/ossp-js/...
-# Daemon startup scripts should be installed in $(OSSP_JS_IPK_DIR)/opt/etc/init.d/S??ossp-js
+# Libraries and include files should be installed into $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/ossp-js/...
+# Documentation files should be installed in $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)doc/ossp-js/...
+# Daemon startup scripts should be installed in $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ossp-js
 #
 # You may need to patch your application to make it use these locations.
 #
 $(OSSP_JS_IPK): $(OSSP_JS_BUILD_DIR)/.built
 	rm -rf $(OSSP_JS_IPK_DIR) $(BUILD_DIR)/ossp-js_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(OSSP_JS_BUILD_DIR) DESTDIR=$(OSSP_JS_IPK_DIR) install
-	$(STRIP_COMMAND) $(OSSP_JS_IPK_DIR)/opt/bin/js $(OSSP_JS_IPK_DIR)/opt/lib/libjs.so.*
-#	install -d $(OSSP_JS_IPK_DIR)/opt/etc/
-#	install -m 644 $(OSSP_JS_SOURCE_DIR)/ossp-js.conf $(OSSP_JS_IPK_DIR)/opt/etc/ossp-js.conf
-#	install -d $(OSSP_JS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(OSSP_JS_SOURCE_DIR)/rc.ossp-js $(OSSP_JS_IPK_DIR)/opt/etc/init.d/SXXossp-js
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXossp-js
+	$(STRIP_COMMAND) $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)bin/js $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)lib/libjs.so.*
+#	install -d $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(OSSP_JS_SOURCE_DIR)/ossp-js.conf $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/ossp-js.conf
+#	install -d $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(OSSP_JS_SOURCE_DIR)/rc.ossp-js $(OSSP_JS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXossp-js
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXossp-js
 	$(MAKE) $(OSSP_JS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(OSSP_JS_SOURCE_DIR)/postinst $(OSSP_JS_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

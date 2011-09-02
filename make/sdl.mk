@@ -119,7 +119,7 @@ $(SDL_BUILD_DIR)/.configured: $(DL_DIR)/$(SDL_SOURCE) $(SDL_PATCHES) make/sdl.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
 		--disable-nls \
@@ -212,9 +212,9 @@ $(SDL_IPK): $(SDL_BUILD_DIR)/.built
 	$(MAKE) $(SDL_DEV_IPK_DIR)/CONTROL/control
 	$(MAKE) $(SDL_IPK_DIR)/CONTROL/control
 	mkdir -p $(SDL_IPK_DIR)/opt
-	mv $(SDL_DEV_IPK_DIR)/opt/lib $(SDL_IPK_DIR)/opt
-	rm -f $(SDL_IPK_DIR)/opt/lib/libSDL.la
-	-$(STRIP_COMMAND) $(SDL_IPK_DIR)/opt/lib/*.so.*
+	mv $(SDL_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib $(SDL_IPK_DIR)/opt
+	rm -f $(SDL_IPK_DIR)$(OPTWARE_PREFIX)lib/libSDL.la
+	-$(STRIP_COMMAND) $(SDL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SDL_DEV_IPK_DIR)
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SDL_IPK_DIR)
 

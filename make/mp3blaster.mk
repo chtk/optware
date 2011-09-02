@@ -41,7 +41,7 @@ MP3BLASTER_IPK_VERSION=2
 
 #
 # MP3BLASTER_CONFFILES should be a list of user-editable files
-#MP3BLASTER_CONFFILES=/opt/etc/mp3blaster.conf /opt/etc/init.d/SXXmp3blaster
+#MP3BLASTER_CONFFILES=$(OPTWARE_PREFIX)etc/mp3blaster.conf $(OPTWARE_PREFIX)etc/init.d/SXXmp3blaster
 
 #
 # MP3BLASTER_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(MP3BLASTER_BUILD_DIR)/.configured: $(DL_DIR)/$(MP3BLASTER_SOURCE) $(MP3BLASTER
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -183,23 +183,23 @@ $(MP3BLASTER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MP3BLASTER_IPK_DIR)/opt/sbin or $(MP3BLASTER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MP3BLASTER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MP3BLASTER_IPK_DIR)/opt/etc/mp3blaster/...
-# Documentation files should be installed in $(MP3BLASTER_IPK_DIR)/opt/doc/mp3blaster/...
-# Daemon startup scripts should be installed in $(MP3BLASTER_IPK_DIR)/opt/etc/init.d/S??mp3blaster
+# Libraries and include files should be installed into $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/mp3blaster/...
+# Documentation files should be installed in $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)doc/mp3blaster/...
+# Daemon startup scripts should be installed in $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mp3blaster
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MP3BLASTER_IPK): $(MP3BLASTER_BUILD_DIR)/.built
 	rm -rf $(MP3BLASTER_IPK_DIR) $(BUILD_DIR)/mp3blaster_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MP3BLASTER_BUILD_DIR) DESTDIR=$(MP3BLASTER_IPK_DIR) install-strip
-#	install -d $(MP3BLASTER_IPK_DIR)/opt/etc/
-#	install -m 644 $(MP3BLASTER_SOURCE_DIR)/mp3blaster.conf $(MP3BLASTER_IPK_DIR)/opt/etc/mp3blaster.conf
-#	install -d $(MP3BLASTER_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MP3BLASTER_SOURCE_DIR)/rc.mp3blaster $(MP3BLASTER_IPK_DIR)/opt/etc/init.d/SXXmp3blaster
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXmp3blaster
+#	install -d $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MP3BLASTER_SOURCE_DIR)/mp3blaster.conf $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/mp3blaster.conf
+#	install -d $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MP3BLASTER_SOURCE_DIR)/rc.mp3blaster $(MP3BLASTER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmp3blaster
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmp3blaster
 	$(MAKE) $(MP3BLASTER_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MP3BLASTER_SOURCE_DIR)/postinst $(MP3BLASTER_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

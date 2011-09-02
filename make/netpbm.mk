@@ -94,10 +94,10 @@ $(NETPBM_BUILD_DIR)/.configured: $(DL_DIR)/$(NETPBM_SOURCE) $(NETPBM_PATCHES)
 	mv $(BUILD_DIR)/$(NETPBM_DIR) $(NETPBM_BUILD_DIR)
 	(cd $(NETPBM_BUILD_DIR); \
 		(echo; echo gnu; echo regular; echo shared; echo y; \
-		 echo libjpeg.so; echo $(STAGING_DIR)/opt/lib; \
-		 echo libtiff.so; echo $(STAGING_DIR)/opt/lib; \
-		 echo libpng.so; echo $(STAGING_DIR)/opt/lib; \
-		 echo libz.so; echo $(STAGING_DIR)/opt/lib; \
+		 echo libjpeg.so; echo $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
+		 echo libtiff.so; echo $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
+		 echo libpng.so; echo $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
+		 echo libz.so; echo $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
 		 echo none; echo "http://netpbm.sourceforge.net/doc" ) | \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(NETPBM_CPPFLAGS)" \
@@ -106,7 +106,7 @@ $(NETPBM_BUILD_DIR)/.configured: $(DL_DIR)/$(NETPBM_SOURCE) $(NETPBM_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(NETPBM_BUILD_DIR)/.configured
@@ -131,35 +131,35 @@ netpbm: $(NETPBM_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libnetpbm.so.$(NETPBM_VERSION): $(NETPBM_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(NETPBM_BUILD_DIR)/netpbm.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(NETPBM_BUILD_DIR)/libnetpbm.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(NETPBM_BUILD_DIR)/libnetpbm.so.$(NETPBM_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libnetpbm.so.$(NETPBM_VERSION) libnetpbm.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libnetpbm.so.$(NETPBM_VERSION) libnetpbm.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libnetpbm.so.$(NETPBM_VERSION): $(NETPBM_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(NETPBM_BUILD_DIR)/netpbm.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(NETPBM_BUILD_DIR)/libnetpbm.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(NETPBM_BUILD_DIR)/libnetpbm.so.$(NETPBM_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnetpbm.so.$(NETPBM_VERSION) libnetpbm.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnetpbm.so.$(NETPBM_VERSION) libnetpbm.so
 
-netpbm-stage: $(STAGING_DIR)/opt/lib/libnetpbm.so.$(NETPBM_VERSION)
+netpbm-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libnetpbm.so.$(NETPBM_VERSION)
 
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NETPBM_IPK_DIR)/opt/sbin or $(NETPBM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NETPBM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NETPBM_IPK_DIR)/opt/etc/netpbm/...
-# Documentation files should be installed in $(NETPBM_IPK_DIR)/opt/doc/netpbm/...
-# Daemon startup scripts should be installed in $(NETPBM_IPK_DIR)/opt/etc/init.d/S??netpbm
+# Libraries and include files should be installed into $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)etc/netpbm/...
+# Documentation files should be installed in $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)doc/netpbm/...
+# Daemon startup scripts should be installed in $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??netpbm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NETPBM_IPK): $(NETPBM_BUILD_DIR)/.built
 	rm -rf $(NETPBM_IPK_DIR) $(NETPBM_IPK)
-	install -d $(NETPBM_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(NETPBM_BUILD_DIR)/netpbm -o $(NETPBM_IPK_DIR)/opt/bin/netpbm
-	install -d $(NETPBM_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(NETPBM_SOURCE_DIR)/rc.netpbm $(NETPBM_IPK_DIR)/opt/etc/init.d/SXXnetpbm
+	install -d $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(NETPBM_BUILD_DIR)/netpbm -o $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)bin/netpbm
+	install -d $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(NETPBM_SOURCE_DIR)/rc.netpbm $(NETPBM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnetpbm
 	install -d $(NETPBM_IPK_DIR)/CONTROL
 	install -m 644 $(NETPBM_SOURCE_DIR)/control $(NETPBM_IPK_DIR)/CONTROL/control
 	install -m 644 $(NETPBM_SOURCE_DIR)/postinst $(NETPBM_IPK_DIR)/CONTROL/postinst

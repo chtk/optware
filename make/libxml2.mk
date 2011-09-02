@@ -33,7 +33,7 @@ LIBXML2_IPK_VERSION=1
 
 #
 # LIBXML2_CONFFILES should be a list of user-editable files
-#LIBXML2_CONFFILES=/opt/etc/libxml2.conf /opt/etc/init.d/SXXlibxml2
+#LIBXML2_CONFFILES=$(OPTWARE_PREFIX)etc/libxml2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibxml2
 
 #
 # LIBXML2_PATCHES should list any patches, in the the order in
@@ -108,7 +108,7 @@ $(LIBXML2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBXML2_SOURCE) $(LIBXML2_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--enable-shared \
@@ -168,20 +168,20 @@ $(LIBXML2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBXML2_IPK_DIR)/opt/sbin or $(LIBXML2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBXML2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBXML2_IPK_DIR)/opt/etc/libxml2/...
-# Documentation files should be installed in $(LIBXML2_IPK_DIR)/opt/doc/libxml2/...
-# Daemon startup scripts should be installed in $(LIBXML2_IPK_DIR)/opt/etc/init.d/S??libxml2
+# Libraries and include files should be installed into $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)etc/libxml2/...
+# Documentation files should be installed in $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)doc/libxml2/...
+# Daemon startup scripts should be installed in $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libxml2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBXML2_IPK): $(LIBXML2_BUILD_DIR)/.built
 	rm -rf $(LIBXML2_IPK_DIR) $(BUILD_DIR)/libxml2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBXML2_BUILD_DIR) DESTDIR=$(LIBXML2_IPK_DIR) install-strip
-	rm -f $(LIBXML2_IPK_DIR)/opt/lib/libxml2.la
-	rm -rf $(LIBXML2_IPK_DIR)/opt/share/doc
+	rm -f $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)lib/libxml2.la
+	rm -rf $(LIBXML2_IPK_DIR)$(OPTWARE_PREFIX)share/doc
 	$(MAKE) $(LIBXML2_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBXML2_IPK_DIR)
 

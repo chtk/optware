@@ -106,7 +106,7 @@ castget-source: $(DL_DIR)/$(CASTGET_SOURCE) $(CASTGET_PATCHES)
 # shown below to make various patches to it.
 #
 # PKG_CONFIG_PATH is set so that pkg-config will locate the correct 
-# libs for configure. In a similar way, $(STAGING_DIR)/opt/bin is added 
+# libs for configure. In a similar way, $(STAGING_DIR)$(OPTWARE_PREFIX)bin is added 
 # to PATH in order to find the correct curl-config script.
 # Finally, ac_cv_func_malloc_0_nonnull=yes is needed to force detection
 # of a GNU-compatible malloc even when cross compiling.
@@ -126,15 +126,15 @@ $(CASTGET_BUILD_DIR)/.configured: $(DL_DIR)/$(CASTGET_SOURCE) $(CASTGET_PATCHES)
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(CASTGET_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(CASTGET_LDFLAGS)" \
-		PKG_CONFIG_PATH="$(STAGING_DIR)/opt/lib/pkgconfig" \
-		PATH="$(STAGING_DIR)/opt/bin:$(PATH)" \
+		PKG_CONFIG_PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/pkgconfig" \
+		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$(PATH)" \
 		ac_cv_func_malloc_0_nonnull=yes \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--mandir=/opt/man \
+		--prefix=$(OPTWARE_PREFIX)\
+		--mandir=$(OPTWARE_PREFIX)man \
 		--disable-nls \
 		--disable-static \
 	)
@@ -188,20 +188,20 @@ $(CASTGET_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CASTGET_IPK_DIR)/opt/sbin or $(CASTGET_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CASTGET_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CASTGET_IPK_DIR)/opt/etc/castget/...
-# Documentation files should be installed in $(CASTGET_IPK_DIR)/opt/doc/castget/...
-# Daemon startup scripts should be installed in $(CASTGET_IPK_DIR)/opt/etc/init.d/S??castget
+# Libraries and include files should be installed into $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)etc/castget/...
+# Documentation files should be installed in $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)doc/castget/...
+# Daemon startup scripts should be installed in $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??castget
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CASTGET_IPK): $(CASTGET_BUILD_DIR)/.built
 	rm -rf $(CASTGET_IPK_DIR) $(BUILD_DIR)/castget_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CASTGET_BUILD_DIR) DESTDIR=$(CASTGET_IPK_DIR) install-strip
-	install -d $(CASTGET_IPK_DIR)/opt/doc/castget
-	install -m 644 $(CASTGET_BUILD_DIR)/castgetrc.example $(CASTGET_IPK_DIR)/opt/doc/castget
+	install -d $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)doc/castget
+	install -m 644 $(CASTGET_BUILD_DIR)/castgetrc.example $(CASTGET_IPK_DIR)$(OPTWARE_PREFIX)doc/castget
 	$(MAKE) $(CASTGET_IPK_DIR)/CONTROL/control
 	#install -m 755 $(CASTGET_SOURCE_DIR)/postinst $(CASTGET_IPK_DIR)/CONTROL/postinst
 	#sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CASTGET_IPK_DIR)/CONTROL/postinst

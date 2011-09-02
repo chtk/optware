@@ -111,7 +111,7 @@ $(STRACE_BUILD_DIR)/.configured: $(DL_DIR)/$(STRACE_SOURCE) $(STRACE_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -160,19 +160,19 @@ $(STRACE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(STRACE_IPK_DIR)/opt/sbin or $(STRACE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(STRACE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(STRACE_IPK_DIR)/opt/etc/strace/...
-# Documentation files should be installed in $(STRACE_IPK_DIR)/opt/doc/strace/...
-# Daemon startup scripts should be installed in $(STRACE_IPK_DIR)/opt/etc/init.d/S??strace
+# Libraries and include files should be installed into $(STRACE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/strace/...
+# Documentation files should be installed in $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)doc/strace/...
+# Daemon startup scripts should be installed in $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??strace
 #
 # You may need to patch your application to make it use these locations.
 #
 $(STRACE_IPK): $(STRACE_BUILD_DIR)/.built
 	rm -rf $(STRACE_IPK_DIR) $(STRACE_IPK)
-	install -d $(STRACE_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(STRACE_BUILD_DIR)/strace -o $(STRACE_IPK_DIR)/opt/bin/strace
+	install -d $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(STRACE_BUILD_DIR)/strace -o $(STRACE_IPK_DIR)$(OPTWARE_PREFIX)bin/strace
 #	install -d $(STRACE_IPK_DIR)/CONTROL
 	$(MAKE) $(STRACE_IPK_DIR)/CONTROL/control
 #	sed -e "s/@ARCH@/$(TARGET_ARCH)/" \

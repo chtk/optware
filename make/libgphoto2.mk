@@ -30,7 +30,7 @@ LIBGPHOTO2_IPK_VERSION=1
 
 #
 # LIBGPHOTO2_CONFFILES should be a list of user-editable files
-# LIBGPHOTO2_CONFFILES=/opt/etc/libgphoto2.conf /opt/etc/init.d/SXXlibgphoto2
+# LIBGPHOTO2_CONFFILES=$(OPTWARE_PREFIX)etc/libgphoto2.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibgphoto2
 
 #
 # LIBGPHOTO2_PATCHES should list any patches, in the the order in
@@ -111,12 +111,12 @@ $(LIBGPHOTO2_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBGPHOTO2_SOURCE) $(LIBGPHOTO2
 		then mv $(BUILD_DIR)/$(LIBGPHOTO2_DIR) $(LIBGPHOTO2_BUILD_DIR) ; \
 	fi
 	(cd $(LIBGPHOTO2_BUILD_DIR); 					\
-		PATH=$(STAGING_DIR)/opt/bin:$${PATH}			\
+		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$${PATH}			\
 		$(TARGET_CONFIGURE_OPTS)				\
 		CFLAGS="$(STAGING_CPPFLAGS) $(LIBGPHOTO2_CPPFLAGS)"	\
 		LDFLAGS="$(STAGING_LDFLAGS) $(LIBGPHOTO2_LDFLAGS)" 	\
-		PKG_CONFIG="$(STAGING_DIR)/opt/bin"			\
-		PKG_CONFIG_PATH="$(STAGING_DIR)/opt/lib/pkgconfig"	\
+		PKG_CONFIG="$(STAGING_DIR)$(OPTWARE_PREFIX)bin"			\
+		PKG_CONFIG_PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/pkgconfig"	\
 		LIBUSB_CFLAGS=-I$(STAGING_INCLUDE_DIR) \
 		LIBUSB_LIBS="-L$(STAGING_LIB_DIR) -lusb" \
 		./configure						\
@@ -153,15 +153,15 @@ $(LIBGPHOTO2_BUILD_DIR)/.staged: $(LIBGPHOTO2_BUILD_DIR)/.built
 	$(MAKE) -C $(LIBGPHOTO2_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
 	touch $(LIBGPHOTO2_BUILD_DIR)/.staged
 
-$(STAGING_DIR)/opt/lib/libgphoto2.so: $(LIBGPHOTO2_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -d $(STAGING_DIR)/opt/bin
-	install -d $(STAGING_DIR)/opt/man/man1
-	$(MAKE) -C $(LIBGPHOTO2_BUILD_DIR) prefix=$(STAGING_DIR)/opt install
-	rm -f $(STAGING_DIR)/opt/lib/libgphoto2.la $(STAGING_DIR)/opt/lib/libgphoto2_port.la
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgphoto2.so: $(LIBGPHOTO2_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)man/man1
+	$(MAKE) -C $(LIBGPHOTO2_BUILD_DIR) prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)install
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgphoto2.la $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgphoto2_port.la
 
-libgphoto2-stage: $(STAGING_DIR)/opt/lib/libgphoto2.so
+libgphoto2-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgphoto2.so
 #
 # This rule creates a control file for ipkg.  It is no longer
 # necessary to create a seperate control file under sources/libgphoto2
@@ -184,22 +184,22 @@ $(LIBGPHOTO2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBGPHOTO2_IPK_DIR)/opt/sbin or $(LIBGPHOTO2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBGPHOTO2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBGPHOTO2_IPK_DIR)/opt/etc/libgphoto2/...
-# Documentation files should be installed in $(LIBGPHOTO2_IPK_DIR)/opt/doc/libgphoto2/...
-# Daemon startup scripts should be installed in $(LIBGPHOTO2_IPK_DIR)/opt/etc/init.d/S??libgphoto2
+# Libraries and include files should be installed into $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/libgphoto2/...
+# Documentation files should be installed in $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)doc/libgphoto2/...
+# Daemon startup scripts should be installed in $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libgphoto2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBGPHOTO2_IPK): $(LIBGPHOTO2_BUILD_DIR)/.built
 	rm -rf $(LIBGPHOTO2_IPK_DIR) $(BUILD_DIR)/libgphoto2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBGPHOTO2_BUILD_DIR) DESTDIR=$(LIBGPHOTO2_IPK_DIR) install-strip
-#	install -d $(LIBGPHOTO2_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBGPHOTO2_SOURCE_DIR)/libgphoto2.conf $(LIBGPHOTO2_IPK_DIR)/opt/etc/libgphoto2.conf
-#	install -d $(LIBGPHOTO2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBGPHOTO2_SOURCE_DIR)/rc.libgphoto2 $(LIBGPHOTO2_IPK_DIR)/opt/etc/init.d/SXXlibgphoto2
+#	install -d $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBGPHOTO2_SOURCE_DIR)/libgphoto2.conf $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/libgphoto2.conf
+#	install -d $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBGPHOTO2_SOURCE_DIR)/rc.libgphoto2 $(LIBGPHOTO2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibgphoto2
 	$(MAKE) $(LIBGPHOTO2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBGPHOTO2_SOURCE_DIR)/postinst $(LIBGPHOTO2_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBGPHOTO2_SOURCE_DIR)/prerm $(LIBGPHOTO2_IPK_DIR)/CONTROL/prerm

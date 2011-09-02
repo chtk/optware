@@ -40,7 +40,7 @@ PY-PYRO_IPK_VERSION=1
 
 #
 # PY-PYRO_CONFFILES should be a list of user-editable files
-#PY-PYRO_CONFFILES=/opt/etc/py-pyro.conf /opt/etc/init.d/SXXpy-pyro
+#PY-PYRO_CONFFILES=$(OPTWARE_PREFIX)etc/py-pyro.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-pyro
 
 #
 # PY-PYRO_PATCHES should list any patches, in the the order in
@@ -107,12 +107,12 @@ $(PY-PYRO_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-PYRO_SOURCE) $(PY-PYRO_PATCHES)
 	(cd $(PY-PYRO_BUILD_DIR); \
 	    ( \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python"; \
 		echo "[install-options]"; \
 		echo "unattended=1"; \
 		echo "[install]"; \
 		echo "optimize=1"; \
-		echo "install-scripts=/opt/bin"; \
+		echo "install-scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg; \
 	)
 	touch $(PY-PYRO_BUILD_DIR)/.configured
@@ -165,12 +165,12 @@ $(PY-PYRO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PYRO_IPK_DIR)/opt/sbin or $(PY-PYRO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PYRO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PYRO_IPK_DIR)/opt/etc/py-pyro/...
-# Documentation files should be installed in $(PY-PYRO_IPK_DIR)/opt/doc/py-pyro/...
-# Daemon startup scripts should be installed in $(PY-PYRO_IPK_DIR)/opt/etc/init.d/S??py-pyro
+# Libraries and include files should be installed into $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX)etc/py-pyro/...
+# Documentation files should be installed in $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX)doc/py-pyro/...
+# Daemon startup scripts should be installed in $(PY-PYRO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-pyro
 #
 # You may need to patch your application to make it use these locations.
 #

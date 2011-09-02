@@ -36,7 +36,7 @@ QPOPPER_IPK_VERSION=1
 
 #
 # QPOPPER_CONFFILES should be a list of user-editable files
-#QPOPPER_CONFFILES=/opt/etc/qpopper.conf /opt/etc/init.d/SXXqpopper
+#QPOPPER_CONFFILES=$(OPTWARE_PREFIX)etc/qpopper.conf $(OPTWARE_PREFIX)etc/init.d/SXXqpopper
 
 #
 # QPOPPER_PATCHES should list any patches, in the the order in
@@ -106,13 +106,13 @@ $(QPOPPER_BUILD_DIR)/.configured: $(DL_DIR)/$(QPOPPER_SOURCE) $(QPOPPER_PATCHES)
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(QPOPPER_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(QPOPPER_LDFLAGS)" \
 		./configure \
-		--enable-spool-dir="/opt/var/spool/mail" \
+		--enable-spool-dir="$(OPTWARE_PREFIX)var/spool/mail" \
 		--enable-standalone \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-openssl=$(STAGING_DIR)/opt \
-		--prefix=/opt \
+		--with-openssl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -160,33 +160,33 @@ $(QPOPPER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(QPOPPER_IPK_DIR)/opt/sbin or $(QPOPPER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(QPOPPER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(QPOPPER_IPK_DIR)/opt/etc/qpopper/...
-# Documentation files should be installed in $(QPOPPER_IPK_DIR)/opt/doc/qpopper/...
-# Daemon startup scripts should be installed in $(QPOPPER_IPK_DIR)/opt/etc/init.d/S??qpopper
+# Libraries and include files should be installed into $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/qpopper/...
+# Documentation files should be installed in $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)doc/qpopper/...
+# Daemon startup scripts should be installed in $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??qpopper
 #
 # You may need to patch your application to make it use these locations.
 #
 $(QPOPPER_IPK): $(QPOPPER_BUILD_DIR)/.built
 	rm -rf $(QPOPPER_IPK_DIR) $(BUILD_DIR)/qpopper_*_${TARGET_ARCH}.ipk
-	install -d $(QPOPPER_IPK_DIR)/opt/man/man8
-	install -m 644 $(QPOPPER_BUILD_DIR)/man/popper.8 $(QPOPPER_IPK_DIR)/opt/man/man8
-	install -d $(QPOPPER_IPK_DIR)/opt/sbin
-	$(STRIP_COMMAND) $(QPOPPER_BUILD_DIR)/popper/popper -o $(QPOPPER_IPK_DIR)/opt/sbin/popper
-	install -d $(QPOPPER_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(QPOPPER_SOURCE_DIR)/rc.qpopper $(QPOPPER_IPK_DIR)/opt/etc/init.d/S70qpopper
-	( cd $(QPOPPER_IPK_DIR)/opt/etc/init.d ; ln -s S70qpopper K30qpopper)
-	install -d $(QPOPPER_IPK_DIR)/opt/doc/qpopper
-	install -m 644 $(QPOPPER_BUILD_DIR)/README  $(QPOPPER_IPK_DIR)/opt/doc/qpopper
-	install -m 644 $(QPOPPER_BUILD_DIR)/License.txt  $(QPOPPER_IPK_DIR)/opt/doc/qpopper
-	install -m 644 $(QPOPPER_BUILD_DIR)/GUIDE.pdf  $(QPOPPER_IPK_DIR)/opt/doc/qpopper
-#	$(MAKE) -C $(QPOPPER_BUILD_DIR) prefix=$(QPOPPER_IPK_DIR)/opt install
-#	install -d $(QPOPPER_IPK_DIR)/opt/etc/
-#	install -m 644 $(QPOPPER_SOURCE_DIR)/qpopper.conf $(QPOPPER_IPK_DIR)/opt/etc/qpopper.conf
-#	install -d $(QPOPPER_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(QPOPPER_SOURCE_DIR)/rc.qpopper $(QPOPPER_IPK_DIR)/opt/etc/init.d/SXXqpopper
+	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -m 644 $(QPOPPER_BUILD_DIR)/man/popper.8 $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(STRIP_COMMAND) $(QPOPPER_BUILD_DIR)/popper/popper -o $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)sbin/popper
+	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(QPOPPER_SOURCE_DIR)/rc.qpopper $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S70qpopper
+	( cd $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d ; ln -s S70qpopper K30qpopper)
+	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)doc/qpopper
+	install -m 644 $(QPOPPER_BUILD_DIR)/README  $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)doc/qpopper
+	install -m 644 $(QPOPPER_BUILD_DIR)/License.txt  $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)doc/qpopper
+	install -m 644 $(QPOPPER_BUILD_DIR)/GUIDE.pdf  $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)doc/qpopper
+#	$(MAKE) -C $(QPOPPER_BUILD_DIR) prefix=$(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)install
+#	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(QPOPPER_SOURCE_DIR)/qpopper.conf $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/qpopper.conf
+#	install -d $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(QPOPPER_SOURCE_DIR)/rc.qpopper $(QPOPPER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXqpopper
 	$(MAKE) $(QPOPPER_IPK_DIR)/CONTROL/control
 	install -m 755 $(QPOPPER_SOURCE_DIR)/postinst $(QPOPPER_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(QPOPPER_SOURCE_DIR)/prerm $(QPOPPER_IPK_DIR)/CONTROL/prerm

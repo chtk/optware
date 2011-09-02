@@ -121,7 +121,7 @@ $(XRENDER_BUILD_DIR)/.configured: $(DL_DIR)/xrender-$(XRENDER_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -156,19 +156,19 @@ xrender-stage: $(XRENDER_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XRENDER_IPK_DIR)/opt/sbin or $(XRENDER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XRENDER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XRENDER_IPK_DIR)/opt/etc/xrender/...
-# Documentation files should be installed in $(XRENDER_IPK_DIR)/opt/doc/xrender/...
-# Daemon startup scripts should be installed in $(XRENDER_IPK_DIR)/opt/etc/init.d/S??xrender
+# Libraries and include files should be installed into $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)etc/xrender/...
+# Documentation files should be installed in $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)doc/xrender/...
+# Daemon startup scripts should be installed in $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xrender
 #
 # You may need to patch your application to make it use these locations.
 #
 $(XRENDER_IPK): $(XRENDER_BUILD_DIR)/.built
 	rm -rf $(XRENDER_IPK_DIR) $(BUILD_DIR)/xrender_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XRENDER_BUILD_DIR) DESTDIR=$(XRENDER_IPK_DIR) install-strip
-	rm -f $(XRENDER_IPK_DIR)/opt/lib/*.la
+	rm -f $(XRENDER_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(XRENDER_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XRENDER_IPK_DIR)
 

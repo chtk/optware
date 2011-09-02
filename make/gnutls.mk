@@ -46,7 +46,7 @@ GNUTLS_IPK_VERSION=1
 
 #
 # GNUTLS_CONFFILES should be a list of user-editable files
-GNUTLS_CONFFILES=#/opt/etc/gnutls.conf /opt/etc/init.d/SXXgnutls
+GNUTLS_CONFFILES=#$(OPTWARE_PREFIX)etc/gnutls.conf $(OPTWARE_PREFIX)etc/init.d/SXXgnutls
 
 #
 # GNUTLS_PATCHES should list any patches, in the the order in
@@ -126,9 +126,9 @@ $(GNUTLS_BUILD_DIR)/.configured: $(DL_DIR)/$(GNUTLS_SOURCE) $(GNUTLS_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-libgcrypt-prefix=$(STAGING_DIR)/opt \
-		--with-libtasn1-prefix=$(STAGING_DIR)/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-libgcrypt-prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-libtasn1-prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -202,12 +202,12 @@ $(GNUTLS-DEV_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GNUTLS_IPK_DIR)/opt/sbin or $(GNUTLS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GNUTLS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GNUTLS_IPK_DIR)/opt/etc/gnutls/...
-# Documentation files should be installed in $(GNUTLS_IPK_DIR)/opt/doc/gnutls/...
-# Daemon startup scripts should be installed in $(GNUTLS_IPK_DIR)/opt/etc/init.d/S??gnutls
+# Libraries and include files should be installed into $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)etc/gnutls/...
+# Documentation files should be installed in $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)doc/gnutls/...
+# Daemon startup scripts should be installed in $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gnutls
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -216,17 +216,17 @@ $(GNUTLS_IPK) $(GNUTLS-DEV_IPK): $(GNUTLS_BUILD_DIR)/.built
 	rm -rf $(GNUTLS-DEV_IPK_DIR) $(BUILD_DIR)/gnutls-dev_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GNUTLS_BUILD_DIR) DESTDIR=$(GNUTLS_IPK_DIR) program_transform_name="" install-strip
 	install -d $(GNUTLS-DEV_IPK_DIR)/opt
-	mv $(GNUTLS_IPK_DIR)/opt/include $(GNUTLS-DEV_IPK_DIR)/opt/
-	install -d $(GNUTLS-DEV_IPK_DIR)/opt/share/man
-	mv $(GNUTLS_IPK_DIR)/opt/share/man/man3 $(GNUTLS-DEV_IPK_DIR)/opt/share/man/
-	mv $(GNUTLS_IPK_DIR)/opt/share/info $(GNUTLS-DEV_IPK_DIR)/opt/share/
-	mv $(GNUTLS_IPK_DIR)/opt/share/aclocal $(GNUTLS-DEV_IPK_DIR)/opt/share/
-	install -d $(GNUTLS-DEV_IPK_DIR)/opt/bin $(GNUTLS-DEV_IPK_DIR)/opt/lib
-	mv $(GNUTLS_IPK_DIR)/opt/bin/libgnutls*-config $(GNUTLS-DEV_IPK_DIR)/opt/bin/
-	mv $(GNUTLS_IPK_DIR)/opt/lib/pkgconfig $(GNUTLS-DEV_IPK_DIR)/opt/lib/
-#	install -m 644 $(GNUTLS_SOURCE_DIR)/gnutls.conf $(GNUTLS_IPK_DIR)/opt/etc/gnutls.conf
-#	install -d $(GNUTLS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(GNUTLS_SOURCE_DIR)/rc.gnutls $(GNUTLS_IPK_DIR)/opt/etc/init.d/SXXgnutls
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)include $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	install -d $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)share/man/man3 $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man/
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)share/info $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)share/aclocal $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/
+	install -d $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)bin/libgnutls*-config $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	mv $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig $(GNUTLS-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
+#	install -m 644 $(GNUTLS_SOURCE_DIR)/gnutls.conf $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)etc/gnutls.conf
+#	install -d $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(GNUTLS_SOURCE_DIR)/rc.gnutls $(GNUTLS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgnutls
 	$(MAKE) $(GNUTLS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(GNUTLS_SOURCE_DIR)/postinst $(GNUTLS_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(GNUTLS_SOURCE_DIR)/prerm $(GNUTLS_IPK_DIR)/CONTROL/prerm

@@ -41,7 +41,7 @@ LIBMEMCACHE_IPK_VERSION=4
 
 #
 # LIBMEMCACHE_CONFFILES should be a list of user-editable files
-#LIBMEMCACHE_CONFFILES=/opt/etc/libmemcache.conf /opt/etc/init.d/SXXlibmemcache
+#LIBMEMCACHE_CONFFILES=$(OPTWARE_PREFIX)etc/libmemcache.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibmemcache
 
 #
 # LIBMEMCACHE_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-shared \
 		--disable-nls \
 		--disable-static \
@@ -182,24 +182,24 @@ $(LIBMEMCACHE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBMEMCACHE_IPK_DIR)/opt/sbin or $(LIBMEMCACHE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBMEMCACHE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBMEMCACHE_IPK_DIR)/opt/etc/libmemcache/...
-# Documentation files should be installed in $(LIBMEMCACHE_IPK_DIR)/opt/doc/libmemcache/...
-# Daemon startup scripts should be installed in $(LIBMEMCACHE_IPK_DIR)/opt/etc/init.d/S??libmemcache
+# Libraries and include files should be installed into $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/libmemcache/...
+# Documentation files should be installed in $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)doc/libmemcache/...
+# Daemon startup scripts should be installed in $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libmemcache
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBMEMCACHE_IPK): $(LIBMEMCACHE_BUILD_DIR)/.built
 	rm -rf $(LIBMEMCACHE_IPK_DIR) $(BUILD_DIR)/libmemcache_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBMEMCACHE_BUILD_DIR) DESTDIR=$(LIBMEMCACHE_IPK_DIR) install
-	rm -f $(LIBMEMCACHE_IPK_DIR)/opt/lib/*.la
-	$(STRIP_COMMAND) $(LIBMEMCACHE_IPK_DIR)/opt/lib/libmemcache.so.[0-9]*.[0-9]*.[0-9]*
-#	install -d $(LIBMEMCACHE_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBMEMCACHE_SOURCE_DIR)/libmemcache.conf $(LIBMEMCACHE_IPK_DIR)/opt/etc/libmemcache.conf
-#	install -d $(LIBMEMCACHE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBMEMCACHE_SOURCE_DIR)/rc.libmemcache $(LIBMEMCACHE_IPK_DIR)/opt/etc/init.d/SXXlibmemcache
+	rm -f $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	$(STRIP_COMMAND) $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)lib/libmemcache.so.[0-9]*.[0-9]*.[0-9]*
+#	install -d $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBMEMCACHE_SOURCE_DIR)/libmemcache.conf $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/libmemcache.conf
+#	install -d $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBMEMCACHE_SOURCE_DIR)/rc.libmemcache $(LIBMEMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibmemcache
 	$(MAKE) $(LIBMEMCACHE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBMEMCACHE_SOURCE_DIR)/postinst $(LIBMEMCACHE_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBMEMCACHE_SOURCE_DIR)/prerm $(LIBMEMCACHE_IPK_DIR)/CONTROL/prerm

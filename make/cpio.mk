@@ -91,7 +91,7 @@ $(CPIO_BUILD_DIR)/.configured: $(DL_DIR)/$(CPIO_SOURCE) $(CPIO_PATCHES) make/cpi
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -115,7 +115,7 @@ cpio: $(CPIO_BUILD_DIR)/.built
 # If you are building a library, then you need to stage it too.
 #
 
-cpio-stage: $(STAGING_DIR)/opt/lib/libcpio.so.$(CPIO_VERSION)
+cpio-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libcpio.so.$(CPIO_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -137,26 +137,26 @@ $(CPIO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CPIO_IPK_DIR)/opt/sbin or $(CPIO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CPIO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CPIO_IPK_DIR)/opt/etc/cpio/...
-# Documentation files should be installed in $(CPIO_IPK_DIR)/opt/doc/cpio/...
-# Daemon startup scripts should be installed in $(CPIO_IPK_DIR)/opt/etc/init.d/S??cpio
+# Libraries and include files should be installed into $(CPIO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)etc/cpio/...
+# Documentation files should be installed in $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)doc/cpio/...
+# Daemon startup scripts should be installed in $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cpio
 #
 # You may need to patch your application to make it use these locations.
 #
 $(CPIO_IPK): $(CPIO_BUILD_DIR)/.built
 	rm -rf $(CPIO_IPK_DIR) $(BUILD_DIR)/cpio_*_$(TARGET_ARCH).ipk
-	install -d $(CPIO_IPK_DIR)/opt/bin
+	install -d $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)bin
 	$(MAKE) -C $(CPIO_BUILD_DIR) DESTDIR=$(CPIO_IPK_DIR) install-strip
-	mv $(CPIO_IPK_DIR)/opt/bin/cpio $(CPIO_IPK_DIR)/opt/bin/cpio-cpio
+	mv $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)bin/cpio $(CPIO_IPK_DIR)$(OPTWARE_PREFIX)bin/cpio-cpio
 	$(MAKE) $(CPIO_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install /opt/bin/cpio cpio /opt/bin/cpio-cpio 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/cpio cpio $(OPTWARE_PREFIX)bin/cpio-cpio 80"; \
 	) > $(CPIO_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove cpio /opt/bin/cpio-cpio"; \
+	 echo "update-alternatives --remove cpio $(OPTWARE_PREFIX)bin/cpio-cpio"; \
 	) > $(CPIO_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

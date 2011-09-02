@@ -40,9 +40,9 @@ $(PERL-UNICODE-STRING_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-UNICODE-STRING_SO
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL -d\
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-UNICODE-STRING_BUILD_DIR)/.configured
 
@@ -52,7 +52,7 @@ $(PERL-UNICODE-STRING_BUILD_DIR)/.built: $(PERL-UNICODE-STRING_BUILD_DIR)/.confi
 	rm -f $(PERL-UNICODE-STRING_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-UNICODE-STRING_BUILD_DIR) \
 	$(TARGET_CONFIGURE_OPTS) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-UNICODE-STRING_BUILD_DIR)/.built
 
 perl-unicode-string: $(PERL-UNICODE-STRING_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-UNICODE-STRING_IPK_DIR)/CONTROL/control:
 $(PERL-UNICODE-STRING_IPK): $(PERL-UNICODE-STRING_BUILD_DIR)/.built
 	rm -rf $(PERL-UNICODE-STRING_IPK_DIR) $(BUILD_DIR)/perl-unicode-string_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-UNICODE-STRING_BUILD_DIR) DESTDIR=$(PERL-UNICODE-STRING_IPK_DIR) install
-	find $(PERL-UNICODE-STRING_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-UNICODE-STRING_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-UNICODE-STRING_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-UNICODE-STRING_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-UNICODE-STRING_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-UNICODE-STRING_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-UNICODE-STRING_IPK_DIR)/CONTROL/control
 	echo $(PERL-UNICODE-STRING_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-UNICODE-STRING_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-UNICODE-STRING_IPK_DIR)

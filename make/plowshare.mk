@@ -40,7 +40,7 @@ PLOWSHARE_IPK_VERSION=1
 
 #
 # PLOWSHARE_CONFFILES should be a list of user-editable files
-#PLOWSHARE_CONFFILES=/opt/etc/plowshare.conf /opt/etc/init.d/SXXplowshare
+#PLOWSHARE_CONFFILES=$(OPTWARE_PREFIX)etc/plowshare.conf $(OPTWARE_PREFIX)etc/init.d/SXXplowshare
 
 #
 # PLOWSHARE_PATCHES should list any patches, in the the order in
@@ -117,7 +117,7 @@ $(PLOWSHARE_BUILD_DIR)/.configured: $(DL_DIR)/$(PLOWSHARE_SOURCE) $(PLOWSHARE_PA
 	fi
 	sed -i -e '/^USRDIR=/s|/usr/local|/opt|' $(@D)/setup.sh
 	find $(@D)/src -name '*.sh' | \
-		xargs sed -i -e '1s|#!.*/bash|#!/opt/bin/bash|'
+		xargs sed -i -e '1s|#!.*/bash|#!$(OPTWARE_PREFIX)bin/bash|'
 #	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PLOWSHARE_CPPFLAGS)" \
@@ -126,7 +126,7 @@ $(PLOWSHARE_BUILD_DIR)/.configured: $(DL_DIR)/$(PLOWSHARE_SOURCE) $(PLOWSHARE_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -180,19 +180,19 @@ $(PLOWSHARE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PLOWSHARE_IPK_DIR)/opt/sbin or $(PLOWSHARE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PLOWSHARE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PLOWSHARE_IPK_DIR)/opt/etc/plowshare/...
-# Documentation files should be installed in $(PLOWSHARE_IPK_DIR)/opt/doc/plowshare/...
-# Daemon startup scripts should be installed in $(PLOWSHARE_IPK_DIR)/opt/etc/init.d/S??plowshare
+# Libraries and include files should be installed into $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX)etc/plowshare/...
+# Documentation files should be installed in $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX)doc/plowshare/...
+# Daemon startup scripts should be installed in $(PLOWSHARE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??plowshare
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PLOWSHARE_IPK): $(PLOWSHARE_BUILD_DIR)/.built
 	rm -rf $(PLOWSHARE_IPK_DIR) $(BUILD_DIR)/plowshare_*_$(TARGET_ARCH).ipk
 	cd $(<D); \
-		DESTDIR=$(PLOWSHARE_IPK_DIR) PREFIX=/opt ./setup.sh install
+		DESTDIR=$(PLOWSHARE_IPK_DIR) PREFIX=$(OPTWARE_PREFIX)./setup.sh install
 	$(MAKE) $(PLOWSHARE_IPK_DIR)/CONTROL/control
 	install -m755 $(PLOWSHARE_SOURCE_DIR)/postinst $(PLOWSHARE_IPK_DIR)/CONTROL/
 	echo $(PLOWSHARE_CONFFILES) | sed -e 's/ /\n/g' > $(PLOWSHARE_IPK_DIR)/CONTROL/conffiles

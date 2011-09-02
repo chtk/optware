@@ -36,7 +36,7 @@ WGET_IPK_VERSION=2
 
 #
 # WGET_CONFFILES should be a list of user-editable files
-WGET_CONFFILES=/opt/etc/wgetrc
+WGET_CONFFILES=$(OPTWARE_PREFIX)etc/wgetrc
 
 #
 # WGET_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ endif
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--without-ssl \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -156,7 +156,7 @@ endif
 		--with-ssl \
 		--with-libssl-prefix=$(STAGING_PREFIX) \
 		--with-libidn-prefix=$(STAGING_PREFIX) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -220,23 +220,23 @@ $(WGET-SSL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WGET_IPK_DIR)/opt/sbin or $(WGET_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WGET_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WGET_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WGET_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WGET_IPK_DIR)/opt/etc/wget/...
-# Documentation files should be installed in $(WGET_IPK_DIR)/opt/doc/wget/...
-# Daemon startup scripts should be installed in $(WGET_IPK_DIR)/opt/etc/init.d/S??wget
+# Libraries and include files should be installed into $(WGET_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WGET_IPK_DIR)$(OPTWARE_PREFIX)etc/wget/...
+# Documentation files should be installed in $(WGET_IPK_DIR)$(OPTWARE_PREFIX)doc/wget/...
+# Daemon startup scripts should be installed in $(WGET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??wget
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WGET_IPK): $(WGET_BUILD_DIR)/.built
 	rm -rf $(WGET_IPK_DIR) $(BUILD_DIR)/wget_*_$(TARGET_ARCH).ipk
-	install -d $(WGET_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(WGET_BUILD_DIR)/src/wget -o $(WGET_IPK_DIR)/opt/bin/wget
-	install -d $(WGET_IPK_DIR)/opt/man/man1
-	install -m 644 $(WGET_BUILD_DIR)/doc/wget.1 $(WGET_IPK_DIR)/opt/man/man1
-	install -d $(WGET_IPK_DIR)/opt/etc/
-	install -m 755 $(WGET_BUILD_DIR)/doc/sample.wgetrc $(WGET_IPK_DIR)/opt/etc/wgetrc
+	install -d $(WGET_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(WGET_BUILD_DIR)/src/wget -o $(WGET_IPK_DIR)$(OPTWARE_PREFIX)bin/wget
+	install -d $(WGET_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -m 644 $(WGET_BUILD_DIR)/doc/wget.1 $(WGET_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(WGET_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 755 $(WGET_BUILD_DIR)/doc/sample.wgetrc $(WGET_IPK_DIR)$(OPTWARE_PREFIX)etc/wgetrc
 	$(MAKE) $(WGET_IPK_DIR)/CONTROL/control
 #	install -m 644 $(WGET_SOURCE_DIR)/postinst $(WGET_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(WGET_SOURCE_DIR)/prerm $(WGET_IPK_DIR)/CONTROL/prerm
@@ -248,12 +248,12 @@ $(WGET_BUILD_DIR)/.ipk: $(WGET_IPK)
 
 $(WGET-SSL_IPK): $(WGET-SSL_BUILD_DIR)/.built
 	rm -rf $(WGET-SSL_IPK_DIR) $(BUILD_DIR)/wget-ssl_*_$(TARGET_ARCH).ipk
-	install -d $(WGET-SSL_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(WGET-SSL_BUILD_DIR)/src/wget -o $(WGET-SSL_IPK_DIR)/opt/bin/wget
-	install -d $(WGET-SSL_IPK_DIR)/opt/man/man1
-	install -m 644 $(WGET-SSL_BUILD_DIR)/doc/wget.1 $(WGET-SSL_IPK_DIR)/opt/man/man1
-	install -d $(WGET-SSL_IPK_DIR)/opt/etc/
-	install -m 755 $(WGET-SSL_BUILD_DIR)/doc/sample.wgetrc $(WGET-SSL_IPK_DIR)/opt/etc/wgetrc
+	install -d $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(WGET-SSL_BUILD_DIR)/src/wget -o $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)bin/wget
+	install -d $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -m 644 $(WGET-SSL_BUILD_DIR)/doc/wget.1 $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 755 $(WGET-SSL_BUILD_DIR)/doc/sample.wgetrc $(WGET-SSL_IPK_DIR)$(OPTWARE_PREFIX)etc/wgetrc
 	$(MAKE) $(WGET-SSL_IPK_DIR)/CONTROL/control
 #	install -m 644 $(WGET-SSL_SOURCE_DIR)/postinst $(WGET-SSL_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(WGET-SSL_SOURCE_DIR)/prerm $(WGET-SSL_IPK_DIR)/CONTROL/prerm

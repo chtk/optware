@@ -193,7 +193,7 @@ $(ASTERISK_BUILD_DIR)/.staged: $(ASTERISK_BUILD_DIR)/.built
 	LDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK_LDFLAGS)" \
 	$(MAKE) -C $(ASTERISK_BUILD_DIR) DESTDIR=$(STAGING_DIR) \
 	INSTALL_PREFIX=$(ASTERISK_INST_DIR) \
-	ASTHEADERDIR=$(STAGING_DIR)/opt/include \
+	ASTHEADERDIR=$(STAGING_DIR)$(OPTWARE_PREFIX)include \
 	CROSS_COMPILE=$(TARGET_CROSS) \
 	CROSS_COMPILE_TARGET=$(ASTERISK_CROSS_COMPILE_TARGET) \
 	CROSS_COMPILE_BIN=$(STAGING_DIR)/bin \
@@ -225,12 +225,12 @@ $(ASTERISK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ASTERISK_IPK_DIR)/opt/sbin or $(ASTERISK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ASTERISK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ASTERISK_IPK_DIR)/opt/etc/asterisk/...
-# Documentation files should be installed in $(ASTERISK_IPK_DIR)/opt/doc/asterisk/...
-# Daemon startup scripts should be installed in $(ASTERISK_IPK_DIR)/opt/etc/init.d/S??asterisk
+# Libraries and include files should be installed into $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/...
+# Documentation files should be installed in $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)doc/asterisk/...
+# Daemon startup scripts should be installed in $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??asterisk
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -248,7 +248,7 @@ $(ASTERISK_IPK): $(ASTERISK_BUILD_DIR)/.built
 		CROSS_COMPILE_BIN=$(STAGING_DIR)/bin/ \
 		$(ASTERISK_TARGET) \
 		install
-	install -d $(ASTERISK_IPK_DIR)/opt/etc/
+	install -d $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)etc/
 	$(MAKE) -C $(ASTERISK_BUILD_DIR) DESTDIR=$(ASTERISK_IPK_DIR) \
 		INSTALL_PREFIX=$(ASTERISK_INST_DIR) \
 		ASTHEADERDIR=$(ASTERISK_INCLUDE_DIR) \
@@ -262,11 +262,11 @@ $(ASTERISK_IPK): $(ASTERISK_BUILD_DIR)/.built
 		CROSS_COMPILE_BIN=$(STAGING_DIR)/bin \
 		$(ASTERISK_TARGET) \
 		samples
-	$(STRIP_COMMAND) $(ASTERISK_IPK_DIR)/opt/sbin/asterisk \
-			 $(ASTERISK_IPK_DIR)/opt/sbin/stereorize \
-			 $(ASTERISK_IPK_DIR)/opt/sbin/streamplayer \
-			 $(ASTERISK_IPK_DIR)/opt/lib/asterisk/modules/*.so \
-			 $(ASTERISK_IPK_DIR)/opt/var/lib/asterisk/agi-bin/eagi*-test
+	$(STRIP_COMMAND) $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)sbin/asterisk \
+			 $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)sbin/stereorize \
+			 $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)sbin/streamplayer \
+			 $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules/*.so \
+			 $(ASTERISK_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/agi-bin/eagi*-test
 	$(MAKE) $(ASTERISK_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ASTERISK_IPK_DIR)
 

@@ -121,7 +121,7 @@ $(XFIXES_BUILD_DIR)/.configured: $(DL_DIR)/xfixes-$(XFIXES_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $@
@@ -156,12 +156,12 @@ xfixes-stage: $(XFIXES_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XFIXES_IPK_DIR)/opt/sbin or $(XFIXES_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XFIXES_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XFIXES_IPK_DIR)/opt/etc/xfixes/...
-# Documentation files should be installed in $(XFIXES_IPK_DIR)/opt/doc/xfixes/...
-# Daemon startup scripts should be installed in $(XFIXES_IPK_DIR)/opt/etc/init.d/S??xfixes
+# Libraries and include files should be installed into $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)etc/xfixes/...
+# Documentation files should be installed in $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)doc/xfixes/...
+# Daemon startup scripts should be installed in $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xfixes
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -169,7 +169,7 @@ $(XFIXES_IPK): $(XFIXES_BUILD_DIR)/.built
 	rm -rf $(XFIXES_IPK_DIR) $(BUILD_DIR)/xfixes_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XFIXES_BUILD_DIR) DESTDIR=$(XFIXES_IPK_DIR) install-strip
 	$(MAKE) $(XFIXES_IPK_DIR)/CONTROL/control
-	rm -f $(XFIXES_IPK_DIR)/opt/lib/*.la
+	rm -f $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XFIXES_IPK_DIR)
 
 #

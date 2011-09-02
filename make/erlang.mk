@@ -56,7 +56,7 @@ ERLANG_SMP ?= --disable-smp-support
 
 #
 # ERLANG_CONFFILES should be a list of user-editable files
-#ERLANG_CONFFILES=/opt/etc/erlang.conf /opt/etc/init.d/SXXerlang
+#ERLANG_CONFFILES=$(OPTWARE_PREFIX)etc/erlang.conf $(OPTWARE_PREFIX)etc/init.d/SXXerlang
 
 #
 # ERLANG_PATCHES should list any patches, in the the order in
@@ -162,7 +162,7 @@ $(ERLANG_HOST_BUILD_DIR)/.configured: host/.configured \
 		CPPFLAGS="-I$(ERLANG_HOST_BUILD_DIR)/termcap" \
 		LDFLAGS="-L$(ERLANG_HOST_BUILD_DIR)/termcap" \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-ssl \
 		--disable-smp-support \
 		--disable-hipe \
@@ -230,8 +230,8 @@ ifeq ($(HOSTCC), $(TARGET_CC))
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-                --with-ssl=$(STAGING_DIR)/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+                --with-ssl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		$(ERLANG_CONFIG_ARGS) \
 		--disable-nls \
 	)
@@ -253,7 +253,7 @@ else
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ssl=$(STAGING_PREFIX) \
 		--with-odbc=$(STAGING_PREFIX) \
 		--disable-hipe \
@@ -368,12 +368,12 @@ $(ERLANG-DOC-HTML_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ERLANG_IPK_DIR)/opt/sbin or $(ERLANG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ERLANG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ERLANG_IPK_DIR)/opt/etc/erlang/...
-# Documentation files should be installed in $(ERLANG_IPK_DIR)/opt/doc/erlang/...
-# Daemon startup scripts should be installed in $(ERLANG_IPK_DIR)/opt/etc/init.d/S??erlang
+# Libraries and include files should be installed into $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)etc/erlang/...
+# Documentation files should be installed in $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)doc/erlang/...
+# Daemon startup scripts should be installed in $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??erlang
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -384,7 +384,7 @@ $(ERLANG_IPK) $(ERLANG-LIBS_IPK) $(ERLANG-MANPAGES_IPK) $(ERLANG-DOC-HTML_IPK): 
 	rm -rf $(ERLANG-DOC-HTML_IPK_DIR) $(BUILD_DIR)/erlang-doc-html_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ERLANG_HOST_BUILD_DIR) \
 		INSTALL_PREFIX=$(ERLANG_HOST_BUILD_DIR) $(ERLANG_MAKE_OPTION) install
-	install -d $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/
+	install -d $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/
 ifeq ($(HOSTCC), $(TARGET_CC))
 	TARGET=$(ERLANG_TARGET) \
 		OVERRIDE_TARGET=$(ERLANG_TARGET) \
@@ -393,73 +393,73 @@ ifeq ($(HOSTCC), $(TARGET_CC))
 		$(MAKE) -C $(ERLANG_BUILD_DIR) INSTALL_PREFIX=$(ERLANG_IPK_DIR) $(ERLANG_MAKE_OPTION) install
 	# 
 	for f in erl start; do \
-        	sed -i -e 's:ROOTDIR=.*:ROOTDIR=/opt/lib/erlang:' $(ERLANG_IPK_DIR)/opt/lib/erlang/erts*/bin/$$f; \
+        	sed -i -e 's:ROOTDIR=.*:ROOTDIR=$(OPTWARE_PREFIX)lib/erlang:' $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts*/bin/$$f; \
         done
 else
-	cp -r `find $(ERLANG_HOST_BUILD_DIR)/bin -mindepth 1 -type d` $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/
-	cp -p $(ERLANG_HOST_BUILD_DIR)/bin/erl $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/erl-host
-	sed -i -e 's:ROOTDIR=.*:ROOTDIR=$(ERLANG_IPK_DIR)/opt/lib/erlang:' $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/erl-host
+	cp -r `find $(ERLANG_HOST_BUILD_DIR)/bin -mindepth 1 -type d` $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/
+	cp -p $(ERLANG_HOST_BUILD_DIR)/bin/erl $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/erl-host
+	sed -i -e 's:ROOTDIR=.*:ROOTDIR=$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang:' $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/erl-host
 	PATH="$(ERLANG_HOST_BUILD_DIR)/bin:$$PATH" \
 		TARGET=$(ERLANG_TARGET) \
 		OVERRIDE_TARGET=$(ERLANG_TARGET) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(ERLANG_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(ERLANG_LDFLAGS)" \
 		$(MAKE) -C $(ERLANG_BUILD_DIR) INSTALL_PREFIX=$(ERLANG_IPK_DIR) $(ERLANG_MAKE_OPTION) install
-	rm -f $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/erl-host
-	rm -rf `find $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/ -mindepth 1 -type d`
+	rm -f $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/erl-host
+	rm -rf `find $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/ -mindepth 1 -type d`
 	#
 	for f in erl start; do \
-        	sed -i -e 's:ROOTDIR=.*:ROOTDIR=/opt/lib/erlang:' $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/$$f; \
+        	sed -i -e 's:ROOTDIR=.*:ROOTDIR=$(OPTWARE_PREFIX)lib/erlang:' $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/$$f; \
         done
 endif
 	# strip binaries
 	for f in \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/erlc \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/escript \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/dialyzer \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/run_erl \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/run_test \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/typer \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/bin/to_erl \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/beam* \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/child_setup* \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/ct_run \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/dyn_erl \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/epmd \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/erlc \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/erlexec \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/escript \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/heart \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/inet_gethost \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/run_erl \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/run_test \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/to_erl \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/typer \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/erts-*/bin/dialyzer \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/tools-*/bin/emem \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/erl_interface-*/bin/erl_call \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/odbc-*/priv/bin/odbcserver \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/orber-*/priv/bin/obj_init_port \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/os_mon-*/priv/bin/memsup \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/os_mon-*/priv/bin/cpu_sup \
-		$(ERLANG_IPK_DIR)/opt/lib/erlang/lib/ssl-*/priv/bin/ssl_esock \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/erlc \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/escript \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/dialyzer \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/run_erl \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/run_test \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/typer \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/to_erl \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/beam* \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/child_setup* \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/ct_run \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/dyn_erl \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/epmd \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/erlc \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/erlexec \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/escript \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/heart \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/inet_gethost \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/run_erl \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/run_test \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/to_erl \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/typer \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/erts-*/bin/dialyzer \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/tools-*/bin/emem \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/erl_interface-*/bin/erl_call \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/odbc-*/priv/bin/odbcserver \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/orber-*/priv/bin/obj_init_port \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/os_mon-*/priv/bin/memsup \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/os_mon-*/priv/bin/cpu_sup \
+		$(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/ssl-*/priv/bin/ssl_esock \
 	; do \
 		[ -f $$f ] && $(STRIP_COMMAND) $$f || true; \
         done
-	for f in `find $(ERLANG_IPK_DIR)/opt/lib -name '*.so'`; do $(STRIP_COMMAND) $$f; done
-	# symlinks in /opt/bin
-#	cd $(ERLANG_IPK_DIR)/opt/bin; \
+	for f in `find $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`; do $(STRIP_COMMAND) $$f; done
+	# symlinks in $(OPTWARE_PREFIX)bin
+#	cd $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)bin; \
         for f in erl erlc; do \
         	ln -s ../lib/erlang/bin/$$f .; \
         done
 
-	install -d $(ERLANG-LIBS_IPK_DIR)/opt/lib/erlang/lib
-	for d in `ls $(ERLANG_IPK_DIR)/opt/lib/erlang/lib | egrep -v '^compiler-|^kernel-|^sasl-|^stdlib-|^tools-|^hipe-'`; \
-		do mv $(ERLANG_IPK_DIR)/opt/lib/erlang/lib/$$d $(ERLANG-LIBS_IPK_DIR)/opt/lib/erlang/lib; done
-	install -d $(ERLANG-LIBS_IPK_DIR)/opt/lib/erlang/bin
-	mv $(ERLANG_IPK_DIR)/opt/lib/erlang/bin/dialyzer $(ERLANG-LIBS_IPK_DIR)/opt/lib/erlang/bin/dialyzer
-	install -d $(ERLANG-LIBS_IPK_DIR)/opt/bin
-	mv $(ERLANG_IPK_DIR)/opt/bin/dialyzer $(ERLANG-LIBS_IPK_DIR)/opt/bin/
+	install -d $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib
+	for d in `ls $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib | egrep -v '^compiler-|^kernel-|^sasl-|^stdlib-|^tools-|^hipe-'`; \
+		do mv $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib/$$d $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/lib; done
+	install -d $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin
+	mv $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/dialyzer $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/erlang/bin/dialyzer
+	install -d $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	mv $(ERLANG_IPK_DIR)$(OPTWARE_PREFIX)bin/dialyzer $(ERLANG-LIBS_IPK_DIR)$(OPTWARE_PREFIX)bin/
 
 	$(MAKE) $(ERLANG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ERLANG_IPK_DIR)
@@ -467,15 +467,15 @@ endif
 	$(MAKE) $(ERLANG-LIBS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ERLANG-LIBS_IPK_DIR)
 
-	install -d $(ERLANG-MANPAGES_IPK_DIR)/opt/share/
+	install -d $(ERLANG-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)share/
 	$(ERLANG_UNZIP) $(DL_DIR)/$(ERLANG_DOC_MAN_SOURCE) | \
-		tar -C $(ERLANG-MANPAGES_IPK_DIR)/opt/share/ -xvf -
+		tar -C $(ERLANG-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)share/ -xvf -
 	$(MAKE) $(ERLANG-MANPAGES_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ERLANG-MANPAGES_IPK_DIR)
 
-	install -d $(ERLANG-DOC-HTML_IPK_DIR)/opt/share/doc/erlang-doc-html
+	install -d $(ERLANG-DOC-HTML_IPK_DIR)$(OPTWARE_PREFIX)share/doc/erlang-doc-html
 	$(ERLANG_UNZIP) $(DL_DIR)/$(ERLANG_DOC_HTML_SOURCE) | \
-		tar -C $(ERLANG-DOC-HTML_IPK_DIR)/opt/share/doc/erlang-doc-html -xvf -
+		tar -C $(ERLANG-DOC-HTML_IPK_DIR)$(OPTWARE_PREFIX)share/doc/erlang-doc-html -xvf -
 	$(MAKE) $(ERLANG-DOC-HTML_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ERLANG-DOC-HTML_IPK_DIR)
 

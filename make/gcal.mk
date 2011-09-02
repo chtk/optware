@@ -44,7 +44,7 @@ GCAL_IPK_VERSION=1
 
 #
 # GCAL_CONFFILES should be a list of user-editable files
-#GCAL_CONFFILES=/opt/etc/gcal.conf /opt/etc/init.d/SXXgcal
+#GCAL_CONFFILES=$(OPTWARE_PREFIX)etc/gcal.conf $(OPTWARE_PREFIX)etc/init.d/SXXgcal
 
 #
 # GCAL_PATCHES should list any patches, in the the order in
@@ -134,7 +134,7 @@ $(GCAL_BUILD_DIR)/.configured: $(DL_DIR)/$(GCAL_SOURCE) $(GCAL_PATCHES) make/gca
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -188,23 +188,23 @@ $(GCAL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GCAL_IPK_DIR)/opt/sbin or $(GCAL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GCAL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GCAL_IPK_DIR)/opt/etc/gcal/...
-# Documentation files should be installed in $(GCAL_IPK_DIR)/opt/doc/gcal/...
-# Daemon startup scripts should be installed in $(GCAL_IPK_DIR)/opt/etc/init.d/S??gcal
+# Libraries and include files should be installed into $(GCAL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)etc/gcal/...
+# Documentation files should be installed in $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)doc/gcal/...
+# Daemon startup scripts should be installed in $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gcal
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GCAL_IPK): $(GCAL_BUILD_DIR)/.built
 	rm -rf $(GCAL_IPK_DIR) $(BUILD_DIR)/gcal_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(GCAL_BUILD_DIR) prefix=$(GCAL_IPK_DIR)/opt install
-	$(STRIP_COMMAND) $(GCAL_IPK_DIR)/opt/bin/gcal \
-		$(GCAL_IPK_DIR)/opt/bin/gcal2txt \
-		$(GCAL_IPK_DIR)/opt/bin/tcal \
-		$(GCAL_IPK_DIR)/opt/bin/txt2gcal
-	rm -f $(GCAL_IPK_DIR)/opt/info/dir $(GCAL_IPK_DIR)/opt/info/dir.old
+	$(MAKE) -C $(GCAL_BUILD_DIR) prefix=$(GCAL_IPK_DIR)$(OPTWARE_PREFIX)install
+	$(STRIP_COMMAND) $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)bin/gcal \
+		$(GCAL_IPK_DIR)$(OPTWARE_PREFIX)bin/gcal2txt \
+		$(GCAL_IPK_DIR)$(OPTWARE_PREFIX)bin/tcal \
+		$(GCAL_IPK_DIR)$(OPTWARE_PREFIX)bin/txt2gcal
+	rm -f $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GCAL_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
 	$(MAKE) $(GCAL_IPK_DIR)/CONTROL/control
 #	echo $(GCAL_CONFFILES) | sed -e 's/ /\n/g' > $(GCAL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GCAL_IPK_DIR)

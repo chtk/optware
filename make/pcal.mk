@@ -40,7 +40,7 @@ PCAL_IPK_VERSION=1
 
 #
 # PCAL_CONFFILES should be a list of user-editable files
-#PCAL_CONFFILES=/opt/etc/pcal.conf /opt/etc/init.d/SXXpcal
+#PCAL_CONFFILES=$(OPTWARE_PREFIX)etc/pcal.conf $(OPTWARE_PREFIX)etc/init.d/SXXpcal
 
 #
 # PCAL_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(PCAL_BUILD_DIR)/.configured: $(DL_DIR)/$(PCAL_SOURCE) $(PCAL_PATCHES) make/pca
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -142,7 +142,7 @@ $(PCAL_BUILD_DIR)/.built: $(PCAL_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PCAL_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(PCAL_LDFLAGS)" \
-		PACK=: BINDIR=/opt/bin MANDIR=/opt/share/man/man1 CATDIR=/opt/share/man/cat1
+		PACK=: BINDIR=$(OPTWARE_PREFIX)bin MANDIR=$(OPTWARE_PREFIX)share/man/man1 CATDIR=$(OPTWARE_PREFIX)share/man/cat1
 	touch $@
 
 #
@@ -182,20 +182,20 @@ $(PCAL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PCAL_IPK_DIR)/opt/sbin or $(PCAL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PCAL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PCAL_IPK_DIR)/opt/etc/pcal/...
-# Documentation files should be installed in $(PCAL_IPK_DIR)/opt/doc/pcal/...
-# Daemon startup scripts should be installed in $(PCAL_IPK_DIR)/opt/etc/init.d/S??pcal
+# Libraries and include files should be installed into $(PCAL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)etc/pcal/...
+# Documentation files should be installed in $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)doc/pcal/...
+# Daemon startup scripts should be installed in $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pcal
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PCAL_IPK): $(PCAL_BUILD_DIR)/.built
 	rm -rf $(PCAL_IPK_DIR) $(BUILD_DIR)/pcal_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PCAL_BUILD_DIR) DESTDIR=$(PCAL_IPK_DIR) install \
-		PACK=: BINDIR=/opt/bin MANDIR=/opt/share/man/man1 CATDIR=/opt/share/man/cat1
-	$(STRIP_COMMAND) $(PCAL_IPK_DIR)/opt/bin/pcal
+		PACK=: BINDIR=$(OPTWARE_PREFIX)bin MANDIR=$(OPTWARE_PREFIX)share/man/man1 CATDIR=$(OPTWARE_PREFIX)share/man/cat1
+	$(STRIP_COMMAND) $(PCAL_IPK_DIR)$(OPTWARE_PREFIX)bin/pcal
 	$(MAKE) $(PCAL_IPK_DIR)/CONTROL/control
 	echo $(PCAL_CONFFILES) | sed -e 's/ /\n/g' > $(PCAL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PCAL_IPK_DIR)

@@ -120,7 +120,7 @@ $(LIBMAD_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBMAD_SOURCE) $(LIBMAD_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,10 +179,10 @@ $(LIBMAD_IPK_DIR)/CONTROL/control:
 $(LIBMAD_IPK): $(LIBMAD_BUILD_DIR)/.built
 	rm -rf $(LIBMAD_IPK_DIR) $(BUILD_DIR)/libmad_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBMAD_BUILD_DIR) DESTDIR=$(LIBMAD_IPK_DIR) install
-	$(STRIP_COMMAND) $(LIBMAD_IPK_DIR)/opt/lib/libmad.so.0.*
-	rm -f $(LIBMAD_IPK_DIR)/opt/lib/libmad.la
-	install -d $(LIBMAD_IPK_DIR)/opt/lib/pkgconfig
-	install $(<D)/mad.pc $(LIBMAD_IPK_DIR)/opt/lib/pkgconfig/mad.pc
+	$(STRIP_COMMAND) $(LIBMAD_IPK_DIR)$(OPTWARE_PREFIX)lib/libmad.so.0.*
+	rm -f $(LIBMAD_IPK_DIR)$(OPTWARE_PREFIX)lib/libmad.la
+	install -d $(LIBMAD_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig
+	install $(<D)/mad.pc $(LIBMAD_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig/mad.pc
 	$(MAKE) $(LIBMAD_IPK_DIR)/CONTROL/control
 	echo $(LIBMAD_CONFFILES) | sed -e 's/ /\n/g' > $(LIBMAD_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBMAD_IPK_DIR)

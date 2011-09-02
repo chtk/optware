@@ -40,7 +40,7 @@ POPPLER_IPK_VERSION=1
 
 #
 # POPPLER_CONFFILES should be a list of user-editable files
-#POPPLER_CONFFILES=/opt/etc/poppler.conf /opt/etc/init.d/SXXpoppler
+#POPPLER_CONFFILES=$(OPTWARE_PREFIX)etc/poppler.conf $(OPTWARE_PREFIX)etc/init.d/SXXpoppler
 
 #
 # POPPLER_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ $(POPPLER_BUILD_DIR)/.configured: $(DL_DIR)/$(POPPLER_SOURCE) $(POPPLER_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-libcurl \
 		--enable-libopenjpeg \
 		--enable-zlib \
@@ -187,23 +187,23 @@ $(POPPLER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(POPPLER_IPK_DIR)/opt/sbin or $(POPPLER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(POPPLER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(POPPLER_IPK_DIR)/opt/etc/poppler/...
-# Documentation files should be installed in $(POPPLER_IPK_DIR)/opt/doc/poppler/...
-# Daemon startup scripts should be installed in $(POPPLER_IPK_DIR)/opt/etc/init.d/S??poppler
+# Libraries and include files should be installed into $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/poppler/...
+# Documentation files should be installed in $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)doc/poppler/...
+# Daemon startup scripts should be installed in $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??poppler
 #
 # You may need to patch your application to make it use these locations.
 #
 $(POPPLER_IPK): $(POPPLER_BUILD_DIR)/.built
 	rm -rf $(POPPLER_IPK_DIR) $(BUILD_DIR)/poppler_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(POPPLER_BUILD_DIR) DESTDIR=$(POPPLER_IPK_DIR) install-strip
-#	install -d $(POPPLER_IPK_DIR)/opt/etc/
-#	install -m 644 $(POPPLER_SOURCE_DIR)/poppler.conf $(POPPLER_IPK_DIR)/opt/etc/poppler.conf
-#	install -d $(POPPLER_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(POPPLER_SOURCE_DIR)/rc.poppler $(POPPLER_IPK_DIR)/opt/etc/init.d/SXXpoppler
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POPPLER_IPK_DIR)/opt/etc/init.d/SXXpoppler
+#	install -d $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(POPPLER_SOURCE_DIR)/poppler.conf $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/poppler.conf
+#	install -d $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(POPPLER_SOURCE_DIR)/rc.poppler $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpoppler
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POPPLER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpoppler
 	$(MAKE) $(POPPLER_IPK_DIR)/CONTROL/control
 #	install -m 755 $(POPPLER_SOURCE_DIR)/postinst $(POPPLER_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POPPLER_IPK_DIR)/CONTROL/postinst

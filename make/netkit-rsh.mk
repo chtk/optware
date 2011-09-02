@@ -137,7 +137,7 @@ endif
 		LDFLAGS="$(STAGING_LDFLAGS) $(NETKIT-RSH_LDFLAGS)" \
 		CFLAGS="$(STAGING_CPPFLAGS) $(NETKIT-RSH_CPPFLAGS) $(STAGING_LDFLAGS) $(NETKIT_RSH_LDFLAGS)" \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--installroot=$(NETKIT-RSH_IPK_DIR) \
 		--with-c-compiler="$(TARGET_CC)" \
 		; \
@@ -194,12 +194,12 @@ $(NETKIT-RSH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NETKIT-RSH_IPK_DIR)/opt/sbin or $(NETKIT-RSH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NETKIT-RSH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NETKIT-RSH_IPK_DIR)/opt/etc/netkit-rsh/...
-# Documentation files should be installed in $(NETKIT-RSH_IPK_DIR)/opt/doc/netkit-rsh/...
-# Daemon startup scripts should be installed in $(NETKIT-RSH_IPK_DIR)/opt/etc/init.d/S??netkit-rsh
+# Libraries and include files should be installed into $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)etc/netkit-rsh/...
+# Documentation files should be installed in $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)doc/netkit-rsh/...
+# Daemon startup scripts should be installed in $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??netkit-rsh
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -207,13 +207,13 @@ $(NETKIT-RSH_IPK): $(NETKIT-RSH_BUILD_DIR)/.built
 	rm -rf $(NETKIT-RSH_IPK_DIR) $(BUILD_DIR)/netkit-rsh_*_$(TARGET_ARCH).ipk
 	
 	install -d $(NETKIT-RSH_IPK_DIR)
-	install -d $(NETKIT-RSH_IPK_DIR)/opt/bin/
-	install -d $(NETKIT-RSH_IPK_DIR)/opt/sbin/
-	install -d $(NETKIT-RSH_IPK_DIR)/opt/man/man1/
-	install -d $(NETKIT-RSH_IPK_DIR)/opt/man/man8/
+	install -d $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -d $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
+	install -d $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)man/man8/
 	$(MAKE) -C $(NETKIT-RSH_BUILD_DIR) DESTDIR=$(NETKIT-RSH_IPK_DIR) install
 	for i in bin/rcp bin/rexec bin/rlogin bin/rsh sbin/in.rexecd sbin/in.rlogind sbin/in.rshd; do \
-		$(STRIP_COMMAND) $(NETKIT-RSH_IPK_DIR)/opt/$${i}; \
+		$(STRIP_COMMAND) $(NETKIT-RSH_IPK_DIR)$(OPTWARE_PREFIX)$${i}; \
 	done
 	$(MAKE) $(NETKIT-RSH_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NETKIT-RSH_IPK_DIR)

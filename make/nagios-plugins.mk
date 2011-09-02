@@ -82,7 +82,7 @@ NAGIOS_PLUGINS_IPK_VERSION=4
 
 #
 # NAGIOS_PLUGINS_CONFFILES should be a list of user-editable files
-# NAGIOS_PLUGINS_CONFFILES=/opt/etc/nagios-plugins.conf /opt/etc/init.d/SXXnagios-plugins
+# NAGIOS_PLUGINS_CONFFILES=$(OPTWARE_PREFIX)etc/nagios-plugins.conf $(OPTWARE_PREFIX)etc/init.d/SXXnagios-plugins
 
 #
 # NAGIOS_PLUGINS_PATCHES should list any patches, in the the order in
@@ -163,7 +163,7 @@ $(NAGIOS_PLUGINS_BUILD_DIR)/.configured: $(DL_DIR)/$(NAGIOS_PLUGINS_SOURCE) $(NA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -217,23 +217,23 @@ $(NAGIOS_PLUGINS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NAGIOS_PLUGINS_IPK_DIR)/opt/sbin or $(NAGIOS_PLUGINS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NAGIOS_PLUGINS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/nagios-plugins/...
-# Documentation files should be installed in $(NAGIOS_PLUGINS_IPK_DIR)/opt/doc/nagios-plugins/...
-# Daemon startup scripts should be installed in $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/init.d/S??nagios-plugins
+# Libraries and include files should be installed into $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/nagios-plugins/...
+# Documentation files should be installed in $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)doc/nagios-plugins/...
+# Daemon startup scripts should be installed in $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nagios-plugins
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NAGIOS_PLUGINS_IPK): $(NAGIOS_PLUGINS_BUILD_DIR)/.built
 	rm -rf $(NAGIOS_PLUGINS_IPK_DIR) $(BUILD_DIR)/nagios-plugins_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NAGIOS_PLUGINS_BUILD_DIR) DESTDIR=$(NAGIOS_PLUGINS_IPK_DIR) install-strip
-	(cd $(NAGIOS_PLUGINS_IPK_DIR)/opt/libexec; rm -f $(PLUGINS_REMOVE)) 
-#	install -d $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/
-#	install -m 644 $(NAGIOS_PLUGINS_SOURCE_DIR)/nagios-plugins.conf $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/nagios-plugins.conf
-#	install -d $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NAGIOS_PLUGINS_SOURCE_DIR)/rc.nagios-plugins $(NAGIOS_PLUGINS_IPK_DIR)/opt/etc/init.d/SXXnagios-plugins
+	(cd $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)libexec; rm -f $(PLUGINS_REMOVE)) 
+#	install -d $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NAGIOS_PLUGINS_SOURCE_DIR)/nagios-plugins.conf $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/nagios-plugins.conf
+#	install -d $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NAGIOS_PLUGINS_SOURCE_DIR)/rc.nagios-plugins $(NAGIOS_PLUGINS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnagios-plugins
 	$(MAKE) $(NAGIOS_PLUGINS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NAGIOS_PLUGINS_SOURCE_DIR)/postinst $(NAGIOS_PLUGINS_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(NAGIOS_PLUGINS_SOURCE_DIR)/prerm $(NAGIOS_PLUGINS_IPK_DIR)/CONTROL/prerm

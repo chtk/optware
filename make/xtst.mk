@@ -120,7 +120,7 @@ $(XTST_BUILD_DIR)/.configured: $(DL_DIR)/xtst-$(XTST_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(XTST_BUILD_DIR)/libtool
@@ -156,19 +156,19 @@ xtst-stage: $(XTST_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XTST_IPK_DIR)/opt/sbin or $(XTST_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XTST_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XTST_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XTST_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XTST_IPK_DIR)/opt/etc/xtst/...
-# Documentation files should be installed in $(XTST_IPK_DIR)/opt/doc/xtst/...
-# Daemon startup scripts should be installed in $(XTST_IPK_DIR)/opt/etc/init.d/S??xtst
+# Libraries and include files should be installed into $(XTST_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XTST_IPK_DIR)$(OPTWARE_PREFIX)etc/xtst/...
+# Documentation files should be installed in $(XTST_IPK_DIR)$(OPTWARE_PREFIX)doc/xtst/...
+# Daemon startup scripts should be installed in $(XTST_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xtst
 #
 # You may need to patch your application to make it use these locations.
 #
 $(XTST_IPK): $(XTST_BUILD_DIR)/.built
 	rm -rf $(XTST_IPK_DIR) $(BUILD_DIR)/xtst_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XTST_BUILD_DIR) DESTDIR=$(XTST_IPK_DIR) install-strip
-	rm -f $(XTST_IPK_DIR)/opt/lib/*.la
+	rm -f $(XTST_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(XTST_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XTST_IPK_DIR)
 

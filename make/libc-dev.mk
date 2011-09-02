@@ -57,13 +57,13 @@ else
 LIBC-DEV_LIBDIR=$(TARGET_LIBDIR)
 endif
 
-LIBC-DEV_CRT_DIR ?= /opt/`$(TARGET_CC) -dumpmachine`/lib
+LIBC-DEV_CRT_DIR ?= $(OPTWARE_PREFIX)`$(TARGET_CC) -dumpmachine`/lib
 LIBC-DEV_LIBC_SO_DIR ?= $(LIBC-DEV_USRLIBDIR)
 LIBC-DEV_NONSHARED_LIB_DIR ?= $(LIBC-DEV_LIBC_SO_DIR)
 
 #
 # LIBC-DEV_CONFFILES should be a list of user-editable files
-#LIBC-DEV_CONFFILES=/opt/etc/libc-dev.conf /opt/etc/init.d/SXXlibc-dev
+#LIBC-DEV_CONFFILES=$(OPTWARE_PREFIX)etc/libc-dev.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibc-dev
 
 #
 # LIBC-DEV_PATCHES should list any patches, in the the order in
@@ -116,36 +116,36 @@ $(BUILD_DIR)/libc-dev-$(LIBC-DEV_VERSION)-ipk/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBC-DEV_IPK_DIR)/opt/sbin or $(LIBC-DEV_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBC-DEV_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBC-DEV_IPK_DIR)/opt/etc/libc-dev/...
-# Documentation files should be installed in $(LIBC-DEV_IPK_DIR)/opt/doc/libc-dev/...
-# Daemon startup scripts should be installed in $(LIBC-DEV_IPK_DIR)/opt/etc/init.d/S??libc-dev
+# Libraries and include files should be installed into $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)etc/libc-dev/...
+# Documentation files should be installed in $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)doc/libc-dev/...
+# Daemon startup scripts should be installed in $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libc-dev
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBC-DEV_IPK): make/libc-dev.mk
 	rm -rf $(LIBC-DEV_IPK_DIR) $(BUILD_DIR)/libc-dev_*_$(TARGET_ARCH).ipk
-	install -d $(LIBC-DEV_IPK_DIR)/opt/
-	-rsync  -rlpgoD --copy-unsafe-links $(TARGET_INCDIR) $(LIBC-DEV_IPK_DIR)/opt/
+	install -d $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	-rsync  -rlpgoD --copy-unsafe-links $(TARGET_INCDIR) $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)
 	install -d $(LIBC-DEV_IPK_DIR)/$(LIBC-DEV_CRT_DIR)
 	rsync -l $(LIBC-DEV_USRLIBDIR)/*crt*.o $(LIBC-DEV_IPK_DIR)/$(LIBC-DEV_CRT_DIR)
-	install -d $(LIBC-DEV_IPK_DIR)/opt/lib/
+	install -d $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
 ifeq (wdtv, $(OPTWARE_TARGET))
-	rm -f $(LIBC-DEV_IPK_DIR)/opt/include/z*.h
+	rm -f $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)include/z*.h
 else
 ifeq (uclibc, $(LIBC_STYLE))
 	rsync -l \
 		$(TARGET_LIBDIR)/libuClibc-$(LIBC-DEV_VERSION).so \
 		$(LIBC-DEV_USRLIBDIR)/libc.so* \
-		$(LIBC-DEV_IPK_DIR)/opt/lib/
+		$(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
 else
 	for f in libc_nonshared.a libpthread_nonshared.a; \
-		do rsync -l $(LIBC-DEV_NONSHARED_LIB_DIR)/$${f} $(LIBC-DEV_IPK_DIR)/opt/lib/; done
-	rsync -l $(LIBC-DEV_LIBC_SO_DIR)/libc.so $(LIBC-DEV_IPK_DIR)/opt/lib/
-	sed -i -e '/^GROUP/s|.*|GROUP ( /lib/libc.so.6 /opt/lib/libc_nonshared.a )|' \
-		$(LIBC-DEV_IPK_DIR)/opt/lib/libc.so
+		do rsync -l $(LIBC-DEV_NONSHARED_LIB_DIR)/$${f} $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/; done
+	rsync -l $(LIBC-DEV_LIBC_SO_DIR)/libc.so $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	sed -i -e '/^GROUP/s|.*|GROUP ( /lib/libc.so.6 $(OPTWARE_PREFIX)lib/libc_nonshared.a )|' \
+		$(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/libc.so
 endif
 	for f in libcrypt libdl libm libpthread libresolv librt libutil \
 		$(if $(filter uclibc, $(LIBC_STYLE)), ld-uClibc, ) \
@@ -161,7 +161,7 @@ endif
 	    fi; \
 	done
 endif
-	rm -rf $(LIBC-DEV_IPK_DIR)/opt/include/c++
+	rm -rf $(LIBC-DEV_IPK_DIR)$(OPTWARE_PREFIX)include/c++
 	$(MAKE) $(LIBC-DEV_IPK_DIR)/CONTROL/control
 	echo $(LIBC-DEV_CONFFILES) | sed -e 's/ /\n/g' > $(LIBC-DEV_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBC-DEV_IPK_DIR)

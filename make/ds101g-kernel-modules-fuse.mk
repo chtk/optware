@@ -24,7 +24,7 @@ DS101G-KERNEL-MODULES-FUSE_IPK_VERSION=3
 
 #
 # DS101G-KERNEL-MODULES-FUSE_CONFFILES should be a list of user-editable files
-#DS101G-KERNEL-MODULES-FUSE_CONFFILES=/opt/etc/ds101g-kernel-modules-fuse.conf /opt/etc/init.d/SXXds101g-kernel-modules-fuse
+#DS101G-KERNEL-MODULES-FUSE_CONFFILES=$(OPTWARE_PREFIX)etc/ds101g-kernel-modules-fuse.conf $(OPTWARE_PREFIX)etc/init.d/SXXds101g-kernel-modules-fuse
 
 #
 # DS101G-KERNEL-MODULES-FUSE_PATCHES should list any patches, in the the order in
@@ -106,7 +106,7 @@ $(DS101G-KERNEL-MODULES-FUSE_BUILD_DIR)/.configured: $(DL_DIR)/$(DS101G-KERNEL-M
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--program-prefix="" \
 		--disable-nls \
 		--disable-static \
@@ -167,12 +167,12 @@ $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/sbin or $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/ds101g-kernel-modules-fuse/...
-# Documentation files should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/doc/ds101g-kernel-modules-fuse/...
-# Daemon startup scripts should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/init.d/S??ds101g-kernel-modules-fuse
+# Libraries and include files should be installed into $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/ds101g-kernel-modules-fuse/...
+# Documentation files should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)doc/ds101g-kernel-modules-fuse/...
+# Daemon startup scripts should be installed in $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ds101g-kernel-modules-fuse
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -182,16 +182,16 @@ $(DS101G-KERNEL-MODULES-FUSE_IPK): $(DS101G-KERNEL-MODULES-FUSE_BUILD_DIR)/.buil
 	$(MAKE) -C $(DS101G-KERNEL-MODULES-FUSE_BUILD_DIR) DESTDIR=$(DS101G-KERNEL-MODULES-FUSE_IPK_DIR) $(TARGET_CONFIGURE_OPTS) install
 	rm -rf $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/dev
 	mv $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/{etc,sbin} $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt
-	mkdir -p $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/lib/modules
-	find $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR) -name "fuse.*o" -exec mv "{}"  $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/lib/modules ";"
+	mkdir -p $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)lib/modules
+	find $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR) -name "fuse.*o" -exec mv "{}"  $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)lib/modules ";"
 	rm -rf $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/lib
-	$(STRIP_COMMAND) $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/bin/*
-	$(STRIP_COMMAND) $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/lib/lib*.so
-	install -d $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/
-#	install -m 644 $(DS101G-KERNEL-MODULES-FUSE_SOURCE_DIR)/ds101g-kernel-modules-fuse.conf $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/ds101g-kernel-modules-fuse.conf
-#	install -d $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(DS101G-KERNEL-MODULES-FUSE_SOURCE_DIR)/rc.ds101g-kernel-modules-fuse $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/init.d/SXXds101g-kernel-modules-fuse
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/opt/etc/init.d/SXXds101g-kernel-modules-fuse
+	$(STRIP_COMMAND) $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so
+	install -d $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(DS101G-KERNEL-MODULES-FUSE_SOURCE_DIR)/ds101g-kernel-modules-fuse.conf $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/ds101g-kernel-modules-fuse.conf
+#	install -d $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(DS101G-KERNEL-MODULES-FUSE_SOURCE_DIR)/rc.ds101g-kernel-modules-fuse $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXds101g-kernel-modules-fuse
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXds101g-kernel-modules-fuse
 	$(MAKE) $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/CONTROL/control
 	install -m 755 $(DS101G-KERNEL-MODULES-FUSE_SOURCE_DIR)/postinst $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/CONTROL/postinst
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DS101G-KERNEL-MODULES-FUSE_IPK_DIR)/CONTROL/postinst

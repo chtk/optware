@@ -41,7 +41,7 @@ CHEROKEE-PYSCGI_IPK_VERSION=1
 
 #
 # CHEROKEE-PYSCGI_CONFFILES should be a list of user-editable files
-#CHEROKEE-PYSCGI_CONFFILES=/opt/etc/cherokee-pyscgi.conf /opt/etc/init.d/SXXcherokee-pyscgi
+#CHEROKEE-PYSCGI_CONFFILES=$(OPTWARE_PREFIX)etc/cherokee-pyscgi.conf $(OPTWARE_PREFIX)etc/init.d/SXXcherokee-pyscgi
 
 #
 # CHEROKEE-PYSCGI_PATCHES should list any patches, in the the order in
@@ -187,12 +187,12 @@ $(PY26-CHEROKEE-SCGI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CHEROKEE-PYSCGI_IPK_DIR)/opt/sbin or $(CHEROKEE-PYSCGI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CHEROKEE-PYSCGI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)/opt/etc/cherokee-pyscgi/...
-# Documentation files should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)/opt/doc/cherokee-pyscgi/...
-# Daemon startup scripts should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)/opt/etc/init.d/S??cherokee-pyscgi
+# Libraries and include files should be installed into $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/cherokee-pyscgi/...
+# Documentation files should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX)doc/cherokee-pyscgi/...
+# Daemon startup scripts should be installed in $(CHEROKEE-PYSCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cherokee-pyscgi
 #
 # You may need to patch your application to make it use these locations.
 #

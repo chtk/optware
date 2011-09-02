@@ -34,7 +34,7 @@ GETTEXT_IPK_VERSION=2
 
 #
 # GETTEXT_CONFFILES should be a list of user-editable files
-#GETTEXT_CONFFILES=/opt/etc/gettext.conf /opt/etc/init.d/SXXgettext
+#GETTEXT_CONFFILES=$(OPTWARE_PREFIX)etc/gettext.conf $(OPTWARE_PREFIX)etc/init.d/SXXgettext
 
 #
 # GETTEXT_PATCHES should list any patches, in the the order in
@@ -139,7 +139,7 @@ $(GETTEXT_BUILD_DIR)/.configured: $(DL_DIR)/$(GETTEXT_SOURCE) $(GETTEXT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--$(GETTEXT_NLS)-nls \
 		--disable-static \
 	)
@@ -196,23 +196,23 @@ $(GETTEXT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GETTEXT_IPK_DIR)/opt/sbin or $(GETTEXT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GETTEXT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GETTEXT_IPK_DIR)/opt/etc/gettext/...
-# Documentation files should be installed in $(GETTEXT_IPK_DIR)/opt/doc/gettext/...
-# Daemon startup scripts should be installed in $(GETTEXT_IPK_DIR)/opt/etc/init.d/S??gettext
+# Libraries and include files should be installed into $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/gettext/...
+# Documentation files should be installed in $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)doc/gettext/...
+# Daemon startup scripts should be installed in $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gettext
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GETTEXT_IPK): $(GETTEXT_BUILD_DIR)/.built
 	rm -rf $(GETTEXT_IPK_DIR) $(BUILD_DIR)/gettext_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GETTEXT_BUILD_DIR) DESTDIR=$(GETTEXT_IPK_DIR) install
-	$(STRIP_COMMAND) $(GETTEXT_IPK_DIR)/opt/lib/*.so*
-#	install -d $(GETTEXT_IPK_DIR)/opt/etc/
-#	install -m 755 $(GETTEXT_SOURCE_DIR)/gettext.conf $(GETTEXT_IPK_DIR)/opt/etc/gettext.conf
-#	install -d $(GETTEXT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(GETTEXT_SOURCE_DIR)/rc.gettext $(GETTEXT_IPK_DIR)/opt/etc/init.d/SXXgettext
+	$(STRIP_COMMAND) $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so*
+#	install -d $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 755 $(GETTEXT_SOURCE_DIR)/gettext.conf $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/gettext.conf
+#	install -d $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(GETTEXT_SOURCE_DIR)/rc.gettext $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgettext
 	$(MAKE) $(GETTEXT_IPK_DIR)/CONTROL/control
 #	install -m 644 $(GETTEXT_SOURCE_DIR)/postinst $(GETTEXT_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(GETTEXT_SOURCE_DIR)/prerm $(GETTEXT_IPK_DIR)/CONTROL/prerm

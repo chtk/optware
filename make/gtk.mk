@@ -35,7 +35,7 @@ GTK_LOCALES=
 
 #
 # GTK_CONFFILES should be a list of user-editable files
-#GTK_CONFFILES=/opt/etc/gtk.conf /opt/etc/init.d/SXXgtk
+#GTK_CONFFILES=$(OPTWARE_PREFIX)etc/gtk.conf $(OPTWARE_PREFIX)etc/init.d/SXXgtk
 
 #
 # GTK_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(GTK_BUILD_DIR)/.configured: $(DL_DIR)/$(GTK_SOURCE) $(GTK_PATCHES) make/gtk.mk
 	sed -i -e '/SRC_SUBDIRS *=/s| demos||' $(@D)/Makefile.in
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
-		PATH="$(STAGING_DIR)/opt/bin:$$PATH" \
+		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$$PATH" \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(GTK_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(GTK_LDFLAGS)" \
 		PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
@@ -134,7 +134,7 @@ $(GTK_BUILD_DIR)/.configured: $(DL_DIR)/$(GTK_SOURCE) $(GTK_PATCHES) make/gtk.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
                 --without-libjasper \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
@@ -169,11 +169,11 @@ $(GTK_BUILD_DIR)/.staged: $(GTK_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(GTK_BUILD_DIR) install-strip prefix=$(STAGING_DIR)/opt
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/g[dt]k*.pc
-	rm -f $(STAGING_DIR)/opt/bin/gdk-pixbuf-csource
-	rm -f $(STAGING_DIR)/opt/lib/libgdk-x11-2.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libgdk_pixbuf-2.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libgdk_pixbuf_xlib-2.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libgtk-x11-2.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)bin/gdk-pixbuf-csource
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgdk-x11-2.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgdk_pixbuf-2.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgdk_pixbuf_xlib-2.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgtk-x11-2.0.la
 	touch $@
 
 gtk-stage: $(GTK_BUILD_DIR)/.staged
@@ -181,21 +181,21 @@ gtk-stage: $(GTK_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GTK_IPK_DIR)/opt/sbin or $(GTK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GTK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GTK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GTK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GTK_IPK_DIR)/opt/etc/gtk/...
-# Documentation files should be installed in $(GTK_IPK_DIR)/opt/doc/gtk/...
-# Daemon startup scripts should be installed in $(GTK_IPK_DIR)/opt/etc/init.d/S??gtk
+# Libraries and include files should be installed into $(GTK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GTK_IPK_DIR)$(OPTWARE_PREFIX)etc/gtk/...
+# Documentation files should be installed in $(GTK_IPK_DIR)$(OPTWARE_PREFIX)doc/gtk/...
+# Daemon startup scripts should be installed in $(GTK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gtk
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GTK_IPK): $(GTK_BUILD_DIR)/.built
 	rm -rf $(GTK_IPK_DIR) $(BUILD_DIR)/gtk_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GTK_BUILD_DIR) DESTDIR=$(GTK_IPK_DIR) install-strip
-	install -d $(GTK_IPK_DIR)/opt/etc/gtk-2.0
-	rm -f $(GTK_IPK_DIR)/opt/lib/*.la
-	rm -rf $(GTK_IPK_DIR)/opt/share/gtk-doc
+	install -d $(GTK_IPK_DIR)$(OPTWARE_PREFIX)etc/gtk-2.0
+	rm -f $(GTK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -rf $(GTK_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
 	$(MAKE) $(GTK_IPK_DIR)/CONTROL/control
 	install -m 644 $(GTK_SOURCE_DIR)/postinst $(GTK_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GTK_IPK_DIR)

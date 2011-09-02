@@ -45,7 +45,7 @@ W3M_IPK_VERSION=1
 
 #
 # W3M_CONFFILES should be a list of user-editable files
-#W3M_CONFFILES=/opt/etc/w3m.conf /opt/etc/init.d/SXXw3m
+#W3M_CONFFILES=$(OPTWARE_PREFIX)etc/w3m.conf $(OPTWARE_PREFIX)etc/init.d/SXXw3m
 
 #
 # W3M_PATCHES should list any patches, in the the order in
@@ -60,7 +60,7 @@ endif
 # If the compilation of the package requires additional
 # compilation or linking flags, then list them here.
 #
-W3M_CPPFLAGS=-I$(STAGING_DIR)/opt/include/gc
+W3M_CPPFLAGS=-I$(STAGING_DIR)$(OPTWARE_PREFIX)include/gc
 W3M_LDFLAGS=-ldl -lpthread
 
 #
@@ -128,7 +128,7 @@ ifeq ($(HOSTCC), $(TARGET_CC))
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ssl \
 		--disable-image \
 	)
@@ -138,7 +138,7 @@ else
 	$(LIBGC_UNZIP) $(DL_DIR)/$(LIBGC_SOURCE) | tar -C $(W3M_LIBGC_HOSTBUILD_DIR) -xvf -
 	@echo "=============================== host libgc configure & build ============"
 	cd $(W3M_LIBGC_HOSTBUILD_DIR)/$(LIBGC_DIR); \
-		./configure --prefix=/opt --disable-static; \
+		./configure --prefix=$(OPTWARE_PREFIX)--disable-static; \
 		make DESTDIR=$(W3M_LIBGC_HOSTBUILD_DIR) install
 	mkdir $(W3M_BUILD_DIR)/hostbuild
 	@echo "=============================== host w3m configure ======================="
@@ -164,7 +164,7 @@ else
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ssl=$(STAGING_PREFIX) \
 		--with-gc=$(STAGING_PREFIX) \
 		--disable-image \
@@ -185,7 +185,7 @@ ifeq ($(HOSTCC), $(TARGET_CC))
 	    $(MAKE) -C $(W3M_BUILD_DIR) CROSS_COMPILATION=no
 else
 	@echo "=============================== cross w3m build ============================"
-	LD_LIBRARY_PATH=$(W3M_LIBGC_HOSTBUILD_DIR)/opt/lib \
+	LD_LIBRARY_PATH=$(W3M_LIBGC_HOSTBUILD_DIR)$(OPTWARE_PREFIX)lib \
 	$(MAKE) -C $(W3M_BUILD_DIR) CROSS_COMPILATION=yes
 endif
 	touch $@
@@ -226,25 +226,25 @@ $(W3M_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(W3M_IPK_DIR)/opt/sbin or $(W3M_IPK_DIR)/opt/bin
+# Binaries should be installed into $(W3M_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(W3M_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(W3M_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(W3M_IPK_DIR)/opt/etc/w3m/...
-# Documentation files should be installed in $(W3M_IPK_DIR)/opt/doc/w3m/...
-# Daemon startup scripts should be installed in $(W3M_IPK_DIR)/opt/etc/init.d/S??w3m
+# Libraries and include files should be installed into $(W3M_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/w3m/...
+# Documentation files should be installed in $(W3M_IPK_DIR)$(OPTWARE_PREFIX)doc/w3m/...
+# Daemon startup scripts should be installed in $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??w3m
 #
 # You may need to patch your application to make it use these locations.
 #
 $(W3M_IPK): $(W3M_BUILD_DIR)/.built
 	rm -rf $(W3M_IPK_DIR) $(BUILD_DIR)/w3m_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(W3M_BUILD_DIR) DESTDIR=$(W3M_IPK_DIR) install
-	$(STRIP_COMMAND) $(W3M_IPK_DIR)/opt/bin/w3m
-	$(STRIP_COMMAND) $(W3M_IPK_DIR)/opt/libexec/w3m/inflate
-	$(STRIP_COMMAND) $(W3M_IPK_DIR)/opt/libexec/w3m/cgi-bin/{w3mbookmark,w3mhelperpanel}
-#	install -d $(W3M_IPK_DIR)/opt/etc/
-#	install -m 644 $(W3M_SOURCE_DIR)/w3m.conf $(W3M_IPK_DIR)/opt/etc/w3m.conf
-#	install -d $(W3M_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(W3M_SOURCE_DIR)/rc.w3m $(W3M_IPK_DIR)/opt/etc/init.d/SXXw3m
+	$(STRIP_COMMAND) $(W3M_IPK_DIR)$(OPTWARE_PREFIX)bin/w3m
+	$(STRIP_COMMAND) $(W3M_IPK_DIR)$(OPTWARE_PREFIX)libexec/w3m/inflate
+	$(STRIP_COMMAND) $(W3M_IPK_DIR)$(OPTWARE_PREFIX)libexec/w3m/cgi-bin/{w3mbookmark,w3mhelperpanel}
+#	install -d $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(W3M_SOURCE_DIR)/w3m.conf $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/w3m.conf
+#	install -d $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(W3M_SOURCE_DIR)/rc.w3m $(W3M_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXw3m
 	$(MAKE) $(W3M_IPK_DIR)/CONTROL/control
 #	install -m 755 $(W3M_SOURCE_DIR)/postinst $(W3M_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(W3M_SOURCE_DIR)/prerm $(W3M_IPK_DIR)/CONTROL/prerm

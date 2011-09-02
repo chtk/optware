@@ -5,8 +5,8 @@
 ###########################################################
 
 # CAVEAT: setserial is currently compiled statically
-# Otherwise calling /opt/sbin/setserial raises:
-# -sh: /opt/sbin/setserial: not found
+# Otherwise calling $(OPTWARE_PREFIX)sbin/setserial raises:
+# -sh: $(OPTWARE_PREFIX)sbin/setserial: not found
 # Sounds like I did not manage to properly pass down the LDFLAGS options
 
 #
@@ -127,7 +127,7 @@ $(SETSERIAL_BUILD_DIR)/.configured: $(DL_DIR)/$(SETSERIAL_SOURCE) $(SETSERIAL_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -181,29 +181,29 @@ $(SETSERIAL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SETSERIAL_IPK_DIR)/opt/sbin or $(SETSERIAL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SETSERIAL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SETSERIAL_IPK_DIR)/opt/etc/setserial/...
-# Documentation files should be installed in $(SETSERIAL_IPK_DIR)/opt/doc/setserial/...
-# Daemon startup scripts should be installed in $(SETSERIAL_IPK_DIR)/opt/etc/init.d/S??setserial
+# Libraries and include files should be installed into $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/setserial/...
+# Documentation files should be installed in $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)doc/setserial/...
+# Daemon startup scripts should be installed in $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??setserial
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SETSERIAL_IPK): $(SETSERIAL_BUILD_DIR)/.built
 	rm -rf $(SETSERIAL_IPK_DIR) $(BUILD_DIR)/setserial_*_$(TARGET_ARCH).ipk
 # setserial's install rule can't easily be made to follow the rules above
-	install -d $(SETSERIAL_IPK_DIR)/opt/sbin
-	install -d $(SETSERIAL_IPK_DIR)/opt/man/man8
-	install -m 755 $(SETSERIAL_BUILD_DIR)/setserial $(SETSERIAL_IPK_DIR)/opt/sbin
-	$(TARGET_STRIP) $(SETSERIAL_IPK_DIR)/opt/sbin/setserial
-	install $(SETSERIAL_BUILD_DIR)/setserial.8 $(SETSERIAL_IPK_DIR)/opt/man/man8
+	install -d $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -m 755 $(SETSERIAL_BUILD_DIR)/setserial $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	$(TARGET_STRIP) $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)sbin/setserial
+	install $(SETSERIAL_BUILD_DIR)/setserial.8 $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)man/man8
 
-#	$(MAKE) -C $(SETSERIAL_BUILD_DIR) DESTDIR=$(SETSERIAL_IPK_DIR)/opt install
-#	install -d $(SETSERIAL_IPK_DIR)/opt/etc/
-#	install -m 644 $(SETSERIAL_SOURCE_DIR)/setserial.conf $(SETSERIAL_IPK_DIR)/opt/etc/setserial.conf
-#	install -d $(SETSERIAL_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SETSERIAL_SOURCE_DIR)/rc.setserial $(SETSERIAL_IPK_DIR)/opt/etc/init.d/SXXsetserial
+#	$(MAKE) -C $(SETSERIAL_BUILD_DIR) DESTDIR=$(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)install
+#	install -d $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SETSERIAL_SOURCE_DIR)/setserial.conf $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/setserial.conf
+#	install -d $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SETSERIAL_SOURCE_DIR)/rc.setserial $(SETSERIAL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXsetserial
 	$(MAKE) $(SETSERIAL_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SETSERIAL_SOURCE_DIR)/postinst $(SETSERIAL_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(SETSERIAL_SOURCE_DIR)/prerm $(SETSERIAL_IPK_DIR)/CONTROL/prerm

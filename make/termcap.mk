@@ -43,9 +43,9 @@ $(TERMCAP_BUILD_DIR)/.configured: $(DL_DIR)/$(TERMCAP_SOURCE)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-install-termcap \
-		--with-termcap=/opt/etc/termcap \
+		--with-termcap=$(OPTWARE_PREFIX)etc/termcap \
 	)
 	touch $(TERMCAP_BUILD_DIR)/.configured
 
@@ -56,13 +56,13 @@ $(TERMCAP_BUILD_DIR)/libtermcap.a: $(TERMCAP_BUILD_DIR)/.configured
 
 termcap: $(TERMCAP_BUILD_DIR)/libtermcap.a
 
-$(STAGING_DIR)/opt/lib/libtermcap.a: $(TERMCAP_BUILD_DIR)/libtermcap.a
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(TERMCAP_BUILD_DIR)/libtermcap.a $(STAGING_DIR)/opt/lib
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtermcap.a: $(TERMCAP_BUILD_DIR)/libtermcap.a
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(TERMCAP_BUILD_DIR)/libtermcap.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
 
-termcap-stage: $(STAGING_DIR)/opt/lib/libtermcap.a
+termcap-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtermcap.a
 
 $(TERMCAP_IPK_DIR)/CONTROL/control:
 	@install -d $(TERMCAP_IPK_DIR)/CONTROL
@@ -79,12 +79,12 @@ $(TERMCAP_IPK_DIR)/CONTROL/control:
 	@echo "Conflicts: $(TERMCAP_CONFLICTS)" >>$@
 
 $(TERMCAP_IPK): $(TERMCAP_BUILD_DIR)/libtermcap.a
-	install -d $(TERMCAP_IPK_DIR)/opt/include
-	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.h $(TERMCAP_IPK_DIR)/opt/include/termcap.h
-	install -d $(TERMCAP_IPK_DIR)/opt/lib
-	install -m 644 $(TERMCAP_BUILD_DIR)/libtermcap.a $(TERMCAP_IPK_DIR)/opt/lib/libtermcap.a
-	install -d $(TERMCAP_IPK_DIR)/opt/etc
-	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.src $(TERMCAP_IPK_DIR)/opt/etc/termcap
+	install -d $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.h $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)include/termcap.h
+	install -d $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(TERMCAP_BUILD_DIR)/libtermcap.a $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)lib/libtermcap.a
+	install -d $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(TERMCAP_BUILD_DIR)/termcap.src $(TERMCAP_IPK_DIR)$(OPTWARE_PREFIX)etc/termcap
 	$(MAKE) $(TERMCAP_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TERMCAP_IPK_DIR)
 

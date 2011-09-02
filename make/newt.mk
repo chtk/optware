@@ -138,7 +138,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--without-tcl \
 	)
@@ -194,28 +194,28 @@ $(NEWT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NEWT_IPK_DIR)/opt/sbin or $(NEWT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NEWT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NEWT_IPK_DIR)/opt/etc/newt/...
-# Documentation files should be installed in $(NEWT_IPK_DIR)/opt/doc/newt/...
-# Daemon startup scripts should be installed in $(NEWT_IPK_DIR)/opt/etc/init.d/S??newt
+# Libraries and include files should be installed into $(NEWT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/newt/...
+# Documentation files should be installed in $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)doc/newt/...
+# Daemon startup scripts should be installed in $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??newt
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NEWT_IPK): $(NEWT_BUILD_DIR)/.built
 	rm -rf $(NEWT_IPK_DIR) $(BUILD_DIR)/newt_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NEWT_BUILD_DIR) instroot=$(NEWT_IPK_DIR) install
-	rm -f $(NEWT_IPK_DIR)/opt/lib/libnewt.a
+	rm -f $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)lib/libnewt.a
 	$(STRIP_COMMAND) \
-		$(NEWT_IPK_DIR)/opt/bin/whiptail \
-		$(NEWT_IPK_DIR)/opt/lib/libnewt.so.[0-9]*.[0-9]*.[0-9]* \
-		$(NEWT_IPK_DIR)/opt/lib/python*/site-packages/_snackmodule.so \
+		$(NEWT_IPK_DIR)$(OPTWARE_PREFIX)bin/whiptail \
+		$(NEWT_IPK_DIR)$(OPTWARE_PREFIX)lib/libnewt.so.[0-9]*.[0-9]*.[0-9]* \
+		$(NEWT_IPK_DIR)$(OPTWARE_PREFIX)lib/python*/site-packages/_snackmodule.so \
 		;
-#	install -d $(NEWT_IPK_DIR)/opt/etc/
-#	install -m 644 $(NEWT_SOURCE_DIR)/newt.conf $(NEWT_IPK_DIR)/opt/etc/newt.conf
-#	install -d $(NEWT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NEWT_SOURCE_DIR)/rc.newt $(NEWT_IPK_DIR)/opt/etc/init.d/SXXnewt
+#	install -d $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NEWT_SOURCE_DIR)/newt.conf $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/newt.conf
+#	install -d $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NEWT_SOURCE_DIR)/rc.newt $(NEWT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnewt
 	$(MAKE) $(NEWT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NEWT_SOURCE_DIR)/postinst $(NEWT_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(NEWT_SOURCE_DIR)/prerm $(NEWT_IPK_DIR)/CONTROL/prerm

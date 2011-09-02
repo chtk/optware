@@ -119,9 +119,9 @@ $(LHA_IPK_DIR)/CONTROL/control:
 
 $(LHA_IPK): $(LHA_BUILD_DIR)/.built
 	rm -rf $(LHA_IPK_DIR) $(BUILD_DIR)/lha_*_$(TARGET_ARCH).ipk
-	install -d $(LHA_IPK_DIR)/opt/bin
-	install -m 755 $(LHA_BUILD_DIR)/src/lha $(LHA_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(LHA_IPK_DIR)/opt/bin/lha
+	install -d $(LHA_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(LHA_BUILD_DIR)/src/lha $(LHA_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(LHA_IPK_DIR)$(OPTWARE_PREFIX)bin/lha
 	$(MAKE) $(LHA_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LHA_IPK_DIR)
 

@@ -40,7 +40,7 @@ P7ZIP_IPK_VERSION=1
 
 #
 # P7ZIP_CONFFILES should be a list of user-editable files
-#P7ZIP_CONFFILES=/opt/etc/p7zip.conf /opt/etc/init.d/SXXp7zip
+#P7ZIP_CONFFILES=$(OPTWARE_PREFIX)etc/p7zip.conf $(OPTWARE_PREFIX)etc/init.d/SXXp7zip
 
 #
 # P7ZIP_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(P7ZIP_BUILD_DIR)/.configured: $(DL_DIR)/$(P7ZIP_SOURCE) $(P7ZIP_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -185,12 +185,12 @@ $(P7ZIP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(P7ZIP_IPK_DIR)/opt/sbin or $(P7ZIP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(P7ZIP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(P7ZIP_IPK_DIR)/opt/etc/p7zip/...
-# Documentation files should be installed in $(P7ZIP_IPK_DIR)/opt/doc/p7zip/...
-# Daemon startup scripts should be installed in $(P7ZIP_IPK_DIR)/opt/etc/init.d/S??p7zip
+# Libraries and include files should be installed into $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/p7zip/...
+# Documentation files should be installed in $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)doc/p7zip/...
+# Daemon startup scripts should be installed in $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??p7zip
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -198,18 +198,18 @@ $(P7ZIP_IPK): $(P7ZIP_BUILD_DIR)/.built
 	rm -rf $(P7ZIP_IPK_DIR) $(BUILD_DIR)/p7zip_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(P7ZIP_BUILD_DIR) install \
 		DEST_DIR=$(P7ZIP_IPK_DIR) \
-		DEST_HOME=/opt \
-		DEST_BIN=/opt/bin \
-		DEST_BIN=/opt/bin \
-		DEST_SHARE=/opt/lib/p7zip \
-		DEST_MAN=/opt/man \
+		DEST_HOME=$(OPTWARE_PREFIX)\
+		DEST_BIN=$(OPTWARE_PREFIX)bin \
+		DEST_BIN=$(OPTWARE_PREFIX)bin \
+		DEST_SHARE=$(OPTWARE_PREFIX)lib/p7zip \
+		DEST_MAN=$(OPTWARE_PREFIX)man \
 	;
 	chmod -R +w $(P7ZIP_IPK_DIR)/opt
-#	install -d $(P7ZIP_IPK_DIR)/opt/etc/
-#	install -m 644 $(P7ZIP_SOURCE_DIR)/p7zip.conf $(P7ZIP_IPK_DIR)/opt/etc/p7zip.conf
-#	install -d $(P7ZIP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(P7ZIP_SOURCE_DIR)/rc.p7zip $(P7ZIP_IPK_DIR)/opt/etc/init.d/SXXp7zip
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(P7ZIP_IPK_DIR)/opt/etc/init.d/SXXp7zip
+#	install -d $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(P7ZIP_SOURCE_DIR)/p7zip.conf $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/p7zip.conf
+#	install -d $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(P7ZIP_SOURCE_DIR)/rc.p7zip $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXp7zip
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(P7ZIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXp7zip
 	$(MAKE) $(P7ZIP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(P7ZIP_SOURCE_DIR)/postinst $(P7ZIP_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(P7ZIP_IPK_DIR)/CONTROL/postinst

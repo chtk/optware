@@ -105,7 +105,7 @@ $(DFU-UTIL_BUILD_DIR)/.configured: $(DL_DIR)/dfu-util-$(DFU-UTIL_VERSION).tar.gz
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(DFU-UTIL_BUILD_DIR)/.configured
@@ -149,12 +149,12 @@ $(DFU-UTIL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DFU-UTIL_IPK_DIR)/opt/sbin or $(DFU-UTIL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DFU-UTIL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DFU-UTIL_IPK_DIR)/opt/etc/dfu-util/...
-# Documentation files should be installed in $(DFU-UTIL_IPK_DIR)/opt/doc/dfu-util/...
-# Daemon startup scripts should be installed in $(DFU-UTIL_IPK_DIR)/opt/etc/init.d/S??dfu-util
+# Libraries and include files should be installed into $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX)etc/dfu-util/...
+# Documentation files should be installed in $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX)doc/dfu-util/...
+# Daemon startup scripts should be installed in $(DFU-UTIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??dfu-util
 #
 # You may need to patch your application to make it use these locations.
 #

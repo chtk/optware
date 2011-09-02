@@ -46,7 +46,7 @@ LIBGPG-ERROR_IPK_VERSION=1
 
 #
 # LIBGPG-ERROR_CONFFILES should be a list of user-editable files
-LIBGPG-ERROR_CONFFILES=#/opt/etc/libgpg-error.conf /opt/etc/init.d/SXXlibgpg-error
+LIBGPG-ERROR_CONFFILES=#$(OPTWARE_PREFIX)etc/libgpg-error.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibgpg-error
 
 #
 # LIBGPG-ERROR_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(LIBGPG-ERROR_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBGPG-ERROR_SOURCE) $(LIBGPG
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,7 +150,7 @@ $(LIBGPG-ERROR_BUILD_DIR)/.staged: $(LIBGPG-ERROR_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
 	sed -i -e 's|-I$$includedir|-I$(STAGING_INCLUDE_DIR)|' $(STAGING_PREFIX)/bin/gpg-error-config
-	rm -f $(STAGING_DIR)/opt/lib/libgpg-error.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgpg-error.la
 	touch $@
 
 libgpg-error-stage: $(LIBGPG-ERROR_BUILD_DIR)/.staged
@@ -177,22 +177,22 @@ $(LIBGPG-ERROR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBGPG-ERROR_IPK_DIR)/opt/sbin or $(LIBGPG-ERROR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBGPG-ERROR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBGPG-ERROR_IPK_DIR)/opt/etc/libgpg-error/...
-# Documentation files should be installed in $(LIBGPG-ERROR_IPK_DIR)/opt/doc/libgpg-error/...
-# Daemon startup scripts should be installed in $(LIBGPG-ERROR_IPK_DIR)/opt/etc/init.d/S??libgpg-error
+# Libraries and include files should be installed into $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/libgpg-error/...
+# Documentation files should be installed in $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)doc/libgpg-error/...
+# Daemon startup scripts should be installed in $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libgpg-error
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBGPG-ERROR_IPK): $(LIBGPG-ERROR_BUILD_DIR)/.built
 	rm -rf $(LIBGPG-ERROR_IPK_DIR) $(BUILD_DIR)/libgpg-error_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBGPG-ERROR_BUILD_DIR) DESTDIR=$(LIBGPG-ERROR_IPK_DIR) install-strip
-	#install -d $(LIBGPG-ERROR_IPK_DIR)/opt/etc/
-	#install -m 644 $(LIBGPG-ERROR_SOURCE_DIR)/libgpg-error.conf $(LIBGPG-ERROR_IPK_DIR)/opt/etc/libgpg-error.conf
-	#install -d $(LIBGPG-ERROR_IPK_DIR)/opt/etc/init.d
-	#install -m 755 $(LIBGPG-ERROR_SOURCE_DIR)/rc.libgpg-error $(LIBGPG-ERROR_IPK_DIR)/opt/etc/init.d/SXXlibgpg-error
+	#install -d $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	#install -m 644 $(LIBGPG-ERROR_SOURCE_DIR)/libgpg-error.conf $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/libgpg-error.conf
+	#install -d $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	#install -m 755 $(LIBGPG-ERROR_SOURCE_DIR)/rc.libgpg-error $(LIBGPG-ERROR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibgpg-error
 	$(MAKE) $(LIBGPG-ERROR_IPK_DIR)/CONTROL/control
 	#install -m 755 $(LIBGPG-ERROR_SOURCE_DIR)/postinst $(LIBGPG-ERROR_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(LIBGPG-ERROR_SOURCE_DIR)/prerm $(LIBGPG-ERROR_IPK_DIR)/CONTROL/prerm

@@ -133,7 +133,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -185,22 +185,22 @@ $(UPSLUG2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UPSLUG2_IPK_DIR)/opt/sbin or $(UPSLUG2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UPSLUG2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UPSLUG2_IPK_DIR)/opt/etc/upslug2/...
-# Documentation files should be installed in $(UPSLUG2_IPK_DIR)/opt/doc/upslug2/...
-# Daemon startup scripts should be installed in $(UPSLUG2_IPK_DIR)/opt/etc/init.d/S??upslug2
+# Libraries and include files should be installed into $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/upslug2/...
+# Documentation files should be installed in $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)doc/upslug2/...
+# Daemon startup scripts should be installed in $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??upslug2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(UPSLUG2_IPK): $(UPSLUG2_BUILD_DIR)/.built
 	rm -rf $(UPSLUG2_IPK_DIR) $(BUILD_DIR)/upslug2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(UPSLUG2_BUILD_DIR) DESTDIR=$(UPSLUG2_IPK_DIR) install-strip
-#	install -d $(UPSLUG2_IPK_DIR)/opt/etc/
-#	install -m 644 $(UPSLUG2_SOURCE_DIR)/upslug2.conf $(UPSLUG2_IPK_DIR)/opt/etc/upslug2.conf
-#	install -d $(UPSLUG2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(UPSLUG2_SOURCE_DIR)/rc.upslug2 $(UPSLUG2_IPK_DIR)/opt/etc/init.d/SXXupslug2
+#	install -d $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(UPSLUG2_SOURCE_DIR)/upslug2.conf $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/upslug2.conf
+#	install -d $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(UPSLUG2_SOURCE_DIR)/rc.upslug2 $(UPSLUG2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXupslug2
 	$(MAKE) $(UPSLUG2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(UPSLUG2_SOURCE_DIR)/postinst $(UPSLUG2_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(UPSLUG2_SOURCE_DIR)/prerm $(UPSLUG2_IPK_DIR)/CONTROL/prerm

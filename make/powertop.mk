@@ -29,7 +29,7 @@ POWERTOP_IPK_VERSION=2
 
 #
 # POWERTOP_CONFFILES should be a list of user-editable files
-#POWERTOP_CONFFILES=/opt/etc/powertop.conf /opt/etc/init.d/SXXpowertop
+#POWERTOP_CONFFILES=$(OPTWARE_PREFIX)etc/powertop.conf $(OPTWARE_PREFIX)etc/init.d/SXXpowertop
 
 #
 # POWERTOP_PATCHES should list any patches, in the the order in
@@ -154,26 +154,26 @@ $(POWERTOP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(POWERTOP_IPK_DIR)/opt/sbin or $(POWERTOP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(POWERTOP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(POWERTOP_IPK_DIR)/opt/etc/powertop/...
-# Documentation files should be installed in $(POWERTOP_IPK_DIR)/opt/doc/powertop/...
-# Daemon startup scripts should be installed in $(POWERTOP_IPK_DIR)/opt/etc/init.d/S??powertop
+# Libraries and include files should be installed into $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/powertop/...
+# Documentation files should be installed in $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)doc/powertop/...
+# Daemon startup scripts should be installed in $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??powertop
 #
 # You may need to patch your application to make it use these locations.
 #
 $(POWERTOP_IPK): $(POWERTOP_BUILD_DIR)/.built
 	rm -rf $(POWERTOP_IPK_DIR) $(BUILD_DIR)/powertop_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(POWERTOP_BUILD_DIR) DESTDIR=$(POWERTOP_IPK_DIR) install-strip
-	install -d $(POWERTOP_IPK_DIR)/opt/sbin/
-	install -m 755 $(POWERTOP_BUILD_DIR)/powertop $(POWERTOP_IPK_DIR)/opt/sbin/powertop
-	$(STRIP_COMMAND) $(POWERTOP_IPK_DIR)/opt/sbin/powertop
-#	install -d $(POWERTOP_IPK_DIR)/opt/etc/
-#	install -m 644 $(POWERTOP_SOURCE_DIR)/powertop.conf $(POWERTOP_IPK_DIR)/opt/etc/powertop.conf
-#	install -d $(POWERTOP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(POWERTOP_SOURCE_DIR)/rc.powertop $(POWERTOP_IPK_DIR)/opt/etc/init.d/SXXpowertop
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POWERTOP_IPK_DIR)/opt/etc/init.d/SXXpowertop
+	install -d $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -m 755 $(POWERTOP_BUILD_DIR)/powertop $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)sbin/powertop
+	$(STRIP_COMMAND) $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)sbin/powertop
+#	install -d $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(POWERTOP_SOURCE_DIR)/powertop.conf $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/powertop.conf
+#	install -d $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(POWERTOP_SOURCE_DIR)/rc.powertop $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpowertop
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POWERTOP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpowertop
 	$(MAKE) $(POWERTOP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(POWERTOP_SOURCE_DIR)/postinst $(POWERTOP_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(POWERTOP_IPK_DIR)/CONTROL/postinst

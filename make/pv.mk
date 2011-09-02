@@ -40,7 +40,7 @@ PV_IPK_VERSION=1
 
 #
 # PV_CONFFILES should be a list of user-editable files
-#PV_CONFFILES=/opt/etc/pv.conf /opt/etc/init.d/SXXpv
+#PV_CONFFILES=$(OPTWARE_PREFIX)etc/pv.conf $(OPTWARE_PREFIX)etc/init.d/SXXpv
 
 #
 # PV_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(PV_BUILD_DIR)/.configured: $(DL_DIR)/$(PV_SOURCE) $(PV_PATCHES) make/pv.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,19 +179,19 @@ $(PV_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PV_IPK_DIR)/opt/sbin or $(PV_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PV_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PV_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PV_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PV_IPK_DIR)/opt/etc/pv/...
-# Documentation files should be installed in $(PV_IPK_DIR)/opt/doc/pv/...
-# Daemon startup scripts should be installed in $(PV_IPK_DIR)/opt/etc/init.d/S??pv
+# Libraries and include files should be installed into $(PV_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PV_IPK_DIR)$(OPTWARE_PREFIX)etc/pv/...
+# Documentation files should be installed in $(PV_IPK_DIR)$(OPTWARE_PREFIX)doc/pv/...
+# Daemon startup scripts should be installed in $(PV_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pv
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PV_IPK): $(PV_BUILD_DIR)/.built
 	rm -rf $(PV_IPK_DIR) $(BUILD_DIR)/pv_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PV_BUILD_DIR) DESTDIR=$(PV_IPK_DIR) install
-	$(STRIP_COMMAND) $(PV_IPK_DIR)/opt/bin/pv
+	$(STRIP_COMMAND) $(PV_IPK_DIR)$(OPTWARE_PREFIX)bin/pv
 	$(MAKE) $(PV_IPK_DIR)/CONTROL/control
 	echo $(PV_CONFFILES) | sed -e 's/ /\n/g' > $(PV_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PV_IPK_DIR)

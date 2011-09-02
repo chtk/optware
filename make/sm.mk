@@ -120,7 +120,7 @@ $(SM_BUILD_DIR)/.configured: $(DL_DIR)/sm-$(SM_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(SM_BUILD_DIR)/libtool
@@ -160,7 +160,7 @@ $(SM_IPK): $(SM_BUILD_DIR)/.built
 	rm -rf $(SM_IPK_DIR) $(BUILD_DIR)/sm_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SM_BUILD_DIR) DESTDIR=$(SM_IPK_DIR) install-strip
 	$(MAKE) $(SM_IPK_DIR)/CONTROL/control
-	rm -f $(SM_IPK_DIR)/opt/lib/*.la
+	rm -f $(SM_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SM_IPK_DIR)
 
 #

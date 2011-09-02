@@ -40,7 +40,7 @@ MG_IPK_VERSION=1
 
 #
 # MG_CONFFILES should be a list of user-editable files
-#MG_CONFFILES=/opt/etc/mg.conf /opt/etc/init.d/SXXmg
+#MG_CONFFILES=$(OPTWARE_PREFIX)etc/mg.conf $(OPTWARE_PREFIX)etc/init.d/SXXmg
 
 #
 # MG_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(MG_BUILD_DIR)/.configured: $(DL_DIR)/$(MG_SOURCE) $(MG_PATCHES) make/mg.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -152,7 +152,7 @@ mg-unpack: $(MG_BUILD_DIR)/.configured
 $(MG_BUILD_DIR)/.built: $(MG_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		$(TARGET_CONFIGURE_OPTS) \
 		CFLAGS="$(STAGING_CPPFLAGS) $(MG_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(MG_LDFLAGS)" \
@@ -196,26 +196,26 @@ $(MG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MG_IPK_DIR)/opt/sbin or $(MG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MG_IPK_DIR)/opt/etc/mg/...
-# Documentation files should be installed in $(MG_IPK_DIR)/opt/doc/mg/...
-# Daemon startup scripts should be installed in $(MG_IPK_DIR)/opt/etc/init.d/S??mg
+# Libraries and include files should be installed into $(MG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/mg/...
+# Documentation files should be installed in $(MG_IPK_DIR)$(OPTWARE_PREFIX)doc/mg/...
+# Daemon startup scripts should be installed in $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MG_IPK): $(MG_BUILD_DIR)/.built
 	rm -rf $(MG_IPK_DIR) $(BUILD_DIR)/mg_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MG_BUILD_DIR) install \
-		prefix=$(MG_IPK_DIR)/opt \
+		prefix=$(MG_IPK_DIR)$(OPTWARE_PREFIX)\
 		;
-	$(STRIP_COMMAND) $(MG_IPK_DIR)/opt/bin/mg
-#	install -d $(MG_IPK_DIR)/opt/etc/
-#	install -m 644 $(MG_SOURCE_DIR)/mg.conf $(MG_IPK_DIR)/opt/etc/mg.conf
-#	install -d $(MG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MG_SOURCE_DIR)/rc.mg $(MG_IPK_DIR)/opt/etc/init.d/SXXmg
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MG_IPK_DIR)/opt/etc/init.d/SXXmg
+	$(STRIP_COMMAND) $(MG_IPK_DIR)$(OPTWARE_PREFIX)bin/mg
+#	install -d $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MG_SOURCE_DIR)/mg.conf $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/mg.conf
+#	install -d $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MG_SOURCE_DIR)/rc.mg $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmg
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmg
 	$(MAKE) $(MG_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MG_SOURCE_DIR)/postinst $(MG_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MG_IPK_DIR)/CONTROL/postinst

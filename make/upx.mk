@@ -43,7 +43,7 @@ UPX_IPK_VERSION=1
 
 #
 # UPX_CONFFILES should be a list of user-editable files
-#UPX_CONFFILES=/opt/etc/upx.conf /opt/etc/init.d/SXXupx
+#UPX_CONFFILES=$(OPTWARE_PREFIX)etc/upx.conf $(OPTWARE_PREFIX)etc/init.d/SXXupx
 
 #
 # UPX_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,27 +190,27 @@ $(UPX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UPX_IPK_DIR)/opt/sbin or $(UPX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UPX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UPX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UPX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UPX_IPK_DIR)/opt/etc/upx/...
-# Documentation files should be installed in $(UPX_IPK_DIR)/opt/doc/upx/...
-# Daemon startup scripts should be installed in $(UPX_IPK_DIR)/opt/etc/init.d/S??upx
+# Libraries and include files should be installed into $(UPX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/upx/...
+# Documentation files should be installed in $(UPX_IPK_DIR)$(OPTWARE_PREFIX)doc/upx/...
+# Daemon startup scripts should be installed in $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??upx
 #
 # You may need to patch your application to make it use these locations.
 #
 $(UPX_IPK): $(UPX_BUILD_DIR)/.built
 	rm -rf $(UPX_IPK_DIR) $(BUILD_DIR)/upx_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(UPX_BUILD_DIR) DESTDIR=$(UPX_IPK_DIR) install-strip
-	install -d $(UPX_IPK_DIR)/opt/bin $(UPX_IPK_DIR)/opt/man/man1
-	install $(UPX_BUILD_DIR)/src/upx.out $(UPX_IPK_DIR)/opt/bin/upx
-	$(STRIP_COMMAND) $(UPX_IPK_DIR)/opt/bin/upx
-	install $(UPX_BUILD_DIR)/doc/upx.1 $(UPX_IPK_DIR)/opt/man/man1
-#	install -d $(UPX_IPK_DIR)/opt/etc/
-#	install -m 644 $(UPX_SOURCE_DIR)/upx.conf $(UPX_IPK_DIR)/opt/etc/upx.conf
-#	install -d $(UPX_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(UPX_SOURCE_DIR)/rc.upx $(UPX_IPK_DIR)/opt/etc/init.d/SXXupx
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UPX_IPK_DIR)/opt/etc/init.d/SXXupx
+	install -d $(UPX_IPK_DIR)$(OPTWARE_PREFIX)bin $(UPX_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install $(UPX_BUILD_DIR)/src/upx.out $(UPX_IPK_DIR)$(OPTWARE_PREFIX)bin/upx
+	$(STRIP_COMMAND) $(UPX_IPK_DIR)$(OPTWARE_PREFIX)bin/upx
+	install $(UPX_BUILD_DIR)/doc/upx.1 $(UPX_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+#	install -d $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(UPX_SOURCE_DIR)/upx.conf $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/upx.conf
+#	install -d $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(UPX_SOURCE_DIR)/rc.upx $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXupx
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UPX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXupx
 	$(MAKE) $(UPX_IPK_DIR)/CONTROL/control
 #	install -m 755 $(UPX_SOURCE_DIR)/postinst $(UPX_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(UPX_IPK_DIR)/CONTROL/postinst

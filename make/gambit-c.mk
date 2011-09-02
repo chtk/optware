@@ -49,7 +49,7 @@ GAMBIT-C_IPK_VERSION=1
 
 #
 # GAMBIT-C_CONFFILES should be a list of user-editable files
-#GAMBIT-C_CONFFILES=/opt/etc/gambit-c.conf /opt/etc/init.d/SXXgambit-c
+#GAMBIT-C_CONFFILES=$(OPTWARE_PREFIX)etc/gambit-c.conf $(OPTWARE_PREFIX)etc/init.d/SXXgambit-c
 
 #
 # GAMBIT-C_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ $(GAMBIT-C_BUILD_DIR)/.configured: $(DL_DIR)/$(GAMBIT-C_SOURCE) $(GAMBIT-C_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-single-host \
 		--enable-gcc-opts \
 		--enable-shared \
@@ -187,20 +187,20 @@ $(GAMBIT-C_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GAMBIT-C_IPK_DIR)/opt/sbin or $(GAMBIT-C_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GAMBIT-C_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GAMBIT-C_IPK_DIR)/opt/etc/gambit-c/...
-# Documentation files should be installed in $(GAMBIT-C_IPK_DIR)/opt/doc/gambit-c/...
-# Daemon startup scripts should be installed in $(GAMBIT-C_IPK_DIR)/opt/etc/init.d/S??gambit-c
+# Libraries and include files should be installed into $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)etc/gambit-c/...
+# Documentation files should be installed in $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)doc/gambit-c/...
+# Daemon startup scripts should be installed in $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gambit-c
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GAMBIT-C_IPK): $(GAMBIT-C_BUILD_DIR)/.built
 	rm -rf $(GAMBIT-C_IPK_DIR) $(BUILD_DIR)/gambit-c_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(GAMBIT-C_BUILD_DIR) prefix=$(GAMBIT-C_IPK_DIR)/opt install
-	$(STRIP_COMMAND) $(GAMBIT-C_IPK_DIR)/opt/bin/gs[ci] $(GAMBIT-C_IPK_DIR)/opt/lib/lib*.so
-	sed -i -e 's|$(STAGING_DIR)||g; s|$(TARGET_CC)|/opt/bin/gcc|' $(GAMBIT-C_IPK_DIR)/opt/bin/gambc-cc
+	$(MAKE) -C $(GAMBIT-C_BUILD_DIR) prefix=$(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)install
+	$(STRIP_COMMAND) $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)bin/gs[ci] $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so
+	sed -i -e 's|$(STAGING_DIR)||g; s|$(TARGET_CC)|$(OPTWARE_PREFIX)bin/gcc|' $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)bin/gambc-cc
 	$(MAKE) $(GAMBIT-C_IPK_DIR)/CONTROL/control
 	echo $(GAMBIT-C_CONFFILES) | sed -e 's/ /\n/g' > $(GAMBIT-C_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GAMBIT-C_IPK_DIR)

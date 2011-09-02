@@ -23,11 +23,11 @@ POSTFIX_CONFLICTS=xmail
 
 POSTFIX_IPK_VERSION=1
 
-POSTFIX_CONFFILES=/opt/etc/aliases \
-		  /opt/etc/postfix/main.cf \
-		  /opt/etc/postfix/master.cf \
-		  /opt/lib/sasl2/smtpd.conf \
-		  /opt/etc/init.d/S69postfix
+POSTFIX_CONFFILES=$(OPTWARE_PREFIX)etc/aliases \
+		  $(OPTWARE_PREFIX)etc/postfix/main.cf \
+		  $(OPTWARE_PREFIX)etc/postfix/master.cf \
+		  $(OPTWARE_PREFIX)lib/sasl2/smtpd.conf \
+		  $(OPTWARE_PREFIX)etc/init.d/S69postfix
 
 POSTFIX_PATCHES=$(POSTFIX_SOURCE_DIR)/postfix.patch \
 		$(POSTFIX_SOURCE_DIR)/postfix-install.patch \
@@ -62,16 +62,16 @@ $(POSTFIX_BUILD_DIR)/.configured: $(DL_DIR)/$(POSTFIX_SOURCE) $(POSTFIX_PATCHES)
 		$(TARGET_CONFIGURE_OPTS) \
 		$(MAKE) makefiles \
 		CCARGS=' \
-			-DDEF_COMMAND_DIR=\"/opt/sbin\" \
-			-DDEF_CONFIG_DIR=\"/opt/etc/postfix\" \
-			-DDEF_DAEMON_DIR=\"/opt/libexec/postfix\" \
-			-DDEF_MAILQ_PATH=\"/opt/bin/mailq\" \
-			-DDEF_HTML_DIR=\"/opt/share/doc/postfix/html\" \
-			-DDEF_MANPAGE_DIR=\"/opt/man\" \
-			-DDEF_NEWALIAS_PATH=\"/opt/bin/newaliases\" \
-			-DDEF_QUEUE_DIR=\"/opt/var/spool/postfix\" \
-			-DDEF_README_DIR=\"/opt/share/doc/postfix/readme\" \
-			-DDEF_SENDMAIL_PATH=\"/opt/sbin/sendmail\" \
+			-DDEF_COMMAND_DIR=\"$(OPTWARE_PREFIX)sbin\" \
+			-DDEF_CONFIG_DIR=\"$(OPTWARE_PREFIX)etc/postfix\" \
+			-DDEF_DAEMON_DIR=\"$(OPTWARE_PREFIX)libexec/postfix\" \
+			-DDEF_MAILQ_PATH=\"$(OPTWARE_PREFIX)bin/mailq\" \
+			-DDEF_HTML_DIR=\"$(OPTWARE_PREFIX)share/doc/postfix/html\" \
+			-DDEF_MANPAGE_DIR=\"$(OPTWARE_PREFIX)man\" \
+			-DDEF_NEWALIAS_PATH=\"$(OPTWARE_PREFIX)bin/newaliases\" \
+			-DDEF_QUEUE_DIR=\"$(OPTWARE_PREFIX)var/spool/postfix\" \
+			-DDEF_README_DIR=\"$(OPTWARE_PREFIX)share/doc/postfix/readme\" \
+			-DDEF_SENDMAIL_PATH=\"$(OPTWARE_PREFIX)sbin/sendmail\" \
 			-DHAS_PCRE \
 			-DUSE_CYRUS_SASL \
 			-DUSE_SASL_AUTH \
@@ -149,41 +149,41 @@ $(POSTFIX_DOC_IPK_DIR)/CONTROL/control:
 $(POSTFIX_IPK): $(POSTFIX_BUILD_DIR)/.built
 	rm -rf $(POSTFIX_IPK_DIR) $(BUILD_DIR)/postfix_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(POSTFIX_BUILD_DIR) install_root=$(POSTFIX_IPK_DIR) \
-					daemon_directory=/opt/libexec/postfix \
-					command_directory=/opt/sbin \
-					queue_directory=/opt/var/spool/postfix \
+					daemon_directory=$(OPTWARE_PREFIX)libexec/postfix \
+					command_directory=$(OPTWARE_PREFIX)sbin \
+					queue_directory=$(OPTWARE_PREFIX)var/spool/postfix \
 					mail_owner=mail \
 					setgid_group=maildrop \
-					sendmail_path=/opt/sbin/sendmail \
-					mailq_path=/opt/bin/mailq \
-					newaliases_path=/opt/bin/newaliases \
-					html_directory=/opt/share/doc/postfix/html \
-					manpage_directory=/opt/man \
+					sendmail_path=$(OPTWARE_PREFIX)sbin/sendmail \
+					mailq_path=$(OPTWARE_PREFIX)bin/mailq \
+					newaliases_path=$(OPTWARE_PREFIX)bin/newaliases \
+					html_directory=$(OPTWARE_PREFIX)share/doc/postfix/html \
+					manpage_directory=$(OPTWARE_PREFIX)man \
 					sample_directory= \
-					readme_directory=/opt/share/doc/postfix/readme \
+					readme_directory=$(OPTWARE_PREFIX)share/doc/postfix/readme \
 					upgrade
-	/bin/sed -i 's/\(\bPATH=\)/\1\/opt\/bin:\/opt\/sbin:/g' $(POSTFIX_IPK_DIR)/opt/etc/postfix/post-install
-	install -m 600 $(POSTFIX_SOURCE_DIR)/aliases $(POSTFIX_IPK_DIR)/opt/etc/aliases
-	install -m 644 $(POSTFIX_SOURCE_DIR)/main.cf $(POSTFIX_IPK_DIR)/opt/etc/postfix/main.cf
+	/bin/sed -i 's/\(\bPATH=\)/\1\/opt\/bin:\/opt\/sbin:/g' $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/postfix/post-install
+	install -m 600 $(POSTFIX_SOURCE_DIR)/aliases $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/aliases
+	install -m 644 $(POSTFIX_SOURCE_DIR)/main.cf $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/postfix/main.cf
 ifeq (${OPTWARE_TARGET}, vt4)
-	sed -i -e 's/mail_owner = mail/mail_owner = admin/' $(POSTFIX_IPK_DIR)/opt/etc/postfix/main.cf
+	sed -i -e 's/mail_owner = mail/mail_owner = admin/' $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/postfix/main.cf
 endif
-	install -m 644 $(POSTFIX_SOURCE_DIR)/master.cf $(POSTFIX_IPK_DIR)/opt/etc/postfix/master.cf
-	install -d $(POSTFIX_IPK_DIR)/opt/lib/sasl2
-	install -m 644 $(POSTFIX_SOURCE_DIR)/smtpd.conf $(POSTFIX_IPK_DIR)/opt/lib/sasl2/smtpd.conf
-	install -d $(POSTFIX_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(POSTFIX_SOURCE_DIR)/rc.postfix $(POSTFIX_IPK_DIR)/opt/etc/init.d/S69postfix
-	(cd $(POSTFIX_IPK_DIR)/opt/etc/init.d; \
+	install -m 644 $(POSTFIX_SOURCE_DIR)/master.cf $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/postfix/master.cf
+	install -d $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)lib/sasl2
+	install -m 644 $(POSTFIX_SOURCE_DIR)/smtpd.conf $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)lib/sasl2/smtpd.conf
+	install -d $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(POSTFIX_SOURCE_DIR)/rc.postfix $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S69postfix
+	(cd $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d; \
 		ln -s S69postfix K31postfix \
 	)
-	$(STRIP_COMMAND) $(POSTFIX_IPK_DIR)/opt/sbin/*
-	$(STRIP_COMMAND) $(POSTFIX_IPK_DIR)/opt/libexec/postfix/*
+	$(STRIP_COMMAND) $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
+	$(STRIP_COMMAND) $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)libexec/postfix/*
 
 	# Split into the different packages
 	rm -rf $(POSTFIX_DOC_IPK_DIR)
 	install -d $(POSTFIX_DOC_IPK_DIR)/opt
-	mv $(POSTFIX_IPK_DIR)/opt/man $(POSTFIX_DOC_IPK_DIR)/opt
-	mv $(POSTFIX_IPK_DIR)/opt/share $(POSTFIX_DOC_IPK_DIR)/opt
+	mv $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)man $(POSTFIX_DOC_IPK_DIR)/opt
+	mv $(POSTFIX_IPK_DIR)$(OPTWARE_PREFIX)share $(POSTFIX_DOC_IPK_DIR)/opt
 	$(MAKE) $(POSTFIX_DOC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(POSTFIX_DOC_IPK_DIR)
 

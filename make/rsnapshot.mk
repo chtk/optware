@@ -18,7 +18,7 @@ RSNAPSHOT_DEPENDS=coreutils, perl, rsync, openssh
 
 RSNAPSHOT_IPK_VERSION=1
 
-RSNAPSHOT_CONFFILES=/opt/etc/rsnapshot.conf
+RSNAPSHOT_CONFFILES=$(OPTWARE_PREFIX)etc/rsnapshot.conf
 
 RSNAPSHOT_PATCHES=
 
@@ -60,17 +60,17 @@ $(RSNAPSHOT_BUILD_DIR)/.configured: $(DL_DIR)/$(RSNAPSHOT_SOURCE) $(RSNAPSHOT_PA
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(RSNAPSHOT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(RSNAPSHOT_LDFLAGS)" \
-		ac_cv_path_PERL=/opt/bin/perl \
-		ac_cv_path_RSYNC=/opt/bin/rsync \
-		ac_cv_path_SSH=/opt/bin/ssh \
-		ac_cv_path_CP=/opt/bin/cp \
-		ac_cv_path_RM=/opt/bin/rm \
-		ac_cv_path_DU=/opt/bin/du \
+		ac_cv_path_PERL=$(OPTWARE_PREFIX)bin/perl \
+		ac_cv_path_RSYNC=$(OPTWARE_PREFIX)bin/rsync \
+		ac_cv_path_SSH=$(OPTWARE_PREFIX)bin/ssh \
+		ac_cv_path_CP=$(OPTWARE_PREFIX)bin/cp \
+		ac_cv_path_RM=$(OPTWARE_PREFIX)bin/rm \
+		ac_cv_path_DU=$(OPTWARE_PREFIX)bin/du \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--without-logger \
 	)
@@ -95,12 +95,12 @@ rsnapshot: $(RSNAPSHOT_BUILD_DIR)/.built
 $(RSNAPSHOT_IPK): $(RSNAPSHOT_BUILD_DIR)/.built
 	rm -rf $(RSNAPSHOT_IPK_DIR) $(BUILD_DIR)/rsnapshot_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RSNAPSHOT_BUILD_DIR) DESTDIR=$(RSNAPSHOT_IPK_DIR) install
-	sed -i -e '/\/usr\/bin\/perl -w/d' -e 's|/usr/local/|/opt/|g' $(RSNAPSHOT_IPK_DIR)/opt/bin/*
-	find $(RSNAPSHOT_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
-	install -m 644 $(RSNAPSHOT_SOURCE_DIR)/rsnapshot.conf $(RSNAPSHOT_IPK_DIR)/opt/etc/rsnapshot.conf
-	install -d $(RSNAPSHOT_IPK_DIR)/opt/var/rsnapshot/
-	install -d $(RSNAPSHOT_IPK_DIR)/opt/var/run/
-	install -d $(RSNAPSHOT_IPK_DIR)/opt/var/log/
+	sed -i -e '/\/usr\/bin\/perl -w/d' -e 's|/usr/local/|$(OPTWARE_PREFIX)|g' $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	find $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
+	install -m 644 $(RSNAPSHOT_SOURCE_DIR)/rsnapshot.conf $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)etc/rsnapshot.conf
+	install -d $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)var/rsnapshot/
+	install -d $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)var/run/
+	install -d $(RSNAPSHOT_IPK_DIR)$(OPTWARE_PREFIX)var/log/
 	$(MAKE) $(RSNAPSHOT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(RSNAPSHOT_SOURCE_DIR)/postinst $(RSNAPSHOT_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(RSNAPSHOT_SOURCE_DIR)/prerm $(RSNAPSHOT_IPK_DIR)/CONTROL/prerm

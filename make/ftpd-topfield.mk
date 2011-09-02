@@ -46,7 +46,7 @@ FTPD-TOPFIELD_IPK_VERSION=0
 
 #
 # FTPD-TOPFIELD_CONFFILES should be a list of user-editable files
-# FTPD-TOPFIELD_CONFFILES=/opt/etc/ftpd-topfield.conf /opt/etc/init.d/SXXftpd-topfield
+# FTPD-TOPFIELD_CONFFILES=$(OPTWARE_PREFIX)etc/ftpd-topfield.conf $(OPTWARE_PREFIX)etc/init.d/SXXftpd-topfield
 
 #
 # FTPD-TOPFIELD_PATCHES should list any patches, in the the order in
@@ -156,24 +156,24 @@ $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FTPD-TOPFIELD_IPK_DIR)/opt/sbin or $(FTPD-TOPFIELD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FTPD-TOPFIELD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/ftpd-topfield/...
-# Documentation files should be installed in $(FTPD-TOPFIELD_IPK_DIR)/opt/doc/ftpd-topfield/...
-# Daemon startup scripts should be installed in $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/init.d/S??ftpd-topfield
+# Libraries and include files should be installed into $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/ftpd-topfield/...
+# Documentation files should be installed in $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)doc/ftpd-topfield/...
+# Daemon startup scripts should be installed in $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ftpd-topfield
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FTPD-TOPFIELD_IPK): $(FTPD-TOPFIELD_BUILD_DIR)/.built
 	rm -rf $(FTPD-TOPFIELD_IPK_DIR) $(BUILD_DIR)/ftpd-topfield_*_$(TARGET_ARCH).ipk
-	install -d $(FTPD-TOPFIELD_IPK_DIR)/opt/sbin/
-	install -m 755 $(FTPD-TOPFIELD_BUILD_DIR)/ftpd $(FTPD-TOPFIELD_IPK_DIR)/opt/sbin/ftpd-topfield
-	$(STRIP_COMMAND) $(FTPD-TOPFIELD_IPK_DIR)/opt/sbin/ftpd-topfield
-#	install -d $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/
-#	install -m 644 $(FTPD-TOPFIELD_SOURCE_DIR)/ftpd-topfield.conf $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/ftpd-topfield.conf
-	install -d $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/rc.ftpd-topfield $(FTPD-TOPFIELD_IPK_DIR)/opt/etc/init.d/S67ftpd-topfield
+	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -m 755 $(FTPD-TOPFIELD_BUILD_DIR)/ftpd $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/ftpd-topfield
+	$(STRIP_COMMAND) $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/ftpd-topfield
+#	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(FTPD-TOPFIELD_SOURCE_DIR)/ftpd-topfield.conf $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/ftpd-topfield.conf
+	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/rc.ftpd-topfield $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S67ftpd-topfield
 	$(MAKE) $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/control
 	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/postinst $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/prerm $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/prerm

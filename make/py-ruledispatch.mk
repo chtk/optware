@@ -47,7 +47,7 @@ PY-RULEDISPATCH_IPK_VERSION=2
 
 #
 # PY-RULEDISPATCH_CONFFILES should be a list of user-editable files
-#PY-RULEDISPATCH_CONFFILES=/opt/etc/py-ruledispatch.conf /opt/etc/init.d/SXXpy-ruledispatch
+#PY-RULEDISPATCH_CONFFILES=$(OPTWARE_PREFIX)etc/py-ruledispatch.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-ruledispatch
 
 #
 # PY-RULEDISPATCH_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(PY-RULEDISPATCH_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-RULEDISPATCH_SOURCE) $(
         fi
 	mv $(BUILD_DIR)/$(PY-RULEDISPATCH_DIR) $(PY-RULEDISPATCH_BUILD_DIR)/2.4
 	(cd $(PY-RULEDISPATCH_BUILD_DIR)/2.4; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.4") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.4") >> setup.cfg \
 	)
 	# 2.5
 	rm -rf $(BUILD_DIR)/$(PY-RULEDISPATCH_DIR)
@@ -139,7 +139,7 @@ $(PY-RULEDISPATCH_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-RULEDISPATCH_SOURCE) $(
         fi
 	mv $(BUILD_DIR)/$(PY-RULEDISPATCH_DIR) $(PY-RULEDISPATCH_BUILD_DIR)/2.5
 	(cd $(PY-RULEDISPATCH_BUILD_DIR)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	touch $@
 
@@ -208,12 +208,12 @@ $(PY25-RULEDISPATCH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-RULEDISPATCH_IPK_DIR)/opt/sbin or $(PY-RULEDISPATCH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-RULEDISPATCH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-RULEDISPATCH_IPK_DIR)/opt/etc/py-ruledispatch/...
-# Documentation files should be installed in $(PY-RULEDISPATCH_IPK_DIR)/opt/doc/py-ruledispatch/...
-# Daemon startup scripts should be installed in $(PY-RULEDISPATCH_IPK_DIR)/opt/etc/init.d/S??py-ruledispatch
+# Libraries and include files should be installed into $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX)etc/py-ruledispatch/...
+# Documentation files should be installed in $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX)doc/py-ruledispatch/...
+# Daemon startup scripts should be installed in $(PY-RULEDISPATCH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-ruledispatch
 #
 # You may need to patch your application to make it use these locations.
 #

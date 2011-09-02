@@ -40,7 +40,7 @@ RRDCOLLECT_IPK_VERSION=1
 
 #
 # RRDCOLLECT_CONFFILES should be a list of user-editable files
-RRDCOLLECT_CONFFILES=/opt/etc/rrdcollect.conf /opt/etc/init.d/S95rrdcollect
+RRDCOLLECT_CONFFILES=$(OPTWARE_PREFIX)etc/rrdcollect.conf $(OPTWARE_PREFIX)etc/init.d/S95rrdcollect
 
 #
 # RRDCOLLECT_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(RRDCOLLECT_BUILD_DIR)/.configured: $(DL_DIR)/$(RRDCOLLECT_SOURCE) $(RRDCOLLECT
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--disable-rpath \
@@ -181,22 +181,22 @@ $(RRDCOLLECT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RRDCOLLECT_IPK_DIR)/opt/sbin or $(RRDCOLLECT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RRDCOLLECT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RRDCOLLECT_IPK_DIR)/opt/etc/rrdcollect/...
-# Documentation files should be installed in $(RRDCOLLECT_IPK_DIR)/opt/doc/rrdcollect/...
-# Daemon startup scripts should be installed in $(RRDCOLLECT_IPK_DIR)/opt/etc/init.d/S??rrdcollect
+# Libraries and include files should be installed into $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/rrdcollect/...
+# Documentation files should be installed in $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)doc/rrdcollect/...
+# Daemon startup scripts should be installed in $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??rrdcollect
 #
 # You may need to patch your application to make it use these locations.
 #
 $(RRDCOLLECT_IPK): $(RRDCOLLECT_BUILD_DIR)/.built
 	rm -rf $(RRDCOLLECT_IPK_DIR) $(BUILD_DIR)/rrdcollect_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RRDCOLLECT_BUILD_DIR) DESTDIR=$(RRDCOLLECT_IPK_DIR) install-strip
-	install -d $(RRDCOLLECT_IPK_DIR)/opt/etc/
-	install -m 644  $(RRDCOLLECT_SOURCE_DIR)/rrdcollect.conf  $(RRDCOLLECT_IPK_DIR)/opt/etc
-	install -d $(RRDCOLLECT_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(RRDCOLLECT_SOURCE_DIR)/rc.rrdcollect $(RRDCOLLECT_IPK_DIR)/opt/etc/init.d/S95rrdcollect
+	install -d $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644  $(RRDCOLLECT_SOURCE_DIR)/rrdcollect.conf  $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -d $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(RRDCOLLECT_SOURCE_DIR)/rc.rrdcollect $(RRDCOLLECT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S95rrdcollect
 	$(MAKE) $(RRDCOLLECT_IPK_DIR)/CONTROL/control
 	install -m 755 $(RRDCOLLECT_SOURCE_DIR)/postinst $(RRDCOLLECT_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(RRDCOLLECT_SOURCE_DIR)/prerm $(RRDCOLLECT_IPK_DIR)/CONTROL/prerm

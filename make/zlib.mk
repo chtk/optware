@@ -54,7 +54,7 @@ $(ZLIB_HOST_BUILD_DIR)/.staged: host/.configured $(DL_DIR)/$(ZLIB_SOURCE) make/z
 	$(ZLIB_UNZIP) $(DL_DIR)/$(ZLIB_SOURCE) | tar -C $(HOST_BUILD_DIR) -xvf -
 	mv $(HOST_BUILD_DIR)/$(ZLIB_DIR) $(@D)
 	(cd $(@D); \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		./configure \
 		--shared \
 	)
@@ -77,7 +77,7 @@ ifeq (darwin,$(TARGET_OS))
 endif
 	(cd $(ZLIB_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
-		prefix=/opt \
+		prefix=$(OPTWARE_PREFIX)\
 		./configure \
 		--shared \
 	)
@@ -107,8 +107,8 @@ $(ZLIB_BUILD_DIR)/.staged: $(ZLIB_BUILD_DIR)/.built
 	install -d $(STAGING_LIB_DIR)
 	install -m 644 $(ZLIB_BUILD_DIR)/libz.a $(STAGING_LIB_DIR)
 	install -m 644 $(ZLIB_BUILD_DIR)/libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) $(STAGING_LIB_DIR)
-	cd $(STAGING_DIR)/opt/lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz$(SO).1$(DYLIB)
-	cd $(STAGING_DIR)/opt/lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz.$(SHLIB_EXT)
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz$(SO).1$(DYLIB)
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz.$(SHLIB_EXT)
 	touch $@
 
 zlib-stage: $(ZLIB_BUILD_DIR)/.staged
@@ -143,14 +143,14 @@ $(ZLIB_IPK_DIR)/CONTROL/control:
 
 $(ZLIB_IPK): $(ZLIB_BUILD_DIR)/.built
 	rm -rf $(ZLIB_IPK_DIR) $(BUILD_DIR)/zlib_*_$(TARGET_ARCH).ipk
-	install -d $(ZLIB_IPK_DIR)/opt/include
-	install -m 644 $(ZLIB_BUILD_DIR)/zlib.h $(ZLIB_IPK_DIR)/opt/include
-	install -m 644 $(ZLIB_BUILD_DIR)/zconf.h $(ZLIB_IPK_DIR)/opt/include
-	install -d $(ZLIB_IPK_DIR)/opt/lib
-	install -m 644 $(ZLIB_BUILD_DIR)/libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) $(ZLIB_IPK_DIR)/opt/lib
-	$(STRIP_COMMAND) $(ZLIB_IPK_DIR)/opt/lib/libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB)
-	cd $(ZLIB_IPK_DIR)/opt/lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz$(SO).1$(DYLIB)
-	cd $(ZLIB_IPK_DIR)/opt/lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz.$(SHLIB_EXT)
+	install -d $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(ZLIB_BUILD_DIR)/zlib.h $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(ZLIB_BUILD_DIR)/zconf.h $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -d $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(ZLIB_BUILD_DIR)/libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib
+	$(STRIP_COMMAND) $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib/libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB)
+	cd $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz$(SO).1$(DYLIB)
+	cd $(ZLIB_IPK_DIR)$(OPTWARE_PREFIX)lib && ln -fs libz$(SO).$(ZLIB_LIB_VERSION)$(DYLIB) libz.$(SHLIB_EXT)
 	$(MAKE) $(ZLIB_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ZLIB_IPK_DIR)
 

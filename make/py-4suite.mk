@@ -41,7 +41,7 @@ PY-4SUITE_IPK_VERSION=2
 
 #
 # PY-4SUITE_CONFFILES should be a list of user-editable files
-#PY-4SUITE_CONFFILES=/opt/etc/py-4suite.conf /opt/etc/init.d/SXXpy-4suite
+#PY-4SUITE_CONFFILES=$(OPTWARE_PREFIX)etc/py-4suite.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-4suite
 
 #
 # PY-4SUITE_PATCHES should list any patches, in the the order in
@@ -122,9 +122,9 @@ $(PY-4SUITE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-4SUITE_SOURCE) $(PY-4SUITE_PA
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg \
 	    ; \
 	    sed -i -e "s/return.*has_docs()/return False/" Ft/Lib/DistExt/Build.py; \
@@ -141,9 +141,9 @@ $(PY-4SUITE_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-4SUITE_SOURCE) $(PY-4SUITE_PA
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[install]"; \
-		echo "install_scripts=/opt/bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg \
 	    ; \
 	    sed -i -e "s/return.*has_docs()/return False/" Ft/Lib/DistExt/Build.py; \
@@ -215,12 +215,12 @@ $(PY25-4SUITE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-4SUITE_IPK_DIR)/opt/sbin or $(PY-4SUITE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-4SUITE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-4SUITE_IPK_DIR)/opt/etc/py-4suite/...
-# Documentation files should be installed in $(PY-4SUITE_IPK_DIR)/opt/doc/py-4suite/...
-# Daemon startup scripts should be installed in $(PY-4SUITE_IPK_DIR)/opt/etc/init.d/S??py-4suite
+# Libraries and include files should be installed into $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)etc/py-4suite/...
+# Documentation files should be installed in $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)doc/py-4suite/...
+# Daemon startup scripts should be installed in $(PY-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-4suite
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -230,9 +230,9 @@ $(PY24-4SUITE_IPK): $(PY-4SUITE_BUILD_DIR)/.built
 	(cd $(PY-4SUITE_BUILD_DIR)/2.4; \
 	PYTHONPATH=$(STAGING_LIB_DIR)/python2.4/site-packages \
 	$(HOST_STAGING_PREFIX)/bin/python2.4 setup.py install \
-	--root=$(PY24-4SUITE_IPK_DIR) --prefix=/opt --without-docs)
-	$(STRIP_COMMAND) `find $(PY24-4SUITE_IPK_DIR)/opt/lib/ -name '*.so'`
-	sed -i -e '1s|#!/usr/bin/env python|#!/opt/bin/python2.4|' $(PY24-4SUITE_IPK_DIR)/opt/bin/*
+	--root=$(PY24-4SUITE_IPK_DIR) --prefix=$(OPTWARE_PREFIX)--without-docs)
+	$(STRIP_COMMAND) `find $(PY24-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)lib/ -name '*.so'`
+	sed -i -e '1s|#!/usr/bin/env python|#!$(OPTWARE_PREFIX)bin/python2.4|' $(PY24-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)bin/*
 	$(MAKE) $(PY24-4SUITE_IPK_DIR)/CONTROL/control
 #	echo $(PY-4SUITE_CONFFILES) | sed -e 's/ /\n/g' > $(PY24-4SUITE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY24-4SUITE_IPK_DIR)
@@ -242,9 +242,9 @@ $(PY25-4SUITE_IPK): $(PY-4SUITE_BUILD_DIR)/.built
 	(cd $(PY-4SUITE_BUILD_DIR)/2.5; \
 	PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 	$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
-	--root=$(PY25-4SUITE_IPK_DIR) --prefix=/opt --without-docs)
-	$(STRIP_COMMAND) `find $(PY25-4SUITE_IPK_DIR)/opt/lib/ -name '*.so'`
-	sed -i -e '1s|#!/usr/bin/env python|#!/opt/bin/python2.5|' $(PY25-4SUITE_IPK_DIR)/opt/bin/*
+	--root=$(PY25-4SUITE_IPK_DIR) --prefix=$(OPTWARE_PREFIX)--without-docs)
+	$(STRIP_COMMAND) `find $(PY25-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)lib/ -name '*.so'`
+	sed -i -e '1s|#!/usr/bin/env python|#!$(OPTWARE_PREFIX)bin/python2.5|' $(PY25-4SUITE_IPK_DIR)$(OPTWARE_PREFIX)bin/*
 	$(MAKE) $(PY25-4SUITE_IPK_DIR)/CONTROL/control
 #	echo $(PY-4SUITE_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-4SUITE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-4SUITE_IPK_DIR)

@@ -32,7 +32,7 @@ XEMACS_IPK_VERSION=3
 
 #
 # XEMACS_CONFFILES should be a list of user-editable files
-#XEMACS_CONFFILES=/opt/etc/xemacs.conf /opt/etc/init.d/SXXxemacs
+#XEMACS_CONFFILES=$(OPTWARE_PREFIX)etc/xemacs.conf $(OPTWARE_PREFIX)etc/init.d/SXXxemacs
 
 #
 # XEMACS_PATCHES should list any patches, in the the order in
@@ -101,7 +101,7 @@ $(XEMACS_BUILD_DIR)/.configured: $(DL_DIR)/$(XEMACS_SOURCE) $(XEMACS_PATCHES)
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(XEMACS_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(XEMACS_LDFLAGS)" \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		$(GNU_TARGET_NAME) \
 	)
@@ -143,21 +143,21 @@ $(XEMACS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(XEMACS_IPK_DIR)/opt/sbin or $(XEMACS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(XEMACS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(XEMACS_IPK_DIR)/opt/etc/xemacs/...
-# Documentation files should be installed in $(XEMACS_IPK_DIR)/opt/doc/xemacs/...
-# Daemon startup scripts should be installed in $(XEMACS_IPK_DIR)/opt/etc/init.d/S??xemacs
+# Libraries and include files should be installed into $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/xemacs/...
+# Documentation files should be installed in $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)doc/xemacs/...
+# Daemon startup scripts should be installed in $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??xemacs
 #
 # You may need to patch your application to make it use these locations.
 #
 $(XEMACS_IPK): $(XEMACS_BUILD_DIR)/.built
 	rm -rf $(XEMACS_IPK_DIR) $(BUILD_DIR)/xemacs_*_$(TARGET_ARCH).ipk
 	install -d $(XEMACS_IPK_DIR)/opt
-	$(MAKE) -C $(XEMACS_BUILD_DIR) prefix=$(XEMACS_IPK_DIR)/opt install
-	rm -f $(XEMACS_IPK_DIR)/opt/bin/xemacs
-	ln -s /opt/bin/xemacs-$(XEMACS_VERSION) $(XEMACS_IPK_DIR)/opt/bin/xemacs
+	$(MAKE) -C $(XEMACS_BUILD_DIR) prefix=$(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)install
+	rm -f $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)bin/xemacs
+	ln -s $(OPTWARE_PREFIX)bin/xemacs-$(XEMACS_VERSION) $(XEMACS_IPK_DIR)$(OPTWARE_PREFIX)bin/xemacs
 	$(MAKE) $(XEMACS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XEMACS_IPK_DIR)
 

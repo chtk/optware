@@ -40,7 +40,7 @@ ND_IPK_VERSION=1
 
 #
 # ND_CONFFILES should be a list of user-editable files
-#ND_CONFFILES=/opt/etc/nd.conf /opt/etc/init.d/SXXnd
+#ND_CONFFILES=$(OPTWARE_PREFIX)etc/nd.conf $(OPTWARE_PREFIX)etc/init.d/SXXnd
 
 #
 # ND_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(ND_BUILD_DIR)/.configured: $(DL_DIR)/$(ND_SOURCE) $(ND_PATCHES) make/nd.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -177,12 +177,12 @@ $(ND_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ND_IPK_DIR)/opt/sbin or $(ND_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ND_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ND_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ND_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ND_IPK_DIR)/opt/etc/nd/...
-# Documentation files should be installed in $(ND_IPK_DIR)/opt/doc/nd/...
-# Daemon startup scripts should be installed in $(ND_IPK_DIR)/opt/etc/init.d/S??nd
+# Libraries and include files should be installed into $(ND_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ND_IPK_DIR)$(OPTWARE_PREFIX)etc/nd/...
+# Documentation files should be installed in $(ND_IPK_DIR)$(OPTWARE_PREFIX)doc/nd/...
+# Daemon startup scripts should be installed in $(ND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nd
 #
 # You may need to patch your application to make it use these locations.
 #

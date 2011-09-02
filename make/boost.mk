@@ -53,7 +53,7 @@ BOOST_IPK_VERSION=1
 
 #
 # BOOST_CONFFILES should be a list of user-editable files
-#BOOST_CONFFILES=/opt/etc/boost.conf /opt/etc/init.d/SXXboost
+#BOOST_CONFFILES=$(OPTWARE_PREFIX)etc/boost.conf $(OPTWARE_PREFIX)etc/init.d/SXXboost
 
 #
 # BOOST_PATCHES should list any patches, in the the order in
@@ -509,12 +509,12 @@ $(BOOST_WAVE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BOOST_IPK_DIR)/opt/sbin or $(BOOST_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BOOST_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BOOST_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BOOST_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BOOST_IPK_DIR)/opt/etc/boost/...
-# Documentation files should be installed in $(BOOST_IPK_DIR)/opt/doc/boost/...
-# Daemon startup scripts should be installed in $(BOOST_IPK_DIR)/opt/etc/init.d/S??boost
+# Libraries and include files should be installed into $(BOOST_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BOOST_IPK_DIR)$(OPTWARE_PREFIX)etc/boost/...
+# Documentation files should be installed in $(BOOST_IPK_DIR)$(OPTWARE_PREFIX)doc/boost/...
+# Daemon startup scripts should be installed in $(BOOST_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??boost
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -522,85 +522,85 @@ $(BOOST_DEV_IPK): $(BOOST_BUILD_DIR)/.configured
 	rm -rf $(BOOST_IPK_DIRS) $(BUILD_DIR)/boost*_$(TARGET_ARCH).ipk
 	(cd $(BOOST_BUILD_DIR); $(BOOST_JAM) install $(BOOST_JAM_ARGS) --prefix=$(BOOST_DEV_IPK_DIR)/opt; exit 0)
 	touch $(BOOST_BUILD_DIR)/.built
-	$(STRIP_COMMAND) $(BOOST_DEV_IPK_DIR)/opt/lib/*.so*
+	$(STRIP_COMMAND) $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so*
 	### now make boost-date_time
 	$(MAKE) $(BOOST_DATE_TIME_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_DATE_TIME_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*date_time* $(BOOST_DATE_TIME_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_DATE_TIME_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*date_time* $(BOOST_DATE_TIME_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_DATE_TIME_IPK_DIR)
 	### now make boost-filesystem
 	$(MAKE) $(BOOST_FILESYSTEM_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_FILESYSTEM_IPK_DIR)/opt/lib
-	-mv $(BOOST_DEV_IPK_DIR)/opt/lib/*filesystem* $(BOOST_FILESYSTEM_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_FILESYSTEM_IPK_DIR)$(OPTWARE_PREFIX)lib
+	-mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*filesystem* $(BOOST_FILESYSTEM_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_FILESYSTEM_IPK_DIR)
 	### now make boost-graph
 	$(MAKE) $(BOOST_GRAPH_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_GRAPH_IPK_DIR)/opt/lib
-	-mv $(BOOST_DEV_IPK_DIR)/opt/lib/*graph* $(BOOST_GRAPH_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_GRAPH_IPK_DIR)$(OPTWARE_PREFIX)lib
+	-mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*graph* $(BOOST_GRAPH_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_GRAPH_IPK_DIR)
 	### now make boost-iostreams
 	$(MAKE) $(BOOST_IOSTREAMS_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_IOSTREAMS_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*iostreams* $(BOOST_IOSTREAMS_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_IOSTREAMS_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*iostreams* $(BOOST_IOSTREAMS_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_IOSTREAMS_IPK_DIR)
 	### now make boost-program_options
 	$(MAKE) $(BOOST_PROGRAM_OPTIONS_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_PROGRAM_OPTIONS_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*program_options* $(BOOST_PROGRAM_OPTIONS_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_PROGRAM_OPTIONS_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*program_options* $(BOOST_PROGRAM_OPTIONS_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_PROGRAM_OPTIONS_IPK_DIR)
 	### now make boost-python
 	$(MAKE) $(BOOST_PYTHON_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_PYTHON_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*python* $(BOOST_PYTHON_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*python* $(BOOST_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_PYTHON_IPK_DIR)
 	### now make boost-random
 	$(MAKE) $(BOOST_RANDOM_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_RANDOM_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*random* $(BOOST_RANDOM_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_RANDOM_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*random* $(BOOST_RANDOM_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_RANDOM_IPK_DIR)
 	### now make boost-regex
 	$(MAKE) $(BOOST_REGEX_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_REGEX_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*regex* $(BOOST_REGEX_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_REGEX_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*regex* $(BOOST_REGEX_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_REGEX_IPK_DIR)
 	### now make boost-serialization if it has been built
-	if ls $(BOOST_DEV_IPK_DIR)/opt/lib/*serialization* > /dev/null 2>&1; then \
+	if ls $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*serialization* > /dev/null 2>&1; then \
 		$(MAKE) $(BOOST_SERIALIZATION_IPK_DIR)/CONTROL/control; \
-		mkdir -p $(BOOST_SERIALIZATION_IPK_DIR)/opt/lib; \
-		mv $(BOOST_DEV_IPK_DIR)/opt/lib/*serialization* $(BOOST_SERIALIZATION_IPK_DIR)/opt/lib; \
+		mkdir -p $(BOOST_SERIALIZATION_IPK_DIR)$(OPTWARE_PREFIX)lib; \
+		mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*serialization* $(BOOST_SERIALIZATION_IPK_DIR)$(OPTWARE_PREFIX)lib; \
 		cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_SERIALIZATION_IPK_DIR); \
 	fi
 	### now make boost-signals
 	$(MAKE) $(BOOST_SIGNALS_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_SIGNALS_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*signals* $(BOOST_SIGNALS_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_SIGNALS_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*signals* $(BOOST_SIGNALS_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_SIGNALS_IPK_DIR)
 	### now make boost-system
 	$(MAKE) $(BOOST_SYSTEM_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_SYSTEM_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*system* $(BOOST_SYSTEM_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_SYSTEM_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*system* $(BOOST_SYSTEM_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_SYSTEM_IPK_DIR)
 	### now make boost-test
 	$(MAKE) $(BOOST_TEST_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_TEST_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*unit_test_framework* $(BOOST_TEST_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*prg_exec_monitor* $(BOOST_TEST_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_TEST_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*unit_test_framework* $(BOOST_TEST_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*prg_exec_monitor* $(BOOST_TEST_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_TEST_IPK_DIR)
 	### now make boost-thread
 	$(MAKE) $(BOOST_THREAD_IPK_DIR)/CONTROL/control
-	mkdir -p $(BOOST_THREAD_IPK_DIR)/opt/lib
-	mv $(BOOST_DEV_IPK_DIR)/opt/lib/*thread* $(BOOST_THREAD_IPK_DIR)/opt/lib
+	mkdir -p $(BOOST_THREAD_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*thread* $(BOOST_THREAD_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_THREAD_IPK_DIR)
 	### now make boost-wave if it has been built
-	if ls $(BOOST_DEV_IPK_DIR)/opt/lib/*wave* > /dev/null 2>&1; then \
+	if ls $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*wave* > /dev/null 2>&1; then \
 		$(MAKE) $(BOOST_WAVE_IPK_DIR)/CONTROL/control; \
-		mkdir -p $(BOOST_WAVE_IPK_DIR)/opt/lib; \
-		mv $(BOOST_DEV_IPK_DIR)/opt/lib/*wave* $(BOOST_WAVE_IPK_DIR)/opt/lib; \
+		mkdir -p $(BOOST_WAVE_IPK_DIR)$(OPTWARE_PREFIX)lib; \
+		mv $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/*wave* $(BOOST_WAVE_IPK_DIR)$(OPTWARE_PREFIX)lib; \
 		cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_WAVE_IPK_DIR); \
 	fi
 	### finally boost-dev
 	$(MAKE) $(BOOST_DEV_IPK_DIR)/CONTROL/control
-	rm -rf $(BOOST_DEV_IPK_DIR)/opt/lib
+	rm -rf $(BOOST_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BOOST_DEV_IPK_DIR)
 
 #

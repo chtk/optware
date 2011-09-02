@@ -41,9 +41,9 @@ $(PERL-FILE-NEXT_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-FILE-NEXT_SOURCE) $(PE
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-file-next-unpack: $(PERL-FILE-NEXT_BUILD_DIR)/.configured
 $(PERL-FILE-NEXT_BUILD_DIR)/.built: $(PERL-FILE-NEXT_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-file-next: $(PERL-FILE-NEXT_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-FILE-NEXT_IPK_DIR)/CONTROL/control:
 $(PERL-FILE-NEXT_IPK): $(PERL-FILE-NEXT_BUILD_DIR)/.built
 	rm -rf $(PERL-FILE-NEXT_IPK_DIR) $(BUILD_DIR)/perl-file-next_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-FILE-NEXT_BUILD_DIR) DESTDIR=$(PERL-FILE-NEXT_IPK_DIR) install
-	find $(PERL-FILE-NEXT_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-FILE-NEXT_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-FILE-NEXT_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-FILE-NEXT_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-FILE-NEXT_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-FILE-NEXT_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-FILE-NEXT_IPK_DIR)/CONTROL/control
 	echo $(PERL-FILE-NEXT_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-FILE-NEXT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-FILE-NEXT_IPK_DIR)

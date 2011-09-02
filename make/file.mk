@@ -98,7 +98,7 @@ $(FILE_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(FILE_SOURCE) make/fi
 	(cd $(@D); \
 		CPPFLAGS="-I$(HOST_STAGING_INCLUDE_DIR)" \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -201,12 +201,12 @@ $(FILE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FILE_IPK_DIR)/opt/sbin or $(FILE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FILE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FILE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FILE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FILE_IPK_DIR)/opt/etc/file/...
-# Documentation files should be installed in $(FILE_IPK_DIR)/opt/doc/file/...
-# Daemon startup scripts should be installed in $(FILE_IPK_DIR)/opt/etc/init.d/S??file
+# Libraries and include files should be installed into $(FILE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FILE_IPK_DIR)$(OPTWARE_PREFIX)etc/file/...
+# Documentation files should be installed in $(FILE_IPK_DIR)$(OPTWARE_PREFIX)doc/file/...
+# Daemon startup scripts should be installed in $(FILE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??file
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -215,10 +215,10 @@ $(FILE_IPK): $(FILE_BUILD_DIR)/.built
 	$(MAKE) -C $(FILE_BUILD_DIR) install-strip \
 		DESTDIR=$(FILE_IPK_DIR) \
 		FILE_COMPILE=$(FILE_HOST_BUILD_DIR)/src/file
-	rm -f $(FILE_IPK_DIR)/opt/lib/libmagic.la
-	rm -f $(FILE_IPK_DIR)/opt/share/file/magic.mgc
-	install -d $(FILE_IPK_DIR)/opt/share/file
-	cp -rp $(FILE_BUILD_DIR)/magic/Magdir $(FILE_IPK_DIR)/opt/share/file/magic
+	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)lib/libmagic.la
+	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file/magic.mgc
+	install -d $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file
+	cp -rp $(FILE_BUILD_DIR)/magic/Magdir $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file/magic
 	$(MAKE) $(FILE_IPK_DIR)/CONTROL/control
 	install -m 644 $(FILE_SOURCE_DIR)/postinst $(FILE_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FILE_SOURCE_DIR)/prerm $(FILE_IPK_DIR)/CONTROL/prerm

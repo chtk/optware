@@ -46,7 +46,7 @@ WEBALIZER_IPK_VERSION=1
 
 #
 # WEBALIZER_CONFFILES should be a list of user-editable files
-WEBALIZER_CONFFILES=/opt/etc/webalizer.conf.sample
+WEBALIZER_CONFFILES=$(OPTWARE_PREFIX)etc/webalizer.conf.sample
 
 #
 # WEBALIZER_PATCHES should list any patches, in the the order in
@@ -119,7 +119,7 @@ $(WEBALIZER_BUILD_DIR)/.configured: $(DL_DIR)/$(WEBALIZER_SOURCE) $(WEBALIZER_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-bz2 \
 		--enable-geoip \
 		--disable-nls \
@@ -129,7 +129,7 @@ $(WEBALIZER_BUILD_DIR)/.configured: $(DL_DIR)/$(WEBALIZER_SOURCE) $(WEBALIZER_PA
 		--with-gdlib=$(STAGING_LIB_DIR) \
 		--with-geoip=$(STAGING_INCLUDE_DIR) \
 		--with-geoiplib=$(STAGING_LIB_DIR) \
-		--with-geodb=/opt/share/GeoDB \
+		--with-geodb=$(OPTWARE_PREFIX)share/GeoDB \
 		--with-png=$(STAGING_INCLUDE_DIR) \
 		--with-pnglib=$(STAGING_LIB_DIR) \
 		--with-z=$(STAGING_INCLUDE_DIR) \
@@ -184,23 +184,23 @@ $(WEBALIZER_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WEBALIZER_IPK_DIR)/opt/sbin or $(WEBALIZER_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WEBALIZER_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WEBALIZER_IPK_DIR)/opt/etc/webalizer/...
-# Documentation files should be installed in $(WEBALIZER_IPK_DIR)/opt/doc/webalizer/...
-# Daemon startup scripts should be installed in $(WEBALIZER_IPK_DIR)/opt/etc/init.d/S??webalizer
+# Libraries and include files should be installed into $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)etc/webalizer/...
+# Documentation files should be installed in $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)doc/webalizer/...
+# Daemon startup scripts should be installed in $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??webalizer
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WEBALIZER_IPK): $(WEBALIZER_BUILD_DIR)/.built
 	rm -rf $(WEBALIZER_IPK_DIR) $(BUILD_DIR)/webalizer_*_$(TARGET_ARCH).ipk
-	install -d $(WEBALIZER_IPK_DIR)/opt/etc/
-	install -d $(WEBALIZER_IPK_DIR)/opt/bin/
-	install -m 644 $(WEBALIZER_BUILD_DIR)/sample.conf $(WEBALIZER_IPK_DIR)/opt/etc/webalizer.conf.sample
-	install -m 755 $(WEBALIZER_BUILD_DIR)/webalizer $(WEBALIZER_IPK_DIR)/opt/bin/webalizer
-	$(STRIP_COMMAND) $(WEBALIZER_IPK_DIR)/opt/bin/webalizer
-	ln -s ./webalizer $(WEBALIZER_IPK_DIR)/opt/bin/webazolver
+	install -d $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -m 644 $(WEBALIZER_BUILD_DIR)/sample.conf $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)etc/webalizer.conf.sample
+	install -m 755 $(WEBALIZER_BUILD_DIR)/webalizer $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)bin/webalizer
+	$(STRIP_COMMAND) $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)bin/webalizer
+	ln -s ./webalizer $(WEBALIZER_IPK_DIR)$(OPTWARE_PREFIX)bin/webazolver
 	$(MAKE) $(WEBALIZER_IPK_DIR)/CONTROL/control
 	install -m 755 $(WEBALIZER_SOURCE_DIR)/postinst $(WEBALIZER_IPK_DIR)/CONTROL/postinst
 	echo $(WEBALIZER_CONFFILES) | sed -e 's/ /\n/g' > $(WEBALIZER_IPK_DIR)/CONTROL/conffiles

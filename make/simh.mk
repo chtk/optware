@@ -41,7 +41,7 @@ SIMH_IPK_VERSION=2
 
 #
 # SIMH_CONFFILES should be a list of user-editable files
-#SIMH_CONFFILES=/opt/etc/simh.conf /opt/etc/init.d/SXXsimh
+#SIMH_CONFFILES=$(OPTWARE_PREFIX)etc/simh.conf $(OPTWARE_PREFIX)etc/init.d/SXXsimh
 
 #
 # SIMH_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ $(SIMH_BUILD_DIR)/.configured: $(DL_DIR)/$(SIMH_SOURCE) $(SIMH_PATCHES) make/sim
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,25 +190,25 @@ $(SIMH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SIMH_IPK_DIR)/opt/sbin or $(SIMH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SIMH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SIMH_IPK_DIR)/opt/etc/simh/...
-# Documentation files should be installed in $(SIMH_IPK_DIR)/opt/doc/simh/...
-# Daemon startup scripts should be installed in $(SIMH_IPK_DIR)/opt/etc/init.d/S??simh
+# Libraries and include files should be installed into $(SIMH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)etc/simh/...
+# Documentation files should be installed in $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)doc/simh/...
+# Daemon startup scripts should be installed in $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??simh
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SIMH_IPK): $(SIMH_BUILD_DIR)/.built
 	rm -rf $(SIMH_IPK_DIR) $(BUILD_DIR)/simh_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(SIMH_BUILD_DIR) DESTDIR=$(SIMH_IPK_DIR) install-strip
-	install -d $(SIMH_IPK_DIR)/opt/bin/
-	install $(SIMH_BUILD_DIR)/BIN/* $(SIMH_IPK_DIR)/opt/bin/
-	mv $(SIMH_IPK_DIR)/opt/bin/eclipse $(SIMH_IPK_DIR)/opt/bin/eclipseemu
-	$(STRIP_COMMAND) $(SIMH_IPK_DIR)/opt/bin/*
-	install -d $(SIMH_IPK_DIR)/opt/share/doc/simh/
+	install -d $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install $(SIMH_BUILD_DIR)/BIN/* $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	mv $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin/eclipse $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin/eclipseemu
+	$(STRIP_COMMAND) $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	install -d $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)share/doc/simh/
 	for f in `find $(SIMH_BUILD_DIR) -name '*.txt'`; do \
-		install $$f $(SIMH_IPK_DIR)/opt/share/doc/simh/; \
+		install $$f $(SIMH_IPK_DIR)$(OPTWARE_PREFIX)share/doc/simh/; \
 	done
 	$(MAKE) $(SIMH_IPK_DIR)/CONTROL/control
 #	echo $(SIMH_CONFFILES) | sed -e 's/ /\n/g' > $(SIMH_IPK_DIR)/CONTROL/conffiles

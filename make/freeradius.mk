@@ -132,11 +132,11 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--libdir=/opt/lib \
+		--prefix=$(OPTWARE_PREFIX)\
+		--libdir=$(OPTWARE_PREFIX)lib \
 		--with-logdir=/var/spool/radius/log \
 		--with-radacctdir=/var/spool/radius/radacct \
-		--with-raddbdir=/opt/etc/raddb \
+		--with-raddbdir=$(OPTWARE_PREFIX)etc/raddb \
 		--with-openssl-includes=$(STAGING_INCLUDE_DIR) \
 		--with-openssl-libraries=$(STAGING_LIB_DIR) \
 		$(FREERADIUS_CONFIG_ARGS) \
@@ -213,12 +213,12 @@ $(FREERADIUS_DOC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FREERADIUS_IPK_DIR)/opt/sbin or $(FREERADIUS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FREERADIUS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FREERADIUS_IPK_DIR)/opt/etc/freeradius/...
-# Documentation files should be installed in $(FREERADIUS_IPK_DIR)/opt/doc/freeradius/...
-# Daemon startup scripts should be installed in $(FREERADIUS_IPK_DIR)/opt/etc/init.d/S??freeradius
+# Libraries and include files should be installed into $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)etc/freeradius/...
+# Documentation files should be installed in $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)doc/freeradius/...
+# Daemon startup scripts should be installed in $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??freeradius
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -226,21 +226,21 @@ $(FREERADIUS_IPK): $(FREERADIUS_BUILD_DIR)/.built
 	rm -rf $(FREERADIUS_IPK_DIR) $(FREERADIUS_IPK)
 	install -d $(FREERADIUS_IPK_DIR)/opt
 	cp -rf $(FREERADIUS_BUILD_DIR)/install/* $(FREERADIUS_IPK_DIR)/
-	rm -rf $(FREERADIUS_IPK_DIR)/opt/share/doc
-	install -d $(FREERADIUS_IPK_DIR)/opt/doc/.radius
-	rm -rf $(FREERADIUS_IPK_DIR)/opt/lib/*.a
-	rm -rf $(FREERADIUS_IPK_DIR)/opt/man/*
-	rm -rf $(FREERADIUS_IPK_DIR)/opt/share/man/*
-	mv $(FREERADIUS_IPK_DIR)/opt/etc/* $(FREERADIUS_IPK_DIR)/opt/doc/.radius/
-	cp -f $(FREERADIUS_SOURCE_DIR)/radiusd.conf $(FREERADIUS_IPK_DIR)/opt/doc/.radius/raddb/radiusd.conf
-	install -d $(FREERADIUS_IPK_DIR)/opt/etc/init.d
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/sbin/radiusd
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/bin/radclient
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/bin/smbencrypt
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/bin/radeapclient $(FREERADIUS_IPK_DIR)/opt/bin/radwho
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/bin/radsniff $(FREERADIUS_IPK_DIR)/opt/bin/rlm_*
-	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)/opt/lib/lib*.so $(FREERADIUS_IPK_DIR)/opt/lib/rlm_*.so
-	install -m 755 $(FREERADIUS_SOURCE_DIR)/rc.freeradius $(FREERADIUS_IPK_DIR)/opt/etc/init.d/S55freeradius
+	rm -rf $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)share/doc
+	install -d $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)doc/.radius
+	rm -rf $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)lib/*.a
+	rm -rf $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)man/*
+	rm -rf $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)share/man/*
+	mv $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)etc/* $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)doc/.radius/
+	cp -f $(FREERADIUS_SOURCE_DIR)/radiusd.conf $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)doc/.radius/raddb/radiusd.conf
+	install -d $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)sbin/radiusd
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/radclient
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/smbencrypt
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/radeapclient $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/radwho
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/radsniff $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)bin/rlm_*
+	$(STRIP_COMMAND) $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)lib/rlm_*.so
+	install -m 755 $(FREERADIUS_SOURCE_DIR)/rc.freeradius $(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S55freeradius
 	$(MAKE) $(FREERADIUS_IPK_DIR)/CONTROL/control
 	install -m 644 $(FREERADIUS_SOURCE_DIR)/postinst $(FREERADIUS_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FREERADIUS_SOURCE_DIR)/prerm $(FREERADIUS_IPK_DIR)/CONTROL/prerm
@@ -248,10 +248,10 @@ $(FREERADIUS_IPK): $(FREERADIUS_BUILD_DIR)/.built
 
 $(FREERADIUS_DOC_IPK): $(FREERADIUS_BUILD_DIR)/.built
 	rm -rf $(FREERADIUS_DOC_IPK_DIR) $(FREERADIUS_DOC_IPK)
-	install -d $(FREERADIUS_DOC_IPK_DIR)/opt/doc
-	install -d $(FREERADIUS_DOC_IPK_DIR)/opt/man
-	cp -rf $(FREERADIUS_BUILD_DIR)/install/opt/share/man/* $(FREERADIUS_DOC_IPK_DIR)/opt/man/
-	cp -rf $(FREERADIUS_BUILD_DIR)/install/opt/share/doc/* $(FREERADIUS_DOC_IPK_DIR)/opt/doc/
+	install -d $(FREERADIUS_DOC_IPK_DIR)$(OPTWARE_PREFIX)doc
+	install -d $(FREERADIUS_DOC_IPK_DIR)$(OPTWARE_PREFIX)man
+	cp -rf $(FREERADIUS_BUILD_DIR)/install$(OPTWARE_PREFIX)share/man/* $(FREERADIUS_DOC_IPK_DIR)$(OPTWARE_PREFIX)man/
+	cp -rf $(FREERADIUS_BUILD_DIR)/install$(OPTWARE_PREFIX)share/doc/* $(FREERADIUS_DOC_IPK_DIR)$(OPTWARE_PREFIX)doc/
 	install -d $(FREERADIUS_DOC_IPK_DIR)/CONTROL
 	$(MAKE) $(FREERADIUS_DOC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FREERADIUS_DOC_IPK_DIR)

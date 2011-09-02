@@ -46,7 +46,7 @@ LIBEXIF_IPK_VERSION=1
 
 #
 # LIBEXIF_CONFFILES should be a list of user-editable files
-#LIBEXIF_CONFFILES=/opt/etc/libexif.conf /opt/etc/init.d/SXXlibexif
+#LIBEXIF_CONFFILES=$(OPTWARE_PREFIX)etc/libexif.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibexif
 
 #
 # LIBEXIF_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ $(LIBEXIF_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBEXIF_SOURCE) $(LIBEXIF_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -185,22 +185,22 @@ $(LIBEXIF_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBEXIF_IPK_DIR)/opt/sbin or $(LIBEXIF_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBEXIF_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBEXIF_IPK_DIR)/opt/etc/libexif/...
-# Documentation files should be installed in $(LIBEXIF_IPK_DIR)/opt/doc/libexif/...
-# Daemon startup scripts should be installed in $(LIBEXIF_IPK_DIR)/opt/etc/init.d/S??libexif
+# Libraries and include files should be installed into $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/libexif/...
+# Documentation files should be installed in $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)doc/libexif/...
+# Daemon startup scripts should be installed in $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libexif
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBEXIF_IPK): $(LIBEXIF_BUILD_DIR)/.built
 	rm -rf $(LIBEXIF_IPK_DIR) $(BUILD_DIR)/libexif_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBEXIF_BUILD_DIR)/libexif DESTDIR=$(LIBEXIF_IPK_DIR) install-strip
-#	install -d $(LIBEXIF_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIBEXIF_SOURCE_DIR)/libexif.conf $(LIBEXIF_IPK_DIR)/opt/etc/libexif.conf
-#	install -d $(LIBEXIF_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIBEXIF_SOURCE_DIR)/rc.libexif $(LIBEXIF_IPK_DIR)/opt/etc/init.d/SXXlibexif
+#	install -d $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIBEXIF_SOURCE_DIR)/libexif.conf $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/libexif.conf
+#	install -d $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIBEXIF_SOURCE_DIR)/rc.libexif $(LIBEXIF_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibexif
 	$(MAKE) $(LIBEXIF_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIBEXIF_SOURCE_DIR)/postinst $(LIBEXIF_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(LIBEXIF_SOURCE_DIR)/prerm $(LIBEXIF_IPK_DIR)/CONTROL/prerm

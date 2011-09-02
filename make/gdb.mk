@@ -43,7 +43,7 @@ GDB_CONFLICTS=
 
 #
 # GDB_CONFFILES should be a list of user-editable files
-# GDB_CONFFILES=/opt/etc/gdb.conf /opt/etc/init.d/SXXgdb
+# GDB_CONFFILES=$(OPTWARE_PREFIX)etc/gdb.conf $(OPTWARE_PREFIX)etc/init.d/SXXgdb
 
 #
 # GDB_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-tui \
 	)
@@ -199,12 +199,12 @@ $(GDB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GDB_IPK_DIR)/opt/sbin or $(GDB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GDB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GDB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GDB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GDB_IPK_DIR)/opt/etc/gdb/...
-# Documentation files should be installed in $(GDB_IPK_DIR)/opt/doc/gdb/...
-# Daemon startup scripts should be installed in $(GDB_IPK_DIR)/opt/etc/init.d/S??gdb
+# Libraries and include files should be installed into $(GDB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GDB_IPK_DIR)$(OPTWARE_PREFIX)etc/gdb/...
+# Documentation files should be installed in $(GDB_IPK_DIR)$(OPTWARE_PREFIX)doc/gdb/...
+# Daemon startup scripts should be installed in $(GDB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gdb
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -220,23 +220,23 @@ $(GDB_IPK_DIR)/CONTROL/control:
 $(GDB_IPK): $(GDB_BUILD_DIR)/.built
 	ls -la $(GDB_BUILD_DIR)/.built
 	rm -rf $(GDB_IPK_DIR) $(BUILD_DIR)/gdb_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(GDB_BUILD_DIR) prefix=$(GDB_IPK_DIR)/opt install
-	rm -f $(GDB_IPK_DIR)/opt/info/standards.info
-	-$(STRIP_COMMAND) $(GDB_IPK_DIR)/opt/bin/run
+	$(MAKE) -C $(GDB_BUILD_DIR) prefix=$(GDB_IPK_DIR)$(OPTWARE_PREFIX)install
+	rm -f $(GDB_IPK_DIR)$(OPTWARE_PREFIX)info/standards.info
+	-$(STRIP_COMMAND) $(GDB_IPK_DIR)$(OPTWARE_PREFIX)bin/run
 	# rm the following files to avoid conflict with binutils
 	for f in \
-		/opt/include/ansidecl.h \
-		/opt/include/bfd.h \
-		/opt/include/bfdlink.h \
-		/opt/include/dis-asm.h \
-		/opt/include/symcat.h \
-		/opt/info/bfd.info \
-		/opt/info/configure.info \
-		/opt/lib/libbfd.a \
-		/opt/lib/libbfd.la \
-		/opt/lib/libiberty.a \
-		/opt/lib/libopcodes.a \
-		/opt/lib/libopcodes.la \
+		$(OPTWARE_PREFIX)include/ansidecl.h \
+		$(OPTWARE_PREFIX)include/bfd.h \
+		$(OPTWARE_PREFIX)include/bfdlink.h \
+		$(OPTWARE_PREFIX)include/dis-asm.h \
+		$(OPTWARE_PREFIX)include/symcat.h \
+		$(OPTWARE_PREFIX)info/bfd.info \
+		$(OPTWARE_PREFIX)info/configure.info \
+		$(OPTWARE_PREFIX)lib/libbfd.a \
+		$(OPTWARE_PREFIX)lib/libbfd.la \
+		$(OPTWARE_PREFIX)lib/libiberty.a \
+		$(OPTWARE_PREFIX)lib/libopcodes.a \
+		$(OPTWARE_PREFIX)lib/libopcodes.la \
 		; \
 	do rm -f $(GDB_IPK_DIR)/$$f; done
 	$(MAKE) $(GDB_IPK_DIR)/CONTROL/control

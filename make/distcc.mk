@@ -106,12 +106,12 @@ $(DISTCC_BUILD_DIR)/.configured: $(DL_DIR)/$(DISTCC_SOURCE) $(DISTCC_PATCHES) ma
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(DISTCC_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(DISTCC_LDFLAGS)" \
-		PYTHON=/opt/bin/python2.5 \
+		PYTHON=$(OPTWARE_PREFIX)bin/python2.5 \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-avahi \
 	)
 	touch $@
@@ -157,12 +157,12 @@ $(DISTCC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(DISTCC_IPK_DIR)/opt/sbin or $(DISTCC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(DISTCC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(DISTCC_IPK_DIR)/opt/etc/distcc/...
-# Documentation files should be installed in $(DISTCC_IPK_DIR)/opt/doc/distcc/...
-# Daemon startup scripts should be installed in $(DISTCC_IPK_DIR)/opt/etc/init.d/S??distcc
+# Libraries and include files should be installed into $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/distcc/...
+# Documentation files should be installed in $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)doc/distcc/...
+# Daemon startup scripts should be installed in $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??distcc
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -171,10 +171,10 @@ $(DISTCC_IPK): $(DISTCC_BUILD_DIR)/.built
 	$(MAKE) -C $(DISTCC_BUILD_DIR) install \
 		DESTDIR=$(DISTCC_IPK_DIR) \
 		INCLUDESERVER_PYTHON=$(HOST_STAGING_PREFIX)/bin/python2.5
-	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)/opt/bin/*distcc*
-	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)/opt/lib/python2.5/site-packages/include_server/*.so
-#	install -d $(DISTCC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(DISTCC_SOURCE_DIR)/rc.distcc $(DISTCC_IPK_DIR)/opt/etc/init.d/SXXdistcc
+	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)bin/*distcc*
+	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/include_server/*.so
+#	install -d $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(DISTCC_SOURCE_DIR)/rc.distcc $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdistcc
 	$(MAKE) $(DISTCC_IPK_DIR)/CONTROL/control
 #	install -m 644 $(DISTCC_SOURCE_DIR)/postinst $(DISTCC_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(DISTCC_SOURCE_DIR)/prerm $(DISTCC_IPK_DIR)/CONTROL/prerm

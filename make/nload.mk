@@ -112,7 +112,7 @@ $(NLOAD_BUILD_DIR)/.configured: $(DL_DIR)/$(NLOAD_SOURCE) $(NLOAD_PATCHES)
 	mv $(BUILD_DIR)/$(NLOAD_DIR) $(@D)
 	autoreconf -vif $(@D)
 	(cd $(@D); \
-		sed -i -e 's|/etc/nload.conf|/opt/etc/nload.conf|' \
+		sed -i -e 's|/etc/nload.conf|$(OPTWARE_PREFIX)etc/nload.conf|' \
 			docs/nload.1.in src/main.cpp ; \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(NLOAD_CPPFLAGS)" \
@@ -122,7 +122,7 @@ $(NLOAD_BUILD_DIR)/.configured: $(DL_DIR)/$(NLOAD_SOURCE) $(NLOAD_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-dependency-tracking \
 		--disable-nls \
 		--disable-static \
@@ -151,13 +151,13 @@ nload: $(NLOAD_BUILD_DIR)/.built
 #
 #$(STAGING_DIR)/.staged: $(NLOAD_BUILD_DIR)/.built
 #	rm -f $@
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(NLOAD_BUILD_DIR)/nload.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(NLOAD_BUILD_DIR)/libnload.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(NLOAD_BUILD_DIR)/libnload.so.$(NLOAD_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libnload.so.$(NLOAD_VERSION) libnload.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libnload.so.$(NLOAD_VERSION) libnload.so
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(NLOAD_BUILD_DIR)/nload.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(NLOAD_BUILD_DIR)/libnload.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(NLOAD_BUILD_DIR)/libnload.so.$(NLOAD_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnload.so.$(NLOAD_VERSION) libnload.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libnload.so.$(NLOAD_VERSION) libnload.so
 #	touch $@
 #
 #nload-stage: $(STAGING_DIR)/.staged
@@ -183,12 +183,12 @@ $(NLOAD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NLOAD_IPK_DIR)/opt/sbin or $(NLOAD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NLOAD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NLOAD_IPK_DIR)/opt/etc/nload/...
-# Documentation files should be installed in $(NLOAD_IPK_DIR)/opt/doc/nload/...
-# Daemon startup scripts should be installed in $(NLOAD_IPK_DIR)/opt/etc/init.d/S??nload
+# Libraries and include files should be installed into $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX)etc/nload/...
+# Documentation files should be installed in $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX)doc/nload/...
+# Daemon startup scripts should be installed in $(NLOAD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nload
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -22,6 +22,7 @@
 
 # one of `ls platforms/toolchain-*.mk | sed 's|^platforms/toolchain-\(.*\)\.mk$$|\1|'`
 OPTWARE_TARGET ?= nslu2
+OPTWARE_PREFIX ?= $(OPTWARE_PREFIX)
 
 PACKAGES_BROKEN_ON_64BIT_HOST = \
 apcupsd appweb atop php 9base alsa-oss appweb \
@@ -64,7 +65,7 @@ NATIVE_PACKAGES_READY_FOR_TESTING = cmake \
 
 # iozone - fileop_linux-arm.o: No such file or directory
 # parted - does not work on the slug, even when compiled natively
-# lumikki - does not install to /opt
+# lumikki - does not install to $(OPTWARE_PREFIX)
 # doxygen - host binary, not stripped
 # bpalogin - for some reason it can't find 'sed' on the build machine
 # clinkcc - ../../src/cybergarage/xml/XML.cpp:151: error: invalid conversion from 'const char**' to 'char**'
@@ -454,20 +455,20 @@ PACKAGE_DIR=$(BASE_DIR)/packages
 BUILD_DIR=$(BASE_DIR)/builds
 STAGING_DIR=$(BASE_DIR)/staging
 
-STAGING_PREFIX=$(STAGING_DIR)/opt
+STAGING_PREFIX=$(STAGING_DIR)$(OPTWARE_PREFIX)
 STAGING_INCLUDE_DIR=$(STAGING_PREFIX)/include
 STAGING_LIB_DIR=$(STAGING_PREFIX)/lib
 STAGING_CPPFLAGS=$(TARGET_CFLAGS) -I$(STAGING_INCLUDE_DIR)
-STAGING_LDFLAGS=$(TARGET_LDFLAGS) -L$(STAGING_LIB_DIR) -Wl,-rpath,/opt/lib -Wl,-rpath-link,$(STAGING_LIB_DIR)
+STAGING_LDFLAGS=$(TARGET_LDFLAGS) -L$(STAGING_LIB_DIR) -Wl,-rpath,$(OPTWARE_PREFIX)lib -Wl,-rpath-link,$(STAGING_LIB_DIR)
 
 HOST_BUILD_DIR=$(BASE_DIR)/host/builds
 HOST_STAGING_DIR=$(BASE_DIR)/host/staging
 
-HOST_STAGING_PREFIX=$(HOST_STAGING_DIR)/opt
+HOST_STAGING_PREFIX=$(HOST_STAGING_DIR)$(OPTWARE_PREFIX)
 HOST_STAGING_INCLUDE_DIR=$(HOST_STAGING_PREFIX)/include
 HOST_STAGING_LIB_DIR=$(HOST_STAGING_PREFIX)/lib
 HOST_STAGING_CPPFLAGS=-I$(HOST_STAGING_INCLUDE_DIR)
-HOST_STAGING_LDFLAGS=-L$(HOST_STAGING_LIB_DIR) -Wl,-rpath,/opt/lib -Wl,-rpath-link,$(HOST_STAGING_LIB_DIR)
+HOST_STAGING_LDFLAGS=-L$(HOST_STAGING_LIB_DIR) -Wl,-rpath,$(OPTWARE_PREFIX)lib -Wl,-rpath-link,$(HOST_STAGING_LIB_DIR)
 
 WHAT_TO_DO_WITH_IPK_DIR=rm -rf
 # WHAT_TO_DO_WITH_IPK_DIR=: keep
@@ -517,7 +518,7 @@ PACKAGES_READY_FOR_TESTING = $(CROSS_PACKAGES_READY_FOR_TESTING)
 endif
 
 ifneq (, $(filter ipkg-opt $(OPTWARE_TARGET)-bootstrap $(OPTWARE_TARGET)-optware-bootstrap, $(PACKAGES)))
-UPD-ALT_PREFIX ?= /opt
+UPD-ALT_PREFIX ?= $(OPTWARE_PREFIX)
 endif
 
 testing:
@@ -567,7 +568,7 @@ TARGET_CONFIGURE_OPTS= \
 	CXX=$(TARGET_CXX) \
 	RANLIB=$(TARGET_RANLIB) \
 	STRIP=$(TARGET_STRIP)
-TARGET_PATH=$(STAGING_PREFIX)/bin:$(STAGING_DIR)/bin:/opt/bin:/opt/sbin:/bin:/sbin:/usr/bin:/usr/sbin
+TARGET_PATH=$(STAGING_PREFIX)/bin:$(STAGING_DIR)/bin:$(OPTWARE_PREFIX)bin:$(OPTWARE_PREFIX)sbin:/bin:/sbin:/usr/bin:/usr/sbin
 
 STRIP_COMMAND ?= $(TARGET_STRIP) --remove-section=.comment --remove-section=.note --strip-unneeded
 
@@ -648,31 +649,31 @@ directories: $(DL_DIR) $(BUILD_DIR) $(STAGING_DIR) $(STAGING_PREFIX) \
 	$(PACKAGE_DIR) $(TMPDIR)
 
 $(DL_DIR):
-	mkdir $(DL_DIR)
+	mkdir -p $(DL_DIR)
 
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)
 
 $(STAGING_DIR):
-	mkdir $(STAGING_DIR)
+	mkdir -p $(STAGING_DIR)
 
 $(STAGING_PREFIX):
-	mkdir $(STAGING_PREFIX)
+	mkdir -p $(STAGING_PREFIX)
 
 $(STAGING_LIB_DIR):
-	mkdir $(STAGING_LIB_DIR)
+	mkdir -p $(STAGING_LIB_DIR)
 
 $(STAGING_INCLUDE_DIR):
-	mkdir $(STAGING_INCLUDE_DIR)
+	mkdir -p $(STAGING_INCLUDE_DIR)
 
 $(TOOL_BUILD_DIR):
-	mkdir $(TOOL_BUILD_DIR)
+	mkdir -p $(TOOL_BUILD_DIR)
 
 $(PACKAGE_DIR):
-	mkdir $(PACKAGE_DIR)
+	mkdir -p $(PACKAGE_DIR)
 
 $(TMPDIR):
-	mkdir $(TMPDIR)
+	mkdir -p $(TMPDIR)
 
 source: $(PACKAGES_SOURCE)
 

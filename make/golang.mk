@@ -188,21 +188,21 @@ $(GOLANG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GOLANG_IPK_DIR)/opt/sbin or $(GOLANG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GOLANG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GOLANG_IPK_DIR)/opt/etc/golang/...
-# Documentation files should be installed in $(GOLANG_IPK_DIR)/opt/doc/golang/...
-# Daemon startup scripts should be installed in $(GOLANG_IPK_DIR)/opt/etc/init.d/S??golang
+# Libraries and include files should be installed into $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)etc/golang/...
+# Documentation files should be installed in $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)doc/golang/...
+# Daemon startup scripts should be installed in $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??golang
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GOLANG_IPK): $(GOLANG_BUILD_DIR)/.built
 	rm -rf $(BUILD_DIR)/golang*_*_$(TARGET_ARCH).ipk $(BUILD_DIR)/golang*-ipk
 	# golang
-	install -d $(GOLANG_IPK_DIR)/opt/share/go
-	# $(STRIP_COMMAND) $(GOLANG_IPK_DIR)/opt/bin/*
-	rsync -av $(<D)/bin $(<D)/pkg $(<D)/[ACLR]* $(GOLANG_IPK_DIR)/opt/share/go/
+	install -d $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)share/go
+	# $(STRIP_COMMAND) $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	rsync -av $(<D)/bin $(<D)/pkg $(<D)/[ACLR]* $(GOLANG_IPK_DIR)$(OPTWARE_PREFIX)share/go/
 	$(MAKE) $(GOLANG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GOLANG_IPK_DIR)
 

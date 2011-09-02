@@ -45,7 +45,7 @@ TURCK_MMCACHE_IPK_VERSION=1
 
 #
 # TURCK_MMCACHE_CONFFILES should be a list of user-editable files
-TURCK_MMCACHE_CONFFILES=/opt/etc/php.d/turck-mmcache.ini
+TURCK_MMCACHE_CONFFILES=$(OPTWARE_PREFIX)etc/php.d/turck-mmcache.ini
 
 #
 # TURCK_MMCACHE_PATCHES should list any patches, in the the order in
@@ -118,8 +118,8 @@ $(TURCK_MMCACHE_BUILD_DIR)/.configured: $(DL_DIR)/$(TURCK_MMCACHE_SOURCE) $(TURC
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-php-config=$(STAGING_DIR)/opt/bin/php-config \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-php-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/php-config \
 	)
 	touch $(TURCK_MMCACHE_BUILD_DIR)/.configured
 
@@ -169,21 +169,21 @@ $(TURCK_MMCACHE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TURCK_MMCACHE_IPK_DIR)/opt/sbin or $(TURCK_MMCACHE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TURCK_MMCACHE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TURCK_MMCACHE_IPK_DIR)/opt/etc/turck-mmcache/...
-# Documentation files should be installed in $(TURCK_MMCACHE_IPK_DIR)/opt/doc/turck-mmcache/...
-# Daemon startup scripts should be installed in $(TURCK_MMCACHE_IPK_DIR)/opt/etc/init.d/S??turck-mmcache
+# Libraries and include files should be installed into $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/turck-mmcache/...
+# Documentation files should be installed in $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)doc/turck-mmcache/...
+# Daemon startup scripts should be installed in $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??turck-mmcache
 #
 # You may need to patch your application to make it use these locations.
 #
 $(TURCK_MMCACHE_IPK): $(TURCK_MMCACHE_BUILD_DIR)/.built
 	rm -rf $(TURCK_MMCACHE_IPK_DIR) $(BUILD_DIR)/turck-mmcache_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(TURCK_MMCACHE_BUILD_DIR) INSTALL_ROOT=$(TURCK_MMCACHE_IPK_DIR) install
-	install -d $(TURCK_MMCACHE_IPK_DIR)/opt/tmp/mmcache
-	install -d $(TURCK_MMCACHE_IPK_DIR)/opt/etc/php.d
-	install -m 644 $(TURCK_MMCACHE_SOURCE_DIR)/turck-mmcache.ini $(TURCK_MMCACHE_IPK_DIR)/opt/etc\/php.d/turck-mmcache.ini
+	install -d $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)tmp/mmcache
+	install -d $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc/php.d
+	install -m 644 $(TURCK_MMCACHE_SOURCE_DIR)/turck-mmcache.ini $(TURCK_MMCACHE_IPK_DIR)$(OPTWARE_PREFIX)etc\/php.d/turck-mmcache.ini
 	$(MAKE) $(TURCK_MMCACHE_IPK_DIR)/CONTROL/control
 	echo $(TURCK_MMCACHE_CONFFILES) | sed -e 's/ /\n/g' > $(TURCK_MMCACHE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TURCK_MMCACHE_IPK_DIR)

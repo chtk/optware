@@ -46,7 +46,7 @@ WPA_SUPPLICANT_IPK_VERSION=3
 
 #
 # WPA_SUPPLICANT_CONFFILES should be a list of user-editable files
-WPA_SUPPLICANT_CONFFILES=/opt/etc/wpa-supplicant.conf 
+WPA_SUPPLICANT_CONFFILES=$(OPTWARE_PREFIX)etc/wpa-supplicant.conf 
 
 #
 # WPA_SUPPLICANT_PATCHES should list any patches, in the the order in
@@ -173,26 +173,26 @@ $(WPA_SUPPLICANT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin or $(WPA_SUPPLICANT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(WPA_SUPPLICANT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(WPA_SUPPLICANT_IPK_DIR)/opt/etc/wpa-supplicant/...
-# Documentation files should be installed in $(WPA_SUPPLICANT_IPK_DIR)/opt/doc/wpa-supplicant/...
-# Daemon startup scripts should be installed in $(WPA_SUPPLICANT_IPK_DIR)/opt/etc/init.d/S??wpa-supplicant
+# Libraries and include files should be installed into $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)etc/wpa-supplicant/...
+# Documentation files should be installed in $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)doc/wpa-supplicant/...
+# Daemon startup scripts should be installed in $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??wpa-supplicant
 #
 # You may need to patch your application to make it use these locations.
 #
 $(WPA_SUPPLICANT_IPK): $(WPA_SUPPLICANT_BUILD_DIR)/.built
 	rm -rf $(WPA_SUPPLICANT_IPK_DIR) $(BUILD_DIR)/wpa-supplicant_*_$(TARGET_ARCH).ipk
-	install -d $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin
-	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_cli $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_cli
-	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_cli
-	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_passphrase $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_passphrase
-	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_passphrase
-	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_supplicant $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_supplicant
-	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)/opt/sbin/wpa_supplicant
-	install -d -d $(WPA_SUPPLICANT_IPK_DIR)/opt/etc
-	install -m 644 $(WPA_SUPPLICANT_SOURCE_DIR)/wpa-supplicant.conf $(WPA_SUPPLICANT_IPK_DIR)/opt/etc/wpa-supplicant.conf
+	install -d $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_cli $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_cli
+	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_cli
+	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_passphrase $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_passphrase
+	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_passphrase
+	install -m 755 $(WPA_SUPPLICANT_BUILD_DIR)/wpa_supplicant $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_supplicant
+	$(STRIP_COMMAND) $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)sbin/wpa_supplicant
+	install -d -d $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(WPA_SUPPLICANT_SOURCE_DIR)/wpa-supplicant.conf $(WPA_SUPPLICANT_IPK_DIR)$(OPTWARE_PREFIX)etc/wpa-supplicant.conf
 	$(MAKE) $(WPA_SUPPLICANT_IPK_DIR)/CONTROL/control
 	install -m 755 $(WPA_SUPPLICANT_SOURCE_DIR)/postinst $(WPA_SUPPLICANT_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(WPA_SUPPLICANT_SOURCE_DIR)/prerm $(WPA_SUPPLICANT_IPK_DIR)/CONTROL/prerm

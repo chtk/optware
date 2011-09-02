@@ -40,7 +40,7 @@ HPING_IPK_VERSION=4
 
 #
 # HPING_CONFFILES should be a list of user-editable files
-#HPING_CONFFILES=/opt/etc/hping.conf /opt/etc/init.d/SXXhping
+#HPING_CONFFILES=$(OPTWARE_PREFIX)etc/hping.conf $(OPTWARE_PREFIX)etc/init.d/SXXhping
 
 #
 # HPING_PATCHES should list any patches, in the the order in
@@ -120,7 +120,7 @@ $(HPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HPING_SOURCE) $(HPING_PATCHES) make/
 	cd $(HPING_BUILD_DIR); \
         sed -i \
         	-e 's|-L/usr/local/lib|$(STAGING_LDFLAGS)|' \
-        	-e 's|/usr/sbin|$(HPING_IPK_DIR)/opt/sbin|g' \
+        	-e 's|/usr/sbin|$(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin|g' \
         	-e '/ln -s/d' \
         	Makefile.in; \
 	sed -i -e 's|<net/bpf.h>|<pcap-bpf.h>|' libpcap_stuff.c script.c; \
@@ -141,7 +141,7 @@ $(HPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HPING_SOURCE) $(HPING_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--no-tcl \
 		--disable-nls \
 		--disable-static \
@@ -201,32 +201,32 @@ $(HPING_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(HPING_IPK_DIR)/opt/sbin or $(HPING_IPK_DIR)/opt/bin
+# Binaries should be installed into $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(HPING_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(HPING_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(HPING_IPK_DIR)/opt/etc/hping/...
-# Documentation files should be installed in $(HPING_IPK_DIR)/opt/doc/hping/...
-# Daemon startup scripts should be installed in $(HPING_IPK_DIR)/opt/etc/init.d/S??hping
+# Libraries and include files should be installed into $(HPING_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/hping/...
+# Documentation files should be installed in $(HPING_IPK_DIR)$(OPTWARE_PREFIX)doc/hping/...
+# Daemon startup scripts should be installed in $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??hping
 #
 # You may need to patch your application to make it use these locations.
 #
 $(HPING_IPK): $(HPING_BUILD_DIR)/.built
 	rm -rf $(HPING_IPK_DIR) $(BUILD_DIR)/hping_*_$(TARGET_ARCH).ipk
-	install -d $(HPING_IPK_DIR)/opt/share/man/man8
-	install -d $(HPING_IPK_DIR)/opt/sbin
+	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
+	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	$(MAKE) -C $(HPING_BUILD_DIR) \
         	DESTDIR=$(HPING_IPK_DIR) \
-        	INSTALL_MANPATH=$(HPING_IPK_DIR)/opt/share/man \
+        	INSTALL_MANPATH=$(HPING_IPK_DIR)$(OPTWARE_PREFIX)share/man \
         	install
-	$(STRIP_COMMAND) $(HPING_IPK_DIR)/opt/sbin/hping3
-	cd $(HPING_IPK_DIR)/opt/sbin; \
+	$(STRIP_COMMAND) $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin/hping3
+	cd $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin; \
         	ln -s hping3 hping; \
         	ln -s hping3 hping2;
-#	install -d $(HPING_IPK_DIR)/opt/etc/
-#	install -m 644 $(HPING_SOURCE_DIR)/hping.conf $(HPING_IPK_DIR)/opt/etc/hping.conf
-#	install -d $(HPING_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(HPING_SOURCE_DIR)/rc.hping $(HPING_IPK_DIR)/opt/etc/init.d/SXXhping
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/opt/etc/init.d/SXXhping
+#	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(HPING_SOURCE_DIR)/hping.conf $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/hping.conf
+#	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(HPING_SOURCE_DIR)/rc.hping $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhping
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhping
 	$(MAKE) $(HPING_IPK_DIR)/CONTROL/control
 #	install -m 755 $(HPING_SOURCE_DIR)/postinst $(HPING_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

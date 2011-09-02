@@ -37,14 +37,14 @@ $(SLIMRAT_BUILD_DIR)/.configured: $(DL_DIR)/$(SLIMRAT_SOURCE) $(SLIMRAT_PATCHES)
 	$(SLIMRAT_UNZIP) $(DL_DIR)/$(SLIMRAT_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 #	cat $(SLIMRAT_PATCHES) | patch -d $(BUILD_DIR)/$(SLIMRAT_DIR) -p1
 	mv $(BUILD_DIR)/$(SLIMRAT_DIR) $(@D)
-	sed -i -e '1s|#!.*|#!/opt/bin/perl|' $(@D)/src/slimrat
+	sed -i -e '1s|#!.*|#!$(OPTWARE_PREFIX)bin/perl|' $(@D)/src/slimrat
 #	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -53,7 +53,7 @@ slimrat-unpack: $(SLIMRAT_BUILD_DIR)/.configured
 $(SLIMRAT_BUILD_DIR)/.built: $(SLIMRAT_BUILD_DIR)/.configured
 	rm -f $@
 #	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 slimrat: $(SLIMRAT_BUILD_DIR)/.built
@@ -76,12 +76,12 @@ $(SLIMRAT_IPK_DIR)/CONTROL/control:
 $(SLIMRAT_IPK): $(SLIMRAT_BUILD_DIR)/.built
 	rm -rf $(SLIMRAT_IPK_DIR) $(BUILD_DIR)/slimrat_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(SLIMRAT_BUILD_DIR) DESTDIR=$(SLIMRAT_IPK_DIR) install
-	install -d $(SLIMRAT_IPK_DIR)/opt/share
-	cp -rp $(SLIMRAT_BUILD_DIR) $(SLIMRAT_IPK_DIR)/opt/share/
-	rm -f $(SLIMRAT_IPK_DIR)/opt/share/slimrat/.[bc]*
-	cd $(SLIMRAT_IPK_DIR)/opt/share/slimrat/src && rm -f .[bc]* slimrat-gui slimrat.glade
-	install -d $(SLIMRAT_IPK_DIR)/opt/bin
-	cd $(SLIMRAT_IPK_DIR)/opt/bin; ln -s ../share/slimrat/src/slimrat .
+	install -d $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)share
+	cp -rp $(SLIMRAT_BUILD_DIR) $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)share/
+	rm -f $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)share/slimrat/.[bc]*
+	cd $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)share/slimrat/src && rm -f .[bc]* slimrat-gui slimrat.glade
+	install -d $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)bin
+	cd $(SLIMRAT_IPK_DIR)$(OPTWARE_PREFIX)bin; ln -s ../share/slimrat/src/slimrat .
 	$(MAKE) $(SLIMRAT_IPK_DIR)/CONTROL/control
 	echo $(SLIMRAT_CONFFILES) | sed -e 's/ /\n/g' > $(SLIMRAT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SLIMRAT_IPK_DIR)

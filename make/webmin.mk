@@ -38,7 +38,7 @@ $(WEBMIN_BUILD_DIR)/.configured: $(DL_DIR)/$(WEBMIN_SOURCE) $(WEBMIN_PATCHES)
 	mv $(BUILD_DIR)/$(WEBMIN_DIR) $(WEBMIN_BUILD_DIR)
 	(cd $(WEBMIN_BUILD_DIR); \
 	find . -name '*.cgi' -o -name '*.pl' | \
-		xargs sed -i -e 's|^#! */.*/bin/perl$$|#!/opt/bin/perl|'; \
+		xargs sed -i -e 's|^#! */.*/bin/perl$$|#!$(OPTWARE_PREFIX)bin/perl|'; \
 	rm -rf bsdexports caldera hpuxexports sgiexports; \
 	rm -f mount/freebsd-mounts* mount/openbsd-mounts* mount/macos-mounts*; \
 	rm -f webmin-gentoo-init webmin-caldera-init; \
@@ -88,10 +88,10 @@ $(WEBMIN_IPK_DIR)/CONTROL/control:
 $(WEBMIN_IPK): $(WEBMIN_BUILD_DIR)/.built
 	rm -rf $(WEBMIN_IPK_DIR) $(BUILD_DIR)/webmin_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(WEBMIN_BUILD_DIR) DESTDIR=$(WEBMIN_IPK_DIR) install
-	install -d $(WEBMIN_IPK_DIR)/opt/etc/webmin
-	install -d $(WEBMIN_IPK_DIR)/opt/etc/init.d
-	install -d $(WEBMIN_IPK_DIR)/opt/etc/pam.d
-	install -d $(WEBMIN_IPK_DIR)/opt/share/webmin
+	install -d $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)etc/webmin
+	install -d $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -d $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)etc/pam.d
+	install -d $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)share/webmin
 	#
 	cd $(WEBMIN_IPK_DIR)/opt; \
 	for d in acl servers webmin webminlog Webmin; do \
@@ -111,8 +111,8 @@ $(WEBMIN_IPK): $(WEBMIN_BUILD_DIR)/.built
 			fi; \
 		done; \
 	done
-#	install $(WEBMIN_SOURCE_DIR)/webmin.rc $(WEBMIN_IPK_DIR)/opt/etc/init.d/webmin
-#	install $(WEBMIN_SOURCE_DIR)/webmin.pam $(WEBMIN_IPK_DIR)/opt/etc/pam.d/webmin
+#	install $(WEBMIN_SOURCE_DIR)/webmin.rc $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/webmin
+#	install $(WEBMIN_SOURCE_DIR)/webmin.pam $(WEBMIN_IPK_DIR)$(OPTWARE_PREFIX)etc/pam.d/webmin
 	$(MAKE) $(WEBMIN_IPK_DIR)/CONTROL/control
 #	install -m 755 $(WEBMIN_SOURCE_DIR)/postinst $(WEBMIN_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=$(OPTWARE_TARGET)' $(WEBMIN_IPK_DIR)/CONTROL/postinst

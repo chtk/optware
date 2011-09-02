@@ -43,7 +43,7 @@ AVAHI_IPK_VERSION=1
 
 #
 # AVAHI_CONFFILES should be a list of user-editable files
-#AVAHI_CONFFILES=/opt/etc/avahi.conf /opt/etc/init.d/SXXavahi
+#AVAHI_CONFFILES=$(OPTWARE_PREFIX)etc/avahi.conf $(OPTWARE_PREFIX)etc/init.d/SXXavahi
 
 #
 # AVAHI_PATCHES should list any patches, in the the order in
@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		\
 		--enable-libdaemon \
 		--with-distro=none \
@@ -212,24 +212,24 @@ $(AVAHI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(AVAHI_IPK_DIR)/opt/sbin or $(AVAHI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(AVAHI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(AVAHI_IPK_DIR)/opt/etc/avahi/...
-# Documentation files should be installed in $(AVAHI_IPK_DIR)/opt/doc/avahi/...
-# Daemon startup scripts should be installed in $(AVAHI_IPK_DIR)/opt/etc/init.d/S??avahi
+# Libraries and include files should be installed into $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/avahi/...
+# Documentation files should be installed in $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)doc/avahi/...
+# Daemon startup scripts should be installed in $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??avahi
 #
 # You may need to patch your application to make it use these locations.
 #
 $(AVAHI_IPK): $(AVAHI_BUILD_DIR)/.built
 	rm -rf $(AVAHI_IPK_DIR) $(BUILD_DIR)/avahi_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(AVAHI_BUILD_DIR) DESTDIR=$(AVAHI_IPK_DIR) install-strip
-	rm -f $(AVAHI_IPK_DIR)/opt/lib/libavahi*.la
-#	install -d $(AVAHI_IPK_DIR)/opt/etc/
-#	install -m 644 $(AVAHI_SOURCE_DIR)/avahi.conf $(AVAHI_IPK_DIR)/opt/etc/avahi.conf
-#	install -d $(AVAHI_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(AVAHI_SOURCE_DIR)/rc.avahi $(AVAHI_IPK_DIR)/opt/etc/init.d/SXXavahi
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(AVAHI_IPK_DIR)/opt/etc/init.d/SXXavahi
+	rm -f $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)lib/libavahi*.la
+#	install -d $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(AVAHI_SOURCE_DIR)/avahi.conf $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/avahi.conf
+#	install -d $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(AVAHI_SOURCE_DIR)/rc.avahi $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXavahi
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXavahi
 	$(MAKE) $(AVAHI_IPK_DIR)/CONTROL/control
 #	install -m 755 $(AVAHI_SOURCE_DIR)/postinst $(AVAHI_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(AVAHI_IPK_DIR)/CONTROL/postinst

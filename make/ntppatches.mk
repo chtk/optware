@@ -42,8 +42,8 @@ $(NTPPATCHES_IPK): $(NTPPATCHES_BUILD_DIR)/.built
 	install -d $(NTPPATCHES_IPK_DIR)/unslung
 	install -m 755 $(NTPPATCHES_SOURCE_DIR)/rc.crond $(NTPPATCHES_IPK_DIR)/unslung/rc.crond
 	install -m 755 $(NTPPATCHES_SOURCE_DIR)/rc.rstimezone $(NTPPATCHES_IPK_DIR)/unslung/rc.rstimezone
-	install -d $(NTPPATCHES_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(NTPPATCHES_SOURCE_DIR)/S10ntpclient $(NTPPATCHES_IPK_DIR)/opt/etc/init.d/S10ntpclient
+	install -d $(NTPPATCHES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(NTPPATCHES_SOURCE_DIR)/S10ntpclient $(NTPPATCHES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S10ntpclient
 	install -d $(NTPPATCHES_IPK_DIR)/CONTROL
 	install -m 644 $(NTPPATCHES_SOURCE_DIR)/control  $(NTPPATCHES_IPK_DIR)/CONTROL/control
 	install -m 755 $(NTPPATCHES_SOURCE_DIR)/postinst $(NTPPATCHES_IPK_DIR)/CONTROL/postinst

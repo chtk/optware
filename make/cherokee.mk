@@ -44,10 +44,10 @@ CHEROKEE_IPK_VERSION=1
 #
 # CHEROKEE_CONFFILES should be a list of user-editable files
 CHEROKEE_CONFFILES=\
-	/opt/etc/default/cherokee \
-	/opt/etc/cherokee/cherokee.conf \
-	/opt/etc/init.d/S80cherokee \
-	/opt/share/www/cherokee/index.html \
+	$(OPTWARE_PREFIX)etc/default/cherokee \
+	$(OPTWARE_PREFIX)etc/cherokee/cherokee.conf \
+	$(OPTWARE_PREFIX)etc/init.d/S80cherokee \
+	$(OPTWARE_PREFIX)share/www/cherokee/index.html \
 
 #
 # CHEROKEE_PATCHES should list any patches, in the the order in
@@ -142,7 +142,7 @@ endif
 	    cat $(CHEROKEE_PATCHES) | patch -d $(BUILD_DIR)/$(CHEROKEE_DIR) -p1; \
 	fi
 	mv $(BUILD_DIR)/$(CHEROKEE_DIR) $(@D)
-	sed -i.orig -e '1s|#!.*|#!/opt/bin/python|' $(@D)/admin/server.py
+	sed -i.orig -e '1s|#!.*|#!$(OPTWARE_PREFIX)bin/python|' $(@D)/admin/server.py
 	sed -i.orig -e '/\/var\/run\/cherokee.pid/d' $(@D)/admin/PageNewConfig.py
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
@@ -156,8 +156,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-wwwroot=/opt/share/www/cherokee \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-wwwroot=$(OPTWARE_PREFIX)share/www/cherokee \
 		$(CHEROKEE_CONFIGURE_OPTIONS) \
 		--without-mysql \
 		--disable-nls \
@@ -259,12 +259,12 @@ $(CHEROKEE-DOC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CHEROKEE_IPK_DIR)/opt/sbin or $(CHEROKEE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CHEROKEE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CHEROKEE_IPK_DIR)/opt/etc/cherokee/...
-# Documentation files should be installed in $(CHEROKEE_IPK_DIR)/opt/doc/cherokee/...
-# Daemon startup scripts should be installed in $(CHEROKEE_IPK_DIR)/opt/etc/init.d/S??cherokee
+# Libraries and include files should be installed into $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/cherokee/...
+# Documentation files should be installed in $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)doc/cherokee/...
+# Daemon startup scripts should be installed in $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cherokee
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -275,39 +275,39 @@ $(CHEROKEE_IPK) $(CHEROKEE-ADMIN_IPK) $(CHEROKEE-DEV_IPK) $(CHEROKEE-DOC_IPK): $
 	rm -rf $(CHEROKEE-DOC_IPK_DIR) $(BUILD_DIR)/cherokee-doc_*_$(TARGET_ARCH).ipk
 	#
 	$(MAKE) -C $(CHEROKEE_BUILD_DIR) DESTDIR=$(CHEROKEE_IPK_DIR) install-strip
-	rm $(CHEROKEE_IPK_DIR)/opt/lib/*.la $(CHEROKEE_IPK_DIR)/opt/lib/cherokee/*.la
-	install -d $(CHEROKEE_IPK_DIR)/opt/share/cherokee/cgi-bin
+	rm $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)lib/cherokee/*.la
+	install -d $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)share/cherokee/cgi-bin
 	sed -i \
 		-e '/server.*port =/s|=.*|= 8008|'\
-		-e 's|= php-cgi |= /opt/bin/php-fcgi |' \
-		$(CHEROKEE_IPK_DIR)/opt/etc/cherokee/cherokee.conf
-	install -d $(CHEROKEE_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(CHEROKEE_SOURCE_DIR)/rc.cherokee $(CHEROKEE_IPK_DIR)/opt/etc/init.d/S80cherokee
-	install -d $(CHEROKEE_IPK_DIR)/opt/etc/default
-	echo "CHEROKEE_ENABLE=yes" > $(CHEROKEE_IPK_DIR)/opt/etc/default/cherokee
+		-e 's|= php-cgi |= $(OPTWARE_PREFIX)bin/php-fcgi |' \
+		$(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/cherokee/cherokee.conf
+	install -d $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(CHEROKEE_SOURCE_DIR)/rc.cherokee $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80cherokee
+	install -d $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/default
+	echo "CHEROKEE_ENABLE=yes" > $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)etc/default/cherokee
 	# -admin
-	install -d $(CHEROKEE-ADMIN_IPK_DIR)/opt/share/cherokee
-	mv $(CHEROKEE_IPK_DIR)/opt/share/cherokee/admin $(CHEROKEE-ADMIN_IPK_DIR)/opt/share/cherokee/admin
-	install -d $(CHEROKEE-ADMIN_IPK_DIR)/opt/sbin
-	mv $(CHEROKEE_IPK_DIR)/opt/sbin/cherokee-admin $(CHEROKEE-ADMIN_IPK_DIR)/opt/sbin/
+	install -d $(CHEROKEE-ADMIN_IPK_DIR)$(OPTWARE_PREFIX)share/cherokee
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)share/cherokee/admin $(CHEROKEE-ADMIN_IPK_DIR)$(OPTWARE_PREFIX)share/cherokee/admin
+	install -d $(CHEROKEE-ADMIN_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)sbin/cherokee-admin $(CHEROKEE-ADMIN_IPK_DIR)$(OPTWARE_PREFIX)sbin/
 	$(MAKE) $(CHEROKEE-ADMIN_IPK_DIR)/CONTROL/control
 	install -m 755 $(CHEROKEE_SOURCE_DIR)/postinst-admin $(CHEROKEE-ADMIN_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CHEROKEE-ADMIN_IPK_DIR)
 	# -dev
-	install -d $(CHEROKEE-DEV_IPK_DIR)/opt/bin
-	mv $(CHEROKEE_IPK_DIR)/opt/bin/cherokee-config $(CHEROKEE-DEV_IPK_DIR)/opt/bin/
-	install -d $(CHEROKEE-DEV_IPK_DIR)/opt/include
-	mv $(CHEROKEE_IPK_DIR)/opt/include/cherokee $(CHEROKEE-DEV_IPK_DIR)/opt/include/cherokee
-	install -d $(CHEROKEE-DEV_IPK_DIR)/opt/lib
-	mv $(CHEROKEE_IPK_DIR)/opt/lib/pkgconfig $(CHEROKEE-DEV_IPK_DIR)/opt/lib/pkgconfig
-	install -d $(CHEROKEE-DEV_IPK_DIR)/opt/share/man/man1
-	mv $(CHEROKEE_IPK_DIR)/opt/share/man/man1/cherokee-config.1 $(CHEROKEE-DEV_IPK_DIR)/opt/share/man/man1/
-	mv $(CHEROKEE_IPK_DIR)/opt/share/aclocal $(CHEROKEE-DEV_IPK_DIR)/opt/share/aclocal
+	install -d $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)bin/cherokee-config $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)include
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)include/cherokee $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)include/cherokee
+	install -d $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig
+	install -d $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/cherokee-config.1 $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)share/aclocal $(CHEROKEE-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/aclocal
 	$(MAKE) $(CHEROKEE-DEV_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CHEROKEE-DEV_IPK_DIR)
 	# -doc
-	install -d $(CHEROKEE-DOC_IPK_DIR)/opt/share
-	mv $(CHEROKEE_IPK_DIR)/opt/share/doc $(CHEROKEE-DOC_IPK_DIR)/opt/share/doc
+	install -d $(CHEROKEE-DOC_IPK_DIR)$(OPTWARE_PREFIX)share
+	mv $(CHEROKEE_IPK_DIR)$(OPTWARE_PREFIX)share/doc $(CHEROKEE-DOC_IPK_DIR)$(OPTWARE_PREFIX)share/doc
 	$(MAKE) $(CHEROKEE-DOC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CHEROKEE-DOC_IPK_DIR)
 	# main

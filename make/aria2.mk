@@ -46,7 +46,7 @@ ARIA2_IPK_VERSION=1
 
 #
 # ARIA2_CONFFILES should be a list of user-editable files
-#ARIA2_CONFFILES=/opt/etc/aria2.conf /opt/etc/init.d/SXXaria2
+#ARIA2_CONFFILES=$(OPTWARE_PREFIX)etc/aria2.conf $(OPTWARE_PREFIX)etc/init.d/SXXaria2
 
 #
 # ARIA2_PATCHES should list any patches, in the the order in
@@ -147,7 +147,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-gnutls \
 		--without-libexpat \
 		--with-openssl \
@@ -210,23 +210,23 @@ $(ARIA2_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ARIA2_IPK_DIR)/opt/sbin or $(ARIA2_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ARIA2_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ARIA2_IPK_DIR)/opt/etc/aria2/...
-# Documentation files should be installed in $(ARIA2_IPK_DIR)/opt/doc/aria2/...
-# Daemon startup scripts should be installed in $(ARIA2_IPK_DIR)/opt/etc/init.d/S??aria2
+# Libraries and include files should be installed into $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/aria2/...
+# Documentation files should be installed in $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)doc/aria2/...
+# Daemon startup scripts should be installed in $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??aria2
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ARIA2_IPK): $(ARIA2_BUILD_DIR)/.built
 	rm -rf $(ARIA2_IPK_DIR) $(BUILD_DIR)/aria2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ARIA2_BUILD_DIR) DESTDIR=$(ARIA2_IPK_DIR) transform='' install-strip
-#	install -d $(ARIA2_IPK_DIR)/opt/etc/
-#	install -m 644 $(ARIA2_SOURCE_DIR)/aria2.conf $(ARIA2_IPK_DIR)/opt/etc/aria2.conf
-#	install -d $(ARIA2_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(ARIA2_SOURCE_DIR)/rc.aria2 $(ARIA2_IPK_DIR)/opt/etc/init.d/SXXaria2
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(ARIA2_IPK_DIR)/opt/etc/init.d/SXXaria2
+#	install -d $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(ARIA2_SOURCE_DIR)/aria2.conf $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/aria2.conf
+#	install -d $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(ARIA2_SOURCE_DIR)/rc.aria2 $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXaria2
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(ARIA2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXaria2
 	$(MAKE) $(ARIA2_IPK_DIR)/CONTROL/control
 #	install -m 755 $(ARIA2_SOURCE_DIR)/postinst $(ARIA2_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(ARIA2_IPK_DIR)/CONTROL/postinst

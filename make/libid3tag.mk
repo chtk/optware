@@ -45,7 +45,7 @@ $(LIBID3TAG_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBID3TAG_SOURCE)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	);
@@ -85,8 +85,8 @@ $(LIBID3TAG_IPK_DIR)/CONTROL/control:
 $(LIBID3TAG_IPK): $(LIBID3TAG_BUILD_DIR)/.built
 	rm -rf $(LIBID3TAG_IPK_DIR) $(LIBID3TAG_IPK)
 	$(MAKE) -C $(LIBID3TAG_BUILD_DIR) DESTDIR=$(LIBID3TAG_IPK_DIR) install
-	$(STRIP_COMMAND) $(LIBID3TAG_IPK_DIR)/opt/lib/*.so.*
-	rm -f $(LIBID3TAG_IPK_DIR)/opt/lib/*.{la,a}
+	$(STRIP_COMMAND) $(LIBID3TAG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
+	rm -f $(LIBID3TAG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.{la,a}
 	$(MAKE) $(LIBID3TAG_IPK_DIR)/CONTROL/control
 #	install -d $(LIBID3TAG_IPK_DIR)/CONTROL
 #	sed -e "s/@ARCH@/$(TARGET_ARCH)/" -e "s/@VERSION@/$(LIBID3TAG_VERSION)/" \

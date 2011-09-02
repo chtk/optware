@@ -122,7 +122,7 @@ $(IMAGEMAGICK_BUILD_DIR)/.configured: $(DL_DIR)/$(IMAGEMAGICK_SOURCE) $(IMAGEMAG
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-openmp \
 		--without-perl \
 		--without-x \
@@ -141,16 +141,16 @@ imagemagick-unpack: $(IMAGEMAGICK_BUILD_DIR)/.configured
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libimagemagick.so.$(IMAGEMAGICK_VERSION): $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.so.$(IMAGEMAGICK_VERSION)
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/imagemagick.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.so.$(IMAGEMAGICK_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libimagemagick.so.$(IMAGEMAGICK_VERSION) libimagemagick.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libimagemagick.so.$(IMAGEMAGICK_VERSION) libimagemagick.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libimagemagick.so.$(IMAGEMAGICK_VERSION): $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.so.$(IMAGEMAGICK_VERSION)
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/imagemagick.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(IMAGEMAGICK_BUILD_DIR)/libimagemagick.so.$(IMAGEMAGICK_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libimagemagick.so.$(IMAGEMAGICK_VERSION) libimagemagick.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libimagemagick.so.$(IMAGEMAGICK_VERSION) libimagemagick.so
 # 
-#imagemagick-stage: $(STAGING_DIR)/opt/lib/libimagemagick.so.$(IMAGEMAGICK_VERSION)
+#imagemagick-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libimagemagick.so.$(IMAGEMAGICK_VERSION)
 
 #
 # This builds the actual binary.  You should change the target to refer
@@ -190,48 +190,48 @@ $(IMAGEMAGICK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(IMAGEMAGICK_IPK_DIR)/opt/sbin or $(IMAGEMAGICK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(IMAGEMAGICK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(IMAGEMAGICK_IPK_DIR)/opt/etc/imagemagick/...
-# Documentation files should be installed in $(IMAGEMAGICK_IPK_DIR)/opt/doc/imagemagick/...
-# Daemon startup scripts should be installed in $(IMAGEMAGICK_IPK_DIR)/opt/etc/init.d/S??imagemagick
+# Libraries and include files should be installed into $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)etc/imagemagick/...
+# Documentation files should be installed in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)doc/imagemagick/...
+# Daemon startup scripts should be installed in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??imagemagick
 #
 # You may need to patch your application to make it use these locations.
 #
 $(IMAGEMAGICK_IPK): $(IMAGEMAGICK_BUILD_DIR)/.built
 	rm -rf $(IMAGEMAGICK_IPK_DIR) $(BUILD_DIR)/imagemagick_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IMAGEMAGICK_BUILD_DIR) DESTDIR=$(IMAGEMAGICK_IPK_DIR) transform='' install-am
-	rm -f $(IMAGEMAGICK_IPK_DIR)/opt/bin/*
-	rm -f $(IMAGEMAGICK_IPK_DIR)/opt/lib/libltdl*
-#	rm -f $(IMAGEMAGICK_IPK_DIR)/opt/lib/*.la
-	find $(IMAGEMAGICK_IPK_DIR)/opt/lib/ \
+	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/libltdl*
+#	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
 		-name '*.a' \
 		-exec rm -f {} \;
-#	find $(IMAGEMAGICK_IPK_DIR)/opt/lib/ \
+#	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
 		-name '*.la' \
 		-exec rm -f {} \;
-	find $(IMAGEMAGICK_IPK_DIR)/opt/lib/ \
+	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
 		-name '*.so' \
 		-exec chmod +w {} \; \
 		-exec $(STRIP_COMMAND) {} \; \
 		-exec chmod -w {} \;
-	for f in $(IMAGEMAGICK_IPK_DIR)/opt/lib/*.so.*; \
+	for f in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*; \
 		do \
 		exec chmod +w $$f; \
 		$(STRIP_COMMAND) $$f; \
 		exec chmod +w $$f; \
 		done
-	cp $(IMAGEMAGICK_BUILD_DIR)/Magick++/bin/Magick++-config $(IMAGEMAGICK_IPK_DIR)/opt/bin
-	cp $(IMAGEMAGICK_BUILD_DIR)/magick/Magick-config $(IMAGEMAGICK_IPK_DIR)/opt/bin
-	cp $(IMAGEMAGICK_BUILD_DIR)/wand/Wand-config $(IMAGEMAGICK_IPK_DIR)/opt/bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/Magick++/bin/Magick++-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/magick/Magick-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/wand/Wand-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
 	for f in `ls $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs`; \
 		do \
-		$(STRIP_COMMAND) $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs/$$f -o $(IMAGEMAGICK_IPK_DIR)/opt/bin/$$f; \
-		$(STRIP_COMMAND) $(IMAGEMAGICK_IPK_DIR)/opt/bin/$$f; \
+		$(STRIP_COMMAND) $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs/$$f -o $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/$$f; \
+		$(STRIP_COMMAND) $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/$$f; \
 		done
-	rm -rf $(IMAGEMAGICK_IPK_DIR)/opt/share/ImageMagick-$(IMAGEMAGICK_VER)/www
-	rm -rf $(IMAGEMAGICK_IPK_DIR)/opt/share/ImageMagick-$(IMAGEMAGICK_VER)/images
+	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)share/ImageMagick-$(IMAGEMAGICK_VER)/www
+	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)share/ImageMagick-$(IMAGEMAGICK_VER)/images
 	$(MAKE) $(IMAGEMAGICK_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IMAGEMAGICK_IPK_DIR)
 

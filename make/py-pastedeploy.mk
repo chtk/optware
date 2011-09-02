@@ -48,7 +48,7 @@ PY-PASTEDEPLOY_CONFLICTS=
 
 #
 # PY-PASTEDEPLOY_CONFFILES should be a list of user-editable files
-#PY-PASTEDEPLOY_CONFFILES=/opt/etc/py-pastedeploy.conf /opt/etc/init.d/SXXpy-pastedeploy
+#PY-PASTEDEPLOY_CONFFILES=$(OPTWARE_PREFIX)etc/py-pastedeploy.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-pastedeploy
 
 #
 # PY-PASTEDEPLOY_PATCHES should list any patches, in the the order in
@@ -136,7 +136,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTEDEPLOY_DIR) $(@D)/2.4
 	(cd $(@D)/2.4; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.4") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.4") >> setup.cfg \
 	)
 	# 2.5
 	rm -rf $(BUILD_DIR)/$(PY-PASTEDEPLOY_DIR)
@@ -152,7 +152,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTEDEPLOY_DIR) $(@D)/2.5
 	(cd $(@D)/2.5; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	# 2.6
 	rm -rf $(BUILD_DIR)/$(PY-PASTEDEPLOY_DIR)
@@ -168,7 +168,7 @@ endif
         fi
 	mv $(BUILD_DIR)/$(PY-PASTEDEPLOY_DIR) $(@D)/2.6
 	(cd $(@D)/2.6; \
-	    (echo "[build_scripts]"; echo "executable=/opt/bin/python2.6") >> setup.cfg \
+	    (echo "[build_scripts]"; echo "executable=$(OPTWARE_PREFIX)bin/python2.6") >> setup.cfg \
 	)
 	touch $@
 
@@ -265,12 +265,12 @@ $(PY26-PASTEDEPLOY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-PASTEDEPLOY_IPK_DIR)/opt/sbin or $(PY-PASTEDEPLOY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-PASTEDEPLOY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-PASTEDEPLOY_IPK_DIR)/opt/etc/py-pastedeploy/...
-# Documentation files should be installed in $(PY-PASTEDEPLOY_IPK_DIR)/opt/doc/py-pastedeploy/...
-# Daemon startup scripts should be installed in $(PY-PASTEDEPLOY_IPK_DIR)/opt/etc/init.d/S??py-pastedeploy
+# Libraries and include files should be installed into $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX)etc/py-pastedeploy/...
+# Documentation files should be installed in $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX)doc/py-pastedeploy/...
+# Daemon startup scripts should be installed in $(PY-PASTEDEPLOY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-pastedeploy
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -148,7 +148,7 @@ $(LIBDVB_BUILD_DIR)/.staged: $(LIBDVB_BUILD_DIR)/.built
 		$(TARGET_CONFIGURE_OPTS) \
 		INCLUDES="$(STAGING_CPPFLAGS) $(LIBDVB_CPPFLAGS)" \
 		LIBS="$(STAGING_LDFLAGS) $(LIBDVB_LDFLAGS) -L../ -ldvbmpegtools" \
-		PREFIX=/opt install
+		PREFIX=$(OPTWARE_PREFIX)install
 	touch $(LIBDVB_BUILD_DIR)/.staged
 
 libdvb-stage: $(LIBDVB_BUILD_DIR)/.staged
@@ -175,12 +175,12 @@ $(LIBDVB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBDVB_IPK_DIR)/opt/sbin or $(LIBDVB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBDVB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBDVB_IPK_DIR)/opt/etc/libdvb/...
-# Documentation files should be installed in $(LIBDVB_IPK_DIR)/opt/doc/libdvb/...
-# Daemon startup scripts should be installed in $(LIBDVB_IPK_DIR)/opt/etc/init.d/S??libdvb
+# Libraries and include files should be installed into $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX)etc/libdvb/...
+# Documentation files should be installed in $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX)doc/libdvb/...
+# Daemon startup scripts should be installed in $(LIBDVB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libdvb
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -190,7 +190,7 @@ $(LIBDVB_IPK): $(LIBDVB_BUILD_DIR)/.built
 		$(TARGET_CONFIGURE_OPTS) \
 		INCLUDES="$(STAGING_CPPFLAGS) $(LIBDVB_CPPFLAGS)" \
 		LIBS="$(STAGING_LDFLAGS) $(LIBDVB_LDFLAGS) -L../ -ldvbmpegtools" \
-		PREFIX=/opt install
+		PREFIX=$(OPTWARE_PREFIX)install
 	$(MAKE) $(LIBDVB_IPK_DIR)/CONTROL/control
 	echo $(LIBDVB_CONFFILES) | sed -e 's/ /\n/g' > $(LIBDVB_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBDVB_IPK_DIR)

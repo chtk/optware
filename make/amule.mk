@@ -43,7 +43,7 @@ AMULE_IPK_VERSION=2
 
 #
 # AMULE_CONFFILES should be a list of user-editable files
-## AMULE_CONFFILES=/opt/etc/amule.conf /opt/etc/init.d/SXXamule
+## AMULE_CONFFILES=$(OPTWARE_PREFIX)etc/amule.conf $(OPTWARE_PREFIX)etc/init.d/SXXamule
 
 #
 # AMULE_PATCHES should list any patches, in the the order in
@@ -76,7 +76,7 @@ AMULE_CONFIGURE_ARGS = \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-debug \
 		--enable-optimize \
 		--enable-alcc \
@@ -94,8 +94,8 @@ AMULE_CONFIGURE_ARGS = \
 		--with-gdlib-prefix=$(STAGING_PREFIX) \
 		--with-libpng-prefix=$(STAGING_PREFIX) \
 		--with-libupnp-prefix=$(STAGING_PREFIX) \
-		--with-wxbase-config=$(STAGING_DIR)/opt/bin/wx-config \
-		--with-wx-config=$(STAGING_DIR)/opt/bin/wx-config \
+		--with-wxbase-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/wx-config \
+		--with-wx-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/wx-config \
 		--with-wx-prefix=$(STAGING_PREFIX) \
 		--with-crypto-prefix=$(STAGING_PREFIX) \
 		--with-zlib=$(STAGING_PREFIX) \
@@ -224,22 +224,22 @@ $(AMULE_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(AMULE_IPK_DIR)/opt/sbin or $(AMULE_IPK_DIR)/opt/bin
+# Binaries should be installed into $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(AMULE_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(AMULE_IPK_DIR)/opt/etc/amule/...
-# Documentation files should be installed in $(AMULE_IPK_DIR)/opt/doc/amule/...
-# Daemon startup scripts should be installed in $(AMULE_IPK_DIR)/opt/etc/init.d/S??amule
+# Libraries and include files should be installed into $(AMULE_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/amule/...
+# Documentation files should be installed in $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)doc/amule/...
+# Daemon startup scripts should be installed in $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??amule
 #
 # You may need to patch your application to make it use these locations.
 #
 $(AMULE_IPK): $(AMULE_BUILD_DIR)/.built
 	rm -rf $(AMULE_IPK_DIR) $(BUILD_DIR)/amule_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(AMULE_BUILD_DIR) DESTDIR=$(AMULE_IPK_DIR) program_transform_name=s/^$(GNU_TARGET_NAME)-// install-strip
-#	install -d $(AMULE_IPK_DIR)/opt/etc/
-#	install -m 644 $(AMULE_SOURCE_DIR)/amule.conf $(AMULE_IPK_DIR)/opt/etc/amule.conf
-	install -d $(AMULE_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(AMULE_SOURCE_DIR)/rc.amuled $(AMULE_IPK_DIR)/opt/etc/init.d/S57amuled
+#	install -d $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(AMULE_SOURCE_DIR)/amule.conf $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/amule.conf
+	install -d $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(AMULE_SOURCE_DIR)/rc.amuled $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S57amuled
 	$(MAKE) $(AMULE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(AMULE_SOURCE_DIR)/postinst $(AMULE_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(AMULE_SOURCE_DIR)/prerm $(AMULE_IPK_DIR)/CONTROL/prerm

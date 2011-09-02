@@ -43,7 +43,7 @@ MSORT_IPK_VERSION=1
 
 #
 # MSORT_CONFFILES should be a list of user-editable files
-#MSORT_CONFFILES=/opt/etc/msort.conf /opt/etc/init.d/SXXmsort
+#MSORT_CONFFILES=$(OPTWARE_PREFIX)etc/msort.conf $(OPTWARE_PREFIX)etc/init.d/SXXmsort
 
 #
 # MSORT_PATCHES should list any patches, in the the order in
@@ -132,7 +132,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-uninum \
 		--disable-nls \
 		--disable-static \
@@ -186,23 +186,23 @@ $(MSORT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MSORT_IPK_DIR)/opt/sbin or $(MSORT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MSORT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MSORT_IPK_DIR)/opt/etc/msort/...
-# Documentation files should be installed in $(MSORT_IPK_DIR)/opt/doc/msort/...
-# Daemon startup scripts should be installed in $(MSORT_IPK_DIR)/opt/etc/init.d/S??msort
+# Libraries and include files should be installed into $(MSORT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/msort/...
+# Documentation files should be installed in $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)doc/msort/...
+# Daemon startup scripts should be installed in $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??msort
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MSORT_IPK): $(MSORT_BUILD_DIR)/.built
 	rm -rf $(MSORT_IPK_DIR) $(BUILD_DIR)/msort_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MSORT_BUILD_DIR) DESTDIR=$(MSORT_IPK_DIR) install-strip
-#	install -d $(MSORT_IPK_DIR)/opt/etc/
-#	install -m 644 $(MSORT_SOURCE_DIR)/msort.conf $(MSORT_IPK_DIR)/opt/etc/msort.conf
-#	install -d $(MSORT_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MSORT_SOURCE_DIR)/rc.msort $(MSORT_IPK_DIR)/opt/etc/init.d/SXXmsort
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MSORT_IPK_DIR)/opt/etc/init.d/SXXmsort
+#	install -d $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MSORT_SOURCE_DIR)/msort.conf $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/msort.conf
+#	install -d $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MSORT_SOURCE_DIR)/rc.msort $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmsort
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MSORT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmsort
 	$(MAKE) $(MSORT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MSORT_SOURCE_DIR)/postinst $(MSORT_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MSORT_IPK_DIR)/CONTROL/postinst

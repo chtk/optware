@@ -46,7 +46,7 @@ SCROBBY_IPK_VERSION=1
 
 #
 # SCROBBY_CONFFILES should be a list of user-editable files
-#SCROBBY_CONFFILES=/opt/etc/scrobby.conf /opt/etc/init.d/SXXscrobby
+#SCROBBY_CONFFILES=$(OPTWARE_PREFIX)etc/scrobby.conf $(OPTWARE_PREFIX)etc/init.d/SXXscrobby
 
 #
 # SCROBBY_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(SCROBBY_BUILD_DIR)/.configured: $(DL_DIR)/$(SCROBBY_SOURCE) $(SCROBBY_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		CURL_CONFIG="$(STAGING_DIR)/bin/curl-config" \
@@ -184,23 +184,23 @@ $(SCROBBY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SCROBBY_IPK_DIR)/opt/sbin or $(SCROBBY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SCROBBY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SCROBBY_IPK_DIR)/opt/etc/scrobby/...
-# Documentation files should be installed in $(SCROBBY_IPK_DIR)/opt/doc/scrobby/...
-# Daemon startup scripts should be installed in $(SCROBBY_IPK_DIR)/opt/etc/init.d/S??scrobby
+# Libraries and include files should be installed into $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/scrobby/...
+# Documentation files should be installed in $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)doc/scrobby/...
+# Daemon startup scripts should be installed in $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??scrobby
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SCROBBY_IPK): $(SCROBBY_BUILD_DIR)/.built
 	rm -rf $(SCROBBY_IPK_DIR) $(BUILD_DIR)/scrobby_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SCROBBY_BUILD_DIR) DESTDIR=$(SCROBBY_IPK_DIR) install-strip
-#	install -d $(SCROBBY_IPK_DIR)/opt/etc/
-#	install -m 644 $(SCROBBY_SOURCE_DIR)/scrobby.conf $(SCROBBY_IPK_DIR)/opt/etc/scrobby.conf
-#	install -d $(SCROBBY_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SCROBBY_SOURCE_DIR)/rc.scrobby $(SCROBBY_IPK_DIR)/opt/etc/init.d/SXXscrobby
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SCROBBY_IPK_DIR)/opt/etc/init.d/SXXscrobby
+#	install -d $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SCROBBY_SOURCE_DIR)/scrobby.conf $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/scrobby.conf
+#	install -d $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SCROBBY_SOURCE_DIR)/rc.scrobby $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXscrobby
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SCROBBY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXscrobby
 	$(MAKE) $(SCROBBY_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SCROBBY_SOURCE_DIR)/postinst $(SCROBBY_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SCROBBY_IPK_DIR)/CONTROL/postinst

@@ -40,7 +40,7 @@ POUND_IPK_VERSION=1
 
 #
 # POUND_CONFFILES should be a list of user-editable files
-#POUND_CONFFILES=/opt/etc/pound.conf /opt/etc/init.d/SXXpound
+#POUND_CONFFILES=$(OPTWARE_PREFIX)etc/pound.conf $(OPTWARE_PREFIX)etc/init.d/SXXpound
 
 #
 # POUND_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(POUND_BUILD_DIR)/.configured: $(DL_DIR)/$(POUND_SOURCE) $(POUND_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ssl=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
@@ -184,12 +184,12 @@ $(POUND_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(POUND_IPK_DIR)/opt/sbin or $(POUND_IPK_DIR)/opt/bin
+# Binaries should be installed into $(POUND_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(POUND_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(POUND_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(POUND_IPK_DIR)/opt/etc/pound/...
-# Documentation files should be installed in $(POUND_IPK_DIR)/opt/doc/pound/...
-# Daemon startup scripts should be installed in $(POUND_IPK_DIR)/opt/etc/init.d/S??pound
+# Libraries and include files should be installed into $(POUND_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/pound/...
+# Documentation files should be installed in $(POUND_IPK_DIR)$(OPTWARE_PREFIX)doc/pound/...
+# Daemon startup scripts should be installed in $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pound
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -197,12 +197,12 @@ $(POUND_IPK): $(POUND_BUILD_DIR)/.built
 	rm -rf $(POUND_IPK_DIR) $(BUILD_DIR)/pound_*_$(TARGET_ARCH).ipk
 	install -d $(POUND_IPK_DIR)/opt
 	$(MAKE) -C $(POUND_BUILD_DIR) DESTDIR=$(POUND_IPK_DIR) install
-	$(STRIP_COMMAND) $(POUND_IPK_DIR)/opt/sbin/pound*
-	chmod 555 $(POUND_IPK_DIR)/opt/sbin/pound
-#	install -d $(POUND_IPK_DIR)/opt/etc/
-#	install -m 644 $(POUND_SOURCE_DIR)/pound.conf $(POUND_IPK_DIR)/opt/etc/pound.conf
-#	install -d $(POUND_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(POUND_SOURCE_DIR)/rc.pound $(POUND_IPK_DIR)/opt/etc/init.d/SXXpound
+	$(STRIP_COMMAND) $(POUND_IPK_DIR)$(OPTWARE_PREFIX)sbin/pound*
+	chmod 555 $(POUND_IPK_DIR)$(OPTWARE_PREFIX)sbin/pound
+#	install -d $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(POUND_SOURCE_DIR)/pound.conf $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/pound.conf
+#	install -d $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(POUND_SOURCE_DIR)/rc.pound $(POUND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXpound
 	$(MAKE) $(POUND_IPK_DIR)/CONTROL/control
 #	install -m 755 $(POUND_SOURCE_DIR)/postinst $(POUND_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(POUND_SOURCE_DIR)/prerm $(POUND_IPK_DIR)/CONTROL/prerm

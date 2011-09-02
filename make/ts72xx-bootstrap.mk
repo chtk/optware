@@ -45,18 +45,18 @@ ts72xx-bootstrap: $(TS72XX_BOOTSTRAP_BUILD_DIR)/.built
 
 $(TS72XX_BOOTSTRAP_BUILD_DIR)/.staged: $(TS72XX_BOOTSTRAP_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/lib
-	install -d $(STAGING_DIR)/opt/sbin
-	install -d $(STAGING_DIR)/opt/etc
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)etc
 	install -d $(STAGING_DIR)/writeable/lib
-	install -d $(STAGING_DIR)/opt/lib/gconv
-	install -d $(STAGING_DIR)/opt/lib/ldscripts
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/*crt* $(STAGING_DIR)/opt/lib
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/lib* $(STAGING_DIR)/opt/lib
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/gconv/* $(STAGING_DIR)/opt/lib/gconv
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(STAGING_DIR)/opt/lib/ldscripts	
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldconfig $(STAGING_DIR)/opt/sbin
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/rc.optware $(STAGING_DIR)/opt/etc
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib/ldscripts
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/*crt* $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/lib* $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/gconv/* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(STAGING_DIR)$(OPTWARE_PREFIX)lib/ldscripts	
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldconfig $(STAGING_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/rc.optware $(STAGING_DIR)$(OPTWARE_PREFIX)etc
 	touch $@
 
 ts72xx-bootstrap-stage: $(TS72XX_BOOTSTRAP_BUILD_DIR)/.staged
@@ -77,23 +77,23 @@ $(TS72XX_BOOTSTRAP_IPK_DIR)/CONTROL/control:
 
 $(TS72XX_BOOTSTRAP_IPK): $(TS72XX_BOOTSTRAP_BUILD_DIR)/.built
 	rm -rf $(TS72XX_BOOTSTRAP_IPK_DIR) $(BUILD_DIR)/ts72xx-bootstrap_*_$(TARGET_ARCH).ipk
-	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/sbin
-	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/etc
+	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
 	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/writeable/lib
-	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib
-	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/gconv
-	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/*crt* $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/lib* $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/
-	rm -f $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/libpthread.so
-	rm -f $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/lib*.a
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/gconv/* $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/gconv/
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts/
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldconfig $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/sbin
-	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/rc.optware $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/etc
+	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv
+	install -d $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/*crt* $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/lib* $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	rm -f $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/libpthread.so
+	rm -f $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.a
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/gconv/* $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv/
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts/
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/ldconfig $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(TS72XX_BOOTSTRAP_BUILD_DIR)/rc.optware $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
 
-	$(STRIP_COMMAND) $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/*.so
-	$(STRIP_COMMAND) $(TS72XX_BOOTSTRAP_IPK_DIR)/opt/lib/*.so.*
+	$(STRIP_COMMAND) $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
+	$(STRIP_COMMAND) $(TS72XX_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
 	$(MAKE) $(TS72XX_BOOTSTRAP_IPK_DIR)/CONTROL/control
 	install -m 644 $(TS72XX_BOOTSTRAP_SOURCE_DIR)/preinst $(TS72XX_BOOTSTRAP_IPK_DIR)/CONTROL/preinst
 	install -m 644 $(TS72XX_BOOTSTRAP_SOURCE_DIR)/postinst $(TS72XX_BOOTSTRAP_IPK_DIR)/CONTROL/postinst

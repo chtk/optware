@@ -41,7 +41,7 @@ JED_IPK_VERSION=1
 
 #
 # JED_CONFFILES should be a list of user-editable files
-#JED_CONFFILES=/opt/etc/jed.conf /opt/etc/init.d/SXXjed
+#JED_CONFFILES=$(OPTWARE_PREFIX)etc/jed.conf $(OPTWARE_PREFIX)etc/init.d/SXXjed
 
 #
 # JED_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(JED_BUILD_DIR)/.configured: $(DL_DIR)/$(JED_SOURCE) $(JED_PATCHES) make/jed.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-slang=$(STAGING_PREFIX) \
 		--without-x \
 		--disable-xft \
@@ -146,7 +146,7 @@ jed-unpack: $(JED_BUILD_DIR)/.configured
 #
 $(JED_BUILD_DIR)/.built: $(JED_BUILD_DIR)/.configured
 	rm -f $@
-	$(MAKE) -C $(@D) JED_ROOT=/opt/share/jed
+	$(MAKE) -C $(@D) JED_ROOT=$(OPTWARE_PREFIX)share/jed
 	touch $@
 
 #
@@ -186,25 +186,25 @@ $(JED_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(JED_IPK_DIR)/opt/sbin or $(JED_IPK_DIR)/opt/bin
+# Binaries should be installed into $(JED_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(JED_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(JED_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(JED_IPK_DIR)/opt/etc/jed/...
-# Documentation files should be installed in $(JED_IPK_DIR)/opt/doc/jed/...
-# Daemon startup scripts should be installed in $(JED_IPK_DIR)/opt/etc/init.d/S??jed
+# Libraries and include files should be installed into $(JED_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/jed/...
+# Documentation files should be installed in $(JED_IPK_DIR)$(OPTWARE_PREFIX)doc/jed/...
+# Daemon startup scripts should be installed in $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??jed
 #
 # You may need to patch your application to make it use these locations.
 #
 $(JED_IPK): $(JED_BUILD_DIR)/.built
 	rm -rf $(JED_IPK_DIR) $(BUILD_DIR)/jed_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JED_BUILD_DIR) install \
-		DESTDIR=$(JED_IPK_DIR) JED_ROOT=/opt/share/jed
-	$(STRIP_COMMAND) $(JED_IPK_DIR)/opt/bin/jed
-#	install -d $(JED_IPK_DIR)/opt/etc/
-#	install -m 644 $(JED_SOURCE_DIR)/jed.conf $(JED_IPK_DIR)/opt/etc/jed.conf
-#	install -d $(JED_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(JED_SOURCE_DIR)/rc.jed $(JED_IPK_DIR)/opt/etc/init.d/SXXjed
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(JED_IPK_DIR)/opt/etc/init.d/SXXjed
+		DESTDIR=$(JED_IPK_DIR) JED_ROOT=$(OPTWARE_PREFIX)share/jed
+	$(STRIP_COMMAND) $(JED_IPK_DIR)$(OPTWARE_PREFIX)bin/jed
+#	install -d $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(JED_SOURCE_DIR)/jed.conf $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/jed.conf
+#	install -d $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(JED_SOURCE_DIR)/rc.jed $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXjed
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXjed
 	$(MAKE) $(JED_IPK_DIR)/CONTROL/control
 #	install -m 755 $(JED_SOURCE_DIR)/postinst $(JED_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(JED_IPK_DIR)/CONTROL/postinst

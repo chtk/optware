@@ -41,9 +41,9 @@ $(PERL-XML-REGEXP_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-XML-REGEXP_SOURCE) $(
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-xml-regexp-unpack: $(PERL-XML-REGEXP_BUILD_DIR)/.configured
 $(PERL-XML-REGEXP_BUILD_DIR)/.built: $(PERL-XML-REGEXP_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-xml-regexp: $(PERL-XML-REGEXP_BUILD_DIR)/.built
@@ -82,7 +82,7 @@ $(PERL-XML-REGEXP_IPK_DIR)/CONTROL/control:
 $(PERL-XML-REGEXP_IPK): $(PERL-XML-REGEXP_BUILD_DIR)/.built
 	rm -rf $(PERL-XML-REGEXP_IPK_DIR) $(BUILD_DIR)/perl-xml-regexp_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-XML-REGEXP_BUILD_DIR) DESTDIR=$(PERL-XML-REGEXP_IPK_DIR) install
-	find $(PERL-XML-REGEXP_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
+	find $(PERL-XML-REGEXP_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
 	$(MAKE) $(PERL-XML-REGEXP_IPK_DIR)/CONTROL/control
 	echo $(PERL-XML-REGEXP_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-XML-REGEXP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-XML-REGEXP_IPK_DIR)

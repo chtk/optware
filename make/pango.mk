@@ -35,7 +35,7 @@ PANGO_LOCALES=
 
 #
 # PANGO_CONFFILES should be a list of user-editable files
-#PANGO_CONFFILES=/opt/etc/pango.conf /opt/etc/init.d/SXXpango
+#PANGO_CONFFILES=$(OPTWARE_PREFIX)etc/pango.conf $(OPTWARE_PREFIX)etc/init.d/SXXpango
 
 #
 # PANGO_PATCHES should list any patches, in the the order in
@@ -131,7 +131,7 @@ $(PANGO_BUILD_DIR)/.configured: $(DL_DIR)/$(PANGO_SOURCE) $(PANGO_PATCHES) make/
 		--target=$(GNU_TARGET_NAME) \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--disable-glibtest \
 	)
@@ -162,11 +162,11 @@ $(PANGO_BUILD_DIR)/.staged: $(PANGO_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(PANGO_BUILD_DIR) install-strip prefix=$(STAGING_DIR)/opt
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/pango*.pc
-	rm -f $(STAGING_DIR)/opt/lib/libpango-1.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libpangox-1.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libpangoxft-1.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libpangoft2-1.0.la
-	rm -f $(STAGING_DIR)/opt/lib/libpangocairo-1.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpango-1.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpangox-1.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpangoxft-1.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpangoft2-1.0.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpangocairo-1.0.la
 	touch $@
 
 pango-stage: $(PANGO_BUILD_DIR)/.staged
@@ -174,20 +174,20 @@ pango-stage: $(PANGO_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PANGO_IPK_DIR)/opt/sbin or $(PANGO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PANGO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PANGO_IPK_DIR)/opt/etc/pango/...
-# Documentation files should be installed in $(PANGO_IPK_DIR)/opt/doc/pango/...
-# Daemon startup scripts should be installed in $(PANGO_IPK_DIR)/opt/etc/init.d/S??pango
+# Libraries and include files should be installed into $(PANGO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)etc/pango/...
+# Documentation files should be installed in $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)doc/pango/...
+# Daemon startup scripts should be installed in $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pango
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PANGO_IPK): $(PANGO_BUILD_DIR)/.built
 	rm -rf $(PANGO_IPK_DIR) $(BUILD_DIR)/pango_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PANGO_BUILD_DIR) DESTDIR=$(PANGO_IPK_DIR) install-strip
-	rm -f $(PANGO_IPK_DIR)/opt/lib/*.la
-	rm -rf $(PANGO_IPK_DIR)/opt/share/gtk-doc
+	rm -f $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -rf $(PANGO_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
 	$(MAKE) $(PANGO_IPK_DIR)/CONTROL/control
 	install -m 644 $(PANGO_SOURCE_DIR)/postinst $(PANGO_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PANGO_IPK_DIR)

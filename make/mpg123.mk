@@ -40,7 +40,7 @@ MPG123_IPK_VERSION=1
 
 #
 # MPG123_CONFFILES should be a list of user-editable files
-#MPG123_CONFFILES=/opt/etc/mpg123.conf /opt/etc/init.d/SXXmpg123
+#MPG123_CONFFILES=$(OPTWARE_PREFIX)etc/mpg123.conf $(OPTWARE_PREFIX)etc/init.d/SXXmpg123
 
 #
 # MPG123_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(MPG123_BUILD_DIR)/.configured: $(DL_DIR)/$(MPG123_SOURCE) $(MPG123_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(MPG123_CONFIG_ARG) \
 		--disable-nls \
 		--disable-static \
@@ -184,12 +184,12 @@ $(MPG123_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MPG123_IPK_DIR)/opt/sbin or $(MPG123_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MPG123_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MPG123_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MPG123_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MPG123_IPK_DIR)/opt/etc/mpg123/...
-# Documentation files should be installed in $(MPG123_IPK_DIR)/opt/doc/mpg123/...
-# Daemon startup scripts should be installed in $(MPG123_IPK_DIR)/opt/etc/init.d/S??mpg123
+# Libraries and include files should be installed into $(MPG123_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MPG123_IPK_DIR)$(OPTWARE_PREFIX)etc/mpg123/...
+# Documentation files should be installed in $(MPG123_IPK_DIR)$(OPTWARE_PREFIX)doc/mpg123/...
+# Daemon startup scripts should be installed in $(MPG123_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mpg123
 #
 # You may need to patch your application to make it use these locations.
 #

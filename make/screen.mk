@@ -112,7 +112,7 @@ $(SCREEN_BUILD_DIR)/.configured: $(DL_DIR)/$(SCREEN_SOURCE) $(SCREEN_PATCHES) ma
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--disable-pam \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 	)
 ifeq ($(LIBC_STYLE),uclibc)
 	sed -i -e '/stropts.h/d' $(@D)/pty.c
@@ -143,16 +143,16 @@ screen: $(SCREEN_BUILD_DIR)/screen
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libscreen.so.$(SCREEN_VERSION): $(SCREEN_BUILD_DIR)/libscreen.so.$(SCREEN_VERSION)
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(SCREEN_BUILD_DIR)/screen.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(SCREEN_BUILD_DIR)/libscreen.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(SCREEN_BUILD_DIR)/libscreen.so.$(SCREEN_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libscreen.so.$(SCREEN_VERSION) libscreen.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libscreen.so.$(SCREEN_VERSION) libscreen.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libscreen.so.$(SCREEN_VERSION): $(SCREEN_BUILD_DIR)/libscreen.so.$(SCREEN_VERSION)
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(SCREEN_BUILD_DIR)/screen.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(SCREEN_BUILD_DIR)/libscreen.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(SCREEN_BUILD_DIR)/libscreen.so.$(SCREEN_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libscreen.so.$(SCREEN_VERSION) libscreen.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libscreen.so.$(SCREEN_VERSION) libscreen.so
 
-screen-stage: $(STAGING_DIR)/opt/lib/libscreen.so.$(SCREEN_VERSION)
+screen-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libscreen.so.$(SCREEN_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -176,22 +176,22 @@ $(SCREEN_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SCREEN_IPK_DIR)/opt/sbin or $(SCREEN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SCREEN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SCREEN_IPK_DIR)/opt/etc/screen/...
-# Documentation files should be installed in $(SCREEN_IPK_DIR)/opt/doc/screen/...
-# Daemon startup scripts should be installed in $(SCREEN_IPK_DIR)/opt/etc/init.d/S??screen
+# Libraries and include files should be installed into $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)etc/screen/...
+# Documentation files should be installed in $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)doc/screen/...
+# Daemon startup scripts should be installed in $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??screen
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SCREEN_IPK): $(SCREEN_BUILD_DIR)/screen
 	rm -rf $(SCREEN_IPK_DIR) $(BUILD_DIR)/screen_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SCREEN_BUILD_DIR) DESTDIR=$(SCREEN_IPK_DIR) install
-	$(STRIP_COMMAND) $(SCREEN_IPK_DIR)/opt/bin/screen-$(SCREEN_VERSION)
-	rm -f $(SCREEN_IPK_DIR)/opt/info/dir{,.old}
-#	install -d $(SCREEN_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SCREEN_SOURCE_DIR)/rc.screen $(SCREEN_IPK_DIR)/opt/etc/init.d/SXXscreen
+	$(STRIP_COMMAND) $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)bin/screen-$(SCREEN_VERSION)
+	rm -f $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)info/dir{,.old}
+#	install -d $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SCREEN_SOURCE_DIR)/rc.screen $(SCREEN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXscreen
 	$(MAKE) $(SCREEN_IPK_DIR)/CONTROL/control
 	install -m 644 $(SCREEN_SOURCE_DIR)/postinst $(SCREEN_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(SCREEN_SOURCE_DIR)/prerm $(SCREEN_IPK_DIR)/CONTROL/prerm

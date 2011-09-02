@@ -118,7 +118,7 @@ $(RECORDEXT_BUILD_DIR)/.configured: $(DL_DIR)/recordext-$(RECORDEXT_VERSION).tar
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	touch $(RECORDEXT_BUILD_DIR)/.configured
@@ -152,12 +152,12 @@ recordext-stage: $(RECORDEXT_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RECORDEXT_IPK_DIR)/opt/sbin or $(RECORDEXT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RECORDEXT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RECORDEXT_IPK_DIR)/opt/etc/recordext/...
-# Documentation files should be installed in $(RECORDEXT_IPK_DIR)/opt/doc/recordext/...
-# Daemon startup scripts should be installed in $(RECORDEXT_IPK_DIR)/opt/etc/init.d/S??recordext
+# Libraries and include files should be installed into $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/recordext/...
+# Documentation files should be installed in $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX)doc/recordext/...
+# Daemon startup scripts should be installed in $(RECORDEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??recordext
 #
 # You may need to patch your application to make it use these locations.
 #

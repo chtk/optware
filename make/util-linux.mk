@@ -40,7 +40,7 @@ UTIL_LINUX_IPK_VERSION=6
 
 #
 # UTIL_LINUX_CONFFILES should be a list of user-editable files
-#UTIL_LINUX_CONFFILES=/opt/etc/util-linux.conf /opt/etc/init.d/SXXutil-linux
+#UTIL_LINUX_CONFFILES=$(OPTWARE_PREFIX)etc/util-linux.conf $(OPTWARE_PREFIX)etc/init.d/SXXutil-linux
 
 #
 # UTIL_LINUX_PATCHES should list any patches, in the the order in
@@ -127,7 +127,7 @@ $(UTIL_LINUX_BUILD_DIR)/.configured: $(DL_DIR)/$(UTIL_LINUX_SOURCE) $(UTIL_LINUX
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -153,16 +153,16 @@ $(UTIL_LINUX_BUILD_DIR)/.built: $(UTIL_LINUX_BUILD_DIR)/.configured
 		HAVE_SYSVINIT_UTILS=no \
 		USE_TTY_GROUP=no \
 		ARCH=$(TARGET_ARCH) \
-		SBIN_DIR=/opt/sbin \
-		BIN_DIR=/opt/bin \
-		ETC_DIR=/opt/etc \
-		USRSBIN_DIR=/opt/sbin \
-		USRBIN_DIR=/opt/bin \
-		USRLIB_DIR=/opt/lib \
-		MAN_DIR=/opt/share/man \
-		INFO_DIR=/opt/share/info \
-		USRSHAREMISC_DIR=/opt/share/misc \
-		LOCALEDIR=/opt/share/locale \
+		SBIN_DIR=$(OPTWARE_PREFIX)sbin \
+		BIN_DIR=$(OPTWARE_PREFIX)bin \
+		ETC_DIR=$(OPTWARE_PREFIX)etc \
+		USRSBIN_DIR=$(OPTWARE_PREFIX)sbin \
+		USRBIN_DIR=$(OPTWARE_PREFIX)bin \
+		USRLIB_DIR=$(OPTWARE_PREFIX)lib \
+		MAN_DIR=$(OPTWARE_PREFIX)share/man \
+		INFO_DIR=$(OPTWARE_PREFIX)share/info \
+		USRSHAREMISC_DIR=$(OPTWARE_PREFIX)share/misc \
+		LOCALEDIR=$(OPTWARE_PREFIX)share/locale \
 		;
 	touch $@
 
@@ -203,12 +203,12 @@ $(UTIL_LINUX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UTIL_LINUX_IPK_DIR)/opt/sbin or $(UTIL_LINUX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UTIL_LINUX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UTIL_LINUX_IPK_DIR)/opt/etc/util-linux/...
-# Documentation files should be installed in $(UTIL_LINUX_IPK_DIR)/opt/doc/util-linux/...
-# Daemon startup scripts should be installed in $(UTIL_LINUX_IPK_DIR)/opt/etc/init.d/S??util-linux
+# Libraries and include files should be installed into $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/util-linux/...
+# Documentation files should be installed in $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)doc/util-linux/...
+# Daemon startup scripts should be installed in $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??util-linux
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -222,25 +222,25 @@ $(UTIL_LINUX_IPK): $(UTIL_LINUX_BUILD_DIR)/.built
 		DISABLE_NLS=yes \
 		HAVE_SYSVINIT_UTILS=no \
 		USE_TTY_GROUP=no \
-		SBIN_DIR=/opt/sbin \
-		BIN_DIR=/opt/bin \
-		ETC_DIR=/opt/etc \
-		USRSBIN_DIR=/opt/sbin \
-		USRBIN_DIR=/opt/bin \
-		USRLIB_DIR=/opt/lib \
-		MAN_DIR=/opt/share/man \
-		INFO_DIR=/opt/share/info \
-		USRSHAREMISC_DIR=/opt/share/misc \
-		LOCALEDIR=/opt/share/locale \
+		SBIN_DIR=$(OPTWARE_PREFIX)sbin \
+		BIN_DIR=$(OPTWARE_PREFIX)bin \
+		ETC_DIR=$(OPTWARE_PREFIX)etc \
+		USRSBIN_DIR=$(OPTWARE_PREFIX)sbin \
+		USRBIN_DIR=$(OPTWARE_PREFIX)bin \
+		USRLIB_DIR=$(OPTWARE_PREFIX)lib \
+		MAN_DIR=$(OPTWARE_PREFIX)share/man \
+		INFO_DIR=$(OPTWARE_PREFIX)share/info \
+		USRSHAREMISC_DIR=$(OPTWARE_PREFIX)share/misc \
+		LOCALEDIR=$(OPTWARE_PREFIX)share/locale \
 		;
-	rm -rf $(UTIL_LINUX_IPK_DIR)/opt/share/info
-	$(STRIP_COMMAND) `ls $(UTIL_LINUX_IPK_DIR)/opt/bin/* | grep -v chkdupexe`
-	rm -f $(UTIL_LINUX_IPK_DIR)/opt/sbin/swapoff
-	$(STRIP_COMMAND) $(UTIL_LINUX_IPK_DIR)/opt/sbin/*
+	rm -rf $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)share/info
+	$(STRIP_COMMAND) `ls $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)bin/* | grep -v chkdupexe`
+	rm -f $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)sbin/swapoff
+	$(STRIP_COMMAND) $(UTIL_LINUX_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
 	$(MAKE) $(UTIL_LINUX_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(UTIL_LINUX_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(UTIL_LINUX_IPK_DIR)/CONTROL/prerm
-	for d in /opt/sbin /opt/bin /opt/share/man/man1 /opt/share/man/man5 /opt/share/man/man8; do \
+	for d in $(OPTWARE_PREFIX)sbin $(OPTWARE_PREFIX)bin $(OPTWARE_PREFIX)share/man/man1 $(OPTWARE_PREFIX)share/man/man5 $(OPTWARE_PREFIX)share/man/man8; do \
 	    cd $(UTIL_LINUX_IPK_DIR)/$$d; \
 	    for f in *; do \
 		mv $$f util-linux-$$f; \
@@ -250,9 +250,9 @@ $(UTIL_LINUX_IPK): $(UTIL_LINUX_BUILD_DIR)/.built
 			>> $(UTIL_LINUX_IPK_DIR)/CONTROL/prerm; \
 	    done; \
 	done
-	echo "update-alternatives --install /opt/sbin/swapoff swapoff /opt/sbin/util-linux-swapon 80" \
+	echo "update-alternatives --install $(OPTWARE_PREFIX)sbin/swapoff swapoff $(OPTWARE_PREFIX)sbin/util-linux-swapon 80" \
 		>> $(UTIL_LINUX_IPK_DIR)/CONTROL/postinst
-	echo "update-alternatives --remove swapoff /opt/sbin/util-linux-swapon" \
+	echo "update-alternatives --remove swapoff $(OPTWARE_PREFIX)sbin/util-linux-swapon" \
 		>> $(UTIL_LINUX_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

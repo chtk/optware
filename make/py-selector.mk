@@ -41,7 +41,7 @@ PY-SELECTOR_IPK_VERSION=1
 
 #
 # PY-SELECTOR_CONFFILES should be a list of user-editable files
-#PY-SELECTOR_CONFFILES=/opt/etc/py-selector.conf /opt/etc/init.d/SXXpy-selector
+#PY-SELECTOR_CONFFILES=$(OPTWARE_PREFIX)etc/py-selector.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-selector
 
 #
 # PY-SELECTOR_PATCHES should list any patches, in the the order in
@@ -117,7 +117,7 @@ $(PY-SELECTOR_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-SELECTOR_SOURCE) $(PY-SELEC
 	(cd $(PY-SELECTOR_BUILD_DIR)/2.4; \
 	    sed -i -e '/use_setuptools/d' setup.py; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.4") >> setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.4") >> setup.cfg \
 	)
 	# 2.5
 	rm -rf $(BUILD_DIR)/$(PY-SELECTOR_DIR)
@@ -127,7 +127,7 @@ $(PY-SELECTOR_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-SELECTOR_SOURCE) $(PY-SELEC
 	(cd $(PY-SELECTOR_BUILD_DIR)/2.5; \
 	    sed -i -e '/use_setuptools/d' setup.py; \
 	    (echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.5") >> setup.cfg \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.5") >> setup.cfg \
 	)
 	touch $@
 
@@ -196,12 +196,12 @@ $(PY25-SELECTOR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-SELECTOR_IPK_DIR)/opt/sbin or $(PY-SELECTOR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-SELECTOR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-SELECTOR_IPK_DIR)/opt/etc/py-selector/...
-# Documentation files should be installed in $(PY-SELECTOR_IPK_DIR)/opt/doc/py-selector/...
-# Daemon startup scripts should be installed in $(PY-SELECTOR_IPK_DIR)/opt/etc/init.d/S??py-selector
+# Libraries and include files should be installed into $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/py-selector/...
+# Documentation files should be installed in $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX)doc/py-selector/...
+# Daemon startup scripts should be installed in $(PY-SELECTOR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-selector
 #
 # You may need to patch your application to make it use these locations.
 #

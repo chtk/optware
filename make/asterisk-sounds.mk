@@ -45,7 +45,7 @@ ASTERISK-SOUNDS_IPK_VERSION=1
 
 #
 # ASTERISK-SOUNDS_CONFFILES should be a list of user-editable files
-#ASTERISK-SOUNDS_CONFFILES=/opt/etc/asterisk-sounds.conf /opt/etc/init.d/SXXasterisk-sounds
+#ASTERISK-SOUNDS_CONFFILES=$(OPTWARE_PREFIX)etc/asterisk-sounds.conf $(OPTWARE_PREFIX)etc/init.d/SXXasterisk-sounds
 
 #
 # ASTERISK-SOUNDS_PATCHES should list any patches, in the the order in
@@ -119,7 +119,7 @@ $(ASTERISK-SOUNDS_BUILD_DIR)/.configured: $(DL_DIR)/$(ASTERISK-SOUNDS_SOURCE) $(
 #		--build=$(GNU_HOST_NAME) \
 #		--host=$(GNU_TARGET_NAME) \
 #		--target=$(GNU_TARGET_NAME) \
-#		--prefix=/opt \
+#		--prefix=$(OPTWARE_PREFIX)\
 #		--disable-nls \
 	)
 	touch $(ASTERISK-SOUNDS_BUILD_DIR)/.configured
@@ -145,7 +145,7 @@ asterisk-sounds: $(ASTERISK-SOUNDS_BUILD_DIR)/.built
 $(ASTERISK-SOUNDS_BUILD_DIR)/.staged: $(ASTERISK-SOUNDS_BUILD_DIR)/.built
 	rm -f $(ASTERISK-SOUNDS_BUILD_DIR)/.staged
 	$(MAKE) -C $(ASTERISK-SOUNDS_BUILD_DIR) DESTDIR=$(STAGING_DIR) \
-	INSTALL_PREFIX=/opt install
+	INSTALL_PREFIX=$(OPTWARE_PREFIX)install
 	touch $(ASTERISK-SOUNDS_BUILD_DIR)/.staged
 
 asterisk-sounds-stage: $(ASTERISK-SOUNDS_BUILD_DIR)/.staged
@@ -170,23 +170,23 @@ $(ASTERISK-SOUNDS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ASTERISK-SOUNDS_IPK_DIR)/opt/sbin or $(ASTERISK-SOUNDS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ASTERISK-SOUNDS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/asterisk-sounds/...
-# Documentation files should be installed in $(ASTERISK-SOUNDS_IPK_DIR)/opt/doc/asterisk-sounds/...
-# Daemon startup scripts should be installed in $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/init.d/S??asterisk-sounds
+# Libraries and include files should be installed into $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk-sounds/...
+# Documentation files should be installed in $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)doc/asterisk-sounds/...
+# Daemon startup scripts should be installed in $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??asterisk-sounds
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ASTERISK-SOUNDS_IPK): $(ASTERISK-SOUNDS_BUILD_DIR)/.built
 	rm -rf $(ASTERISK-SOUNDS_IPK_DIR) $(BUILD_DIR)/asterisk-sounds_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ASTERISK-SOUNDS_BUILD_DIR) DESTDIR=$(ASTERISK-SOUNDS_IPK_DIR) \
-	INSTALL_PREFIX=/opt install
-#	install -d $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/
-#	install -m 644 $(ASTERISK-SOUNDS_SOURCE_DIR)/asterisk-sounds.conf $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/asterisk-sounds.conf
-#	install -d $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(ASTERISK-SOUNDS_SOURCE_DIR)/rc.asterisk-sounds $(ASTERISK-SOUNDS_IPK_DIR)/opt/etc/init.d/SXXasterisk-sounds
+	INSTALL_PREFIX=$(OPTWARE_PREFIX)install
+#	install -d $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(ASTERISK-SOUNDS_SOURCE_DIR)/asterisk-sounds.conf $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk-sounds.conf
+#	install -d $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(ASTERISK-SOUNDS_SOURCE_DIR)/rc.asterisk-sounds $(ASTERISK-SOUNDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXasterisk-sounds
 	$(MAKE) $(ASTERISK-SOUNDS_IPK_DIR)/CONTROL/control
 #	install -m 755 $(ASTERISK-SOUNDS_SOURCE_DIR)/postinst $(ASTERISK-SOUNDS_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(ASTERISK-SOUNDS_SOURCE_DIR)/prerm $(ASTERISK-SOUNDS_IPK_DIR)/CONTROL/prerm

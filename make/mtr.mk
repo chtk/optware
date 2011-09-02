@@ -40,7 +40,7 @@ MTR_IPK_VERSION=1
 
 #
 # MTR_CONFFILES should be a list of user-editable files
-#MTR_CONFFILES=/opt/etc/mtr.conf /opt/etc/init.d/SXXmtr
+#MTR_CONFFILES=$(OPTWARE_PREFIX)etc/mtr.conf $(OPTWARE_PREFIX)etc/init.d/SXXmtr
 
 #
 # MTR_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(MTR_BUILD_DIR)/.configured: $(DL_DIR)/$(MTR_SOURCE) $(MTR_PATCHES) make/mtr.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-gtk \
 		--disable-nls \
 		--disable-static \
@@ -184,23 +184,23 @@ $(MTR_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MTR_IPK_DIR)/opt/sbin or $(MTR_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MTR_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MTR_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MTR_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MTR_IPK_DIR)/opt/etc/mtr/...
-# Documentation files should be installed in $(MTR_IPK_DIR)/opt/doc/mtr/...
-# Daemon startup scripts should be installed in $(MTR_IPK_DIR)/opt/etc/init.d/S??mtr
+# Libraries and include files should be installed into $(MTR_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/mtr/...
+# Documentation files should be installed in $(MTR_IPK_DIR)$(OPTWARE_PREFIX)doc/mtr/...
+# Daemon startup scripts should be installed in $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mtr
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MTR_IPK): $(MTR_BUILD_DIR)/.built
 	rm -rf $(MTR_IPK_DIR) $(BUILD_DIR)/mtr_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MTR_BUILD_DIR) DESTDIR=$(MTR_IPK_DIR) install
-	$(STRIP_COMMAND) $(MTR_IPK_DIR)/opt/sbin/mtr
-#	install -d $(MTR_IPK_DIR)/opt/etc/
-#	install -m 644 $(MTR_SOURCE_DIR)/mtr.conf $(MTR_IPK_DIR)/opt/etc/mtr.conf
-#	install -d $(MTR_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MTR_SOURCE_DIR)/rc.mtr $(MTR_IPK_DIR)/opt/etc/init.d/SXXmtr
+	$(STRIP_COMMAND) $(MTR_IPK_DIR)$(OPTWARE_PREFIX)sbin/mtr
+#	install -d $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MTR_SOURCE_DIR)/mtr.conf $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/mtr.conf
+#	install -d $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MTR_SOURCE_DIR)/rc.mtr $(MTR_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmtr
 	$(MAKE) $(MTR_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MTR_SOURCE_DIR)/postinst $(MTR_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(MTR_SOURCE_DIR)/prerm $(MTR_IPK_DIR)/CONTROL/prerm

@@ -115,7 +115,7 @@ $(BZFLAG_BUILD_DIR)/.configured: $(DL_DIR)/$(BZFLAG_SOURCE) $(BZFLAG_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-x \
 		--disable-nls \
 		--disable-client \
@@ -171,12 +171,12 @@ $(BZFLAG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BZFLAG_IPK_DIR)/opt/sbin or $(BZFLAG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BZFLAG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BZFLAG_IPK_DIR)/opt/etc/bzflag/...
-# Documentation files should be installed in $(BZFLAG_IPK_DIR)/opt/doc/bzflag/...
-# Daemon startup scripts should be installed in $(BZFLAG_IPK_DIR)/opt/etc/init.d/S??bzflag
+# Libraries and include files should be installed into $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/bzflag/...
+# Documentation files should be installed in $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)doc/bzflag/...
+# Daemon startup scripts should be installed in $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bzflag
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -184,13 +184,13 @@ $(BZFLAG_IPK): $(BZFLAG_BUILD_DIR)/.built
 	rm -rf $(BZFLAG_IPK_DIR) $(BUILD_DIR)/bzflag_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BZFLAG_BUILD_DIR) DESTDIR=$(BZFLAG_IPK_DIR) install
 	# contents of /share are not needed by a dedicated server
-	rm -rf $(BZFLAG_IPK_DIR)/opt/share
+	rm -rf $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)share
 	# strip binaries
-	$(STRIP_COMMAND) $(BZFLAG_IPK_DIR)/opt/bin/bzfs $(BZFLAG_IPK_DIR)/opt/bin/bzadmin
-#	install -d $(BZFLAG_IPK_DIR)/opt/etc/
-#	install -m 755 $(BZFLAG_SOURCE_DIR)/bzflag.conf $(BZFLAG_IPK_DIR)/opt/etc/bzflag.conf
-#	install -d $(BZFLAG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(BZFLAG_SOURCE_DIR)/rc.bzflag $(BZFLAG_IPK_DIR)/opt/etc/init.d/SXXbzflag
+	$(STRIP_COMMAND) $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)bin/bzfs $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)bin/bzadmin
+#	install -d $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 755 $(BZFLAG_SOURCE_DIR)/bzflag.conf $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/bzflag.conf
+#	install -d $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(BZFLAG_SOURCE_DIR)/rc.bzflag $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXbzflag
 	$(MAKE) $(BZFLAG_IPK_DIR)/CONTROL/control
 #	install -m 644 $(BZFLAG_SOURCE_DIR)/postinst $(BZFLAG_IPK_DIR)/CONTROL/postinst
 #	install -m 644 $(BZFLAG_SOURCE_DIR)/prerm $(BZFLAG_IPK_DIR)/CONTROL/prerm

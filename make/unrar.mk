@@ -72,11 +72,11 @@ $(UNRAR_IPK_DIR)/CONTROL/control:
 
 $(UNRAR_IPK): $(UNRAR_BUILD_DIR)/.built
 	rm -rf $(UNRAR_IPK_DIR) $(BUILD_DIR)/unrar_*_$(TARGET_ARCH).ipk
-	install -d $(UNRAR_IPK_DIR)/opt/bin
-	install -m 755 $(UNRAR_BUILD_DIR)/unrar $(UNRAR_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(UNRAR_IPK_DIR)/opt/bin/unrar
-	install -d $(UNRAR_IPK_DIR)/opt/share/doc/unrar
-	install -m 644 $(UNRAR_BUILD_DIR)/*.txt $(UNRAR_IPK_DIR)/opt/share/doc/unrar
+	install -d $(UNRAR_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(UNRAR_BUILD_DIR)/unrar $(UNRAR_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(UNRAR_IPK_DIR)$(OPTWARE_PREFIX)bin/unrar
+	install -d $(UNRAR_IPK_DIR)$(OPTWARE_PREFIX)share/doc/unrar
+	install -m 644 $(UNRAR_BUILD_DIR)/*.txt $(UNRAR_IPK_DIR)$(OPTWARE_PREFIX)share/doc/unrar
 	$(MAKE) $(UNRAR_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(UNRAR_IPK_DIR)
 

@@ -43,10 +43,10 @@ HPLIP_IPK_VERSION=1
 
 #
 # HPLIP_CONFFILES should be a list of user-editable files
-HPLIP_CONFFILES=/opt/etc/hp/hplip.conf \
-		/opt/etc/sane.d/dll.conf \
+HPLIP_CONFFILES=$(OPTWARE_PREFIX)etc/hp/hplip.conf \
+		$(OPTWARE_PREFIX)etc/sane.d/dll.conf \
 		opt/etc/udev/rules.d/55-hpmud.rules
-#/opt/etc/init.d/SXXhplip
+#$(OPTWARE_PREFIX)etc/init.d/SXXhplip
 
 #
 # HPLIP_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ endif
 	if test "$(BUILD_DIR)/$(HPLIP_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(HPLIP_DIR) $(@D) ; \
 	fi
-	sed -i -e 's|/etc/|/opt&|; /halpredir/s|/usr/share|/opt/share|' $(@D)/Makefile.am ; \
+	sed -i -e 's|/etc/|/opt&|; /halpredir/s|/usr/share|$(OPTWARE_PREFIX)share|' $(@D)/Makefile.am ; \
 	cd $(@D) ; touch INSTALL NEWS README AUTHORS ChangeLog
 	autoreconf -vif $(@D)
 	(cd $(@D); \
@@ -142,18 +142,18 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc \
 		--disable-nls \
 		--disable-static \
 		$(HPLIP_CONFIG_ARGS) \
 		--enable-scan-build \
 		--enable-fax-build \
 		--disable-dependency-tracking \
-		--with-cupsbackenddir=/opt/lib/cups/backend \
-		--with-icondir=/opt/share/applications \
-		--with-systraydir=/opt/etc/xdg/autostart \
-		--with-cupsfilterdir=/opt/lib/cups/filter \
+		--with-cupsbackenddir=$(OPTWARE_PREFIX)lib/cups/backend \
+		--with-icondir=$(OPTWARE_PREFIX)share/applications \
+		--with-systraydir=$(OPTWARE_PREFIX)etc/xdg/autostart \
+		--with-cupsfilterdir=$(OPTWARE_PREFIX)lib/cups/filter \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
@@ -205,23 +205,23 @@ $(HPLIP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(HPLIP_IPK_DIR)/opt/sbin or $(HPLIP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(HPLIP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(HPLIP_IPK_DIR)/opt/etc/hplip/...
-# Documentation files should be installed in $(HPLIP_IPK_DIR)/opt/doc/hplip/...
-# Daemon startup scripts should be installed in $(HPLIP_IPK_DIR)/opt/etc/init.d/S??hplip
+# Libraries and include files should be installed into $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/hplip/...
+# Documentation files should be installed in $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)doc/hplip/...
+# Daemon startup scripts should be installed in $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??hplip
 #
 # You may need to patch your application to make it use these locations.
 #
 $(HPLIP_IPK): $(HPLIP_BUILD_DIR)/.built
 	rm -rf $(HPLIP_IPK_DIR) $(BUILD_DIR)/hplip_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HPLIP_BUILD_DIR) DESTDIR=$(HPLIP_IPK_DIR) install-strip
-#	install -d $(HPLIP_IPK_DIR)/opt/etc/
-#	install -m 644 $(HPLIP_SOURCE_DIR)/hplip.conf $(HPLIP_IPK_DIR)/opt/etc/hplip.conf
-#	install -d $(HPLIP_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(HPLIP_SOURCE_DIR)/rc.hplip $(HPLIP_IPK_DIR)/opt/etc/init.d/SXXhplip
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HPLIP_IPK_DIR)/opt/etc/init.d/SXXhplip
+#	install -d $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(HPLIP_SOURCE_DIR)/hplip.conf $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/hplip.conf
+#	install -d $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(HPLIP_SOURCE_DIR)/rc.hplip $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhplip
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HPLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXhplip
 	$(MAKE) $(HPLIP_IPK_DIR)/CONTROL/control
 #	install -m 755 $(HPLIP_SOURCE_DIR)/postinst $(HPLIP_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(HPLIP_IPK_DIR)/CONTROL/postinst

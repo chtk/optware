@@ -158,9 +158,9 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-gmp \
-		--datarootdir=/opt \
+		--datarootdir=$(OPTWARE_PREFIX)\
 		--cache-file=config.cache \
 	)
 	touch $@
@@ -185,16 +185,16 @@ coreutils: $(COREUTILS_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libcoreutils.so.$(COREUTILS_VERSION): $(COREUTILS_BUILD_DIR)/.built
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(COREUTILS_BUILD_DIR)/coreutils.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(COREUTILS_BUILD_DIR)/libcoreutils.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(COREUTILS_BUILD_DIR)/libcoreutils.so.$(COREUTILS_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libcoreutils.so.$(COREUTILS_VERSION) libcoreutils.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libcoreutils.so.$(COREUTILS_VERSION) libcoreutils.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libcoreutils.so.$(COREUTILS_VERSION): $(COREUTILS_BUILD_DIR)/.built
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(COREUTILS_BUILD_DIR)/coreutils.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(COREUTILS_BUILD_DIR)/libcoreutils.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(COREUTILS_BUILD_DIR)/libcoreutils.so.$(COREUTILS_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libcoreutils.so.$(COREUTILS_VERSION) libcoreutils.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libcoreutils.so.$(COREUTILS_VERSION) libcoreutils.so
 #
-#coreutils-stage: $(STAGING_DIR)/opt/lib/libcoreutils.so.$(COREUTILS_VERSION)
+#coreutils-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libcoreutils.so.$(COREUTILS_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -217,33 +217,33 @@ $(COREUTILS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(COREUTILS_IPK_DIR)/opt/sbin or $(COREUTILS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(COREUTILS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(COREUTILS_IPK_DIR)/opt/etc/coreutils/...
-# Documentation files should be installed in $(COREUTILS_IPK_DIR)/opt/doc/coreutils/...
-# Daemon startup scripts should be installed in $(COREUTILS_IPK_DIR)/opt/etc/init.d/S??coreutils
+# Libraries and include files should be installed into $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/coreutils/...
+# Documentation files should be installed in $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)doc/coreutils/...
+# Daemon startup scripts should be installed in $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??coreutils
 #
 # You may need to patch your application to make it use these locations.
 #
 $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 	rm -rf $(COREUTILS_IPK_DIR) $(BUILD_DIR)/coreutils_*_$(TARGET_ARCH).ipk
 	# Install binaries
-	install -d $(COREUTILS_IPK_DIR)/opt/bin
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
 	$(MAKE) -C $(COREUTILS_BUILD_DIR) DESTDIR=$(COREUTILS_IPK_DIR) install-exec
 	# copy su - can't install it as install only works for root
-	cp -p $(COREUTILS_BUILD_DIR)/src/su $(COREUTILS_IPK_DIR)/opt/bin/su
+	cp -p $(COREUTILS_BUILD_DIR)/src/su $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/su
 	# Install makefiles
-	install -d $(COREUTILS_IPK_DIR)/opt/man/man1	
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)man/man1	
 	$(MAKE) -C $(COREUTILS_BUILD_DIR)/man DESTDIR=$(COREUTILS_IPK_DIR) install
-	$(STRIP_COMMAND) $(COREUTILS_IPK_DIR)/opt/bin/* $(COREUTILS_IPK_DIR)/opt/lib/coreutils/lib*.so
+	$(STRIP_COMMAND) $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/* $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)lib/coreutils/lib*.so
 	$(MAKE) $(COREUTILS_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(COREUTILS_IPK_DIR)/CONTROL/postinst
-	(echo "/bin/chown 0:0 /opt/bin/coreutils-su"; \
-	 echo "/bin/chmod 4755 /opt/bin/coreutils-su"; \
+	(echo "/bin/chown 0:0 $(OPTWARE_PREFIX)bin/coreutils-su"; \
+	 echo "/bin/chmod 4755 $(OPTWARE_PREFIX)bin/coreutils-su"; \
 	) >> $(COREUTILS_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(COREUTILS_IPK_DIR)/CONTROL/prerm
-	cd $(COREUTILS_IPK_DIR)/opt/bin; \
+	cd $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin; \
 	for p in *; do \
 	    if test "$$p" = "["; then \
 		q=coreutils-lbracket; \
@@ -251,7 +251,7 @@ $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 		q=coreutils-$$p; \
 	    fi; \
 	    mv $$p $$q; \
-	    echo "update-alternatives --install '/opt/bin/$$p' '$$p' '$$q' 50" \
+	    echo "update-alternatives --install '$(OPTWARE_PREFIX)bin/$$p' '$$p' '$$q' 50" \
 		>> $(COREUTILS_IPK_DIR)/CONTROL/postinst; \
 	    echo "update-alternatives --remove '$$p' '$$q'" \
 		>> $(COREUTILS_IPK_DIR)/CONTROL/prerm; \
@@ -261,10 +261,10 @@ $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 			$(COREUTILS_IPK_DIR)/CONTROL/postinst $(COREUTILS_IPK_DIR)/CONTROL/prerm; \
 	fi
 ifeq ($(OPTWARE_WRITE_OUTSIDE_OPT_ALLOWED),true)
-	install -d $(COREUTILS_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(COREUTILS_SOURCE_DIR)/rc.coreutils $(COREUTILS_IPK_DIR)/opt/etc/init.d/S05coreutils
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(COREUTILS_SOURCE_DIR)/rc.coreutils $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05coreutils
 	install -d $(COREUTILS_IPK_DIR)/usr/bin
-	ln -s /opt/bin/env $(COREUTILS_IPK_DIR)/usr/bin/env
+	ln -s $(OPTWARE_PREFIX)bin/env $(COREUTILS_IPK_DIR)/usr/bin/env
 endif
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(COREUTILS_IPK_DIR)
 

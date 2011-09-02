@@ -40,7 +40,7 @@ PARTED_IPK_VERSION=1
 #
 # PARTED_CONFFILES should be a list of user-editable files
 PARTED_CONFFILES=
-# /opt/etc/parted.conf /opt/etc/init.d/SXXparted
+# $(OPTWARE_PREFIX)etc/parted.conf $(OPTWARE_PREFIX)etc/init.d/SXXparted
 
 #
 # PARTED_PATCHES should list any patches, in the the order in
@@ -116,7 +116,7 @@ $(PARTED_BUILD_DIR)/.configured: $(DL_DIR)/$(PARTED_SOURCE) $(PARTED_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--without-readline \
 		--disable-Werror \
 		--disable-nls \
@@ -174,19 +174,19 @@ $(PARTED_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PARTED_IPK_DIR)/opt/sbin or $(PARTED_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PARTED_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PARTED_IPK_DIR)/opt/etc/parted/...
-# Documentation files should be installed in $(PARTED_IPK_DIR)/opt/doc/parted/...
-# Daemon startup scripts should be installed in $(PARTED_IPK_DIR)/opt/etc/init.d/S??parted
+# Libraries and include files should be installed into $(PARTED_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)etc/parted/...
+# Documentation files should be installed in $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)doc/parted/...
+# Daemon startup scripts should be installed in $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??parted
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PARTED_IPK): $(PARTED_BUILD_DIR)/.built
 	rm -rf $(PARTED_IPK_DIR) $(BUILD_DIR)/parted_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PARTED_BUILD_DIR) DESTDIR=$(PARTED_IPK_DIR) install-strip
-	rm -f $(PARTED_IPK_DIR)/opt/lib/libparted.a
+	rm -f $(PARTED_IPK_DIR)$(OPTWARE_PREFIX)lib/libparted.a
 	$(MAKE) $(PARTED_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PARTED_IPK_DIR)
 

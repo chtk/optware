@@ -42,7 +42,7 @@ SABNZBD_IPK_VERSION=2
 
 #
 # SABNZBD_CONFFILES should be a list of user-editable files
-SABNZBD_CONFFILES=/opt/etc/SABnzbd.ini /opt/etc/init.d/S70sabnzbd
+SABNZBD_CONFFILES=$(OPTWARE_PREFIX)etc/SABnzbd.ini $(OPTWARE_PREFIX)etc/init.d/S70sabnzbd
 
 #
 # SABNZBD_PATCHES should list any patches, in the the order in
@@ -124,11 +124,11 @@ $(SABNZBD_BUILD_DIR)/.configured: $(DL_DIR)/$(SABNZBD_SOURCE) $(SABNZBD_PATCHES)
 	        echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 	        echo "[build_scripts]"; \
-	        echo "executable=/opt/bin/python2.4"; \
+	        echo "executable=$(OPTWARE_PREFIX)bin/python2.4"; \
 	        echo "[install]"; \
-	        echo "install_scripts=/opt/bin"; \
+	        echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	)
 	# 2.5
@@ -140,11 +140,11 @@ $(SABNZBD_BUILD_DIR)/.configured: $(DL_DIR)/$(SABNZBD_SOURCE) $(SABNZBD_PATCHES)
 	        echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 	        echo "[build_scripts]"; \
-	        echo "executable=/opt/bin/python2.5"; \
+	        echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 	        echo "[install]"; \
-	        echo "install_scripts=/opt/bin"; \
+	        echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -217,12 +217,12 @@ $(SABNZBD_PY25_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SABNZBD_IPK_DIR)/opt/sbin or $(SABNZBD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SABNZBD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SABNZBD_IPK_DIR)/opt/etc/sabnzbd/...
-# Documentation files should be installed in $(SABNZBD_IPK_DIR)/opt/doc/sabnzbd/...
-# Daemon startup scripts should be installed in $(SABNZBD_IPK_DIR)/opt/etc/init.d/S70sabnzbd
+# Libraries and include files should be installed into $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX)etc/sabnzbd/...
+# Documentation files should be installed in $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX)doc/sabnzbd/...
+# Daemon startup scripts should be installed in $(SABNZBD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S70sabnzbd
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -235,16 +235,16 @@ $(SABNZBD_PY24_IPK): $(SABNZBD_BUILD_DIR)/.built
 	    $(TARGET_CONFIGURE_OPTS) LDSHARED='$(TARGET_CC) -shared' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.4 setup.py install \
 	    --root=$(SABNZBD_PY24_IPK_DIR) --prefix=/opt
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/etc
-	install -m 644 $(SABNZBD_SOURCE_DIR)/SABnzbd.ini $(SABNZBD_PY24_IPK_DIR)/opt/etc/SABnzbd.ini
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(SABNZBD_SOURCE_DIR)/rc.sabnzbd $(SABNZBD_PY24_IPK_DIR)/opt/etc/init.d/S70sabnzbd
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/tmp/downloads
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/tmp/SABnzbd/cache
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/tmp/SABnzbd/tmp
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/tmp/SABnzbd/nzb
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/tmp/SABnzbd/nzb/backup
-	install -d $(SABNZBD_PY24_IPK_DIR)/opt/var/log
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(SABNZBD_SOURCE_DIR)/SABnzbd.ini $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)etc/SABnzbd.ini
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(SABNZBD_SOURCE_DIR)/rc.sabnzbd $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S70sabnzbd
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)tmp/downloads
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/cache
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/tmp
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/nzb
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/nzb/backup
+	install -d $(SABNZBD_PY24_IPK_DIR)$(OPTWARE_PREFIX)var/log
 	$(MAKE) $(SABNZBD_PY24_IPK_DIR)/CONTROL/control
 	install -m 644 $(SABNZBD_SOURCE_DIR)/postinst $(SABNZBD_PY24_IPK_DIR)/CONTROL/postinst
 	echo $(SABNZBD_CONFFILES) | sed -e 's/ /\n/g' > $(SABNZBD_PY24_IPK_DIR)/CONTROL/conffiles
@@ -257,16 +257,16 @@ $(SABNZBD_PY25_IPK): $(SABNZBD_BUILD_DIR)/.built
 	    $(TARGET_CONFIGURE_OPTS) LDSHARED='$(TARGET_CC) -shared' \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
 	    --root=$(SABNZBD_PY25_IPK_DIR) --prefix=/opt
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/etc
-	install -m 644 $(SABNZBD_SOURCE_DIR)/SABnzbd.ini $(SABNZBD_PY25_IPK_DIR)/opt/etc/SABnzbd.ini
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(SABNZBD_SOURCE_DIR)/rc.sabnzbd $(SABNZBD_PY25_IPK_DIR)/opt/etc/init.d/S70sabnzbd
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/tmp/downloads
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/tmp/SABnzbd/cache
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/tmp/SABnzbd/tmp
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/tmp/SABnzbd/nzb
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/tmp/SABnzbd/nzb/backup
-	install -d $(SABNZBD_PY25_IPK_DIR)/opt/var/log
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(SABNZBD_SOURCE_DIR)/SABnzbd.ini $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)etc/SABnzbd.ini
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(SABNZBD_SOURCE_DIR)/rc.sabnzbd $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S70sabnzbd
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)tmp/downloads
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/cache
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/tmp
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/nzb
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)tmp/SABnzbd/nzb/backup
+	install -d $(SABNZBD_PY25_IPK_DIR)$(OPTWARE_PREFIX)var/log
 	$(MAKE) $(SABNZBD_PY25_IPK_DIR)/CONTROL/control
 	install -m 644 $(SABNZBD_SOURCE_DIR)/postinst $(SABNZBD_PY25_IPK_DIR)/CONTROL/postinst
 	echo $(SABNZBD_CONFFILES) | sed -e 's/ /\n/g' > $(SABNZBD_PY25_IPK_DIR)/CONTROL/conffiles

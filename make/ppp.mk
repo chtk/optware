@@ -46,7 +46,7 @@ PPP_IPK_VERSION=1
 
 #
 # PPP_CONFFILES should be a list of user-editable files
-PPP_CONFFILES=/opt/etc/ppp/options
+PPP_CONFFILES=$(OPTWARE_PREFIX)etc/ppp/options
 
 #
 # PPP_PATCHES should list any patches, in the the order in
@@ -126,8 +126,8 @@ $(PPP_BUILD_DIR)/.configured: $(DL_DIR)/$(PPP_SOURCE) $(PPP_PATCHES) make/ppp.mk
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PPP_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(PPP_LDFLAGS)" \
 		./configure \
-		--prefix=/opt \
-		--sysconfdir=/opt/etc \
+		--prefix=$(OPTWARE_PREFIX)\
+		--sysconfdir=$(OPTWARE_PREFIX)etc \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
@@ -174,22 +174,22 @@ $(PPP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PPP_IPK_DIR)/opt/sbin or $(PPP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PPP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PPP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PPP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PPP_IPK_DIR)/opt/etc/ppp/...
-# Documentation files should be installed in $(PPP_IPK_DIR)/opt/doc/ppp/...
-# Daemon startup scripts should be installed in $(PPP_IPK_DIR)/opt/etc/init.d/S??ppp
+# Libraries and include files should be installed into $(PPP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PPP_IPK_DIR)$(OPTWARE_PREFIX)etc/ppp/...
+# Documentation files should be installed in $(PPP_IPK_DIR)$(OPTWARE_PREFIX)doc/ppp/...
+# Daemon startup scripts should be installed in $(PPP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ppp
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PPP_IPK): $(PPP_BUILD_DIR)/.built
 	rm -rf $(PPP_IPK_DIR) $(BUILD_DIR)/ppp_*_$(TARGET_ARCH).ipk
-	install -d $(PPP_IPK_DIR)/opt/sbin/
-	install -m 755 $(PPP_BUILD_DIR)/pppd/pppd $(PPP_IPK_DIR)/opt/sbin/pppd
-	$(STRIP_COMMAND) $(PPP_IPK_DIR)/opt/sbin/pppd
-	install -d $(PPP_IPK_DIR)/opt/etc/ppp
-	install -m 644 $(PPP_BUILD_DIR)/etc.ppp/options $(PPP_IPK_DIR)/opt/etc/ppp/options
+	install -d $(PPP_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -m 755 $(PPP_BUILD_DIR)/pppd/pppd $(PPP_IPK_DIR)$(OPTWARE_PREFIX)sbin/pppd
+	$(STRIP_COMMAND) $(PPP_IPK_DIR)$(OPTWARE_PREFIX)sbin/pppd
+	install -d $(PPP_IPK_DIR)$(OPTWARE_PREFIX)etc/ppp
+	install -m 644 $(PPP_BUILD_DIR)/etc.ppp/options $(PPP_IPK_DIR)$(OPTWARE_PREFIX)etc/ppp/options
 	$(MAKE) $(PPP_IPK_DIR)/CONTROL/control
 	echo $(PPP_CONFFILES) | sed -e 's/ /\n/g' > $(PPP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PPP_IPK_DIR)

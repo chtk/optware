@@ -112,7 +112,7 @@ $(LIBPNG_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBPNG_SOURCE) $(LIBPNG_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -142,8 +142,8 @@ libpng: $(LIBPNG_BUILD_DIR)/.built
 $(LIBPNG_BUILD_DIR)/.staged: $(LIBPNG_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) prefix=$(STAGING_PREFIX) install
-	rm -f $(STAGING_DIR)/opt/lib/libpng.la
-	rm -f $(STAGING_DIR)/opt/lib/libpng12.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpng.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpng12.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libpng*.pc
 	sed -i -e 's|-I$${includedir}|-I$(STAGING_INCLUDE_DIR)|' $(STAGING_PREFIX)/bin/libpng12-config
 	touch $@
@@ -171,20 +171,20 @@ $(LIBPNG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBPNG_IPK_DIR)/opt/sbin or $(LIBPNG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBPNG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBPNG_IPK_DIR)/opt/etc/libpng/...
-# Documentation files should be installed in $(LIBPNG_IPK_DIR)/opt/doc/libpng/...
-# Daemon startup scripts should be installed in $(LIBPNG_IPK_DIR)/opt/etc/init.d/S??libpng
+# Libraries and include files should be installed into $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)etc/libpng/...
+# Documentation files should be installed in $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)doc/libpng/...
+# Daemon startup scripts should be installed in $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libpng
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBPNG_IPK): $(LIBPNG_BUILD_DIR)/.built
 	rm -rf $(LIBPNG_IPK_DIR) $(LIBPNG_IPK)
 	install -d $(LIBPNG_IPK_DIR)/opt
-	$(MAKE) -C $(LIBPNG_BUILD_DIR) prefix=$(LIBPNG_IPK_DIR)/opt install-strip
-	rm -f $(LIBPNG_IPK_DIR)/opt/lib/*.la
+	$(MAKE) -C $(LIBPNG_BUILD_DIR) prefix=$(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)install-strip
+	rm -f $(LIBPNG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(LIBPNG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBPNG_IPK_DIR)
 

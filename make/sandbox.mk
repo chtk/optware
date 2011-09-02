@@ -46,7 +46,7 @@ SANDBOX_IPK_VERSION=1
 
 #
 # SANDBOX_CONFFILES should be a list of user-editable files
-#SANDBOX_CONFFILES=/opt/etc/sandbox.conf /opt/etc/init.d/SXXsandbox
+#SANDBOX_CONFFILES=$(OPTWARE_PREFIX)etc/sandbox.conf $(OPTWARE_PREFIX)etc/init.d/SXXsandbox
 
 #
 # SANDBOX_PATCHES should list any patches, in the the order in
@@ -129,7 +129,7 @@ $(SANDBOX_BUILD_DIR)/.configured: $(DL_DIR)/$(SANDBOX_SOURCE) $(SANDBOX_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -182,23 +182,23 @@ $(SANDBOX_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SANDBOX_IPK_DIR)/opt/sbin or $(SANDBOX_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SANDBOX_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SANDBOX_IPK_DIR)/opt/etc/sandbox/...
-# Documentation files should be installed in $(SANDBOX_IPK_DIR)/opt/doc/sandbox/...
-# Daemon startup scripts should be installed in $(SANDBOX_IPK_DIR)/opt/etc/init.d/S??sandbox
+# Libraries and include files should be installed into $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/sandbox/...
+# Documentation files should be installed in $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)doc/sandbox/...
+# Daemon startup scripts should be installed in $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??sandbox
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SANDBOX_IPK): $(SANDBOX_BUILD_DIR)/.built
 	rm -rf $(SANDBOX_IPK_DIR) $(BUILD_DIR)/sandbox_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SANDBOX_BUILD_DIR) DESTDIR=$(SANDBOX_IPK_DIR) install-strip
-#	install -d $(SANDBOX_IPK_DIR)/opt/etc/
-#	install -m 644 $(SANDBOX_SOURCE_DIR)/sandbox.conf $(SANDBOX_IPK_DIR)/opt/etc/sandbox.conf
-#	install -d $(SANDBOX_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SANDBOX_SOURCE_DIR)/rc.sandbox $(SANDBOX_IPK_DIR)/opt/etc/init.d/SXXsandbox
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SANDBOX_IPK_DIR)/opt/etc/init.d/SXXsandbox
+#	install -d $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SANDBOX_SOURCE_DIR)/sandbox.conf $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/sandbox.conf
+#	install -d $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SANDBOX_SOURCE_DIR)/rc.sandbox $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXsandbox
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SANDBOX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXsandbox
 	$(MAKE) $(SANDBOX_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SANDBOX_SOURCE_DIR)/postinst $(SANDBOX_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SANDBOX_IPK_DIR)/CONTROL/postinst

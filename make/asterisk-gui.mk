@@ -119,11 +119,11 @@ $(ASTERISK_GUI_BUILD_DIR)/.configured: $(DL_DIR)/$(ASTERISK_GUI_SOURCE) $(ASTERI
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
-		--localstatedir=/opt/var \
-		--sysconfdir=/opt/etc \
+		--localstatedir=$(OPTWARE_PREFIX)var \
+		--sysconfdir=$(OPTWARE_PREFIX)etc \
 	)
 	touch $(ASTERISK_GUI_BUILD_DIR)/.configured
 
@@ -174,12 +174,12 @@ $(ASTERISK_GUI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ASTERISK_GUI_IPK_DIR)/opt/sbin or $(ASTERISK_GUI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ASTERISK_GUI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ASTERISK_GUI_IPK_DIR)/opt/etc/asterisk-gui/...
-# Documentation files should be installed in $(ASTERISK_GUI_IPK_DIR)/opt/doc/asterisk-gui/...
-# Daemon startup scripts should be installed in $(ASTERISK_GUI_IPK_DIR)/opt/etc/init.d/S??asterisk-gui
+# Libraries and include files should be installed into $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk-gui/...
+# Documentation files should be installed in $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)doc/asterisk-gui/...
+# Daemon startup scripts should be installed in $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??asterisk-gui
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -188,46 +188,46 @@ $(ASTERISK_GUI_IPK): $(ASTERISK_GUI_BUILD_DIR)/.built
 	$(MAKE) -C $(ASTERISK_GUI_BUILD_DIR) DESTDIR=$(ASTERISK_GUI_IPK_DIR) install
 
 	# FIX gui_sysinfo
-	sed -i -e 's#`uname #`/opt/bin/uname #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`uptime`#`/opt/bin/uptime`#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`/usr/sbin/asterisk #`/opt/sbin/asterisk #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`date`#`/opt/bin/date`#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`hostname #`/bin/hostname #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`ifconfig`#`/sbin/ifconfig`#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`df #`/opt/bin/df #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`free`#`/opt/bin/free`#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#`/bin/date #`/opt/bin/date #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
+	sed -i -e 's#`uname #`$(OPTWARE_PREFIX)bin/uname #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`uptime`#`$(OPTWARE_PREFIX)bin/uptime`#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`/usr/sbin/asterisk #`$(OPTWARE_PREFIX)sbin/asterisk #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`date`#`$(OPTWARE_PREFIX)bin/date`#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`hostname #`/bin/hostname #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`ifconfig`#`/sbin/ifconfig`#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`df #`$(OPTWARE_PREFIX)bin/df #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`free`#`$(OPTWARE_PREFIX)bin/free`#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#`/bin/date #`$(OPTWARE_PREFIX)bin/date #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
 
 	# FIX scripts
-	sed -i -e 's#`/bin/bash`#`/bin/sh`#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#/etc/#/opt/etc/#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#/var/#/opt/var/#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
+	sed -i -e 's#`/bin/bash`#`/bin/sh`#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#/etc/#$(OPTWARE_PREFIX)etc/#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#/var/#$(OPTWARE_PREFIX)var/#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
 
-	sed -i -e 's#/bin/grep /var/log/asterisk/messages#/opt/bin/grep /var/log/asterisk/messages#g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#/bin/mkdir #/opt/bin/mkdir #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#/bin/ls #/opt/bin/ls #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
-	sed -i -e 's#/bin/echo #/opt/bin/echo #g' $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/scripts/*
+	sed -i -e 's#/bin/grep /var/log/asterisk/messages#$(OPTWARE_PREFIX)bin/grep /var/log/asterisk/messages#g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#/bin/mkdir #$(OPTWARE_PREFIX)bin/mkdir #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#/bin/ls #$(OPTWARE_PREFIX)bin/ls #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
+	sed -i -e 's#/bin/echo #$(OPTWARE_PREFIX)bin/echo #g' $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/scripts/*
 
 	# FIX asterisk config directory location
-	ASTERISK_GUI_HTML_FILES=`find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.html'`
-	ASTERISK_GUI_JS_FILES=`find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.js'`
-	ASTERISK_GUI_SVGZ_FILES=`find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.svgz'`
+	ASTERISK_GUI_HTML_FILES=`find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.html'`
+	ASTERISK_GUI_JS_FILES=`find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.js'`
+	ASTERISK_GUI_SVGZ_FILES=`find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.svgz'`
 	ASTERISK_GUI_GUI_CONFIG_FILES="$(ASTERISK_GUI_HTML_FILES) $(ASTERISK_GUI_JS_FILES) $(ASTERISK_GUI_SVGZ_FILES)"
 
-	#ASTERISK_GUI_GUI_CONFIG_FILE=`find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config`
+	#ASTERISK_GUI_GUI_CONFIG_FILE=`find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config`
 	#for f in $(ASTERISK_GUI_HTML_FILES) $(ASTERISK_GUI_JS_FILES) $(ASTERISK_GUI_SVGZ_FILES) ; do
-	#for f in `find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.html'`; do \
+	#for f in `find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.html'`; do \
 
 
-	for f in `find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.html'; \
-		find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.js'; \
-		find $(ASTERISK_GUI_IPK_DIR)/opt/var/lib/asterisk/static-http/config -name '*.svgz'`; do \
-		sed -i -e 's#/etc/#/opt/etc/#g' $$f; \
-		sed -i -e 's#/var/#/opt/var/#g' $$f; \
-		sed -i -e 's#/bin/rm#/opt/bin/rm#g' $$f; \
-		sed -i -e 's#/bin/tar#/opt/bin/tar#g' $$f; \
-		sed -i -e 's#/bin/grep#/opt/bin/grep#g' $$f; \
-		sed -i -e 's#/bin/touch#/opt/bin/touch#g' $$f; \
+	for f in `find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.html'; \
+		find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.js'; \
+		find $(ASTERISK_GUI_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/static-http/config -name '*.svgz'`; do \
+		sed -i -e 's#/etc/#$(OPTWARE_PREFIX)etc/#g' $$f; \
+		sed -i -e 's#/var/#$(OPTWARE_PREFIX)var/#g' $$f; \
+		sed -i -e 's#/bin/rm#$(OPTWARE_PREFIX)bin/rm#g' $$f; \
+		sed -i -e 's#/bin/tar#$(OPTWARE_PREFIX)bin/tar#g' $$f; \
+		sed -i -e 's#/bin/grep#$(OPTWARE_PREFIX)bin/grep#g' $$f; \
+		sed -i -e 's#/bin/touch#$(OPTWARE_PREFIX)bin/touch#g' $$f; \
 		sed -i -e 's#/bin/reboot#/sbin/reboot#g' $$f; \
 		sed -i -e 's#/bin/reset_config#/sbin/reset_config#g' $$f; \
 	done

@@ -41,7 +41,7 @@ MOD_PYTHON_IPK_VERSION=2
 
 #
 # MOD_PYTHON_CONFFILES should be a list of user-editable files
-MOD_PYTHON_CONFFILES=/opt/etc/apache2/conf.d/mod_python.conf
+MOD_PYTHON_CONFFILES=$(OPTWARE_PREFIX)etc/apache2/conf.d/mod_python.conf
 
 #
 # MOD_PYTHON_PATCHES should list any patches, in the the order in
@@ -121,18 +121,18 @@ $(MOD_PYTHON_BUILD_DIR)/.configured: $(DL_DIR)/$(MOD_PYTHON_SOURCE) $(MOD_PYTHON
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-apxs=$(STAGING_DIR)/opt/sbin/apxs \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-apxs=$(STAGING_DIR)$(OPTWARE_PREFIX)sbin/apxs \
 		--with-python=$(HOST_STAGING_PREFIX)/bin/python2.5 \
 		--disable-nls \
 	)
 	( \
                 echo "[build_ext]"; \
-                echo "include-dirs=$(STAGING_DIR)/opt/include"; \
-                echo "library-dirs=$(STAGING_DIR)/opt/lib"; \
-                echo "rpath=/opt/lib"; \
+                echo "include-dirs=$(STAGING_DIR)$(OPTWARE_PREFIX)include"; \
+                echo "library-dirs=$(STAGING_DIR)$(OPTWARE_PREFIX)lib"; \
+                echo "rpath=$(OPTWARE_PREFIX)lib"; \
                 echo "[build_scripts]"; \
-                echo "executable=/opt/bin/python2.5"; \
+                echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
                 echo "[install]"; \
                 echo "prefix=/opt"; \
         ) > $(@D)/dist/setup.cfg
@@ -187,22 +187,22 @@ $(MOD_PYTHON_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MOD_PYTHON_IPK_DIR)/opt/sbin or $(MOD_PYTHON_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MOD_PYTHON_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MOD_PYTHON_IPK_DIR)/opt/etc/mod-python/...
-# Documentation files should be installed in $(MOD_PYTHON_IPK_DIR)/opt/doc/mod-python/...
-# Daemon startup scripts should be installed in $(MOD_PYTHON_IPK_DIR)/opt/etc/init.d/S??mod-python
+# Libraries and include files should be installed into $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/mod-python/...
+# Documentation files should be installed in $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)doc/mod-python/...
+# Daemon startup scripts should be installed in $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mod-python
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MOD_PYTHON_IPK): $(MOD_PYTHON_BUILD_DIR)/.built
 	rm -rf $(MOD_PYTHON_IPK_DIR) $(BUILD_DIR)/mod-python_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(MOD_PYTHON_BUILD_DIR) DESTDIR=$(MOD_PYTHON_IPK_DIR) install
-	$(STRIP_COMMAND) $(MOD_PYTHON_IPK_DIR)/opt/libexec/mod_python.so
-	$(STRIP_COMMAND) $(MOD_PYTHON_IPK_DIR)/opt/lib/python2.5/site-packages/mod_python/_psp.so
-	install -d $(MOD_PYTHON_IPK_DIR)/opt/etc/apache2/conf.d/
-	install -m 644 $(MOD_PYTHON_SOURCE_DIR)/mod_python.conf $(MOD_PYTHON_IPK_DIR)/opt/etc/apache2/conf.d/mod_python.conf
+	$(STRIP_COMMAND) $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)libexec/mod_python.so
+	$(STRIP_COMMAND) $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/mod_python/_psp.so
+	install -d $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/apache2/conf.d/
+	install -m 644 $(MOD_PYTHON_SOURCE_DIR)/mod_python.conf $(MOD_PYTHON_IPK_DIR)$(OPTWARE_PREFIX)etc/apache2/conf.d/mod_python.conf
 	$(MAKE) $(MOD_PYTHON_IPK_DIR)/CONTROL/control
 	echo $(MOD_PYTHON_CONFFILES) | sed -e 's/ /\n/g' > $(MOD_PYTHON_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(MOD_PYTHON_IPK_DIR)

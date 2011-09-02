@@ -41,7 +41,7 @@ PY-LEPL_IPK_VERSION=1
 
 #
 # PY-LEPL_CONFFILES should be a list of user-editable files
-#PY-LEPL_CONFFILES=/opt/etc/py-lepl.conf /opt/etc/init.d/SXXpy-lepl
+#PY-LEPL_CONFFILES=$(OPTWARE_PREFIX)etc/py-lepl.conf $(OPTWARE_PREFIX)etc/init.d/SXXpy-lepl
 
 #
 # PY-LEPL_PATCHES should list any patches, in the the order in
@@ -118,9 +118,9 @@ $(PY-LEPL_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-LEPL_SOURCE) $(PY-LEPL_PATCHES)
 	(cd $(@D)/2.6; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python2.6"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg \
 	)
 	# 3.1
@@ -133,9 +133,9 @@ $(PY-LEPL_BUILD_DIR)/.configured: $(DL_DIR)/$(PY-LEPL_SOURCE) $(PY-LEPL_PATCHES)
 	(cd $(@D)/3.1; \
 	    ( \
 	    echo "[build_scripts]"; \
-	    echo "executable=/opt/bin/python3.1"; \
+	    echo "executable=$(OPTWARE_PREFIX)bin/python3.1"; \
 	    echo "[install]"; \
-	    echo "install_scripts=/opt/bin"; \
+	    echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) > setup.cfg \
 	)
 	touch $@
@@ -205,12 +205,12 @@ $(PY31-LEPL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PY-LEPL_IPK_DIR)/opt/sbin or $(PY-LEPL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PY-LEPL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PY-LEPL_IPK_DIR)/opt/etc/py-lepl/...
-# Documentation files should be installed in $(PY-LEPL_IPK_DIR)/opt/doc/py-lepl/...
-# Daemon startup scripts should be installed in $(PY-LEPL_IPK_DIR)/opt/etc/init.d/S??py-lepl
+# Libraries and include files should be installed into $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX)etc/py-lepl/...
+# Documentation files should be installed in $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX)doc/py-lepl/...
+# Daemon startup scripts should be installed in $(PY-LEPL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??py-lepl
 #
 # You may need to patch your application to make it use these locations.
 #

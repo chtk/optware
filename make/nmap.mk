@@ -26,7 +26,7 @@ NMAP_IPK_VERSION=1
 
 #
 # NMAP_CONFFILES should be a list of user-editable files
-# NMAP_CONFFILES=/opt/etc/nmap.conf /opt/etc/init.d/SXXnmap
+# NMAP_CONFFILES=$(OPTWARE_PREFIX)etc/nmap.conf $(OPTWARE_PREFIX)etc/init.d/SXXnmap
 
 #
 # NMAP_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(NMAP_BUILD_DIR)/.configured: $(DL_DIR)/$(NMAP_SOURCE) $(NMAP_PATCHES) make/nma
 	fi
 	( \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python"; \
+		echo "executable=$(OPTWARE_PREFIX)bin/python"; \
 	) >> $(@D)/ndiff/setup.cfg
 	sed -i -e '/	$$(INSTALL)/s| -s | |' $(@D)/ncat/Makefile.in
 #	autoreconf -vif $(@D)
@@ -127,10 +127,10 @@ $(NMAP_BUILD_DIR)/.configured: $(DL_DIR)/$(NMAP_SOURCE) $(NMAP_PATCHES) make/nma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
-		--with-openssl=$(STAGING_DIR)/opt \
+		--with-openssl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
 		--with-pcap=linux \
 		--with-nmapfe=no \
 		--without-zenmap \
@@ -190,19 +190,19 @@ $(NMAP_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NMAP_IPK_DIR)/opt/sbin or $(NMAP_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NMAP_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NMAP_IPK_DIR)/opt/etc/nmap/...
-# Documentation files should be installed in $(NMAP_IPK_DIR)/opt/doc/nmap/...
-# Daemon startup scripts should be installed in $(NMAP_IPK_DIR)/opt/etc/init.d/S??nmap
+# Libraries and include files should be installed into $(NMAP_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/nmap/...
+# Documentation files should be installed in $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)doc/nmap/...
+# Daemon startup scripts should be installed in $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nmap
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NMAP_IPK): $(NMAP_BUILD_DIR)/.built
 	rm -rf $(NMAP_IPK_DIR) $(BUILD_DIR)/nmap_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NMAP_BUILD_DIR) DESTDIR=$(NMAP_IPK_DIR) install
-	$(STRIP_COMMAND) $(NMAP_IPK_DIR)/opt/bin/nmap $(NMAP_IPK_DIR)/opt/bin/ncat
+	$(STRIP_COMMAND) $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)bin/nmap $(NMAP_IPK_DIR)$(OPTWARE_PREFIX)bin/ncat
 	$(MAKE) $(NMAP_IPK_DIR)/CONTROL/control
 	echo $(NMAP_CONFFILES) | sed -e 's/ /\n/g' > $(NMAP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NMAP_IPK_DIR)

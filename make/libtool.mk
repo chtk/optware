@@ -134,7 +134,7 @@ $(LIBTOOL_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBTOOL_SOURCE) $(LIBTOOL_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,19 +189,19 @@ $(LIBTOOL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBTOOL_IPK_DIR)/opt/sbin or $(LIBTOOL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBTOOL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBTOOL_IPK_DIR)/opt/etc/libtool/...
-# Documentation files should be installed in $(LIBTOOL_IPK_DIR)/opt/doc/libtool/...
-# Daemon startup scripts should be installed in $(LIBTOOL_IPK_DIR)/opt/etc/init.d/S??libtool
+# Libraries and include files should be installed into $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/libtool/...
+# Documentation files should be installed in $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)doc/libtool/...
+# Daemon startup scripts should be installed in $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libtool
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LIBTOOL_IPK): $(LIBTOOL_BUILD_DIR)/.built
 	rm -rf $(LIBTOOL_IPK_DIR) $(BUILD_DIR)/libtool_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBTOOL_BUILD_DIR) DESTDIR=$(LIBTOOL_IPK_DIR) install-strip
-	rm -f $(LIBTOOL_IPK_DIR)/opt/info/dir
+	rm -f $(LIBTOOL_IPK_DIR)$(OPTWARE_PREFIX)info/dir
 	$(MAKE) $(LIBTOOL_IPK_DIR)/CONTROL/control
 #	install -d $(LIBTOOL_IPK_DIR)/CONTROL
 #	sed -e "s/@ARCH@/$(TARGET_ARCH)/" -e "s/@VERSION@/$(LIBTOOL_VERSION)/" \

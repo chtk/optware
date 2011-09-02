@@ -42,7 +42,7 @@ GUTENPRINT_IPK_VERSION=1
 
 #
 # GUTENPRINT_CONFFILES should be a list of user-editable files
-#GUTENPRINT_CONFFILES=/opt/etc/gutenprint.conf /opt/etc/init.d/SXXgutenprint
+#GUTENPRINT_CONFFILES=$(OPTWARE_PREFIX)etc/gutenprint.conf $(OPTWARE_PREFIX)etc/init.d/SXXgutenprint
 
 #
 # GUTENPRINT_PATCHES should list any patches, in the the order in
@@ -106,8 +106,8 @@ $(GUTENPRINT_HOST_BUILD_DIR)/.built: $(DL_DIR)/$(GUTENPRINT_SOURCE) make/gutenpr
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(GNU_HOST_NAME) \
-		--prefix=/opt \
-		--with-cups=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-cups=$(OPTWARE_PREFIX)\
 		--enable-cups-ppds \
 		--enable-cups-level3-ppds \
 		--without-ghostscript \
@@ -146,8 +146,8 @@ $(GUTENPRINT_BUILD_DIR)/.configured: $(DL_DIR)/$(GUTENPRINT_SOURCE) $(GUTENPRINT
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-cups=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-cups=$(OPTWARE_PREFIX)\
 		--disable-cups-ppds \
 		--without-foomatic \
 		--disable-libgutenprintui2 \
@@ -228,17 +228,17 @@ $(GUTENPRINT_IPK): $(GUTENPRINT_BUILD_DIR)/.built
 
 $(GUTENPRINT-CUPS-DRIVER_IPK): $(GUTENPRINT_HOST_BUILD_DIR)/.built
 	rm -rf $(GUTENPRINT-CUPS-DRIVER_IPK_DIR) $(BUILD_DIR)/cups-driver-gutenprint_*_$(TARGET_ARCH).ipk
-	install -d $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)/opt/share/cups/model
+	install -d $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)$(OPTWARE_PREFIX)share/cups/model
 	cd $(GUTENPRINT_HOST_BUILD_DIR)/src/cups/ppd/C; \
-		install *ppd.gz $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)/opt/share/cups/model/
+		install *ppd.gz $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)$(OPTWARE_PREFIX)share/cups/model/
 	$(MAKE) $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GUTENPRINT-CUPS-DRIVER_IPK_DIR)
 
 $(GUTENPRINT-FOOMATIC-DB_IPK): $(GUTENPRINT_HOST_BUILD_DIR)/.built
 	rm -rf $(GUTENPRINT-FOOMATIC-DB_IPK_DIR) $(BUILD_DIR)/foomatic-db-gutenprint_*_$(TARGET_ARCH).ipk
-	install -d $(GUTENPRINT-FOOMATIC-DB_IPK_DIR)/opt/share/foomatic
+	install -d $(GUTENPRINT-FOOMATIC-DB_IPK_DIR)$(OPTWARE_PREFIX)share/foomatic
 	cp -rp $(GUTENPRINT_HOST_BUILD_DIR)/src/foomatic/foomatic-db \
-		$(GUTENPRINT-FOOMATIC-DB_IPK_DIR)/opt/share/foomatic/db
+		$(GUTENPRINT-FOOMATIC-DB_IPK_DIR)$(OPTWARE_PREFIX)share/foomatic/db
 	$(MAKE) $(GUTENPRINT-FOOMATIC-DB_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GUTENPRINT-FOOMATIC-DB_IPK_DIR)
 

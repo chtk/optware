@@ -44,7 +44,7 @@ POSTGRESQL_IPK_VERSION=2
 
 #
 # POSTGRESQL_CONFFILES should be a list of user-editable files
-#POSTGRESQL_CONFFILES=/opt/etc/postgresql.conf /opt/etc/init.d/SXXpostgresql
+#POSTGRESQL_CONFFILES=$(OPTWARE_PREFIX)etc/postgresql.conf $(OPTWARE_PREFIX)etc/init.d/SXXpostgresql
 
 #
 # POSTGRESQL_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ $(POSTGRESQL_BUILD_DIR)/.configured: $(DL_DIR)/$(POSTGRESQL_SOURCE) $(POSTGRESQL
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--with-includes=$(STAGING_INCLUDE_DIR) \
 		--with-libs=$(STAGING_LIB_DIR) \
@@ -182,24 +182,24 @@ $(POSTGRESQL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(POSTGRESQL_IPK_DIR)/opt/sbin or $(POSTGRESQL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(POSTGRESQL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(POSTGRESQL_IPK_DIR)/opt/etc/postgresql/...
-# Documentation files should be installed in $(POSTGRESQL_IPK_DIR)/opt/doc/postgresql/...
-# Daemon startup scripts should be installed in $(POSTGRESQL_IPK_DIR)/opt/etc/init.d/S??postgresql
+# Libraries and include files should be installed into $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/postgresql/...
+# Documentation files should be installed in $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)doc/postgresql/...
+# Daemon startup scripts should be installed in $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??postgresql
 #
 # You may need to patch your application to make it use these locations.
 #
 $(POSTGRESQL_IPK): $(POSTGRESQL_BUILD_DIR)/.built
 	rm -rf $(POSTGRESQL_IPK_DIR) $(BUILD_DIR)/postgresql_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(POSTGRESQL_BUILD_DIR) DESTDIR=$(POSTGRESQL_IPK_DIR) install-strip
-	rm -f $(POSTGRESQL_IPK_DIR)/opt/lib/libpq.a $(POSTGRESQL_IPK_DIR)/opt/lib/libecpg*.a $(POSTGRESQL_IPK_DIR)/opt/lib/libpgtypes*.a
-	$(STRIP_COMMAND) $(POSTGRESQL_IPK_DIR)/opt/bin/pg_config
-#	install -d $(POSTGRESQL_IPK_DIR)/opt/etc/
-#	install -m 644 $(POSTGRESQL_SOURCE_DIR)/postgresql.conf $(POSTGRESQL_IPK_DIR)/opt/etc/postgresql.conf
-	install -d $(POSTGRESQL_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(POSTGRESQL_SOURCE_DIR)/rc.postgresql $(POSTGRESQL_IPK_DIR)/opt/etc/init.d/S98postgresql
+	rm -f $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)lib/libpq.a $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)lib/libecpg*.a $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)lib/libpgtypes*.a
+	$(STRIP_COMMAND) $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)bin/pg_config
+#	install -d $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(POSTGRESQL_SOURCE_DIR)/postgresql.conf $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/postgresql.conf
+	install -d $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(POSTGRESQL_SOURCE_DIR)/rc.postgresql $(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S98postgresql
 	sed \
 	    -e '/^#max_connections = /{s|^#||;s|= [0-9]*|= 8|}' \
 	    -e '/^#shared_buffers = /{s|^#||;s|= [0-9]*MB|= 128kB|}' \
@@ -212,8 +212,8 @@ $(POSTGRESQL_IPK): $(POSTGRESQL_BUILD_DIR)/.built
 	    -e '/^#max_files_per_process = /{s|^#||;s|= [0-9]*|= 25|}' \
 	    -e '/^#wal_buffers = /{s|^#||;s|= [0-9]*kB|= 32kB|}' \
 	    -e '/^#effective_cache_size = /{s|^#||;s|= [0-9]*MB|= 4MB|}' \
-		$(POSTGRESQL_IPK_DIR)/opt/share/postgresql/postgresql.conf.sample > \
-		$(POSTGRESQL_IPK_DIR)/opt/share/postgresql/postgresql.conf.small
+		$(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)share/postgresql/postgresql.conf.sample > \
+		$(POSTGRESQL_IPK_DIR)$(OPTWARE_PREFIX)share/postgresql/postgresql.conf.small
 	$(MAKE) $(POSTGRESQL_IPK_DIR)/CONTROL/control
 	install -m 755 $(POSTGRESQL_SOURCE_DIR)/postinst $(POSTGRESQL_IPK_DIR)/CONTROL/postinst
 ifneq ($(OPTWARE_TARGET), nslu2)

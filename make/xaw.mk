@@ -122,7 +122,7 @@ $(XAW_BUILD_DIR)/.configured: $(DL_DIR)/xaw-$(XAW_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(XAW_BUILD_DIR)/libtool
@@ -162,7 +162,7 @@ $(XAW_IPK): $(XAW_BUILD_DIR)/.built
 	rm -rf $(XAW_IPK_DIR) $(BUILD_DIR)/xaw_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XAW_BUILD_DIR) DESTDIR=$(XAW_IPK_DIR) install-strip
 	$(MAKE) $(XAW_IPK_DIR)/CONTROL/control
-	rm -f $(XAW_IPK_DIR)/opt/lib/*.la
+	rm -f $(XAW_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XAW_IPK_DIR)
 
 #

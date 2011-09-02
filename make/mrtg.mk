@@ -123,7 +123,7 @@ $(MRTG_BUILD_DIR)/.configured: $(DL_DIR)/$(MRTG_SOURCE) $(MRTG_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -137,7 +137,7 @@ mrtg-unpack: $(MRTG_BUILD_DIR)/.configured
 #
 $(MRTG_BUILD_DIR)/.built: $(MRTG_BUILD_DIR)/.configured
 	rm -f $@
-	$(MAKE) -C $(@D) TARGET_PERL="/opt/bin/perl"
+	$(MAKE) -C $(@D) TARGET_PERL="$(OPTWARE_PREFIX)bin/perl"
 	touch $@
 
 #
@@ -177,23 +177,23 @@ $(MRTG_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MRTG_IPK_DIR)/opt/sbin or $(MRTG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MRTG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MRTG_IPK_DIR)/opt/etc/mrtg/...
-# Documentation files should be installed in $(MRTG_IPK_DIR)/opt/doc/mrtg/...
-# Daemon startup scripts should be installed in $(MRTG_IPK_DIR)/opt/etc/init.d/S??mrtg
+# Libraries and include files should be installed into $(MRTG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/mrtg/...
+# Documentation files should be installed in $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)doc/mrtg/...
+# Daemon startup scripts should be installed in $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??mrtg
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MRTG_IPK): $(MRTG_BUILD_DIR)/.built
 	rm -rf $(MRTG_IPK_DIR) $(BUILD_DIR)/mrtg_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(MRTG_BUILD_DIR) TARGET_PERL="/opt/bin/perl" DESTDIR=$(MRTG_IPK_DIR) install
-	$(STRIP_COMMAND) $(MRTG_IPK_DIR)/opt/bin/rateup
-#	install -d $(MRTG_IPK_DIR)/opt/etc/
-#	install -m 644 $(MRTG_SOURCE_DIR)/mrtg.conf $(MRTG_IPK_DIR)/opt/etc/mrtg.conf
-#	install -d $(MRTG_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MRTG_SOURCE_DIR)/rc.mrtg $(MRTG_IPK_DIR)/opt/etc/init.d/SXXmrtg
+	$(MAKE) -C $(MRTG_BUILD_DIR) TARGET_PERL="$(OPTWARE_PREFIX)bin/perl" DESTDIR=$(MRTG_IPK_DIR) install
+	$(STRIP_COMMAND) $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)bin/rateup
+#	install -d $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(MRTG_SOURCE_DIR)/mrtg.conf $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/mrtg.conf
+#	install -d $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MRTG_SOURCE_DIR)/rc.mrtg $(MRTG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmrtg
 	$(MAKE) $(MRTG_IPK_DIR)/CONTROL/control
 	install -m 755 $(MRTG_SOURCE_DIR)/postinst $(MRTG_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(MRTG_SOURCE_DIR)/prerm $(MRTG_IPK_DIR)/CONTROL/prerm

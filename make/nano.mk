@@ -18,7 +18,7 @@ NANO_CONFLICTS=
 
 NANO_IPK_VERSION=1
 
-#NANO_CONFFILES=/opt/etc/nanorc
+#NANO_CONFFILES=$(OPTWARE_PREFIX)etc/nanorc
 
 #NANO_PATCHES=$(NANO_SOURCE_DIR)/broken_regex.patch
 
@@ -55,7 +55,7 @@ $(NANO_BUILD_DIR)/.configured: $(DL_DIR)/$(NANO_SOURCE) $(NANO_PATCHES) make/nan
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--enable-all \
 		--without-libiconv-prefix \
 		--disable-utf8 \
@@ -96,8 +96,8 @@ $(NANO_IPK_DIR)/CONTROL/control:
 $(NANO_IPK): $(NANO_BUILD_DIR)/.built
 	rm -rf $(NANO_IPK_DIR) $(BUILD_DIR)/nano_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NANO_BUILD_DIR) DESTDIR=$(NANO_IPK_DIR) program_transform_name="" install-strip
-	install -d $(NANO_IPK_DIR)/opt/etc/
-	install -m 644 $(NANO_BUILD_DIR)/doc/nanorc.sample $(NANO_IPK_DIR)/opt/etc/nanorc
+	install -d $(NANO_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(NANO_BUILD_DIR)/doc/nanorc.sample $(NANO_IPK_DIR)$(OPTWARE_PREFIX)etc/nanorc
 	$(MAKE) $(NANO_IPK_DIR)/CONTROL/control
 	echo $(NANO_CONFFILES) | sed -e 's/ /\n/g' > $(NANO_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NANO_IPK_DIR)

@@ -52,9 +52,9 @@ TRANSMISSIOND_IPK_VERSION=1
 
 #
 # TRANSMISSIOND_CONFFILES should be a list of user-editable files
-TRANSMISSIOND_CONFFILES=/opt/etc/transmission.conf
+TRANSMISSIOND_CONFFILES=$(OPTWARE_PREFIX)etc/transmission.conf
 
-TRANSMISSIOND_CONFFILES += /opt/etc/init.d/S80busybox_httpd
+TRANSMISSIOND_CONFFILES += $(OPTWARE_PREFIX)etc/init.d/S80busybox_httpd
 
 #
 # TRANSMISSIOND_PATCHES should list any patches, in the the order in
@@ -211,8 +211,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--datadir=/opt/share \
+		--prefix=$(OPTWARE_PREFIX)\
+		--datadir=$(OPTWARE_PREFIX)share \
 		--disable-daemon \
 		--disable-gtk \
 		--disable-wx \
@@ -259,8 +259,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--datadir=/opt/share \
+		--prefix=$(OPTWARE_PREFIX)\
+		--datadir=$(OPTWARE_PREFIX)share \
 		--disable-daemon \
 		--disable-gtk \
 		--disable-wx \
@@ -331,12 +331,12 @@ endif
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(TRANSMISSIOND_IPK_DIR)/opt/sbin or $(TRANSMISSIOND_IPK_DIR)/opt/bin
+# Binaries should be installed into $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(TRANSMISSIOND_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(TRANSMISSIOND_IPK_DIR)/opt/etc/transmissiond/...
-# Documentation files should be installed in $(TRANSMISSIOND_IPK_DIR)/opt/doc/transmissiond/...
-# Daemon startup scripts should be installed in $(TRANSMISSIOND_IPK_DIR)/opt/etc/init.d/S??transmissiond
+# Libraries and include files should be installed into $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc/transmissiond/...
+# Documentation files should be installed in $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)doc/transmissiond/...
+# Daemon startup scripts should be installed in $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??transmissiond
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -348,25 +348,25 @@ endif
 	rm -rf $(TRANSMISSIOND_IPK_DIR) $(BUILD_DIR)/transmissiond_*_$(TARGET_ARCH).ipk
 	install -d $(TRANSMISSIOND_IPK_DIR)/opt
 	$(MAKE) -C $(TRANSMISSIOND_BUILD_DIR) DESTDIR=$(TRANSMISSIOND_IPK_DIR) install-strip
-	rm -f $(TRANSMISSIOND_IPK_DIR)/opt/bin/transmission-*
-	rm -rf $(TRANSMISSIOND_IPK_DIR)/opt/share/man
-	rm -rf $(TRANSMISSIOND_IPK_DIR)/opt/share/transmission
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/etc
-	install -m 644 $(TRANSMISSIOND_SOURCE_DIR)/transmission.conf $(TRANSMISSIOND_IPK_DIR)/opt/etc/transmission.conf
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/share/doc/transmissiond
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/S80busybox_httpd $(TRANSMISSIOND_IPK_DIR)/opt/etc/init.d
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/share/www/cgi-bin
-	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/transmission.cgi $(TRANSMISSIOND_IPK_DIR)/opt/share/www/cgi-bin
+	rm -f $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)bin/transmission-*
+	rm -rf $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/man
+	rm -rf $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/transmission
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 644 $(TRANSMISSIOND_SOURCE_DIR)/transmission.conf $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc/transmission.conf
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmissiond
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/S80busybox_httpd $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/www/cgi-bin
+	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/transmission.cgi $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/www/cgi-bin
 ifdef TRANSMISSIOND-DBG_INCLUDED
-	install -m 755 $(TRANSMISSIOND-DBG_BUILD_DIR)/cli/transmissiond $(TRANSMISSIOND_IPK_DIR)/opt/bin/transmissiond-dbg
+	install -m 755 $(TRANSMISSIOND-DBG_BUILD_DIR)/cli/transmissiond $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)bin/transmissiond-dbg
 endif
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/sbin
-	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/transmission_watchdog $(TRANSMISSIOND_IPK_DIR)/opt/sbin
-	install -m 666 $(TRANSMISSIOND_SOURCE_DIR)/README.daemon $(TRANSMISSIOND_IPK_DIR)/opt/share/doc/transmissiond
-	install -m 666 $(TRANSMISSIOND_BUILD_DIR)/NEWS $(TRANSMISSIOND_IPK_DIR)/opt/share/doc/transmissiond
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/var/log
-	install -d $(TRANSMISSIOND_IPK_DIR)/opt/var/run
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/transmission_watchdog $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 666 $(TRANSMISSIOND_SOURCE_DIR)/README.daemon $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmissiond
+	install -m 666 $(TRANSMISSIOND_BUILD_DIR)/NEWS $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmissiond
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)var/log
+	install -d $(TRANSMISSIOND_IPK_DIR)$(OPTWARE_PREFIX)var/run
 	$(MAKE) $(TRANSMISSIOND_IPK_DIR)/CONTROL/control
 	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/postinst $(TRANSMISSIOND_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(TRANSMISSIOND_SOURCE_DIR)/prerm $(TRANSMISSIOND_IPK_DIR)/CONTROL/prerm

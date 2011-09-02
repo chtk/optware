@@ -44,7 +44,7 @@ BC_IPK_VERSION=2
 
 #
 # BC_CONFFILES should be a list of user-editable files
-#BC_CONFFILES=/opt/etc/bc.conf /opt/etc/init.d/SXXbc
+#BC_CONFFILES=$(OPTWARE_PREFIX)etc/bc.conf $(OPTWARE_PREFIX)etc/init.d/SXXbc
 
 #
 # BC_PATCHES should list any patches, in the the order in
@@ -117,7 +117,7 @@ $(BC_BUILD_DIR)/.configured: $(DL_DIR)/$(BC_SOURCE) $(BC_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $(BC_BUILD_DIR)/.configured
@@ -167,12 +167,12 @@ $(BC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(BC_IPK_DIR)/opt/sbin or $(BC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(BC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(BC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(BC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(BC_IPK_DIR)/opt/etc/bc/...
-# Documentation files should be installed in $(BC_IPK_DIR)/opt/doc/bc/...
-# Daemon startup scripts should be installed in $(BC_IPK_DIR)/opt/etc/init.d/S??bc
+# Libraries and include files should be installed into $(BC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(BC_IPK_DIR)$(OPTWARE_PREFIX)etc/bc/...
+# Documentation files should be installed in $(BC_IPK_DIR)$(OPTWARE_PREFIX)doc/bc/...
+# Daemon startup scripts should be installed in $(BC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??bc
 #
 # You may need to patch your application to make it use these locations.
 #

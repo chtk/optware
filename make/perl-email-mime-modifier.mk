@@ -41,9 +41,9 @@ $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-EMAIL-MIME-M
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -52,7 +52,7 @@ perl-email-mime-modifier-unpack: $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.configur
 $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.built: $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perl-email-mime-modifier: $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.built
@@ -82,7 +82,7 @@ $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)/CONTROL/control:
 $(PERL-EMAIL-MIME-MODIFIER_IPK): $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR)/.built
 	rm -rf $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR) $(BUILD_DIR)/perl-email-mime-modifier_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-EMAIL-MIME-MODIFIER_BUILD_DIR) DESTDIR=$(PERL-EMAIL-MIME-MODIFIER_IPK_DIR) install
-	find $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
+	find $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
 	$(MAKE) $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)/CONTROL/control
 	echo $(PERL-EMAIL-MIME-MODIFIER_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-EMAIL-MIME-MODIFIER_IPK_DIR)

@@ -46,9 +46,9 @@ libnsl: $(LIBNSL_BUILD_DIR)/.built
 
 $(LIBNSL_BUILD_DIR)/.staged: $(LIBNSL_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(LIBNSL_BUILD_DIR)/$(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so $(STAGING_DIR)/opt/lib
-	(cd $(STAGING_DIR)/opt/lib; \
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(LIBNSL_BUILD_DIR)/$(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	(cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib; \
 	 ln -nfs $(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so \
                  $(LIBNSL_LIBNAME).so; \
 	 ln -nfs $(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so \
@@ -74,9 +74,9 @@ $(LIBNSL_IPK_DIR)/CONTROL/control:
 
 $(LIBNSL_IPK): $(LIBNSL_BUILD_DIR)/.built
 	rm -rf $(LIBNSL_IPK_DIR) $(BUILD_DIR)/libnsl_*_$(TARGET_ARCH).ipk
-	install -d $(LIBNSL_IPK_DIR)/opt/lib
-	install -m 644 $(LIBNSL_BUILD_DIR)/$(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so $(LIBNSL_IPK_DIR)/opt/lib
-	(cd $(LIBNSL_IPK_DIR)/opt/lib; \
+	install -d $(LIBNSL_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(LIBNSL_BUILD_DIR)/$(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so $(LIBNSL_IPK_DIR)$(OPTWARE_PREFIX)lib
+	(cd $(LIBNSL_IPK_DIR)$(OPTWARE_PREFIX)lib; \
 	 ln -s $(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so \
                $(LIBNSL_LIBNAME).so; \
 	 ln -s $(LIBNSL_LIBNAME)-$(LIBNSL_VERSION).so \

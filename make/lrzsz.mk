@@ -125,7 +125,7 @@ $(LRZSZ_BUILD_DIR)/.configured: $(DL_DIR)/$(LRZSZ_SOURCE) $(LRZSZ_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -168,12 +168,12 @@ $(LRZSZ_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LRZSZ_IPK_DIR)/opt/sbin or $(LRZSZ_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LRZSZ_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LRZSZ_IPK_DIR)/opt/etc/lrzsz/...
-# Documentation files should be installed in $(LRZSZ_IPK_DIR)/opt/doc/lrzsz/...
-# Daemon startup scripts should be installed in $(LRZSZ_IPK_DIR)/opt/etc/init.d/S??lrzsz
+# Libraries and include files should be installed into $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX)etc/lrzsz/...
+# Documentation files should be installed in $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX)doc/lrzsz/...
+# Daemon startup scripts should be installed in $(LRZSZ_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??lrzsz
 #
 # You may need to patch your application to make it use these locations.
 #

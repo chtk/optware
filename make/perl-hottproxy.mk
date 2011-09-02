@@ -40,7 +40,7 @@ PERL_HOTTPROXY_IPK_VERSION=1
 
 #
 # PERL_HOTTPROXY_CONFFILES should be a list of user-editable files
-PERL_HOTTPROXY_CONFFILES=/opt/share/hottproxy/HoTTProxy_Admin.conf /opt/share/hottproxy/HoTTProxy.conf
+PERL_HOTTPROXY_CONFFILES=$(OPTWARE_PREFIX)share/hottproxy/HoTTProxy_Admin.conf $(OPTWARE_PREFIX)share/hottproxy/HoTTProxy.conf
 #/init.d/SXXperl-hottproxy
 
 #
@@ -118,9 +118,9 @@ $(PERL_HOTTPROXY_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL_HOTTPROXY_SOURCE) $(PE
 		then mv $(BUILD_DIR)/$(PERL_HOTTPROXY_DIR) $(PERL_HOTTPROXY_BUILD_DIR) ; \
 	fi
 #	(cd $(PERL_HOTTPROXY_BUILD_DIR); \
-#		sed -i -e 's|HoTTProxy.conf|/opt/etc/HoTTProxy.conf|' \
+#		sed -i -e 's|HoTTProxy.conf|$(OPTWARE_PREFIX)etc/HoTTProxy.conf|' \
 #		HoTTProxy.pl HoTTProxy/UI.pm ; \
-#		sed -i -e 's|HoTTProxy_Admin.conf|/opt/etc/HoTTProxy_Admin.conf|' \
+#		sed -i -e 's|HoTTProxy_Admin.conf|$(OPTWARE_PREFIX)etc/HoTTProxy_Admin.conf|' \
 #		HoTTProxy_Admin.pl ; \
 #		sed -i -e 's|src=\\"/|src=\\"/HoTTProxy/|g' HoTTProxy/UI.pm ;\
 #	)
@@ -174,23 +174,23 @@ $(PERL_HOTTPROXY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PERL_HOTTPROXY_IPK_DIR)/opt/sbin or $(PERL_HOTTPROXY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PERL_HOTTPROXY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/perl-hottproxy/...
-# Documentation files should be installed in $(PERL_HOTTPROXY_IPK_DIR)/opt/doc/perl-hottproxy/...
-# Daemon startup scripts should be installed in $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/init.d/S??perl-hottproxy
+# Libraries and include files should be installed into $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/perl-hottproxy/...
+# Documentation files should be installed in $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)doc/perl-hottproxy/...
+# Daemon startup scripts should be installed in $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??perl-hottproxy
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PERL_HOTTPROXY_IPK): $(PERL_HOTTPROXY_BUILD_DIR)/.built
 	rm -rf $(PERL_HOTTPROXY_IPK_DIR) $(BUILD_DIR)/perl-hottproxy_*_$(TARGET_ARCH).ipk
-	install -d $(PERL_HOTTPROXY_IPK_DIR)/opt/share/hottproxy
-	tar -c -C $(PERL_HOTTPROXY_BUILD_DIR) -f - . | tar -xv -C $(PERL_HOTTPROXY_IPK_DIR)/opt/share/hottproxy -f -
-#	install -m 644 $(PERL_HOTTPROXY_SOURCE_DIR)/perl-hottproxy.conf $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/perl-hottproxy.conf
-#	install -d $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(PERL_HOTTPROXY_SOURCE_DIR)/rc.perl-hottproxy $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/init.d/SXXperl-hottproxy
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PERL_HOTTPROXY_IPK_DIR)/opt/etc/init.d/SXXperl-hottproxy
+	install -d $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)share/hottproxy
+	tar -c -C $(PERL_HOTTPROXY_BUILD_DIR) -f - . | tar -xv -C $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)share/hottproxy -f -
+#	install -m 644 $(PERL_HOTTPROXY_SOURCE_DIR)/perl-hottproxy.conf $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/perl-hottproxy.conf
+#	install -d $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(PERL_HOTTPROXY_SOURCE_DIR)/rc.perl-hottproxy $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXperl-hottproxy
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PERL_HOTTPROXY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXperl-hottproxy
 	$(MAKE) $(PERL_HOTTPROXY_IPK_DIR)/CONTROL/control
 #	install -m 755 $(PERL_HOTTPROXY_SOURCE_DIR)/postinst $(PERL_HOTTPROXY_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(PERL_HOTTPROXY_IPK_DIR)/CONTROL/postinst

@@ -42,7 +42,7 @@ HELLANZB_IPK_VERSION=2
 
 #
 # HELLANZB_CONFFILES should be a list of user-editable files
-HELLANZB_CONFFILES=/opt/etc/hellanzb.conf /opt/etc/init.d/S71hellanzb
+HELLANZB_CONFFILES=$(OPTWARE_PREFIX)etc/hellanzb.conf $(OPTWARE_PREFIX)etc/init.d/S71hellanzb
 
 #
 # HELLANZB_PATCHES should list any patches, in the the order in
@@ -121,11 +121,11 @@ $(HELLANZB_BUILD_DIR)/.configured: $(DL_DIR)/$(HELLANZB_SOURCE) $(HELLANZB_PATCH
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 	        echo "[build_scripts]"; \
-	        echo "executable=/opt/bin/python2.4"; \
+	        echo "executable=$(OPTWARE_PREFIX)bin/python2.4"; \
 	        echo "[install]"; \
-	        echo "install_scripts=/opt/bin"; \
+	        echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	) 
 	# 2.5 
@@ -137,11 +137,11 @@ $(HELLANZB_BUILD_DIR)/.configured: $(DL_DIR)/$(HELLANZB_SOURCE) $(HELLANZB_PATCH
 	        echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=/opt/lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
 	        echo "[build_scripts]"; \
-	        echo "executable=/opt/bin/python2.5"; \
+	        echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
 	        echo "[install]"; \
-	        echo "install_scripts=/opt/bin"; \
+	        echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
 	    ) >> setup.cfg; \
 	) 
 	touch $@ 
@@ -213,12 +213,12 @@ $(PY25-HELLANZB_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(HELLANZB_IPK_DIR)/opt/sbin or $(HELLANZB_IPK_DIR)/opt/bin
+# Binaries should be installed into $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(HELLANZB_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(HELLANZB_IPK_DIR)/opt/etc/hellanzb/...
-# Documentation files should be installed in $(HELLANZB_IPK_DIR)/opt/doc/hellanzb/...
-# Daemon startup scripts should be installed in $(HELLANZB_IPK_DIR)/opt/etc/init.d/S??hellanzb
+# Libraries and include files should be installed into $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/hellanzb/...
+# Documentation files should be installed in $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)doc/hellanzb/...
+# Daemon startup scripts should be installed in $(HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??hellanzb
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -227,11 +227,11 @@ $(PY24-HELLANZB_IPK): $(HELLANZB_BUILD_DIR)/.built
 	rm -rf $(PY24-HELLANZB_IPK_DIR) $(BUILD_DIR)/py24-hellanzb_*_$(TARGET_ARCH).ipk
 	cd $(HELLANZB_BUILD_DIR)/2.4; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.4 setup.py install \
-	    --root=$(PY24-HELLANZB_IPK_DIR) --prefix=/opt 
-	install -d $(PY24-HELLANZB_IPK_DIR)/opt/etc/
-	install -m 644 $(HELLANZB_SOURCE_DIR)/hellanzb.conf $(PY24-HELLANZB_IPK_DIR)/opt/etc/hellanzb.conf
-	install -d $(PY24-HELLANZB_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(HELLANZB_SOURCE_DIR)/rc.hellanzb $(PY24-HELLANZB_IPK_DIR)/opt/etc/init.d/S71hellanzb
+	    --root=$(PY24-HELLANZB_IPK_DIR) --prefix=$(OPTWARE_PREFIX)
+	install -d $(PY24-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(HELLANZB_SOURCE_DIR)/hellanzb.conf $(PY24-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/hellanzb.conf
+	install -d $(PY24-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(HELLANZB_SOURCE_DIR)/rc.hellanzb $(PY24-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S71hellanzb
 	$(MAKE) $(PY24-HELLANZB_IPK_DIR)/CONTROL/control 
 	install -m 644 $(HELLANZB_SOURCE_DIR)/postinst $(PY24-HELLANZB_IPK_DIR)/CONTROL/postinst
 	echo $(HELLANZB_CONFFILES) | sed -e 's/ /\n/g' > $(PY24-HELLANZB_IPK_DIR)/CONTROL/conffiles
@@ -241,11 +241,11 @@ $(PY25-HELLANZB_IPK): $(HELLANZB_BUILD_DIR)/.built
 	rm -rf $(PY25-HELLANZB_IPK_DIR) $(BUILD_DIR)/py25-hellanzb_*_$(TARGET_ARCH).ipk
 	cd $(HELLANZB_BUILD_DIR)/2.5; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
-	    --root=$(PY25-HELLANZB_IPK_DIR) --prefix=/opt 
-	install -d $(PY25-HELLANZB_IPK_DIR)/opt/etc/
-	install -m 644 $(HELLANZB_SOURCE_DIR)/hellanzb.conf $(PY25-HELLANZB_IPK_DIR)/opt/etc/hellanzb.conf
-	install -d $(PY25-HELLANZB_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(HELLANZB_SOURCE_DIR)/rc.hellanzb $(PY25-HELLANZB_IPK_DIR)/opt/etc/init.d/S71hellanzb
+	    --root=$(PY25-HELLANZB_IPK_DIR) --prefix=$(OPTWARE_PREFIX)
+	install -d $(PY25-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(HELLANZB_SOURCE_DIR)/hellanzb.conf $(PY25-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/hellanzb.conf
+	install -d $(PY25-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(HELLANZB_SOURCE_DIR)/rc.hellanzb $(PY25-HELLANZB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S71hellanzb
 	$(MAKE) $(PY25-HELLANZB_IPK_DIR)/CONTROL/control
 	install -m 644 $(HELLANZB_SOURCE_DIR)/postinst $(PY25-HELLANZB_IPK_DIR)/CONTROL/postinst
 	echo $(HELLANZB_CONFFILES) | sed -e 's/ /\n/g' > $(PY25-HELLANZB_IPK_DIR)/CONTROL/conffiles

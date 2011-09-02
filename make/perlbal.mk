@@ -43,9 +43,9 @@ $(PERLBAL_BUILD_DIR)/.configured: $(DL_DIR)/$(PERLBAL_SOURCE) $(PERLBAL_PATCHES)
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		PERL5LIB="$(STAGING_LIB_DIR)/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
-	sed -i -e 's|/etc/|/opt/etc/|' $(@D)/perlbal $(@D)/lib/Perlbal/Plugin/Include.pm
+	sed -i -e 's|/etc/|$(OPTWARE_PREFIX)etc/|' $(@D)/perlbal $(@D)/lib/Perlbal/Plugin/Include.pm
 	touch $@
 
 perlbal-unpack: $(PERLBAL_BUILD_DIR)/.configured
@@ -61,7 +61,7 @@ $(PERLBAL_BUILD_DIR)/.built: $(PERLBAL_BUILD_DIR)/.configured
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		$(PERL_INC) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perlbal: $(PERLBAL_BUILD_DIR)/.built
@@ -91,13 +91,13 @@ $(PERLBAL_IPK_DIR)/CONTROL/control:
 $(PERLBAL_IPK): $(PERLBAL_BUILD_DIR)/.built
 	rm -rf $(PERLBAL_IPK_DIR) $(BUILD_DIR)/perlbal_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERLBAL_BUILD_DIR) DESTDIR=$(PERLBAL_IPK_DIR) install
-	find $(PERLBAL_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERLBAL_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERLBAL_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERLBAL_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERLBAL_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERLBAL_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERLBAL_IPK_DIR)/CONTROL/control
 	echo $(PERLBAL_CONFFILES) | sed -e 's/ /\n/g' > $(PERLBAL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERLBAL_IPK_DIR)

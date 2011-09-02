@@ -40,7 +40,7 @@ CACAO_IPK_VERSION=1
 
 #
 # CACAO_CONFFILES should be a list of user-editable files
-#CACAO_CONFFILES=/opt/etc/cacao.conf /opt/etc/init.d/SXXcacao
+#CACAO_CONFFILES=$(OPTWARE_PREFIX)etc/cacao.conf $(OPTWARE_PREFIX)etc/init.d/SXXcacao
 
 #
 # CACAO_PATCHES should list any patches, in the the order in
@@ -139,12 +139,12 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(CACAO_TARGET_NAME) \
 		--target=$(CACAO_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(CACAO_CONFIG_ARGS) \
 		--with-build-java-runtime-library-classes=$(STAGING_PREFIX)/share/classpath/glibj.zip \
 		--with-jni_md_h=$(STAGING_INCLUDE_DIR) \
 		--with-jni_h=$(STAGING_INCLUDE_DIR) \
-		--with-java-runtime-library-prefix=/opt \
+		--with-java-runtime-library-prefix=$(OPTWARE_PREFIX)\
 		--with-cacaoh=$(CACAO_HOST_BUILD_DIR)/src/cacaoh/cacaoh \
 		--disable-nls \
 		--disable-static \
@@ -164,7 +164,7 @@ $(CACAO_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(CACAO_SOURCE) make/
 	(cd $(@D); \
 		JAVAC="javac -bootclasspath $(STAGING_PREFIX)/share/classpath/glibj.zip" \
 		./configure \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-java-runtime-library-prefix=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
@@ -220,12 +220,12 @@ $(CACAO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CACAO_IPK_DIR)/opt/sbin or $(CACAO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CACAO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CACAO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CACAO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CACAO_IPK_DIR)/opt/etc/cacao/...
-# Documentation files should be installed in $(CACAO_IPK_DIR)/opt/doc/cacao/...
-# Daemon startup scripts should be installed in $(CACAO_IPK_DIR)/opt/etc/init.d/S??cacao
+# Libraries and include files should be installed into $(CACAO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CACAO_IPK_DIR)$(OPTWARE_PREFIX)etc/cacao/...
+# Documentation files should be installed in $(CACAO_IPK_DIR)$(OPTWARE_PREFIX)doc/cacao/...
+# Daemon startup scripts should be installed in $(CACAO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??cacao
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -40,7 +40,7 @@ SPAWN-FCGI_IPK_VERSION=1
 
 #
 # SPAWN-FCGI_CONFFILES should be a list of user-editable files
-#SPAWN-FCGI_CONFFILES=/opt/etc/spawn-fcgi.conf /opt/etc/init.d/SXXspawn-fcgi
+#SPAWN-FCGI_CONFFILES=$(OPTWARE_PREFIX)etc/spawn-fcgi.conf $(OPTWARE_PREFIX)etc/init.d/SXXspawn-fcgi
 
 #
 # SPAWN-FCGI_PATCHES should list any patches, in the the order in
@@ -124,7 +124,7 @@ $(SPAWN-FCGI_BUILD_DIR)/.configured: $(DL_DIR)/$(SPAWN-FCGI_SOURCE) $(SPAWN-FCGI
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -178,23 +178,23 @@ $(SPAWN-FCGI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SPAWN-FCGI_IPK_DIR)/opt/sbin or $(SPAWN-FCGI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SPAWN-FCGI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SPAWN-FCGI_IPK_DIR)/opt/etc/spawn-fcgi/...
-# Documentation files should be installed in $(SPAWN-FCGI_IPK_DIR)/opt/doc/spawn-fcgi/...
-# Daemon startup scripts should be installed in $(SPAWN-FCGI_IPK_DIR)/opt/etc/init.d/S??spawn-fcgi
+# Libraries and include files should be installed into $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/spawn-fcgi/...
+# Documentation files should be installed in $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)doc/spawn-fcgi/...
+# Daemon startup scripts should be installed in $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??spawn-fcgi
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SPAWN-FCGI_IPK): $(SPAWN-FCGI_BUILD_DIR)/.built
 	rm -rf $(SPAWN-FCGI_IPK_DIR) $(BUILD_DIR)/spawn-fcgi_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SPAWN-FCGI_BUILD_DIR) DESTDIR=$(SPAWN-FCGI_IPK_DIR) install-strip
-#	install -d $(SPAWN-FCGI_IPK_DIR)/opt/etc/
-#	install -m 644 $(SPAWN-FCGI_SOURCE_DIR)/spawn-fcgi.conf $(SPAWN-FCGI_IPK_DIR)/opt/etc/spawn-fcgi.conf
-#	install -d $(SPAWN-FCGI_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(SPAWN-FCGI_SOURCE_DIR)/rc.spawn-fcgi $(SPAWN-FCGI_IPK_DIR)/opt/etc/init.d/SXXspawn-fcgi
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SPAWN-FCGI_IPK_DIR)/opt/etc/init.d/SXXspawn-fcgi
+#	install -d $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(SPAWN-FCGI_SOURCE_DIR)/spawn-fcgi.conf $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/spawn-fcgi.conf
+#	install -d $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(SPAWN-FCGI_SOURCE_DIR)/rc.spawn-fcgi $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXspawn-fcgi
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SPAWN-FCGI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXspawn-fcgi
 	$(MAKE) $(SPAWN-FCGI_IPK_DIR)/CONTROL/control
 #	install -m 755 $(SPAWN-FCGI_SOURCE_DIR)/postinst $(SPAWN-FCGI_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(SPAWN-FCGI_IPK_DIR)/CONTROL/postinst

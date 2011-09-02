@@ -40,9 +40,9 @@ $(PERLCONSOLE_BUILD_DIR)/.configured: $(DL_DIR)/$(PERLCONSOLE_SOURCE) $(PERLCONS
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $@
 
@@ -51,7 +51,7 @@ perlconsole-unpack: $(PERLCONSOLE_BUILD_DIR)/.configured
 $(PERLCONSOLE_BUILD_DIR)/.built: $(PERLCONSOLE_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $@
 
 perlconsole: $(PERLCONSOLE_BUILD_DIR)/.built
@@ -81,13 +81,13 @@ $(PERLCONSOLE_IPK_DIR)/CONTROL/control:
 $(PERLCONSOLE_IPK): $(PERLCONSOLE_BUILD_DIR)/.built
 	rm -rf $(PERLCONSOLE_IPK_DIR) $(BUILD_DIR)/perlconsole_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERLCONSOLE_BUILD_DIR) DESTDIR=$(PERLCONSOLE_IPK_DIR) install
-	find $(PERLCONSOLE_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERLCONSOLE_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERLCONSOLE_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERLCONSOLE_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERLCONSOLE_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERLCONSOLE_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERLCONSOLE_IPK_DIR)/CONTROL/control
 	echo $(PERLCONSOLE_CONFFILES) | sed -e 's/ /\n/g' > $(PERLCONSOLE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERLCONSOLE_IPK_DIR)

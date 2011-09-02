@@ -70,9 +70,9 @@ LIGHTTPD_IPK_VERSION=1
 #
 # LIGHTTPD_CONFFILES should be a list of user-editable files
 LIGHTTPD_CONFFILES=\
-	/opt/etc/lighttpd/lighttpd.conf \
-	/opt/etc/lighttpd/conf.d/01-default.conf \
-	/opt/etc/init.d/S80lighttpd
+	$(OPTWARE_PREFIX)etc/lighttpd/lighttpd.conf \
+	$(OPTWARE_PREFIX)etc/lighttpd/conf.d/01-default.conf \
+	$(OPTWARE_PREFIX)etc/init.d/S80lighttpd
 
 #
 # LIGHTTPD_PATCHES should list any patches, in the the order in
@@ -190,8 +190,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--libdir=/opt/lib/lighttpd \
+		--prefix=$(OPTWARE_PREFIX)\
+		--libdir=$(OPTWARE_PREFIX)lib/lighttpd \
 		--with-bzip2 \
 		--with-ldap \
 		--with-lua \
@@ -253,12 +253,12 @@ $(LIGHTTPD_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIGHTTPD_IPK_DIR)/opt/sbin or $(LIGHTTPD_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIGHTTPD_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIGHTTPD_IPK_DIR)/opt/etc/lighttpd/...
-# Documentation files should be installed in $(LIGHTTPD_IPK_DIR)/opt/doc/lighttpd/...
-# Daemon startup scripts should be installed in $(LIGHTTPD_IPK_DIR)/opt/etc/init.d/S??lighttpd
+# Libraries and include files should be installed into $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/...
+# Documentation files should be installed in $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)doc/lighttpd/...
+# Daemon startup scripts should be installed in $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??lighttpd
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -266,20 +266,20 @@ $(LIGHTTPD_IPK): $(LIGHTTPD_BUILD_DIR)/.built
 	rm -rf $(LIGHTTPD_IPK_DIR) $(BUILD_DIR)/lighttpd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIGHTTPD_BUILD_DIR) \
 	    DESTDIR=$(LIGHTTPD_IPK_DIR) program_transform_name="" install-strip
-	rm -f $(LIGHTTPD_IPK_DIR)/opt/bin/spawn-fcgi
-	rm -f $(LIGHTTPD_IPK_DIR)/opt/share/man/man1/spawn-fcgi.1
-	rm -f $(LIGHTTPD_IPK_DIR)/opt/lib/lighttpd/*.la
-	install -d $(LIGHTTPD_IPK_DIR)/opt/share/doc/lighttpd
-	install -d $(LIGHTTPD_IPK_DIR)/opt/share/www/lighttpd
-	install -d $(LIGHTTPD_IPK_DIR)/opt/var/log/lighttpd
-	rsync -av $(LIGHTTPD_BUILD_DIR)/doc/* $(LIGHTTPD_IPK_DIR)/opt/share/doc/lighttpd/
-	install -m 644 $(LIGHTTPD_SOURCE_DIR)/index.html $(LIGHTTPD_IPK_DIR)/opt/share/www/lighttpd/
-	install -d $(LIGHTTPD_IPK_DIR)/opt/etc/lighttpd
-	install -m 644 $(LIGHTTPD_SOURCE_DIR)/lighttpd.conf $(LIGHTTPD_IPK_DIR)/opt/etc/lighttpd/
-	install -d $(LIGHTTPD_IPK_DIR)/opt/etc/lighttpd/conf.d
-	echo > $(LIGHTTPD_IPK_DIR)/opt/etc/lighttpd/conf.d/01-default.conf
-	install -d $(LIGHTTPD_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(LIGHTTPD_SOURCE_DIR)/rc.lighttpd $(LIGHTTPD_IPK_DIR)/opt/etc/init.d/S80lighttpd
+	rm -f $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)bin/spawn-fcgi
+	rm -f $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/spawn-fcgi.1
+	rm -f $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)lib/lighttpd/*.la
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/lighttpd
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/www/lighttpd
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)var/log/lighttpd
+	rsync -av $(LIGHTTPD_BUILD_DIR)/doc/* $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/lighttpd/
+	install -m 644 $(LIGHTTPD_SOURCE_DIR)/index.html $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)share/www/lighttpd/
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd
+	install -m 644 $(LIGHTTPD_SOURCE_DIR)/lighttpd.conf $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/conf.d
+	echo > $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/lighttpd/conf.d/01-default.conf
+	install -d $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(LIGHTTPD_SOURCE_DIR)/rc.lighttpd $(LIGHTTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80lighttpd
 	$(MAKE) $(LIGHTTPD_IPK_DIR)/CONTROL/control
 	install -m 755 $(LIGHTTPD_SOURCE_DIR)/postinst $(LIGHTTPD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(LIGHTTPD_SOURCE_DIR)/prerm $(LIGHTTPD_IPK_DIR)/CONTROL/prerm

@@ -148,7 +148,7 @@ $(INFERNO_BUILD_DIR)/.configured: $(INFERNO_HOST_BUILD_DIR)/.built $(INFERNO_PAT
 	fi
 	cp -p $(INFERNO_SOURCE_DIR)/audio-oss.c $(@D)/emu/Linux/
 	sed -i.bak \
-		-e '/CFLAGS=.*-DROOT/s|-DROOT=\x22\x27$$ROOT\x27\x22|-DROOT=\x22\x27/opt/share/inferno\x27\x22|' \
+		-e '/CFLAGS=.*-DROOT/s|-DROOT=\x22\x27$$ROOT\x27\x22|-DROOT=\x22\x27$(OPTWARE_PREFIX)share/inferno\x27\x22|' \
 		$(@D)/emu/Linux/mkfile
 	sed -i.bak \
 		-e '/^ROOT=/s|=.*|=$(@D)|' \
@@ -254,25 +254,25 @@ $(INFERNO_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(INFERNO_IPK_DIR)/opt/sbin or $(INFERNO_IPK_DIR)/opt/bin
+# Binaries should be installed into $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(INFERNO_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(INFERNO_IPK_DIR)/opt/etc/inferno/...
-# Documentation files should be installed in $(INFERNO_IPK_DIR)/opt/doc/inferno/...
-# Daemon startup scripts should be installed in $(INFERNO_IPK_DIR)/opt/etc/init.d/S??inferno
+# Libraries and include files should be installed into $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)etc/inferno/...
+# Documentation files should be installed in $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)doc/inferno/...
+# Daemon startup scripts should be installed in $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??inferno
 #
 # You may need to patch your application to make it use these locations.
 #
 $(INFERNO-SMALL_IPK) $(INFERNO-UTILS_IPK): $(INFERNO_BUILD_DIR)/.built
 	rm -rf $(BUILD_DIR)/inferno*_*_$(TARGET_ARCH).ipk $(BUILD_DIR)/inferno*-ipk
 	# inferno
-	install -d $(INFERNO_IPK_DIR)/opt/bin $(INFERNO_IPK_DIR)/opt/share/inferno
-	install $(<D)/Linux/$(INFERNO_ARCH)/bin/* $(INFERNO_IPK_DIR)/opt/bin
-	$(STRIP_COMMAND) $(INFERNO_IPK_DIR)/opt/bin/*
-	rsync -av $(<D)/dis $(INFERNO_IPK_DIR)/opt/share/inferno/
+	install -d $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)share/inferno
+	install $(<D)/Linux/$(INFERNO_ARCH)/bin/* $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin
+	$(STRIP_COMMAND) $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	rsync -av $(<D)/dis $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)share/inferno/
 	# inferno-small
-	install -d $(INFERNO-SMALL_IPK_DIR)/opt/bin
-	mv $(INFERNO_IPK_DIR)/opt/bin/emu-g $(INFERNO-SMALL_IPK_DIR)/opt/bin/
+	install -d $(INFERNO-SMALL_IPK_DIR)$(OPTWARE_PREFIX)bin
+	mv $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin/emu-g $(INFERNO-SMALL_IPK_DIR)$(OPTWARE_PREFIX)bin/
 	for f in \
 		dis/lib/arg.dis \
 		dis/lib/attrdb.dis \
@@ -372,15 +372,15 @@ $(INFERNO-SMALL_IPK) $(INFERNO-UTILS_IPK): $(INFERNO_BUILD_DIR)/.built
 		; \
 	do \
 		d=`dirname $$f`; \
-		install -d $(INFERNO-SMALL_IPK_DIR)/opt/share/inferno/$$d; \
-		mv $(INFERNO_IPK_DIR)/opt/share/inferno/$$f \
-		   $(INFERNO-SMALL_IPK_DIR)/opt/share/inferno/$$d; \
+		install -d $(INFERNO-SMALL_IPK_DIR)$(OPTWARE_PREFIX)share/inferno/$$d; \
+		mv $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)share/inferno/$$f \
+		   $(INFERNO-SMALL_IPK_DIR)$(OPTWARE_PREFIX)share/inferno/$$d; \
 	done
 	$(MAKE) $(INFERNO-SMALL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INFERNO-SMALL_IPK_DIR)
 	# inferno-utils
-	install -d $(INFERNO-UTILS_IPK_DIR)/opt/share/inferno
-	mv $(INFERNO_IPK_DIR)/opt/bin $(INFERNO-UTILS_IPK_DIR)/opt/share/inferno
+	install -d $(INFERNO-UTILS_IPK_DIR)$(OPTWARE_PREFIX)share/inferno
+	mv $(INFERNO_IPK_DIR)$(OPTWARE_PREFIX)bin $(INFERNO-UTILS_IPK_DIR)$(OPTWARE_PREFIX)share/inferno
 	$(MAKE) $(INFERNO-UTILS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INFERNO-UTILS_IPK_DIR)
 #	# rest in inferno

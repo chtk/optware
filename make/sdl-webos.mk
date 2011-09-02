@@ -123,7 +123,7 @@ $(SDL-WEBOS_BUILD_DIR)/.configured: $(DL_DIR)/$(SDL-WEBOS_SOURCE) $(SDL-WEBOS_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-ipod \
 		--enable-webos \
 		--enable-video-opengles \
@@ -211,9 +211,9 @@ $(SDL-WEBOS_IPK): $(SDL-WEBOS_BUILD_DIR)/.built
 	$(MAKE) $(SDL-WEBOS_DEV_IPK_DIR)/CONTROL/control
 	$(MAKE) $(SDL-WEBOS_IPK_DIR)/CONTROL/control
 	mkdir -p $(SDL-WEBOS_IPK_DIR)/opt
-	mv $(SDL-WEBOS_DEV_IPK_DIR)/opt/lib $(SDL-WEBOS_IPK_DIR)/opt
-	rm -f $(SDL-WEBOS_IPK_DIR)/opt/lib/libSDL.la
-	-$(STRIP_COMMAND) $(SDL-WEBOS_IPK_DIR)/opt/lib/*.so.*
+	mv $(SDL-WEBOS_DEV_IPK_DIR)$(OPTWARE_PREFIX)lib $(SDL-WEBOS_IPK_DIR)/opt
+	rm -f $(SDL-WEBOS_IPK_DIR)$(OPTWARE_PREFIX)lib/libSDL.la
+	-$(STRIP_COMMAND) $(SDL-WEBOS_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SDL-WEBOS_DEV_IPK_DIR)
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SDL-WEBOS_IPK_DIR)
 

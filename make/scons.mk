@@ -46,7 +46,7 @@ SCONS_IPK_VERSION=1
 
 #
 # SCONS_CONFFILES should be a list of user-editable files
-#SCONS_CONFFILES=/opt/etc/scons.conf /opt/etc/init.d/SXXscons
+#SCONS_CONFFILES=$(OPTWARE_PREFIX)etc/scons.conf $(OPTWARE_PREFIX)etc/init.d/SXXscons
 
 #
 # SCONS_PATCHES should list any patches, in the the order in
@@ -129,9 +129,9 @@ $(SCONS_BUILD_DIR)/.configured: $(DL_DIR)/$(SCONS_SOURCE) $(SCONS_PATCHES) make/
 		echo "[build_ext]"; \
 		echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=/opt/bin/python2.5" \
+		echo "executable=$(OPTWARE_PREFIX)bin/python2.5" \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -185,7 +185,7 @@ $(SCONS_HOST_BUILD_DIR)/.staged: host/.configured make/scons.mk
 		echo "[build_ext]"; \
 		echo "include-dirs=$(HOST_STAGING_INCLUDE_DIR):$(HOST_STAGING_INCLUDE_DIR)/python2.5"; \
 		echo "library-dirs=$(HOST_STAGING_LIB_DIR)"; \
-		echo "rpath=/opt/lib"; \
+		echo "rpath=$(OPTWARE_PREFIX)lib"; \
 	    ) >> setup.cfg; \
 	)
 	(cd $(@D); \
@@ -218,12 +218,12 @@ $(SCONS_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SCONS_IPK_DIR)/opt/sbin or $(SCONS_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SCONS_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SCONS_IPK_DIR)/opt/etc/scons/...
-# Documentation files should be installed in $(SCONS_IPK_DIR)/opt/doc/scons/...
-# Daemon startup scripts should be installed in $(SCONS_IPK_DIR)/opt/etc/init.d/S??scons
+# Libraries and include files should be installed into $(SCONS_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)etc/scons/...
+# Documentation files should be installed in $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)doc/scons/...
+# Daemon startup scripts should be installed in $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??scons
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -234,7 +234,7 @@ $(SCONS_IPK): $(SCONS_BUILD_DIR)/.built
 		$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
 			--root=$(SCONS_IPK_DIR) --prefix=/opt; \
         )
-	install -d $(SCONS_IPK_DIR)/opt/etc/
+	install -d $(SCONS_IPK_DIR)$(OPTWARE_PREFIX)etc/
 	$(MAKE) $(SCONS_IPK_DIR)/CONTROL/control
 	echo $(SCONS_CONFFILES) | sed -e 's/ /\n/g' > $(SCONS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SCONS_IPK_DIR)

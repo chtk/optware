@@ -42,7 +42,7 @@ LITTLESMALLTALK_IPK_VERSION=1
 
 #
 # LITTLESMALLTALK_CONFFILES should be a list of user-editable files
-LITTLESMALLTALK_CONFFILES=/opt/share/littlesmalltalk/LittleSmalltalk.image
+LITTLESMALLTALK_CONFFILES=$(OPTWARE_PREFIX)share/littlesmalltalk/LittleSmalltalk.image
 
 #
 # LITTLESMALLTALK_PATCHES should list any patches, in the the order in
@@ -166,7 +166,7 @@ $(LITTLESMALLTALK_BUILD_DIR)/.built: $(LITTLESMALLTALK_BUILD_DIR)/.configured
 		UNAME_O=Linux \
 		UNAME_M=$(TARGET_ARCH) \
 		CC=$(TARGET_CC) \
-		CPPFLAGS='-DNETWORK_BYTE_ORDER -DDefaultImageFile=\"/opt/share/littlesmalltalk/LittleSmalltalk.image\"' \
+		CPPFLAGS='-DNETWORK_BYTE_ORDER -DDefaultImageFile=\"$(OPTWARE_PREFIX)share/littlesmalltalk/LittleSmalltalk.image\"' \
 		LDFLAGS_EXTRA="$(STAGING_LDFLAGS) $(LITTLESMALLTALK_LDFLAGS)" \
 		;
 	touch $@
@@ -208,27 +208,27 @@ $(LITTLESMALLTALK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LITTLESMALLTALK_IPK_DIR)/opt/sbin or $(LITTLESMALLTALK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LITTLESMALLTALK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LITTLESMALLTALK_IPK_DIR)/opt/etc/littlesmalltalk/...
-# Documentation files should be installed in $(LITTLESMALLTALK_IPK_DIR)/opt/doc/littlesmalltalk/...
-# Daemon startup scripts should be installed in $(LITTLESMALLTALK_IPK_DIR)/opt/etc/init.d/S??littlesmalltalk
+# Libraries and include files should be installed into $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)etc/littlesmalltalk/...
+# Documentation files should be installed in $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)doc/littlesmalltalk/...
+# Daemon startup scripts should be installed in $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??littlesmalltalk
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LITTLESMALLTALK_IPK): $(LITTLESMALLTALK_BUILD_DIR)/.built
 	rm -rf $(LITTLESMALLTALK_IPK_DIR) $(BUILD_DIR)/littlesmalltalk_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(LITTLESMALLTALK_BUILD_DIR) DESTDIR=$(LITTLESMALLTALK_IPK_DIR) install-strip
-	install -d $(LITTLESMALLTALK_IPK_DIR)/opt/bin
-	install -m 755 $(LITTLESMALLTALK_BUILD_DIR)/bin/st $(LITTLESMALLTALK_IPK_DIR)/opt/bin/lst5
-	$(STRIP_COMMAND) $(LITTLESMALLTALK_IPK_DIR)/opt/bin/lst5
-	install -d $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk
-	install -m 777 $(LITTLESMALLTALK_IMAGE) $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk/LittleSmalltalk.image
-	install -m 444 $(LITTLESMALLTALK_IMAGE) $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk/LittleSmalltalk-dist.image
-	install -m 444 $(LITTLESMALLTALK_BUILD_DIR)/README $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk/
-	install -m 444 $(LITTLESMALLTALK_BUILD_DIR)/LICENSE $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk/
-	cp -rp $(LITTLESMALLTALK_BUILD_DIR)/examples/ $(LITTLESMALLTALK_IPK_DIR)/opt/share/littlesmalltalk/
+	install -d $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(LITTLESMALLTALK_BUILD_DIR)/bin/st $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)bin/lst5
+	$(STRIP_COMMAND) $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)bin/lst5
+	install -d $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk
+	install -m 777 $(LITTLESMALLTALK_IMAGE) $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk/LittleSmalltalk.image
+	install -m 444 $(LITTLESMALLTALK_IMAGE) $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk/LittleSmalltalk-dist.image
+	install -m 444 $(LITTLESMALLTALK_BUILD_DIR)/README $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk/
+	install -m 444 $(LITTLESMALLTALK_BUILD_DIR)/LICENSE $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk/
+	cp -rp $(LITTLESMALLTALK_BUILD_DIR)/examples/ $(LITTLESMALLTALK_IPK_DIR)$(OPTWARE_PREFIX)share/littlesmalltalk/
 	$(MAKE) $(LITTLESMALLTALK_IPK_DIR)/CONTROL/control
 	echo $(LITTLESMALLTALK_CONFFILES) | sed -e 's/ /\n/g' > $(LITTLESMALLTALK_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LITTLESMALLTALK_IPK_DIR)

@@ -43,7 +43,7 @@ AICCU_IPK_VERSION=2
 
 #
 # AICCU_CONFFILES should be a list of user-editable files
-AICCU_CONFFILES=/opt/etc/aiccu.conf /opt/etc/init.d/S50aiccu
+AICCU_CONFFILES=$(OPTWARE_PREFIX)etc/aiccu.conf $(OPTWARE_PREFIX)etc/init.d/S50aiccu
 
 #
 # AICCU_PATCHES should list any patches, in the the order in
@@ -131,7 +131,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -150,10 +150,10 @@ $(AICCU_BUILD_DIR)/.built: $(AICCU_BUILD_DIR)/.configured
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(AICCU_CPPFLAGS)" \
 		EXTRA_LDFLAGS="$(STAGING_LDFLAGS) $(AICCU_LDFLAGS)" \
 		OS_NAME=Linux \
-		dirsbin=/opt/sbin/ \
-		dirbin=/opt/bin/ \
-		diretc=/opt/etc/ \
-		dirdoc=/opt/share/doc/aiccu/ \
+		dirsbin=$(OPTWARE_PREFIX)sbin/ \
+		dirbin=$(OPTWARE_PREFIX)bin/ \
+		diretc=$(OPTWARE_PREFIX)etc/ \
+		dirdoc=$(OPTWARE_PREFIX)share/doc/aiccu/ \
 		$(AICCU_WITH_GNUTLS) \
 		STRIP="$(STRIP_COMMAND)" \
 		;
@@ -196,27 +196,27 @@ $(AICCU_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(AICCU_IPK_DIR)/opt/sbin or $(AICCU_IPK_DIR)/opt/bin
+# Binaries should be installed into $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(AICCU_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(AICCU_IPK_DIR)/opt/etc/aiccu/...
-# Documentation files should be installed in $(AICCU_IPK_DIR)/opt/doc/aiccu/...
-# Daemon startup scripts should be installed in $(AICCU_IPK_DIR)/opt/etc/init.d/S??aiccu
+# Libraries and include files should be installed into $(AICCU_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)etc/aiccu/...
+# Documentation files should be installed in $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)doc/aiccu/...
+# Daemon startup scripts should be installed in $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??aiccu
 #
 # You may need to patch your application to make it use these locations.
 #
 $(AICCU_IPK): $(AICCU_BUILD_DIR)/.built
 	rm -rf $(AICCU_IPK_DIR) $(BUILD_DIR)/aiccu_*_$(TARGET_ARCH).ipk
-	install -d $(AICCU_IPK_DIR)/opt/etc
+	install -d $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)etc
 	$(MAKE) -C $(AICCU_BUILD_DIR) install \
 		DESTDIR=$(AICCU_IPK_DIR) \
-		dirsbin=/opt/sbin/ \
-		dirbin=/opt/bin/ \
-		diretc=/opt/etc/ \
-		dirdoc=/opt/share/doc/aiccu/ \
+		dirsbin=$(OPTWARE_PREFIX)sbin/ \
+		dirbin=$(OPTWARE_PREFIX)bin/ \
+		diretc=$(OPTWARE_PREFIX)etc/ \
+		dirdoc=$(OPTWARE_PREFIX)share/doc/aiccu/ \
 		;
-	rm -f $(AICCU_IPK_DIR)/opt/etc/init.d/aiccu
-	install -m 755 $(AICCU_SOURCE_DIR)/rc.aiccu $(AICCU_IPK_DIR)/opt/etc/init.d/S50aiccu
+	rm -f $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/aiccu
+	install -m 755 $(AICCU_SOURCE_DIR)/rc.aiccu $(AICCU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S50aiccu
 	$(MAKE) $(AICCU_IPK_DIR)/CONTROL/control
 	echo $(AICCU_CONFFILES) | sed -e 's/ /\n/g' > $(AICCU_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(AICCU_IPK_DIR)

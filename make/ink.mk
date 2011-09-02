@@ -40,7 +40,7 @@ INK_IPK_VERSION=1
 
 #
 # INK_CONFFILES should be a list of user-editable files
-#INK_CONFFILES=/opt/etc/ink.conf /opt/etc/init.d/SXXink
+#INK_CONFFILES=$(OPTWARE_PREFIX)etc/ink.conf $(OPTWARE_PREFIX)etc/init.d/SXXink
 
 #
 # INK_PATCHES should list any patches, in the the order in
@@ -122,7 +122,7 @@ $(INK_BUILD_DIR)/.configured: $(DL_DIR)/$(INK_SOURCE) $(INK_PATCHES) make/ink.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 	)
@@ -137,7 +137,7 @@ ink-unpack: $(INK_BUILD_DIR)/.configured
 $(INK_BUILD_DIR)/.built: $(INK_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(INK_CPPFLAGS)" \
 		CFLAGS=-Wall \
@@ -182,21 +182,21 @@ $(INK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(INK_IPK_DIR)/opt/sbin or $(INK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(INK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(INK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(INK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(INK_IPK_DIR)/opt/etc/ink/...
-# Documentation files should be installed in $(INK_IPK_DIR)/opt/doc/ink/...
-# Daemon startup scripts should be installed in $(INK_IPK_DIR)/opt/etc/init.d/S??ink
+# Libraries and include files should be installed into $(INK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(INK_IPK_DIR)$(OPTWARE_PREFIX)etc/ink/...
+# Documentation files should be installed in $(INK_IPK_DIR)$(OPTWARE_PREFIX)doc/ink/...
+# Daemon startup scripts should be installed in $(INK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ink
 #
 # You may need to patch your application to make it use these locations.
 #
 $(INK_IPK): $(INK_BUILD_DIR)/.built
 	rm -rf $(INK_IPK_DIR) $(BUILD_DIR)/ink_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(INK_BUILD_DIR) install DESTDIR=$(INK_IPK_DIR)/opt
-	install -d $(INK_IPK_DIR)/opt/bin
-	install -m 755 $(INK_BUILD_DIR)/ink $(INK_IPK_DIR)/opt/bin/
-	$(STRIP_COMMAND) $(INK_IPK_DIR)/opt/bin/ink
+	install -d $(INK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -m 755 $(INK_BUILD_DIR)/ink $(INK_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	$(STRIP_COMMAND) $(INK_IPK_DIR)$(OPTWARE_PREFIX)bin/ink
 	$(MAKE) $(INK_IPK_DIR)/CONTROL/control
 	echo $(INK_CONFFILES) | sed -e 's/ /\n/g' > $(INK_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INK_IPK_DIR)

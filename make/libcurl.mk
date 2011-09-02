@@ -45,7 +45,7 @@ LIBCURL_IPK_VERSION=1
 
 #
 # LIBCURL_CONFFILES should be a list of user-editable files
-LIBCURL_CONFFILES=#/opt/etc/libcurl.conf /opt/etc/init.d/SXXlibcurl
+LIBCURL_CONFFILES=#$(OPTWARE_PREFIX)etc/libcurl.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibcurl
 
 #
 # LIBCURL_PATCHES should list any patches, in the the order in
@@ -128,7 +128,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-thread \
 		--enable-shared \
 		--disable-static \
@@ -156,7 +156,7 @@ endif
 		--without-krb4 \
 		--without-libidn \
 		--with-zlib="$(STAGING_DIR)" \
-		--with-ca-bundle=/opt/share/curl/curl-ca-bundle.crt \
+		--with-ca-bundle=$(OPTWARE_PREFIX)share/curl/curl-ca-bundle.crt \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
@@ -185,7 +185,7 @@ $(LIBCURL_BUILD_DIR)/.staged: $(LIBCURL_BUILD_DIR)/.built
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_PREFIX)/bin/curl-config
 	sed -i -e 's|-I$${prefix}/include|-I$(STAGING_INCLUDE_DIR)|' $(STAGING_PREFIX)/bin/curl-config
 	install -d $(STAGING_DIR)/bin
-	cp $(STAGING_DIR)/opt/bin/curl-config $(STAGING_DIR)/bin/curl-config
+	cp $(STAGING_DIR)$(OPTWARE_PREFIX)bin/curl-config $(STAGING_DIR)/bin/curl-config
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libcurl.pc
 	rm -f $(STAGING_LIB_DIR)/libcurl.la
 	touch $@
@@ -227,12 +227,12 @@ $(LIBCURL-DEV_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIBCURL_IPK_DIR)/opt/sbin or $(LIBCURL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIBCURL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIBCURL_IPK_DIR)/opt/etc/libcurl/...
-# Documentation files should be installed in $(LIBCURL_IPK_DIR)/opt/doc/libcurl/...
-# Daemon startup scripts should be installed in $(LIBCURL_IPK_DIR)/opt/etc/init.d/S??libcurl
+# Libraries and include files should be installed into $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)etc/libcurl/...
+# Documentation files should be installed in $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)doc/libcurl/...
+# Daemon startup scripts should be installed in $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??libcurl
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -240,15 +240,15 @@ $(LIBCURL_IPK) $(LIBCURL-DEV_IPK): $(LIBCURL_BUILD_DIR)/.built
 	rm -rf $(LIBCURL_IPK_DIR) $(BUILD_DIR)/libcurl_*_$(TARGET_ARCH).ipk
 	rm -rf $(LIBCURL-DEV_IPK_DIR) $(BUILD_DIR)/libcurl-dev_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBCURL_BUILD_DIR) DESTDIR=$(LIBCURL_IPK_DIR) install-strip
-	rm -f $(LIBCURL_IPK_DIR)/opt/lib/libcurl.a $(LIBCURL_IPK_DIR)/opt/lib/libcurl.la
-	install -d $(LIBCURL_IPK_DIR)/opt/share/curl
-	install $(LIBCURL_BUILD_DIR)/lib/ca-bundle.crt $(LIBCURL_IPK_DIR)/opt/share/curl/curl-ca-bundle.crt
+	rm -f $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)lib/libcurl.a $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)lib/libcurl.la
+	install -d $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)share/curl
+	install $(LIBCURL_BUILD_DIR)/lib/ca-bundle.crt $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)share/curl/curl-ca-bundle.crt
 	$(MAKE) $(LIBCURL_IPK_DIR)/CONTROL/control
 	echo $(LIBCURL_CONFFILES) | sed -e 's/ /\n/g' > $(LIBCURL_IPK_DIR)/CONTROL/conffiles
-	install -d $(LIBCURL-DEV_IPK_DIR)/opt/share/man $(LIBCURL-DEV_IPK_DIR)/opt/lib
-	mv $(LIBCURL_IPK_DIR)/opt/share/man/man3 $(LIBCURL-DEV_IPK_DIR)/opt/share/man/
-	mv $(LIBCURL_IPK_DIR)/opt/include $(LIBCURL-DEV_IPK_DIR)/opt/
-	mv $(LIBCURL_IPK_DIR)/opt/lib/pkgconfig $(LIBCURL-DEV_IPK_DIR)/opt/lib/
+	install -d $(LIBCURL-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man $(LIBCURL-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
+	mv $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)share/man/man3 $(LIBCURL-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man/
+	mv $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)include $(LIBCURL-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(LIBCURL_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig $(LIBCURL-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBCURL_IPK_DIR)
 	$(MAKE) $(LIBCURL-DEV_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBCURL-DEV_IPK_DIR)

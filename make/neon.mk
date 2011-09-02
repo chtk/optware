@@ -117,14 +117,14 @@ $(NEON_BUILD_DIR)/.configured: $(DL_DIR)/$(NEON_SOURCE) $(NEON_PATCHES) make/neo
 		LDFLAGS="$(STAGING_LDFLAGS) $(NEON_LDFLAGS)" \
 		PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
 		PKG_CONFIG_LIBDIR="$(STAGING_LIB_DIR)/pkgconfig" \
-		XML2_CONFIG=$(STAGING_DIR)/opt/bin/xml2-config \
+		XML2_CONFIG=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/xml2-config \
 		ac_cv_path_KRB5_CONFIG=none \
 		ne_cv_gai_addrconfig=no \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 		--enable-shared \
 		--with-ssl \
@@ -153,7 +153,7 @@ neon: $(NEON_BUILD_DIR)/.built
 $(NEON_BUILD_DIR)/.staged: $(NEON_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(NEON_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
-	sed -e "s:echo \$${libdir}/libneon.la:echo $(STAGING_DIR)/\$${libdir}/libneon.la:" <$(NEON_BUILD_DIR)/neon-config >$(STAGING_DIR)/opt/bin/neon-config
+	sed -e "s:echo \$${libdir}/libneon.la:echo $(STAGING_DIR)/\$${libdir}/libneon.la:" <$(NEON_BUILD_DIR)/neon-config >$(STAGING_DIR)$(OPTWARE_PREFIX)bin/neon-config
 	sed -i -e '/echo/s|-I$${includedir}/neon|-I$(STAGING_INCLUDE_DIR)|' $(STAGING_PREFIX)/bin/neon-config
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/neon.pc
 	touch $@
@@ -182,20 +182,20 @@ $(NEON_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NEON_IPK_DIR)/opt/sbin or $(NEON_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NEON_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NEON_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NEON_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NEON_IPK_DIR)/opt/etc/neon/...
-# Documentation files should be installed in $(NEON_IPK_DIR)/opt/doc/neon/...
-# Daemon startup scripts should be installed in $(NEON_IPK_DIR)/opt/etc/init.d/S??neon
+# Libraries and include files should be installed into $(NEON_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NEON_IPK_DIR)$(OPTWARE_PREFIX)etc/neon/...
+# Documentation files should be installed in $(NEON_IPK_DIR)$(OPTWARE_PREFIX)doc/neon/...
+# Daemon startup scripts should be installed in $(NEON_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??neon
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NEON_IPK): $(NEON_BUILD_DIR)/.built
 	rm -rf $(NEON_IPK_DIR) $(BUILD_DIR)/neon_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(NEON_BUILD_DIR) DESTDIR=$(NEON_IPK_DIR) install
-	rm -f $(NEON_IPK_DIR)/opt/lib/libneon.la
-	$(TARGET_STRIP) $(NEON_IPK_DIR)/opt/lib/libneon.so
+	rm -f $(NEON_IPK_DIR)$(OPTWARE_PREFIX)lib/libneon.la
+	$(TARGET_STRIP) $(NEON_IPK_DIR)$(OPTWARE_PREFIX)lib/libneon.so
 	$(MAKE) $(NEON_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NEON_IPK_DIR)
 

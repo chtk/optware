@@ -129,7 +129,7 @@ $(NZBGET_BUILD_DIR)/.configured: $(DL_DIR)/$(NZBGET_SOURCE) $(NZBGET_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-tlslib=OpenSSL \
 		$(NZBGET_CONFIGURE_OPTS) \
 	)
@@ -185,31 +185,31 @@ $(NZBGET_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(NZBGET_IPK_DIR)/opt/sbin or $(NZBGET_IPK_DIR)/opt/bin
+# Binaries should be installed into $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(NZBGET_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(NZBGET_IPK_DIR)/opt/etc/nzbget/...
-# Documentation files should be installed in $(NZBGET_IPK_DIR)/opt/doc/nzbget/...
-# Daemon startup scripts should be installed in $(NZBGET_IPK_DIR)/opt/etc/init.d/S??nzbget
+# Libraries and include files should be installed into $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/nzbget/...
+# Documentation files should be installed in $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)doc/nzbget/...
+# Daemon startup scripts should be installed in $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??nzbget
 #
 # You may need to patch your application to make it use these locations.
 #
 $(NZBGET_IPK): $(NZBGET_BUILD_DIR)/.built
 	rm -rf $(NZBGET_IPK_DIR) $(BUILD_DIR)/nzbget_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(NZBGET_BUILD_DIR) DESTDIR=$(NZBGET_IPK_DIR) install
-	install -d $(NZBGET_IPK_DIR)/opt/bin $(NZBGET_IPK_DIR)/opt/sbin $(NZBGET_IPK_DIR)/opt/share/doc/nzbget
-	install -m 755 $(NZBGET_BUILD_DIR)/nzbget $(NZBGET_IPK_DIR)/opt/bin/
-	install -m 755 $(NZBGET_BUILD_DIR)/nzbgetd $(NZBGET_IPK_DIR)/opt/sbin/
-	install -m 644 $(NZBGET_BUILD_DIR)/README $(NZBGET_IPK_DIR)/opt/share/doc/nzbget/
-	install -m 644 $(NZBGET_BUILD_DIR)/nzbget.conf.example $(NZBGET_IPK_DIR)/opt/share/doc/nzbget/
-	install -m 755 $(NZBGET_BUILD_DIR)/postprocess-example.sh $(NZBGET_IPK_DIR)/opt/share/doc/nzbget/
-	install -m 644 $(NZBGET_BUILD_DIR)/postprocess-example.conf $(NZBGET_IPK_DIR)/opt/share/doc/nzbget/
-	$(STRIP_COMMAND) $(NZBGET_IPK_DIR)/opt/bin/nzbget
-	sed -i s:/usr/local/bin:/opt/bin: $(NZBGET_IPK_DIR)/opt/sbin/nzbgetd
-#	install -d $(NZBGET_IPK_DIR)/opt/etc/
-#	install -m 644 $(NZBGET_SOURCE_DIR)/nzbget.conf $(NZBGET_IPK_DIR)/opt/etc/nzbget.conf
-#	install -d $(NZBGET_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(NZBGET_SOURCE_DIR)/rc.nzbget $(NZBGET_IPK_DIR)/opt/etc/init.d/SXXnzbget
+	install -d $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)bin $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)sbin $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/nzbget
+	install -m 755 $(NZBGET_BUILD_DIR)/nzbget $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -m 755 $(NZBGET_BUILD_DIR)/nzbgetd $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -m 644 $(NZBGET_BUILD_DIR)/README $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/nzbget/
+	install -m 644 $(NZBGET_BUILD_DIR)/nzbget.conf.example $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/nzbget/
+	install -m 755 $(NZBGET_BUILD_DIR)/postprocess-example.sh $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/nzbget/
+	install -m 644 $(NZBGET_BUILD_DIR)/postprocess-example.conf $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/nzbget/
+	$(STRIP_COMMAND) $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)bin/nzbget
+	sed -i s:/usr/local/bin:$(OPTWARE_PREFIX)bin: $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)sbin/nzbgetd
+#	install -d $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(NZBGET_SOURCE_DIR)/nzbget.conf $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/nzbget.conf
+#	install -d $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(NZBGET_SOURCE_DIR)/rc.nzbget $(NZBGET_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXnzbget
 	$(MAKE) $(NZBGET_IPK_DIR)/CONTROL/control
 #	install -m 755 $(NZBGET_SOURCE_DIR)/postinst $(NZBGET_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(NZBGET_SOURCE_DIR)/prerm $(NZBGET_IPK_DIR)/CONTROL/prerm

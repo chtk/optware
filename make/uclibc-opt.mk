@@ -9,8 +9,8 @@
 
 UCLIBC-OPT_VERSION ?= 0.9.28
 UCLIBC-OPT_IPK_VERSION ?= $(BUILDROOT_IPK_VERSION)
-UCLIBC-OPT_LIBS_SOURCE_DIR ?= $(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root/opt/lib
-ifeq ($(UCLIBC-OPT_LIBS_SOURCE_DIR),$(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root/opt/lib)
+UCLIBC-OPT_LIBS_SOURCE_DIR ?= $(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root$(OPTWARE_PREFIX)lib
+ifeq ($(UCLIBC-OPT_LIBS_SOURCE_DIR),$(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root$(OPTWARE_PREFIX)lib)
 UCLIBC-OPT_FROM_BUILDROOT=1
 endif
 
@@ -56,12 +56,12 @@ $(UCLIBC-OPT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(UCLIBC-OPT_IPK_DIR)/opt/sbin or $(UCLIBC-OPT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(UCLIBC-OPT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(UCLIBC-OPT_IPK_DIR)/opt/etc/uclibc-opt/...
-# Documentation files should be installed in $(UCLIBC-OPT_IPK_DIR)/opt/doc/uclibc-opt/...
-# Daemon startup scripts should be installed in $(UCLIBC-OPT_IPK_DIR)/opt/etc/init.d/S??uclibc-opt
+# Libraries and include files should be installed into $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/uclibc-opt/...
+# Documentation files should be installed in $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)doc/uclibc-opt/...
+# Daemon startup scripts should be installed in $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??uclibc-opt
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -87,17 +87,17 @@ endif
 	install -d $(UCLIBC-OPT_IPK_DIR)
 #	$(MAKE) -C $(BUILDROOT_BUILD_DIR) DESTDIR=$(UCLIBC-OPT_IPK_DIR) install-strip
 #	tar -xv -C $(UCLIBC-OPT_IPK_DIR) -f $(BUILDROOT_BUILD_DIR)/rootfs.$(TARGET_ARCH).tar \
-#		--wildcards $(UCLIBC-OPT_LIBS_PATTERN) ./opt/sbin/ldconfig
-	install -d $(UCLIBC-OPT_IPK_DIR)/opt/etc
-	install -d $(UCLIBC-OPT_IPK_DIR)/opt/lib
-	cp -af $(UCLIBC-OPT_LIBS_PATTERN) $(UCLIBC-OPT_IPK_DIR)/opt/lib
-	$(TARGET_STRIP) $(patsubst %, $(UCLIBC-OPT_IPK_DIR)/opt/lib/%*so*, $(UCLIBC-OPT_LIBS))
+#		--wildcards $(UCLIBC-OPT_LIBS_PATTERN) .$(OPTWARE_PREFIX)sbin/ldconfig
+	install -d $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -d $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)lib
+	cp -af $(UCLIBC-OPT_LIBS_PATTERN) $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)lib
+	$(TARGET_STRIP) $(patsubst %, $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)lib/%*so*, $(UCLIBC-OPT_LIBS))
 	$(MAKE) $(UCLIBC-OPT_IPK_DIR)/CONTROL/control
 ifdef UCLIBC-OPT_FROM_BUILDROOT
-	install -d $(UCLIBC-OPT_IPK_DIR)/opt/usr/lib
-	install -d $(UCLIBC-OPT_IPK_DIR)/opt/sbin
-	install -m 755 $(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root/opt/sbin/ldconfig \
-		$(UCLIBC-OPT_IPK_DIR)/opt/sbin
+	install -d $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)usr/lib
+	install -d $(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(BUILDROOT_BUILD_DIR)/build_$(TARGET_ARCH)/root$(OPTWARE_PREFIX)sbin/ldconfig \
+		$(UCLIBC-OPT_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	install -m 755 $(BUILDROOT_SOURCE_DIR)/postinst $(UCLIBC-OPT_IPK_DIR)/CONTROL/postinst
 endif
 #	install -m 755 $(BUILDROOT_SOURCE_DIR)/prerm $(UCLIBC-OPT_IPK_DIR)/CONTROL/prerm

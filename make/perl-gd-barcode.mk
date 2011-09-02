@@ -41,9 +41,9 @@ $(PERL-GD-BARCODE_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-GD-BARCODE_SOURCE) $(
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=/opt \
+		PREFIX=$(OPTWARE_PREFIX)\
 	)
 	touch $(PERL-GD-BARCODE_BUILD_DIR)/.configured
 
@@ -52,7 +52,7 @@ perl-gd-barcode-unpack: $(PERL-GD-BARCODE_BUILD_DIR)/.configured
 $(PERL-GD-BARCODE_BUILD_DIR)/.built: $(PERL-GD-BARCODE_BUILD_DIR)/.configured
 	rm -f $(PERL-GD-BARCODE_BUILD_DIR)/.built
 	$(MAKE) -C $(PERL-GD-BARCODE_BUILD_DIR) \
-	PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl"
+	PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
 	touch $(PERL-GD-BARCODE_BUILD_DIR)/.built
 
 perl-gd-barcode: $(PERL-GD-BARCODE_BUILD_DIR)/.built
@@ -82,13 +82,13 @@ $(PERL-GD-BARCODE_IPK_DIR)/CONTROL/control:
 $(PERL-GD-BARCODE_IPK): $(PERL-GD-BARCODE_BUILD_DIR)/.built
 	rm -rf $(PERL-GD-BARCODE_IPK_DIR) $(BUILD_DIR)/perl-gd-barcode_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-GD-BARCODE_BUILD_DIR) DESTDIR=$(PERL-GD-BARCODE_IPK_DIR) install
-	find $(PERL-GD-BARCODE_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-GD-BARCODE_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-GD-BARCODE_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-GD-BARCODE_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-GD-BARCODE_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-GD-BARCODE_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-GD-BARCODE_IPK_DIR)/CONTROL/control
 	echo $(PERL-GD-BARCODE_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-GD-BARCODE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-GD-BARCODE_IPK_DIR)

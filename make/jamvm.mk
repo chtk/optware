@@ -36,7 +36,7 @@ JAMVM_CONFLICTS=
 
 #
 # JAMVM_CONFFILES should be a list of user-editable files
-#JAMVM_CONFFILES=/opt/etc/jamvm.conf /opt/etc/init.d/SXXjamvm
+#JAMVM_CONFFILES=$(OPTWARE_PREFIX)etc/jamvm.conf $(OPTWARE_PREFIX)etc/init.d/SXXjamvm
 
 #
 # JAMVM_PATCHES should list any patches, in the the order in
@@ -108,11 +108,11 @@ $(JAMVM_BUILD_DIR)/.configured: $(DL_DIR)/$(JAMVM_SOURCE) $(JAMVM_PATCHES)
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(JAMVM_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(JAMVM_LDFLAGS)" \
 		./configure \
-		--with-classpath-install-dir=/opt \
+		--with-classpath-install-dir=$(OPTWARE_PREFIX)\
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -135,16 +135,16 @@ jamvm: $(JAMVM_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)/opt/lib/libjamvm.so.$(JAMVM_VERSION): $(JAMVM_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)/opt/include
-	install -m 644 $(JAMVM_BUILD_DIR)/jamvm.h $(STAGING_DIR)/opt/include
-	install -d $(STAGING_DIR)/opt/lib
-	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.a $(STAGING_DIR)/opt/lib
-	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.so.$(JAMVM_VERSION) $(STAGING_DIR)/opt/lib
-	cd $(STAGING_DIR)/opt/lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so.1
-	cd $(STAGING_DIR)/opt/lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libjamvm.so.$(JAMVM_VERSION): $(JAMVM_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -m 644 $(JAMVM_BUILD_DIR)/jamvm.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.so.$(JAMVM_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so
 
-jamvm-stage: $(STAGING_DIR)/opt/lib/libjamvm.so.$(JAMVM_VERSION)
+jamvm-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libjamvm.so.$(JAMVM_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -168,20 +168,20 @@ $(JAMVM_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(JAMVM_IPK_DIR)/opt/sbin or $(JAMVM_IPK_DIR)/opt/bin
+# Binaries should be installed into $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(JAMVM_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(JAMVM_IPK_DIR)/opt/etc/jamvm/...
-# Documentation files should be installed in $(JAMVM_IPK_DIR)/opt/doc/jamvm/...
-# Daemon startup scripts should be installed in $(JAMVM_IPK_DIR)/opt/etc/init.d/S??jamvm
+# Libraries and include files should be installed into $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)etc/jamvm/...
+# Documentation files should be installed in $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)doc/jamvm/...
+# Daemon startup scripts should be installed in $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??jamvm
 #
 # You may need to patch your application to make it use these locations.
 #
 $(JAMVM_IPK): $(JAMVM_BUILD_DIR)/.built
 	rm -rf $(JAMVM_IPK_DIR) $(BUILD_DIR)/jamvm_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JAMVM_BUILD_DIR) install-strip prefix=$(JAMVM_IPK_DIR)/opt
-	install -d $(JAMVM_IPK_DIR)/opt/include/jamvm/
-	mv $(JAMVM_IPK_DIR)/opt/include/jni.h $(JAMVM_IPK_DIR)/opt/include/jamvm/jni.h
+	install -d $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jamvm/
+	mv $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jni.h $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jamvm/jni.h
 	$(MAKE) $(JAMVM_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JAMVM_IPK_DIR)
 

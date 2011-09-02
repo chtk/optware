@@ -35,7 +35,7 @@ PIXMAN_LOCALES=
 
 #
 # PIXMAN_CONFFILES should be a list of user-editable files
-#PIXMAN_CONFFILES=/opt/etc/pixman.conf /opt/etc/init.d/SXXpixman
+#PIXMAN_CONFFILES=$(OPTWARE_PREFIX)etc/pixman.conf $(OPTWARE_PREFIX)etc/init.d/SXXpixman
 
 #
 # PIXMAN_PATCHES should list any patches, in the the order in
@@ -130,7 +130,7 @@ $(PIXMAN_BUILD_DIR)/.configured: $(DL_DIR)/$(PIXMAN_SOURCE) $(PIXMAN_PATCHES) ma
 		--target=$(GNU_TARGET_NAME) \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -160,7 +160,7 @@ $(PIXMAN_BUILD_DIR)/.staged: $(PIXMAN_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) install DESTDIR=$(STAGING_DIR)
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/pixman*.pc
-	rm -f $(STAGING_DIR)/opt/lib/libpixman*.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libpixman*.la
 	touch $@
 
 pixman-stage: $(PIXMAN_BUILD_DIR)/.staged
@@ -168,20 +168,20 @@ pixman-stage: $(PIXMAN_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PIXMAN_IPK_DIR)/opt/sbin or $(PIXMAN_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PIXMAN_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PIXMAN_IPK_DIR)/opt/etc/pixman/...
-# Documentation files should be installed in $(PIXMAN_IPK_DIR)/opt/doc/pixman/...
-# Daemon startup scripts should be installed in $(PIXMAN_IPK_DIR)/opt/etc/init.d/S??pixman
+# Libraries and include files should be installed into $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)etc/pixman/...
+# Documentation files should be installed in $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)doc/pixman/...
+# Daemon startup scripts should be installed in $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??pixman
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PIXMAN_IPK): $(PIXMAN_BUILD_DIR)/.built
 	rm -rf $(PIXMAN_IPK_DIR) $(BUILD_DIR)/pixman_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PIXMAN_BUILD_DIR) DESTDIR=$(PIXMAN_IPK_DIR) install-strip
-	rm -f $(PIXMAN_IPK_DIR)/opt/lib/*.la
-	rm -rf $(PIXMAN_IPK_DIR)/opt/share/gtk-doc
+	rm -f $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -rf $(PIXMAN_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
 	$(MAKE) $(PIXMAN_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PIXMAN_IPK_DIR)
 

@@ -120,7 +120,7 @@ $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.configured: $(DL_DIR)/$(ASTERISK-CHAN-CAPI_SOUR
 		then mv $(BUILD_DIR)/$(ASTERISK-CHAN-CAPI_DIR) $(ASTERISK-CHAN-CAPI_BUILD_DIR) ; \
 	fi
 	(cd $(ASTERISK-CHAN-CAPI_BUILD_DIR); \
-		./create_config.sh $(STAGING_DIR)/opt/usr/include \
+		./create_config.sh $(STAGING_DIR)$(OPTWARE_PREFIX)usr/include \
 	)
 #	$(PATCH_LIBTOOL) $(ASTERISK-CHAN-CAPI_BUILD_DIR)/libtool
 	touch $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.configured
@@ -134,7 +134,7 @@ $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.built: $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.configu
 	rm -f $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.built
 	$(MAKE) -C $(ASTERISK-CHAN-CAPI_BUILD_DIR) \
 		$(TARGET_CONFIGURE_OPTS) \
-		CFLAGS="$(STAGING_CPPFLAGS) $(ASTERISK-CHAN-CAPI_CPPFLAGS) -I$(STAGING_DIR)/opt/usr/include" \
+		CFLAGS="$(STAGING_CPPFLAGS) $(ASTERISK-CHAN-CAPI_CPPFLAGS) -I$(STAGING_DIR)$(OPTWARE_PREFIX)usr/include" \
 		LIBLINUX="$(STAGING_LDFLAGS) $(ASTERISK-CHAN-CAPI_LDFLAGS)"
 	touch $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.built
 
@@ -175,21 +175,21 @@ $(ASTERISK-CHAN-CAPI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/sbin or $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/etc/asterisk-chan-capi/...
-# Documentation files should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/doc/asterisk-chan-capi/...
-# Daemon startup scripts should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/etc/init.d/S??asterisk-chan-capi
+# Libraries and include files should be installed into $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk-chan-capi/...
+# Documentation files should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)doc/asterisk-chan-capi/...
+# Daemon startup scripts should be installed in $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??asterisk-chan-capi
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ASTERISK-CHAN-CAPI_IPK): $(ASTERISK-CHAN-CAPI_BUILD_DIR)/.built
 	rm -rf $(ASTERISK-CHAN-CAPI_IPK_DIR) $(BUILD_DIR)/asterisk-chan-capi_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(ASTERISK-CHAN-CAPI_BUILD_DIR) MODULES_DIR=$(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/lib/asterisk/modules install
-	$(STRIP_COMMAND) $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/lib/asterisk/modules/*.so
-	install -d $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/etc/asterisk/sample/
-	install -m 644 $(ASTERISK-CHAN-CAPI_BUILD_DIR)/capi.conf $(ASTERISK-CHAN-CAPI_IPK_DIR)/opt/etc/asterisk/sample/capi.conf
+	$(MAKE) -C $(ASTERISK-CHAN-CAPI_BUILD_DIR) MODULES_DIR=$(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules install
+	$(STRIP_COMMAND) $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules/*.so
+	install -d $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/sample/
+	install -m 644 $(ASTERISK-CHAN-CAPI_BUILD_DIR)/capi.conf $(ASTERISK-CHAN-CAPI_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/sample/capi.conf
 	$(MAKE) $(ASTERISK-CHAN-CAPI_IPK_DIR)/CONTROL/control
 #	install -m 755 $(ASTERISK-CHAN-CAPI_SOURCE_DIR)/postinst $(ASTERISK-CHAN-CAPI_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst

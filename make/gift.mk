@@ -37,7 +37,7 @@ GIFT_IPK_VERSION=5
 
 #
 # GIFT_CONFFILES should be a list of user-editable files
-GIFT_CONFFILES=/opt/share/giFT/giftd.conf /opt/etc/init.d/S30giftd /usr/sbin/giftd_wrapper
+GIFT_CONFFILES=$(OPTWARE_PREFIX)share/giFT/giftd.conf $(OPTWARE_PREFIX)etc/init.d/S30giftd /usr/sbin/giftd_wrapper
 
 #
 # GIFT_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(GIFT_BUILD_DIR)/.configured: $(DL_DIR)/$(GIFT_SOURCE) $(GIFT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-ogg=$(STAGING_PREFIX) \
 		--with-vorbis=$(STAGING_PREFIX) \
 		--disable-nls \
@@ -135,8 +135,8 @@ $(GIFT_BUILD_DIR)/.staged: $(GIFT_BUILD_DIR)/.built
 	rm -f $(GIFT_BUILD_DIR)/.staged
 	$(MAKE) -C $(GIFT_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
 	sed -i -e 's|^prefix=/opt|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libgift.pc
-	rm -f $(STAGING_DIR)/opt/lib/libgift.la $(STAGING_DIR)/opt/lib/libgiftproto.la
-	rm -f $(STAGING_DIR)/opt/bin/giftd $(STAGING_DIR)/opt/bin/gift-setup
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgift.la $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiftproto.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)bin/giftd $(STAGING_DIR)$(OPTWARE_PREFIX)bin/gift-setup
 	touch $(GIFT_BUILD_DIR)/.staged
 
 gift-stage: $(GIFT_BUILD_DIR)/.staged
@@ -162,22 +162,22 @@ $(GIFT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GIFT_IPK_DIR)/opt/sbin or $(GIFT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GIFT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GIFT_IPK_DIR)/opt/etc/gift/...
-# Documentation files should be installed in $(GIFT_IPK_DIR)/opt/doc/gift/...
-# Daemon startup scripts should be installed in $(GIFT_IPK_DIR)/opt/etc/init.d/S??gift
+# Libraries and include files should be installed into $(GIFT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/gift/...
+# Documentation files should be installed in $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)doc/gift/...
+# Daemon startup scripts should be installed in $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gift
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GIFT_IPK): $(GIFT_BUILD_DIR)/.built
 	rm -rf $(GIFT_IPK_DIR) $(BUILD_DIR)/gift_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GIFT_BUILD_DIR) DESTDIR=$(GIFT_IPK_DIR) install-strip
-	install -d $(GIFT_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(GIFT_SOURCE_DIR)/S30giftd $(GIFT_IPK_DIR)/opt/etc/init.d/S30giftd
-	install -d $(GIFT_IPK_DIR)/opt/sbin
-	install -m 755 $(GIFT_SOURCE_DIR)/giftd_wrapper $(GIFT_IPK_DIR)/opt/sbin
+	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(GIFT_SOURCE_DIR)/S30giftd $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S30giftd
+	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -m 755 $(GIFT_SOURCE_DIR)/giftd_wrapper $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)sbin
 	install -d $(GIFT_IPK_DIR)/CONTROL
 	$(MAKE) $(GIFT_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFT_IPK_DIR)

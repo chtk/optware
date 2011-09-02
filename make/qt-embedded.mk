@@ -45,14 +45,14 @@ QT-EMBEDDED_SUGGESTS=openssl, mysql5, sqlite, dbus, postgresql
 QT-EMBEDDED_CONFLICTS=
 QT-EMBEDDED_TOOLS=lrelease qmake uic moc rcc
 QT-EMBEDDED_CFLAGS=$(TARGET_CFLAGS)
-QT-EMBEDDED_CFLAGS+='"-I$(STAGING_DIR)/opt/include"'
-QT-EMBEDDED_CFLAGS+='"-I$(STAGING_DIR)/opt/include/mysql"'
-QT-EMBEDDED_LFLAGS+='"-L$(STAGING_DIR)/opt/lib"'
-QT-EMBEDDED_LFLAGS+='"-L$(STAGING_DIR)/opt/lib/mysql"'
-QT-EMBEDDED_LFLAGS+='"-Wl,-rpath=/opt/lib"'
-QT-EMBEDDED_LFLAGS+='"-Wl,-rpath=/opt/lib/mysql"'
-QT-EMBEDDED_LFLAGS+='"-Wl,-rpath-link=$(STAGING_DIR)/opt/lib"'
-QT-EMBEDDED_LFLAGS+='"-Wl,-rpath-link=$(STAGING_DIR)/opt/lib/mysql"'
+QT-EMBEDDED_CFLAGS+='"-I$(STAGING_DIR)$(OPTWARE_PREFIX)include"'
+QT-EMBEDDED_CFLAGS+='"-I$(STAGING_DIR)$(OPTWARE_PREFIX)include/mysql"'
+QT-EMBEDDED_LFLAGS+='"-L$(STAGING_DIR)$(OPTWARE_PREFIX)lib"'
+QT-EMBEDDED_LFLAGS+='"-L$(STAGING_DIR)$(OPTWARE_PREFIX)lib/mysql"'
+QT-EMBEDDED_LFLAGS+='"-Wl,-rpath=$(OPTWARE_PREFIX)lib"'
+QT-EMBEDDED_LFLAGS+='"-Wl,-rpath=$(OPTWARE_PREFIX)lib/mysql"'
+QT-EMBEDDED_LFLAGS+='"-Wl,-rpath-link=$(STAGING_DIR)$(OPTWARE_PREFIX)lib"'
+QT-EMBEDDED_LFLAGS+='"-Wl,-rpath-link=$(STAGING_DIR)$(OPTWARE_PREFIX)lib/mysql"'
 ifeq (yes, $(TARGET_CC_PROBE))
 QT-EMBEDDED_PLATFORM=-platform linux-g++-custom
 else
@@ -79,7 +79,7 @@ QT-EMBEDDED_IPK_VERSION=1
 
 #
 # QT-EMBEDDED_CONFFILES should be a list of user-editable files
-#QT-EMBEDDED_CONFFILES=/opt/etc/qt-embedded.conf /opt/etc/init.d/SXXqt-embedded
+#QT-EMBEDDED_CONFFILES=$(OPTWARE_PREFIX)etc/qt-embedded.conf $(OPTWARE_PREFIX)etc/init.d/SXXqt-embedded
 
 #
 # QT-EMBEDDED_PATCHES should list any patches, in the the order in
@@ -178,15 +178,15 @@ endif
 		cp -a qmake qmake-target ; \
 		echo 'yes' | \
 		$(QT-EMBEDDED_PATH) \
-		PKG_CONFIG_PATH=$(STAGING_DIR)/opt/lib/pkgconfig \
+		PKG_CONFIG_PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)lib/pkgconfig \
 		PKG_CONFIG_SYSROOT=$(STAGING_DIR) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(QT-EMBEDDED_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(QT-EMBEDDED_LDFLAGS)" \
 		./configure \
-		-prefix /opt \
+		-prefix $(OPTWARE_PREFIX)\
 		-force-pkg-config \
 		-no-pch \
-		-plugindir /opt/lib/qt4/plugins \
+		-plugindir $(OPTWARE_PREFIX)lib/qt4/plugins \
 		-opensource \
 		-plugin-sql-mysql \
 		-plugin-sql-sqlite \
@@ -240,7 +240,7 @@ $(QT-EMBEDDED_BUILD_DIR)/.staged: $(QT-EMBEDDED_BUILD_DIR)/.built
 	$(QT-EMBEDDED_PATH) $(MAKE) -C $(@D) INSTALL_ROOT=$(STAGING_DIR) install
 ifneq (yes, $(TARGET_CC_PROBE))
 	(cd $(@D) ; \
-		install -m 755 target-bin/uic target-bin/moc target-bin/rcc target-bin/lrelease target-bin/qmake $(STAGING_DIR)/opt/bin \
+		install -m 755 target-bin/uic target-bin/moc target-bin/rcc target-bin/lrelease target-bin/qmake $(STAGING_DIR)$(OPTWARE_PREFIX)bin \
 	)
 endif
 	touch $@
@@ -269,12 +269,12 @@ $(QT-EMBEDDED_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(QT-EMBEDDED_IPK_DIR)/opt/sbin or $(QT-EMBEDDED_IPK_DIR)/opt/bin
+# Binaries should be installed into $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(QT-EMBEDDED_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(QT-EMBEDDED_IPK_DIR)/opt/etc/qt-embedded/...
-# Documentation files should be installed in $(QT-EMBEDDED_IPK_DIR)/opt/doc/qt-embedded/...
-# Daemon startup scripts should be installed in $(QT-EMBEDDED_IPK_DIR)/opt/etc/init.d/S??qt-embedded
+# Libraries and include files should be installed into $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/qt-embedded/...
+# Documentation files should be installed in $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)doc/qt-embedded/...
+# Daemon startup scripts should be installed in $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??qt-embedded
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -283,15 +283,15 @@ $(QT-EMBEDDED_IPK): $(QT-EMBEDDED_BUILD_DIR)/.built
 	$(QT-EMBEDDED_PATH) $(MAKE) -C $(QT-EMBEDDED_BUILD_DIR) INSTALL_ROOT=$(QT-EMBEDDED_IPK_DIR) install
 ifneq (yes, $(TARGET_CC_PROBE))
 	(cd $(QT-EMBEDDED_BUILD_DIR) ; \
-		install -m 755 target-bin/uic target-bin/moc target-bin/rcc target-bin/lrelease target-bin/qmake $(QT-EMBEDDED_IPK_DIR)/opt/bin \
+		install -m 755 target-bin/uic target-bin/moc target-bin/rcc target-bin/lrelease target-bin/qmake $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)bin \
 	)
 endif
 #	$(MAKE) -C $(QT-EMBEDDED_BUILD_DIR) DESTDIR=$(QT-EMBEDDED_IPK_DIR) install-strip
-#	install -d $(QT-EMBEDDED_IPK_DIR)/opt/etc/
-#	install -m 644 $(QT-EMBEDDED_SOURCE_DIR)/qt-embedded.conf $(QT-EMBEDDED_IPK_DIR)/opt/etc/qt-embedded.conf
-#	install -d $(QT-EMBEDDED_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(QT-EMBEDDED_SOURCE_DIR)/rc.qt-embedded $(QT-EMBEDDED_IPK_DIR)/opt/etc/init.d/SXXqt-embedded
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QT-EMBEDDED_IPK_DIR)/opt/etc/init.d/SXXqt-embedded
+#	install -d $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(QT-EMBEDDED_SOURCE_DIR)/qt-embedded.conf $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/qt-embedded.conf
+#	install -d $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(QT-EMBEDDED_SOURCE_DIR)/rc.qt-embedded $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXqt-embedded
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QT-EMBEDDED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXqt-embedded
 	$(MAKE) $(QT-EMBEDDED_IPK_DIR)/CONTROL/control
 #	install -m 755 $(QT-EMBEDDED_SOURCE_DIR)/postinst $(QT-EMBEDDED_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(QT-EMBEDDED_IPK_DIR)/CONTROL/postinst

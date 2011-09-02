@@ -53,7 +53,7 @@ MINIDLNA_IPK_VERSION=2
 
 #
 # MINIDLNA_CONFFILES should be a list of user-editable files
-#MINIDLNA_CONFFILES=/opt/etc/init.d/S98minidlna
+#MINIDLNA_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S98minidlna
 
 #
 # MINIDLNA_PATCHES should list any patches, in the the order in
@@ -144,7 +144,7 @@ endif
 		$(@D)/genconfig.sh
 	sed -i.orig \
 		 -e 's|/etc/|/opt&|' \
-		 -e 's|/usr/|/opt/|' \
+		 -e 's|/usr/|$(OPTWARE_PREFIX)|' \
 		$(@D)/minidlna.c
 #	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
@@ -154,7 +154,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 	touch $@
@@ -210,12 +210,12 @@ $(MINIDLNA_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MINIDLNA_IPK_DIR)/opt/sbin or $(MINIDLNA_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MINIDLNA_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MINIDLNA_IPK_DIR)/opt/etc/minidlna/...
-# Documentation files should be installed in $(MINIDLNA_IPK_DIR)/opt/doc/minidlna/...
-# Daemon startup scripts should be installed in $(MINIDLNA_IPK_DIR)/opt/etc/init.d/S??minidlna
+# Libraries and include files should be installed into $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc/minidlna/...
+# Documentation files should be installed in $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)doc/minidlna/...
+# Daemon startup scripts should be installed in $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??minidlna
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -224,13 +224,13 @@ $(MINIDLNA_IPK): $(MINIDLNA_BUILD_DIR)/.built
 	$(MAKE) -C $(MINIDLNA_BUILD_DIR) install \
 		DESTDIR=$(MINIDLNA_IPK_DIR) \
 		PREFIX=$(MINIDLNA_IPK_DIR) \
-		INSTALLPREFIX=$(MINIDLNA_IPK_DIR)/opt \
-		ETCINSTALLDIR=$(MINIDLNA_IPK_DIR)/opt/etc \
+		INSTALLPREFIX=$(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)\
+		ETCINSTALLDIR=$(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc \
 		;
-	$(STRIP_COMMAND) $(MINIDLNA_IPK_DIR)/opt/sbin/*
-#	install -m 644 $(MINIDLNA_SOURCE_DIR)/minidlna.conf $(MINIDLNA_IPK_DIR)/opt/etc/minidlna.conf
-#	install -d $(MINIDLNA_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(MINIDLNA_BUILD_DIR)/linux/minidlna.init.d.script $(MINIDLNA_IPK_DIR)/opt/etc/init.d/S98minidlna
+	$(STRIP_COMMAND) $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
+#	install -m 644 $(MINIDLNA_SOURCE_DIR)/minidlna.conf $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc/minidlna.conf
+#	install -d $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(MINIDLNA_BUILD_DIR)/linux/minidlna.init.d.script $(MINIDLNA_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S98minidlna
 	$(MAKE) $(MINIDLNA_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MINIDLNA_SOURCE_DIR)/postinst $(MINIDLNA_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(MINIDLNA_SOURCE_DIR)/prerm $(MINIDLNA_IPK_DIR)/CONTROL/prerm

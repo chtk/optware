@@ -61,20 +61,20 @@ $(FSG3V4_BOOTSTRAP_IPK): $(FSG3V4_BOOTSTRAP_BUILD_DIR)/.built
 	rm -rf $(FSG3V4_BOOTSTRAP_IPK_DIR)
 	rm -f $(BUILD_DIR)/fsg3v4-bootstrap_*_$(TARGET_ARCH).ipk
 	rm -f $(BUILD_DIR)/fsg3v4-bootstrap_*_$(TARGET_ARCH).xsh
-#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib
-#	install -m 755 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.so* $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/
-#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.a $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/
-#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.o $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/
-#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/gconv
-#	install -m 755 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/gconv/*.so $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/gconv/
-#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/gconv/gconv-modules $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/gconv/
-#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts
-#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/ldscripts/
-#	cd $(FSG3V4_BOOTSTRAP_BUILD_DIR) ; cp -P `find . -type l -print` $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/
-#	$(STRIP_COMMAND) $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/lib/*.so
+#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 755 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.so* $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.a $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/*.o $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv
+#	install -m 755 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/gconv/*.so $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv/
+#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/gconv/gconv-modules $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/gconv/
+#	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts
+#	install -m 644 $(FSG3V4_BOOTSTRAP_BUILD_DIR)/ldscripts/* $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/ldscripts/
+#	cd $(FSG3V4_BOOTSTRAP_BUILD_DIR) ; cp -P `find . -type l -print` $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/
+#	$(STRIP_COMMAND) $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
 
-	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/etc
-	install -m 755 $(IPKG-OPT_SOURCE_DIR)/rc.optware $(FSG3V4_BOOTSTRAP_IPK_DIR)/opt/etc
+	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -m 755 $(IPKG-OPT_SOURCE_DIR)/rc.optware $(FSG3V4_BOOTSTRAP_IPK_DIR)$(OPTWARE_PREFIX)etc
 	install -d $(FSG3V4_BOOTSTRAP_IPK_DIR)/etc/init.d
 	install -m 755 $(FSG3V4_BOOTSTRAP_SOURCE_DIR)/optware $(FSG3V4_BOOTSTRAP_IPK_DIR)/etc/init.d/optware
 

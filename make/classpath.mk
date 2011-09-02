@@ -38,7 +38,7 @@ CLASSPATH_IPK_VERSION=1
 
 #
 # CLASSPATH_CONFFILES should be a list of user-editable files
-#CLASSPATH_CONFFILES=/opt/etc/classpath.conf /opt/etc/init.d/SXXclasspath
+#CLASSPATH_CONFFILES=$(OPTWARE_PREFIX)etc/classpath.conf $(OPTWARE_PREFIX)etc/init.d/SXXclasspath
 
 #
 # CLASSPATH_PATCHES should list any patches, in the the order in
@@ -139,7 +139,7 @@ $(CLASSPATH_BUILD_DIR)/.configured: $(DL_DIR)/$(CLASSPATH_SOURCE) $(DL_DIR)/$(CL
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		; \
 	)
@@ -192,12 +192,12 @@ $(CLASSPATH_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(CLASSPATH_IPK_DIR)/opt/sbin or $(CLASSPATH_IPK_DIR)/opt/bin
+# Binaries should be installed into $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(CLASSPATH_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(CLASSPATH_IPK_DIR)/opt/etc/classpath/...
-# Documentation files should be installed in $(CLASSPATH_IPK_DIR)/opt/doc/classpath/...
-# Daemon startup scripts should be installed in $(CLASSPATH_IPK_DIR)/opt/etc/init.d/S??classpath
+# Libraries and include files should be installed into $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX)etc/classpath/...
+# Documentation files should be installed in $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX)doc/classpath/...
+# Daemon startup scripts should be installed in $(CLASSPATH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??classpath
 #
 # You may need to patch your application to make it use these locations.
 #

@@ -46,7 +46,7 @@ PYTHON24_IPK_VERSION=2
 
 #
 # PYTHON24_CONFFILES should be a list of user-editable files
-#PYTHON24_CONFFILES=/opt/etc/python.conf /opt/etc/init.d/SXXpython
+#PYTHON24_CONFFILES=$(OPTWARE_PREFIX)etc/python.conf $(OPTWARE_PREFIX)etc/init.d/SXXpython
 
 #
 # If the compilation of the package requires additional
@@ -141,7 +141,7 @@ endif
 	echo "[build_ext]"; \
 	echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/ncurses"; \
 	echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	echo "rpath=/opt/lib") > setup.cfg; \
+	echo "rpath=$(OPTWARE_PREFIX)lib") > setup.cfg; \
 	\
 	 $(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PYTHON24_CPPFLAGS)" \
@@ -153,8 +153,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--mandir=/opt/man \
+		--prefix=$(OPTWARE_PREFIX)\
+		--mandir=$(OPTWARE_PREFIX)man \
 		--enable-shared \
 		--enable-unicode=ucs4 \
 	)
@@ -181,7 +181,7 @@ python24: $(PYTHON24_BUILD_DIR)/.built
 $(PYTHON24_BUILD_DIR)/.staged: $(PYTHON24_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
-	install $(@D)/buildpython/python $(STAGING_DIR)/opt/bin/
+	install $(@D)/buildpython/python $(STAGING_DIR)$(OPTWARE_PREFIX)bin/
 	touch $@
 
 python24-stage: $(PYTHON24_BUILD_DIR)/.staged
@@ -213,36 +213,36 @@ $(PYTHON24_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(PYTHON24_IPK_DIR)/opt/sbin or $(PYTHON24_IPK_DIR)/opt/bin
+# Binaries should be installed into $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(PYTHON24_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(PYTHON24_IPK_DIR)/opt/etc/python/...
-# Documentation files should be installed in $(PYTHON24_IPK_DIR)/opt/doc/python/...
-# Daemon startup scripts should be installed in $(PYTHON24_IPK_DIR)/opt/etc/init.d/S??python
+# Libraries and include files should be installed into $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)etc/python/...
+# Documentation files should be installed in $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)doc/python/...
+# Daemon startup scripts should be installed in $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??python
 #
 # You may need to patch your application to make it use these locations.
 #
 $(PYTHON24_IPK): $(PYTHON24_BUILD_DIR)/.built
 	rm -rf $(PYTHON24_IPK_DIR) $(BUILD_DIR)/python24_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PYTHON24_BUILD_DIR) DESTDIR=$(PYTHON24_IPK_DIR) install
-	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)/opt/bin/python$(PYTHON24_VERSION_MAJOR)
-	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)/opt/lib/python$(PYTHON24_VERSION_MAJOR)/lib-dynload/*.so
-	chmod 755 $(PYTHON24_IPK_DIR)/opt/lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
-	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)/opt/lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
-	chmod 555 $(PYTHON24_IPK_DIR)/opt/lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
-	(cd $(PYTHON24_IPK_DIR)/opt/bin; \
+	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)bin/python$(PYTHON24_VERSION_MAJOR)
+	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)lib/python$(PYTHON24_VERSION_MAJOR)/lib-dynload/*.so
+	chmod 755 $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
+	$(STRIP_COMMAND) $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
+	chmod 555 $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)lib/libpython$(PYTHON24_VERSION_MAJOR).so.1.0
+	(cd $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)bin; \
 		mv idle idle$(PYTHON24_VERSION_MAJOR); \
 		mv pydoc pydoc$(PYTHON24_VERSION_MAJOR); \
 		mv smtpd.py smtpd$(PYTHON24_VERSION_MAJOR).py; \
 	)
-	rm $(PYTHON24_IPK_DIR)/opt/bin/python
-	install -d $(PYTHON24_IPK_DIR)/opt/local/bin
-	install -d $(PYTHON24_IPK_DIR)/opt/local/lib/python$(PYTHON24_VERSION_MAJOR)/site-packages
-	sed -i -e 's|$(TARGET_CROSS)|/opt/bin/|g' \
-	       -e 's|$(STAGING_INCLUDE_DIR)|/opt/include|g' \
-	       -e 's|$(STAGING_LIB_DIR)|/opt/lib|g' \
+	rm $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)bin/python
+	install -d $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)local/bin
+	install -d $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)local/lib/python$(PYTHON24_VERSION_MAJOR)/site-packages
+	sed -i -e 's|$(TARGET_CROSS)|$(OPTWARE_PREFIX)bin/|g' \
+	       -e 's|$(STAGING_INCLUDE_DIR)|$(OPTWARE_PREFIX)include|g' \
+	       -e 's|$(STAGING_LIB_DIR)|$(OPTWARE_PREFIX)lib|g' \
 	       -e '/^RUNSHARED=/s|=.*|=|' \
-	       $(PYTHON24_IPK_DIR)/opt/lib/python2.4/config/Makefile
+	       $(PYTHON24_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.4/config/Makefile
 	$(MAKE) $(PYTHON24_IPK_DIR)/CONTROL/control
 #	install -m 755 $(PYTHON24_SOURCE_DIR)/postinst $(PYTHON24_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(PYTHON24_SOURCE_DIR)/prerm $(PYTHON24_IPK_DIR)/CONTROL/prerm

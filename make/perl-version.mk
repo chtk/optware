@@ -41,7 +41,7 @@ $(PERL-VERSION_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-VERSION_SOURCE) $(PERL-V
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Build.PL \
 		--config cc=$(TARGET_CC) \
 		--config ld=$(TARGET_CC) \
@@ -53,7 +53,7 @@ perl-version-unpack: $(PERL-VERSION_BUILD_DIR)/.configured
 $(PERL-VERSION_BUILD_DIR)/.built: $(PERL-VERSION_BUILD_DIR)/.configured
 	rm -f $@
 	(cd $(@D); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
 		./Build \
 	)
 	touch $@
@@ -63,8 +63,8 @@ perl-version: $(PERL-VERSION_BUILD_DIR)/.built
 $(PERL-VERSION_BUILD_DIR)/.staged: $(PERL-VERSION_BUILD_DIR)/.built
 	rm -f $@
 	(cd $(@D); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
-		./Build --prefix $(STAGING_DIR)/opt install \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		./Build --prefix $(STAGING_DIR)$(OPTWARE_PREFIX)install \
 	)
 	touch $@
 
@@ -88,16 +88,16 @@ $(PERL-VERSION_IPK_DIR)/CONTROL/control:
 $(PERL-VERSION_IPK): $(PERL-VERSION_BUILD_DIR)/.built
 	rm -rf $(PERL-VERSION_IPK_DIR) $(BUILD_DIR)/perl-version_*_$(TARGET_ARCH).ipk
 	(cd $(PERL-VERSION_BUILD_DIR); \
-		PERL5LIB="$(STAGING_DIR)/opt/lib/perl5/site_perl" \
-		./Build --prefix $(PERL-VERSION_IPK_DIR)/opt install \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		./Build --prefix $(PERL-VERSION_IPK_DIR)$(OPTWARE_PREFIX)install \
 	)
-	find $(PERL-VERSION_IPK_DIR)/opt -name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-VERSION_IPK_DIR)/opt/lib/perl5 ; \
+	find $(PERL-VERSION_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-VERSION_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-VERSION_IPK_DIR)/opt -type d -exec chmod go+rx {} \;
+	find $(PERL-VERSION_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-VERSION_IPK_DIR)/CONTROL/control
 	echo $(PERL-VERSION_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-VERSION_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-VERSION_IPK_DIR)

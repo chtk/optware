@@ -48,7 +48,7 @@ RUBY_DEPENDS=
 
 #
 # RUBY_CONFFILES should be a list of user-editable files
-#RUBY_CONFFILES=/opt/etc/ruby.conf /opt/etc/init.d/SXXruby
+#RUBY_CONFFILES=$(OPTWARE_PREFIX)etc/ruby.conf $(OPTWARE_PREFIX)etc/init.d/SXXruby
 
 #
 # RUBY_PATCHES should list any patches, in the the order in
@@ -133,8 +133,8 @@ $(RUBY_BUILD_DIR)/.configured: $(DL_DIR)/$(RUBY_SOURCE) $(RUBY_PATCHES) make/rub
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-sitedir=/opt/local/lib/ruby/site_ruby \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-sitedir=$(OPTWARE_PREFIX)local/lib/ruby/site_ruby \
 		--disable-nls \
                 --with-opt-dir=$(STAGING_PREFIX) \
                 --with-target-dir=$(STAGING_PREFIX) \
@@ -216,12 +216,12 @@ $(RUBY_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(RUBY_IPK_DIR)/opt/sbin or $(RUBY_IPK_DIR)/opt/bin
+# Binaries should be installed into $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(RUBY_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(RUBY_IPK_DIR)/opt/etc/ruby/...
-# Documentation files should be installed in $(RUBY_IPK_DIR)/opt/doc/ruby/...
-# Daemon startup scripts should be installed in $(RUBY_IPK_DIR)/opt/etc/init.d/S??ruby
+# Libraries and include files should be installed into $(RUBY_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)etc/ruby/...
+# Documentation files should be installed in $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)doc/ruby/...
+# Daemon startup scripts should be installed in $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??ruby
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -229,12 +229,12 @@ $(RUBY_IPK): $(RUBY_BUILD_DIR)/.built
 	rm -rf $(RUBY_IPK_DIR) $(BUILD_DIR)/ruby_*_$(TARGET_ARCH).ipk
 	PATH=`dirname $(RUBY_HOST_RUBY)`:$$PATH \
 	$(MAKE) -C $(RUBY_BUILD_DIR) DESTDIR=$(RUBY_IPK_DIR) install
-	for so in $(RUBY_IPK_DIR)/opt/bin/ruby \
-	    $(RUBY_IPK_DIR)/opt/lib/libruby.so.[0-9]*.[0-9]*.[0-9]* \
-	    `find $(RUBY_IPK_DIR)/opt/lib/ruby/1.9.1/ -name '*.so'`; \
+	for so in $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)bin/ruby \
+	    $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)lib/libruby.so.[0-9]*.[0-9]*.[0-9]* \
+	    `find $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)lib/ruby/1.9.1/ -name '*.so'`; \
 	do $(STRIP_COMMAND) $$so; \
 	done
-	install -d $(RUBY_IPK_DIR)/opt/etc/
+	install -d $(RUBY_IPK_DIR)$(OPTWARE_PREFIX)etc/
 	$(MAKE) $(RUBY_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(RUBY_IPK_DIR)
 

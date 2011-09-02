@@ -21,7 +21,7 @@ DHCP_CONFLICTS=
 
 DHCP_IPK_VERSION=1
 
-DHCP_CONFFILES=/opt/etc/dhcpd.conf
+DHCP_CONFFILES=$(OPTWARE_PREFIX)etc/dhcpd.conf
 
 #DHCP_PATCHES=$(DHCP_SOURCE_DIR)/linux_ipv6_discover.patch
 
@@ -71,7 +71,7 @@ $(DHCP_BUILD_DIR)/.configured: $(DL_DIR)/$(DHCP_SOURCE) make/dhcp.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		$(DHCP_CONFIG_ARGS) \
 		--disable-nls \
 		--disable-static \
@@ -109,11 +109,11 @@ $(DHCP_IPK_DIR)/CONTROL/control:
 $(DHCP_IPK): $(DHCP_BUILD_DIR)/.built
 	rm -rf $(DHCP_IPK_DIR) $(BUILD_DIR)/dhcp_*_$(TARGET_ARCH).ipk
 	install -d $(DHCP_IPK_DIR)/CONTROL
-	install -d $(DHCP_IPK_DIR)/opt/sbin $(DHCP_IPK_DIR)/opt/etc/init.d
-	$(STRIP_COMMAND) $(DHCP_BUILD_DIR)/`find  builds/dhcp -name work* | cut -d/ -f3`/server/dhcpd -o $(DHCP_IPK_DIR)/opt/sbin/dhcpd
-	install -m 755 $(SOURCE_DIR)/dhcp.rc $(DHCP_IPK_DIR)/opt/etc/init.d/S56dhcp
-	touch $(DHCP_IPK_DIR)/opt/etc/dhcpd.leases
-	cp $(DHCP_BUILD_DIR)/server/dhcpd.conf $(DHCP_IPK_DIR)/opt/etc/
+	install -d $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)sbin $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	$(STRIP_COMMAND) $(DHCP_BUILD_DIR)/`find  builds/dhcp -name work* | cut -d/ -f3`/server/dhcpd -o $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)sbin/dhcpd
+	install -m 755 $(SOURCE_DIR)/dhcp.rc $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S56dhcp
+	touch $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)etc/dhcpd.leases
+	cp $(DHCP_BUILD_DIR)/server/dhcpd.conf $(DHCP_IPK_DIR)$(OPTWARE_PREFIX)etc/
 	echo $(DHCP_CONFFILES) | sed -e 's/ /\n/g' > $(DHCP_IPK_DIR)/CONTROL/conffiles
 	$(MAKE) $(DHCP_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DHCP_IPK_DIR)

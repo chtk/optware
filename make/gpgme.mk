@@ -40,7 +40,7 @@ GPGME_IPK_VERSION=1
 
 #
 # GPGME_CONFFILES should be a list of user-editable files
-#GPGME_CONFFILES=/opt/etc/gpgme.conf /opt/etc/init.d/SXXgpgme
+#GPGME_CONFFILES=$(OPTWARE_PREFIX)etc/gpgme.conf $(OPTWARE_PREFIX)etc/init.d/SXXgpgme
 
 #
 # GPGME_PATCHES should list any patches, in the the order in
@@ -124,10 +124,10 @@ $(GPGME_BUILD_DIR)/.configured: $(DL_DIR)/$(GPGME_SOURCE) $(GPGME_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-gpg-error-prefix=$(STAGING_PREFIX) \
-		--with-gpg=/opt/bin/gpg \
-		--with-gpgsm=/opt/bin/gpgsm \
+		--with-gpg=$(OPTWARE_PREFIX)bin/gpg \
+		--with-gpgsm=$(OPTWARE_PREFIX)bin/gpgsm \
 		--with-pth=$(STAGING_PREFIX) \
 		--without-pth-test \
 		--disable-nls \
@@ -185,23 +185,23 @@ $(GPGME_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GPGME_IPK_DIR)/opt/sbin or $(GPGME_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GPGME_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GPGME_IPK_DIR)/opt/etc/gpgme/...
-# Documentation files should be installed in $(GPGME_IPK_DIR)/opt/doc/gpgme/...
-# Daemon startup scripts should be installed in $(GPGME_IPK_DIR)/opt/etc/init.d/S??gpgme
+# Libraries and include files should be installed into $(GPGME_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/gpgme/...
+# Documentation files should be installed in $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)doc/gpgme/...
+# Daemon startup scripts should be installed in $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gpgme
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GPGME_IPK): $(GPGME_BUILD_DIR)/.built
 	rm -rf $(GPGME_IPK_DIR) $(BUILD_DIR)/gpgme_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GPGME_BUILD_DIR) DESTDIR=$(GPGME_IPK_DIR) install-strip
-#	install -d $(GPGME_IPK_DIR)/opt/etc/
-#	install -m 644 $(GPGME_SOURCE_DIR)/gpgme.conf $(GPGME_IPK_DIR)/opt/etc/gpgme.conf
-#	install -d $(GPGME_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(GPGME_SOURCE_DIR)/rc.gpgme $(GPGME_IPK_DIR)/opt/etc/init.d/SXXgpgme
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GPGME_IPK_DIR)/opt/etc/init.d/SXXgpgme
+#	install -d $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(GPGME_SOURCE_DIR)/gpgme.conf $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/gpgme.conf
+#	install -d $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(GPGME_SOURCE_DIR)/rc.gpgme $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgpgme
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GPGME_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXgpgme
 	$(MAKE) $(GPGME_IPK_DIR)/CONTROL/control
 #	install -m 755 $(GPGME_SOURCE_DIR)/postinst $(GPGME_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(GPGME_IPK_DIR)/CONTROL/postinst

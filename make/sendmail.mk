@@ -25,13 +25,13 @@ SENDMAIL_IPK_VERSION=1
 #
 # SENDMAIL_CONFFILES should be a list of user-editable files
 SENDMAIL_CONFFILES=\
-	/opt/etc/mail/aliases \
-	/opt/etc/mail/local-host-names \
-	/opt/etc/mail/helpfile \
-	/opt/etc/mail/relay-domains \
-	/opt/etc/mail/sendmail.cf \
-	/opt/etc/mail/submit.cf \
-	/opt/etc/init.d/S69sendmail
+	$(OPTWARE_PREFIX)etc/mail/aliases \
+	$(OPTWARE_PREFIX)etc/mail/local-host-names \
+	$(OPTWARE_PREFIX)etc/mail/helpfile \
+	$(OPTWARE_PREFIX)etc/mail/relay-domains \
+	$(OPTWARE_PREFIX)etc/mail/sendmail.cf \
+	$(OPTWARE_PREFIX)etc/mail/submit.cf \
+	$(OPTWARE_PREFIX)etc/init.d/S69sendmail
 
 #
 # SENDMAIL_PATCHES should list any patches, in the the order in
@@ -116,8 +116,8 @@ $(SENDMAIL_BUILD_DIR)/.built: $(SENDMAIL_BUILD_DIR)/.configured
 	rm -f $(SENDMAIL_BUILD_DIR)/.built
 	$(MAKE) -C $(SENDMAIL_BUILD_DIR) \
 		CC=$(TARGET_CC)	CCLINK=$(TARGET_CC) \
-	CCOPTS="-D_PATH_SENDMAILCF=\\\"/opt/etc/mail/sendmail.cf\\\" -I$(STAGING_INCLUDE_DIR) $(SENDMAIL_CPPFLAGS)" \
-		LIBDIRS="-L$(STAGING_LIB_DIR) -Wl,--rpath=/opt/lib"
+	CCOPTS="-D_PATH_SENDMAILCF=\\\"$(OPTWARE_PREFIX)etc/mail/sendmail.cf\\\" -I$(STAGING_INCLUDE_DIR) $(SENDMAIL_CPPFLAGS)" \
+		LIBDIRS="-L$(STAGING_LIB_DIR) -Wl,--rpath=$(OPTWARE_PREFIX)lib"
 	touch $(SENDMAIL_BUILD_DIR)/.built
 
 #
@@ -157,22 +157,22 @@ $(SENDMAIL_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(SENDMAIL_IPK_DIR)/opt/sbin or $(SENDMAIL_IPK_DIR)/opt/bin
+# Binaries should be installed into $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(SENDMAIL_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(SENDMAIL_IPK_DIR)/opt/etc/sendmail/...
-# Documentation files should be installed in $(SENDMAIL_IPK_DIR)/opt/doc/sendmail/...
-# Daemon startup scripts should be installed in $(SENDMAIL_IPK_DIR)/opt/etc/init.d/S??sendmail
+# Libraries and include files should be installed into $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/sendmail/...
+# Documentation files should be installed in $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)doc/sendmail/...
+# Daemon startup scripts should be installed in $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??sendmail
 #
 # You may need to patch your application to make it use these locations.
 #
 $(SENDMAIL_IPK): $(SENDMAIL_BUILD_DIR)/.built
 	rm -rf $(SENDMAIL_IPK_DIR) $(BUILD_DIR)/sendmail_*_$(TARGET_ARCH).ipk
-	install -d $(SENDMAIL_IPK_DIR)/opt/etc/mail
-	install -d $(SENDMAIL_IPK_DIR)/opt/bin
-	install -d $(SENDMAIL_IPK_DIR)/opt/sbin
-	install -d $(SENDMAIL_IPK_DIR)/opt/man/man{1,5,8}
-	install -d $(SENDMAIL_IPK_DIR)/opt/var/spool/mqueue
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/mail
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)man/man{1,5,8}
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)var/spool/mqueue
 	$(MAKE) -C $(SENDMAIL_BUILD_DIR) DESTDIR=$(SENDMAIL_IPK_DIR) \
 		UBINGRP=$(LOGNAME) UBINOWN=$(LOGNAME) \
 		SBINGRP=$(LOGNAME) SBINOWN=$(LOGNAME) \
@@ -181,23 +181,23 @@ $(SENDMAIL_IPK): $(SENDMAIL_BUILD_DIR)/.built
 		MANOWN=$(LOGNAME) MANGRP=$(LOGNAME) \
 		CFGRP=$(LOGNAME)   CFOWN=$(LOGNAME) \
 		MSPQOWN=$(LOGNAME) \
-		MAILDIR=/opt/etc/mail \
+		MAILDIR=$(OPTWARE_PREFIX)etc/mail \
 		install
 	$(MAKE) -C $(SENDMAIL_BUILD_DIR)/cf/cf DESTDIR=$(SENDMAIL_IPK_DIR) \
 		CFGRP=$(LOGNAME)   CFOWN=$(LOGNAME) \
-		MAILDIR=/opt/etc/mail \
+		MAILDIR=$(OPTWARE_PREFIX)etc/mail \
 		CF=generic-linux install-sendmail-cf
-	for i in $(SENDMAIL_IPK_DIR)/opt/{bin/vacation,sbin/*}; do chmod u+w $$i; $(STRIP_COMMAND) $$i; chmod a-w $$i; done
+	for i in $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX){bin/vacation,sbin/*}; do chmod u+w $$i; $(STRIP_COMMAND) $$i; chmod a-w $$i; done
 	( umask 022;\
 	echo "# local-host-names - include all aliases for your machine here."\
-        > $(SENDMAIL_IPK_DIR)/opt/etc/mail/local-host-names;\
+        > $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/mail/local-host-names;\
 	echo "# relay-domains - include all hosts you want to relay mail for."\
-	> $(SENDMAIL_IPK_DIR)/opt/etc/mail/relay-domains ;\
+	> $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/mail/relay-domains ;\
 	echo "# aliases - define mail aliases here." \
-	> $(SENDMAIL_IPK_DIR)/opt/etc/mail/aliases )
-	install -d $(SENDMAIL_IPK_DIR)/opt/etc/
-	install -d $(SENDMAIL_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(SENDMAIL_SOURCE_DIR)/rc.sendmail $(SENDMAIL_IPK_DIR)/opt/etc/init.d/S69sendmail
+	> $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/mail/aliases )
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(SENDMAIL_SOURCE_DIR)/rc.sendmail $(SENDMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S69sendmail
 	$(MAKE) $(SENDMAIL_IPK_DIR)/CONTROL/control
 	install -m 755 $(SENDMAIL_SOURCE_DIR)/postinst $(SENDMAIL_IPK_DIR)/CONTROL/postinst
 	echo $(SENDMAIL_CONFFILES) | sed -e 's/ /\n/g' > $(SENDMAIL_IPK_DIR)/CONTROL/conffiles

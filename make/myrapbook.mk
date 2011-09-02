@@ -46,7 +46,7 @@ MYRAPBOOK_IPK_VERSION=1
 
 #
 # MYRAPBOOK_CONFFILES should be a list of user-editable files
-MYRAPBOOK_CONFFILES=/opt/etc/myrapbook.conf /opt/etc/init.d/myrapbookd
+MYRAPBOOK_CONFFILES=$(OPTWARE_PREFIX)etc/myrapbook.conf $(OPTWARE_PREFIX)etc/init.d/myrapbookd
 
 #
 # MYRAPBOOK_PATCHES should list any patches, in the the order in
@@ -124,8 +124,8 @@ $(MYRAPBOOK_BUILD_DIR)/.configured: $(DL_DIR)/$(MYRAPBOOK_SOURCE) $(MYRAPBOOK_PA
 	sed -i -e '/^CC =/s|^.*|CC = "$(TARGET_CC)"|' \
 	-e '/^CFLAGS=/s|^.*|CFLAGS=$(STAGING_CPPFLAGS) $(MYRAPBOOK_CPPFLAGS)|' \
 	-e 's|^LIBS =.*|LIBS=$(STAGING_LDFLAGS) $(MYRAPBOOK_LDFLAGS) \\|' $(@D)/makefile
-	sed -i -e 's|/tmp/myrapbook|/opt/tmp/myrapbook|' \
-	-e 's|\./myrapbook\.conf|/opt/etc/myrapbook.conf|' $(@D)/myrapbook.c
+	sed -i -e 's|/tmp/myrapbook|$(OPTWARE_PREFIX)tmp/myrapbook|' \
+	-e 's|\./myrapbook\.conf|$(OPTWARE_PREFIX)etc/myrapbook.conf|' $(@D)/myrapbook.c
 	###fix by andrew_sh@mybookworld.wikidot.com
 	sed -i -e "s/SOL_TCP/getprotobyname('tcp')/" $(@D)/web_interface/daemoncntrl.php
 	touch $@
@@ -167,28 +167,28 @@ $(MYRAPBOOK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(MYRAPBOOK_IPK_DIR)/opt/sbin or $(MYRAPBOOK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(MYRAPBOOK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(MYRAPBOOK_IPK_DIR)/opt/etc/myrapbook/...
-# Documentation files should be installed in $(MYRAPBOOK_IPK_DIR)/opt/doc/myrapbook/...
-# Daemon startup scripts should be installed in $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d/S??myrapbook
+# Libraries and include files should be installed into $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/myrapbook/...
+# Documentation files should be installed in $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)doc/myrapbook/...
+# Daemon startup scripts should be installed in $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??myrapbook
 #
 # You may need to patch your application to make it use these locations.
 #
 $(MYRAPBOOK_IPK): $(MYRAPBOOK_BUILD_DIR)/.built
 	rm -rf $(MYRAPBOOK_IPK_DIR) $(BUILD_DIR)/myrapbook_*_$(TARGET_ARCH).ipk
-	mkdir -p $(MYRAPBOOK_IPK_DIR)/opt/bin $(MYRAPBOOK_IPK_DIR)/opt/share/myrapbook
-	cp -f $(MYRAPBOOK_BUILD_DIR)/web_interface/* $(MYRAPBOOK_IPK_DIR)/opt/share/myrapbook
-	$(STRIP_COMMAND) $(MYRAPBOOK_BUILD_DIR)/myrapbook-daemon -o $(MYRAPBOOK_IPK_DIR)/opt/bin/myrapbook-daemon
-	install -d $(MYRAPBOOK_IPK_DIR)/opt/etc/
-	install -m 644 $(MYRAPBOOK_SOURCE_DIR)/myrapbook.conf $(MYRAPBOOK_IPK_DIR)/opt/etc/myrapbook.conf
-	install -d $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(MYRAPBOOK_SOURCE_DIR)/myrapbookd $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d/myrapbookd
-	ln -s myrapbookd $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d/S92myrapbookd
-	ln -s myrapbookd $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d/K12myrapbookd
-	install -d $(MYRAPBOOK_IPK_DIR)/opt/tmp/myrapbook
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MYRAPBOOK_IPK_DIR)/opt/etc/init.d/SXXmyrapbook
+	mkdir -p $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)bin $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)share/myrapbook
+	cp -f $(MYRAPBOOK_BUILD_DIR)/web_interface/* $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)share/myrapbook
+	$(STRIP_COMMAND) $(MYRAPBOOK_BUILD_DIR)/myrapbook-daemon -o $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)bin/myrapbook-daemon
+	install -d $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -m 644 $(MYRAPBOOK_SOURCE_DIR)/myrapbook.conf $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/myrapbook.conf
+	install -d $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(MYRAPBOOK_SOURCE_DIR)/myrapbookd $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/myrapbookd
+	ln -s myrapbookd $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S92myrapbookd
+	ln -s myrapbookd $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/K12myrapbookd
+	install -d $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)tmp/myrapbook
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MYRAPBOOK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXmyrapbook
 	$(MAKE) $(MYRAPBOOK_IPK_DIR)/CONTROL/control
 #	install -m 755 $(MYRAPBOOK_SOURCE_DIR)/postinst $(MYRAPBOOK_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(MYRAPBOOK_IPK_DIR)/CONTROL/postinst

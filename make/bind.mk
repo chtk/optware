@@ -60,12 +60,12 @@ $(BIND_BUILD_DIR)/.configured: $(DL_DIR)/$(BIND_SOURCE) make/bind.mk
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		$(BIND_CONFIG_ARGS) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--with-libtool \
 		--with-openssl=$(STAGING_PREFIX) \
 		--without-libxml2 \
-		--sysconfdir=/opt/etc/named \
-		--localstatedir=/opt/var \
+		--sysconfdir=$(OPTWARE_PREFIX)etc/named \
+		--localstatedir=$(OPTWARE_PREFIX)var \
 		--with-randomdev=/dev/random \
 		--disable-getifaddrs ; }
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -99,22 +99,22 @@ $(BIND_IPK_DIR)/CONTROL/control:
 $(BIND_IPK): $(BIND_BUILD_DIR)/.built
 	rm -rf $(BIND_IPK_DIR) $(BIND_IPK)
 	$(MAKE) -C $(BIND_BUILD_DIR) DESTDIR=$(BIND_IPK_DIR) install
-	$(STRIP_COMMAND) $(BIND_IPK_DIR)/opt/lib/*.so.*
+	$(STRIP_COMMAND) $(BIND_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
 	$(STRIP_COMMAND) \
-		$(BIND_IPK_DIR)/opt/bin/dig \
-		$(BIND_IPK_DIR)/opt/bin/host \
-		$(BIND_IPK_DIR)/opt/bin/nslookup \
-		$(BIND_IPK_DIR)/opt/bin/nsupdate \
-		$(BIND_IPK_DIR)/opt/sbin/*
-	# cp -p $(BIND_IPK_DIR)/opt/sbin/named $(BIND_IPK_DIR)/opt/sbin/named.exe
-	rm -rf $(BIND_IPK_DIR)/opt/{man,include}
-	rm -f $(BIND_IPK_DIR)/opt/lib/*.la $(BIND_IPK_DIR)/opt/lib/*.a
-	install -d $(BIND_IPK_DIR)/opt/etc/init.d
-	install -m 755 $(BIND_SOURCE_DIR)/S09named $(BIND_IPK_DIR)/opt/etc/init.d/S09named
+		$(BIND_IPK_DIR)$(OPTWARE_PREFIX)bin/dig \
+		$(BIND_IPK_DIR)$(OPTWARE_PREFIX)bin/host \
+		$(BIND_IPK_DIR)$(OPTWARE_PREFIX)bin/nslookup \
+		$(BIND_IPK_DIR)$(OPTWARE_PREFIX)bin/nsupdate \
+		$(BIND_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
+	# cp -p $(BIND_IPK_DIR)$(OPTWARE_PREFIX)sbin/named $(BIND_IPK_DIR)$(OPTWARE_PREFIX)sbin/named.exe
+	rm -rf $(BIND_IPK_DIR)$(OPTWARE_PREFIX){man,include}
+	rm -f $(BIND_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la $(BIND_IPK_DIR)$(OPTWARE_PREFIX)lib/*.a
+	install -d $(BIND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	install -m 755 $(BIND_SOURCE_DIR)/S09named $(BIND_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S09named
 	$(MAKE) $(BIND_IPK_DIR)/CONTROL/control
 	install -m 755 $(BIND_SOURCE_DIR)/postinst $(BIND_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(BIND_SOURCE_DIR)/prerm    $(BIND_IPK_DIR)/CONTROL/prerm
-	install -d $(BIND_IPK_DIR)/opt/etc/named
+	install -d $(BIND_IPK_DIR)$(OPTWARE_PREFIX)etc/named
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BIND_IPK_DIR)
 
 bind-ipk: $(BIND_IPK)

@@ -44,7 +44,7 @@ LIRC_IPK_VERSION=3
 
 #
 # LIRC_CONFFILES should be a list of user-editable files
-#LIRC_CONFFILES=/opt/etc/lirc.conf /opt/etc/init.d/SXXlirc
+#LIRC_CONFFILES=$(OPTWARE_PREFIX)etc/lirc.conf $(OPTWARE_PREFIX)etc/init.d/SXXlirc
 
 #
 # LIRC_PATCHES should list any patches, in the the order in
@@ -142,11 +142,11 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 		--disable-static \
 		--with-kerneldir=$(LIRC_KERNELDIR) \
-		--with-moduledir=/opt/lib/modules \
+		--with-moduledir=$(OPTWARE_PREFIX)lib/modules \
 		--with-driver="$(LIRC_DRIVER)" \
 		--with-driver=udp \
 		--without-x \
@@ -172,7 +172,7 @@ lirc-unpack: $(LIRC_BUILD_DIR)/.configured
 # toolchain.
 $(LIRC_BUILD_DIR)/.built: $(LIRC_BUILD_DIR)/.configured
 	rm -f $@
-	PATH=/opt/brcm/hndtools-mipsel-linux/bin:$$PATH \
+	PATH=$(OPTWARE_PREFIX)brcm/hndtools-mipsel-linux/bin:$$PATH \
 	$(MAKE) -C $(LIRC_BUILD_DIR)
 	touch $@
 
@@ -213,12 +213,12 @@ $(LIRC_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LIRC_IPK_DIR)/opt/sbin or $(LIRC_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LIRC_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LIRC_IPK_DIR)/opt/etc/lirc/...
-# Documentation files should be installed in $(LIRC_IPK_DIR)/opt/doc/lirc/...
-# Daemon startup scripts should be installed in $(LIRC_IPK_DIR)/opt/etc/init.d/S??lirc
+# Libraries and include files should be installed into $(LIRC_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/lirc/...
+# Documentation files should be installed in $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)doc/lirc/...
+# Daemon startup scripts should be installed in $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??lirc
 #
 # You may need to patch your application to make it use these locations.
 #
@@ -227,12 +227,12 @@ $(LIRC_IPK): $(LIRC_BUILD_DIR)/.built
 	rm -rf $(LIRC_IPK_DIR) $(BUILD_DIR)/lirc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIRC_BUILD_DIR) DESTDIR=$(LIRC_IPK_DIR) install-strip
 	rm -rf $(LIRC_IPK_DIR)/dev
-	$(STRIP_COMMAND) $(LIRC_IPK_DIR)/opt/lib/*.so.*
-#	install -d $(LIRC_IPK_DIR)/opt/etc/
-#	install -m 644 $(LIRC_SOURCE_DIR)/lirc.conf $(LIRC_IPK_DIR)/opt/etc/lirc.conf
-#	install -d $(LIRC_IPK_DIR)/opt/etc/init.d
-#	install -m 755 $(LIRC_SOURCE_DIR)/rc.lirc $(LIRC_IPK_DIR)/opt/etc/init.d/SXXlirc
-#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIRC_IPK_DIR)/opt/etc/init.d/SXXlirc
+	$(STRIP_COMMAND) $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*
+#	install -d $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/
+#	install -m 644 $(LIRC_SOURCE_DIR)/lirc.conf $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/lirc.conf
+#	install -d $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+#	install -m 755 $(LIRC_SOURCE_DIR)/rc.lirc $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlirc
+#	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIRC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlirc
 	$(MAKE) $(LIRC_IPK_DIR)/CONTROL/control
 #	install -m 755 $(LIRC_SOURCE_DIR)/postinst $(LIRC_IPK_DIR)/CONTROL/postinst
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LIRC_IPK_DIR)/CONTROL/postinst

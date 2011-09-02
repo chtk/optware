@@ -125,10 +125,10 @@ $(FONTCONFIG_BUILD_DIR)/.configured: $(DL_DIR)/fontconfig-$(FONTCONFIG_VERSION).
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
-		--with-default-fonts=/opt/share/fonts \
+		--prefix=$(OPTWARE_PREFIX)\
+		--with-default-fonts=$(OPTWARE_PREFIX)share/fonts \
 		--without-add-fonts \
-		--with-freetype-config=$(STAGING_DIR)/opt/bin/freetype-config \
+		--with-freetype-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/freetype-config \
 		--disable-docs \
 		--disable-static \
 	)
@@ -165,19 +165,19 @@ fontconfig-stage: $(FONTCONFIG_BUILD_DIR)/.staged
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(FONTCONFIG_IPK_DIR)/opt/sbin or $(FONTCONFIG_IPK_DIR)/opt/bin
+# Binaries should be installed into $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(FONTCONFIG_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(FONTCONFIG_IPK_DIR)/opt/etc/fontconfig/...
-# Documentation files should be installed in $(FONTCONFIG_IPK_DIR)/opt/doc/fontconfig/...
-# Daemon startup scripts should be installed in $(FONTCONFIG_IPK_DIR)/opt/etc/init.d/S??fontconfig
+# Libraries and include files should be installed into $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/fontconfig/...
+# Documentation files should be installed in $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)doc/fontconfig/...
+# Daemon startup scripts should be installed in $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??fontconfig
 #
 # You may need to patch your application to make it use these locations.
 #
 $(FONTCONFIG_IPK): $(FONTCONFIG_BUILD_DIR)/.built
 	rm -rf $(FONTCONFIG_IPK_DIR) $(BUILD_DIR)/fontconfig_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FONTCONFIG_BUILD_DIR) DESTDIR=$(FONTCONFIG_IPK_DIR) install-strip
-	rm -f $(FONTCONFIG_IPK_DIR)/opt/lib/*.la
+	rm -f $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
 	$(MAKE) $(FONTCONFIG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FONTCONFIG_IPK_DIR)
 

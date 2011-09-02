@@ -40,7 +40,7 @@ ENSCRIPT_IPK_VERSION=1
 
 #
 # ENSCRIPT_CONFFILES should be a list of user-editable files
-#ENSCRIPT_CONFFILES=/opt/etc/enscript.conf /opt/etc/init.d/SXXenscript
+#ENSCRIPT_CONFFILES=$(OPTWARE_PREFIX)etc/enscript.conf $(OPTWARE_PREFIX)etc/init.d/SXXenscript
 
 #
 # ENSCRIPT_PATCHES should list any patches, in the the order in
@@ -126,7 +126,7 @@ $(ENSCRIPT_BUILD_DIR)/.configured: $(DL_DIR)/$(ENSCRIPT_SOURCE) $(ENSCRIPT_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 --disable-dependency-tracking \
 		--disable-nls \
 		--disable-static \
@@ -181,19 +181,19 @@ $(ENSCRIPT_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(ENSCRIPT_IPK_DIR)/opt/sbin or $(ENSCRIPT_IPK_DIR)/opt/bin
+# Binaries should be installed into $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(ENSCRIPT_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(ENSCRIPT_IPK_DIR)/opt/etc/enscript/...
-# Documentation files should be installed in $(ENSCRIPT_IPK_DIR)/opt/doc/enscript/...
-# Daemon startup scripts should be installed in $(ENSCRIPT_IPK_DIR)/opt/etc/init.d/S??enscript
+# Libraries and include files should be installed into $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)etc/enscript/...
+# Documentation files should be installed in $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)doc/enscript/...
+# Daemon startup scripts should be installed in $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??enscript
 #
 # You may need to patch your application to make it use these locations.
 #
 $(ENSCRIPT_IPK): $(ENSCRIPT_BUILD_DIR)/.built
 	rm -rf $(ENSCRIPT_IPK_DIR) $(BUILD_DIR)/enscript_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ENSCRIPT_BUILD_DIR) DESTDIR=$(ENSCRIPT_IPK_DIR) install-strip
-	rm -rf $(ENSCRIPT_IPK_DIR)/opt/info/dir*
+	rm -rf $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)info/dir*
 	$(MAKE) $(ENSCRIPT_IPK_DIR)/CONTROL/control
 	echo $(ENSCRIPT_CONFFILES) | sed -e 's/ /\n/g' > $(ENSCRIPT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ENSCRIPT_IPK_DIR)

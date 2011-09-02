@@ -110,7 +110,7 @@ $(GAWK_BUILD_DIR)/.configured: $(DL_DIR)/$(GAWK_SOURCE) $(GAWK_PATCHES) make/gaw
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX)\
 		--disable-nls \
 	)
 ifeq ($(HOST_MACHINE),armv5b)
@@ -142,16 +142,16 @@ gawk: $(GAWK_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-#$(STAGING_DIR)/opt/lib/libgawk.so.$(GAWK_VERSION): $(GAWK_BUILD_DIR)/.built
-#	install -d $(STAGING_DIR)/opt/include
-#	install -m 644 $(GAWK_BUILD_DIR)/gawk.h $(STAGING_DIR)/opt/include
-#	install -d $(STAGING_DIR)/opt/lib
-#	install -m 644 $(GAWK_BUILD_DIR)/libgawk.a $(STAGING_DIR)/opt/lib
-#	install -m 644 $(GAWK_BUILD_DIR)/libgawk.so.$(GAWK_VERSION) $(STAGING_DIR)/opt/lib
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libgawk.so.$(GAWK_VERSION) libgawk.so.1
-#	cd $(STAGING_DIR)/opt/lib && ln -fs libgawk.so.$(GAWK_VERSION) libgawk.so
+#$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgawk.so.$(GAWK_VERSION): $(GAWK_BUILD_DIR)/.built
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -m 644 $(GAWK_BUILD_DIR)/gawk.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
+#	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(GAWK_BUILD_DIR)/libgawk.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	install -m 644 $(GAWK_BUILD_DIR)/libgawk.so.$(GAWK_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgawk.so.$(GAWK_VERSION) libgawk.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgawk.so.$(GAWK_VERSION) libgawk.so
 #
-#gawk-stage: $(STAGING_DIR)/opt/lib/libgawk.so.$(GAWK_VERSION)
+#gawk-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgawk.so.$(GAWK_VERSION)
 
 $(GAWK_IPK_DIR)/CONTROL/control:
 	@install -d $(@D)
@@ -171,28 +171,28 @@ $(GAWK_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(GAWK_IPK_DIR)/opt/sbin or $(GAWK_IPK_DIR)/opt/bin
+# Binaries should be installed into $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(GAWK_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(GAWK_IPK_DIR)/opt/etc/gawk/...
-# Documentation files should be installed in $(GAWK_IPK_DIR)/opt/doc/gawk/...
-# Daemon startup scripts should be installed in $(GAWK_IPK_DIR)/opt/etc/init.d/S??gawk
+# Libraries and include files should be installed into $(GAWK_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)etc/gawk/...
+# Documentation files should be installed in $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)doc/gawk/...
+# Daemon startup scripts should be installed in $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??gawk
 #
 # You may need to patch your application to make it use these locations.
 #
 $(GAWK_IPK): $(GAWK_BUILD_DIR)/.built
 	rm -rf $(GAWK_IPK_DIR) $(BUILD_DIR)/gawk_*_$(TARGET_ARCH).ipk
-	install -d $(GAWK_IPK_DIR)/opt/bin
+	install -d $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin
 	$(MAKE) -C $(GAWK_BUILD_DIR) DESTDIR=$(GAWK_IPK_DIR) install-strip
-	rm -f $(GAWK_IPK_DIR)/opt/info/dir $(GAWK_IPK_DIR)/opt/share/info/dir
-	rm -f $(GAWK_IPK_DIR)/opt/bin/gawk-$(GAWK_VERSION)
-	rm -f $(GAWK_IPK_DIR)/opt/bin/pgawk-$(GAWK_VERSION)
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)share/info/dir
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin/gawk-$(GAWK_VERSION)
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin/pgawk-$(GAWK_VERSION)
 	$(MAKE) $(GAWK_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install /opt/bin/awk awk /opt/bin/gawk 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/awk awk $(OPTWARE_PREFIX)bin/gawk 80"; \
 	) > $(GAWK_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove awk /opt/bin/gawk"; \
+	 echo "update-alternatives --remove awk $(OPTWARE_PREFIX)bin/gawk"; \
 	) > $(GAWK_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \

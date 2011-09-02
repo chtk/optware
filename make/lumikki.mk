@@ -43,7 +43,7 @@ LUMIKKI_IPK_VERSION=3
 
 #
 # LUMIKKI_CONFFILES should be a list of user-editable files
-#LUMIKKI_CONFFILES=/opt/etc/lumikki.conf /opt/etc/init.d/SXXlumikki
+#LUMIKKI_CONFFILES=$(OPTWARE_PREFIX)etc/lumikki.conf $(OPTWARE_PREFIX)etc/init.d/SXXlumikki
 
 #
 # LUMIKKI_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(LUMIKKI_BUILD_DIR)/.configured: $(DL_DIR)/$(LUMIKKI_SOURCE) $(LUMIKKI_PATCHES)
 #		--build=$(GNU_HOST_NAME) \
 #		--host=$(GNU_TARGET_NAME) \
 #		--target=$(GNU_TARGET_NAME) \
-#		--prefix=/opt \
+#		--prefix=$(OPTWARE_PREFIX)\
 #		--disable-nls \
 #		--disable-static \
 #	)
@@ -152,7 +152,7 @@ lumikki: $(LUMIKKI_BUILD_DIR)/.built
 $(LUMIKKI_BUILD_DIR)/.staged: $(LUMIKKI_BUILD_DIR)/.built
 	rm -f $(LUMIKKI_BUILD_DIR)/.staged
 	$(MAKE) -C $(LUMIKKI_BUILD_DIR) DESTDIR=$(STAGING_DIR) \
-		TRUE_DESTDIR=/opt MANDIR=$(DESTDIR)/man/man1 \
+		TRUE_DESTDIR=$(OPTWARE_PREFIX)MANDIR=$(DESTDIR)/man/man1 \
 		DOCDIR=$(STAGING_DIR)/shared/docs \
 		install
 	touch $(LUMIKKI_BUILD_DIR)/.staged
@@ -181,24 +181,24 @@ $(LUMIKKI_IPK_DIR)/CONTROL/control:
 #
 # This builds the IPK file.
 #
-# Binaries should be installed into $(LUMIKKI_IPK_DIR)/opt/sbin or $(LUMIKKI_IPK_DIR)/opt/bin
+# Binaries should be installed into $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)sbin or $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)bin
 # (use the location in a well-known Linux distro as a guide for choosing sbin or bin).
-# Libraries and include files should be installed into $(LUMIKKI_IPK_DIR)/opt/{lib,include}
-# Configuration files should be installed in $(LUMIKKI_IPK_DIR)/opt/etc/lumikki/...
-# Documentation files should be installed in $(LUMIKKI_IPK_DIR)/opt/doc/lumikki/...
-# Daemon startup scripts should be installed in $(LUMIKKI_IPK_DIR)/opt/etc/init.d/S??lumikki
+# Libraries and include files should be installed into $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX){lib,include}
+# Configuration files should be installed in $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/lumikki/...
+# Documentation files should be installed in $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)doc/lumikki/...
+# Daemon startup scripts should be installed in $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S??lumikki
 #
 # You may need to patch your application to make it use these locations.
 #
 $(LUMIKKI_IPK): $(LUMIKKI_BUILD_DIR)/.built
 	rm -rf $(LUMIKKI_IPK_DIR) $(BUILD_DIR)/lumikki_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LUMIKKI_BUILD_DIR) DESTDIR=$(LUMIKKI_IPK_DIR) \
-		TRUE_DESTDIR=/opt MANDIR=$(LUMIKKI_IPK_DIR)/man/man1 \
+		TRUE_DESTDIR=$(OPTWARE_PREFIX)MANDIR=$(LUMIKKI_IPK_DIR)/man/man1 \
 		DOCDIR=$(LUMIKKI_IPK_DIR)/share/docs install-strip
-	#install -d $(LUMIKKI_IPK_DIR)/opt/etc/
-	#install -m 644 $(LUMIKKI_SOURCE_DIR)/lumikki.conf $(LUMIKKI_IPK_DIR)/opt/etc/lumikki.conf
-	#install -d $(LUMIKKI_IPK_DIR)/opt/etc/init.d
-	#install -m 755 $(LUMIKKI_SOURCE_DIR)/rc.lumikki $(LUMIKKI_IPK_DIR)/opt/etc/init.d/SXXlumikki
+	#install -d $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	#install -m 644 $(LUMIKKI_SOURCE_DIR)/lumikki.conf $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/lumikki.conf
+	#install -d $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	#install -m 755 $(LUMIKKI_SOURCE_DIR)/rc.lumikki $(LUMIKKI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlumikki
 	$(MAKE) $(LUMIKKI_IPK_DIR)/CONTROL/control
 	#install -m 755 $(LUMIKKI_SOURCE_DIR)/postinst $(LUMIKKI_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(LUMIKKI_SOURCE_DIR)/prerm $(LUMIKKI_IPK_DIR)/CONTROL/prerm
