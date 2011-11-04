@@ -9,7 +9,8 @@ BROKEN_PACKAGES = \
 	py-bazaar-ng py-simplejson \
 	qemu qemu-libc-i386 \
 	sandbox \
-	slrn spandsp 
+	slrn spandsp \
+	telldus-core \
 
 PSMISC_VERSION := 22.11
 
@@ -18,3 +19,5 @@ SAMBA34_IPK_VERSION := 2
 
 SAMBA35_VERSION := 3.5.9
 SAMBA35_IPK_VERSION := 1
+
+ZNC_CONFIG_ARGS:=gl_cv_cc_visibility=true
