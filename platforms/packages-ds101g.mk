@@ -18,6 +18,7 @@ BROKEN_PACKAGES = \
 	golang \
 	ldconfig \
 	sandbox \
+	telldus-core \
 
 PSMISC_VERSION := 22.11
 
@@ -32,3 +33,5 @@ SAMBA35_IPK_VERSION := 1
 
 STRACE_VERSION := 4.5.17
 STRACE_IPK_VERSION := 1
+
+ZNC_CONFIG_ARGS:=gl_cv_cc_visibility=true

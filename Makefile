@@ -197,7 +197,8 @@ PYTHON_PACKAGES = \
 	py-pexpect py-pil py-ply py-protocols \
 	py-pgsql py-psycopg py-psycopg2 py-pygresql \
 	py-pudge py-pylons py-pyro py-quixote \
-	py-rdiff-backup py-reportlab py-routes py-roundup py-ruledispatch \
+	py-rdiff-backup py-redis \
+	py-reportlab py-routes py-roundup py-ruledispatch \
 	py-scgi py-selector py-serial py-setuptools \
 	py-silvercity py-simplejson py-simpy py-soappy \
 	py-sqlalchemy py-sqlite py-sqlobject py-statlib \
@@ -378,7 +379,8 @@ COMMON_CROSS_PACKAGES = \
 	qemacs qemu qemu-libc-i386 qpopper quagga quickie quilt \
 	radiusclient-ng rc rc5pipe rcs rdate \
 	readline re2c recode recordext \
-	redir renderext rhtvision rlfe rlwrap rrdcollect rrdtool \
+	redir renderext rhtvision rkhunter \
+	rlfe rlwrap rrdcollect rrdtool \
 	rssh rsstail rsync rtorrent rtpproxy ruby rubygems rxtx \
 	sablevm samba samba2 samba34 samba35 samba36 sandbox sane-backends \
 	scli scponly screen scrobby scsi-idle sdl sdparm \
@@ -389,11 +391,11 @@ COMMON_CROSS_PACKAGES = \
 	socat softflowd sox spandsp spawn-fcgi speex spindown splix \
 	sqlite sqlite2 \
 	sqsh squeak squid squid3 srelay srecord ssam sslwrap \
-	strace stunnel streamripper \
+	strace strongswan stunnel streamripper \
 	stupid-ftpd sudo surfraw swi-prolog svn \
 	swig syslog-ng sysstat syx \
 	taged taglib tar tcl tcpwrappers tftp-hpa \
-	tcpdump tcpflow tcsh termcap tesseract-ocr \
+	tcpdump tcpflow tcsh telldus-core termcap tesseract-ocr \
 	texinfo textutils thttpd \
 	tig tin tinyproxy tinyscheme tmsnc tmux tnef tnftp tnftpd \
 	toppyweb tor torsocks torrent torrentflux transcode \
@@ -414,7 +416,7 @@ COMMON_CROSS_PACKAGES = \
 	xmu xpdf xpm xproto xrender xt xterm xtrans xtst \
 	x264 xmail xvid xz-utils \
 	yafc yasm yawk yougrabber \
-	zile zip zlib zoo zsh \
+	zile zip zlib znc zoo zsh \
 
 # emacs and xemacs needs to run themselves to dump an image, so they probably will never cross-compile.
 # ocaml does not use gnu configure, cross build may work by some more tweaking, build native first
