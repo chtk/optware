@@ -4,8 +4,8 @@
 #
 #############################################################
 
-LIBEVENT_SITE=http://www.monkey.org/~provos/
-LIBEVENT_VERSION=2.0.11
+LIBEVENT_SITE=https://github.com/downloads/libevent/libevent
+LIBEVENT_VERSION=2.0.16
 LIBEVENT_DIR=libevent-$(LIBEVENT_VERSION)-stable
 LIBEVENT_SOURCE=$(LIBEVENT_DIR).tar.gz
 LIBEVENT_UNZIP=zcat
@@ -32,7 +32,7 @@ LIBEVENT_IPK=$(BUILD_DIR)/libevent_$(LIBEVENT_VERSION)-$(LIBEVENT_IPK_VERSION)_$
 .PHONY: libevent-source libevent-unpack libevent libevent-stage libevent-ipk libevent-clean libevent-dirclean libevent-check
 
 $(DL_DIR)/$(LIBEVENT_SOURCE):
-	$(WGET) -P $(@D) $(LIBEVENT_SITE)/$(@F) || \
+	$(WGET) --no-check-certificate -P $(@D) $(LIBEVENT_SITE)/$(@F) || \
 	$(WGET) -P $(@D) $(SOURCES_NLO_SITE)/$(@F)
 
 libevent-source: $(DL_DIR)/$(LIBEVENT_SOURCE)
