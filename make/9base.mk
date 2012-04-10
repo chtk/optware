@@ -38,7 +38,7 @@
 
 9BASE_IPK_VERSION=1
 
-#9BASE_CONFFILES=/$(OPTWARE_PREFIX)etc/9base.conf /$(OPTWARE_PREFIX)etc/init.d/SXX9base
+#9BASE_CONFFILES=$(OPTWARE_PREFIX)/etc/9base.conf $(OPTWARE_PREFIX)/etc/init.d/SXX9base
 
 #9BASE_PATCHES=$(9BASE_SOURCE_DIR)/configure.patch
 
@@ -83,7 +83,7 @@ $(9BASE_HOST_BUILD_DIR)/.staged: $(9BASE_HOST_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) install \
 		DESTDIR=$(HOST_STAGING_DIR) \
-		PREFIX=/$(OPTWARE_PREFIX)lib/9base \
+		PREFIX=$(OPTWARE_PREFIX)/lib/9base \
 		SUBDIRS="yacc" \
 		;
 	touch $@
@@ -175,15 +175,15 @@ $(9BASE_IPK): $(9BASE_BUILD_DIR)/.built
 	rm -rf $(9BASE_IPK_DIR) $(BUILD_DIR)/9base_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(9BASE_BUILD_DIR) install \
 		DESTDIR=$(9BASE_IPK_DIR) \
-		PREFIX=/$(OPTWARE_PREFIX)lib/9base \
+		PREFIX=/$(OPTWARE_PREFIX)/lib/9base \
 		STRIP="true" \
 		;
-	$(STRIP_COMMAND) $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)lib/9base/bin/*
-	install -d $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)share
-	mv $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)lib/9base/share/man $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)share/
-	rmdir $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)lib/9base/share
+	$(STRIP_COMMAND) $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/lib/9base/bin/*
+	install -d $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/share
+	mv $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/lib/9base/share/man $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/share/
+	rmdir $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/lib/9base/share
 	for d in man1; do \
-		cd $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)share/man/$$d; \
+		cd $(9BASE_IPK_DIR)/$(OPTWARE_PREFIX)/share/man/$$d; \
 		for f in *; do mv $$f 9base-$$f; done; \
 	done
 	$(MAKE) $(9BASE_IPK_DIR)/CONTROL/control
