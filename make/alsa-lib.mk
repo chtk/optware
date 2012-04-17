@@ -48,6 +48,9 @@ ALSA-LIB_CONFFILES=
 #
 ALSA-LIB_PATCHES=
 
+ifeq ($(TARGET_ARCH), $(filter mips mipsel, $(TARGET_ARCH)))
+	ALSA-LIB_PATCHES += $(ALSA-LIB_SOURCE_DIR)/003-mips-atomic-static-inline.patch
+endif
 #
 # If the compilation of the package requires additional
 # compilation or linking flags, then list them here.
@@ -103,7 +106,7 @@ alsa-lib-source: $(DL_DIR)/$(ALSA-LIB_SOURCE) $(ALSA-LIB_PATCHES)
 $(ALSA-LIB_BUILD_DIR)/.configured: $(DL_DIR)/$(ALSA-LIB_SOURCE) $(ALSA-LIB_PATCHES) make/alsa-lib.mk
 	rm -rf $(BUILD_DIR)/$(ALSA-LIB_DIR) $(ALSA-LIB_BUILD_DIR)
 	$(ALSA-LIB_UNZIP) $(DL_DIR)/$(ALSA-LIB_SOURCE) | tar -C $(BUILD_DIR) -xvf -
-#	cat $(ALSA-LIB_PATCHES) | patch -d $(BUILD_DIR)/$(ALSA-LIB_DIR) -p1
+	cat $(ALSA-LIB_PATCHES) | patch -d $(BUILD_DIR)/$(ALSA-LIB_DIR) -p1
 	mv $(BUILD_DIR)/$(ALSA-LIB_DIR) $(ALSA-LIB_BUILD_DIR)
 	(cd $(ALSA-LIB_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
