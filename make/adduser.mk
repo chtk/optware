@@ -135,7 +135,7 @@ $(ADDUSER_BUILD_DIR)/.built: $(ADDUSER_BUILD_DIR)/.configured
 	CPPFLAGS="$(STAGING_CPPFLAGS) $(ADDUSER_CPPFLAGS)" \
 	LDFLAGS="$(STAGING_LDFLAGS) $(ADDUSER_LDFLAGS)" \
 	$(BUSYBOX_BUILD_EXTRA_ENV) \
-	$(MAKE) CROSS="$(TARGET_CROSS)" PREFIX="/opt" \
+	$(MAKE) CROSS="$(TARGET_CROSS)" PREFIX="$(OPTWARE_PREFIX)" \
 		HOSTCC=$(HOSTCC) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer" \
 		-C $(ADDUSER_BUILD_DIR)
@@ -178,15 +178,17 @@ $(ADDUSER_IPK_DIR)/CONTROL/control:
 #
 $(ADDUSER_IPK): $(ADDUSER_BUILD_DIR)/.built
 	rm -rf $(ADDUSER_IPK_DIR) $(BUILD_DIR)/adduser_*_$(TARGET_ARCH).ipk
-	install -d $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(ADDUSER_BUILD_DIR)/busybox $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin/adduser
-	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs adduser addgroup
-	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs adduser delgroup
-	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs adduser deluser
-	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs adduser adduser-su
+	install -d $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(ADDUSER_BUILD_DIR)/busybox $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin/adduser
+	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -fs adduser addgroup
+	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -fs adduser delgroup
+	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -fs adduser deluser
+	cd $(ADDUSER_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -fs adduser adduser-su
 	$(MAKE) $(ADDUSER_IPK_DIR)/CONTROL/control
 	install -m 644 $(ADDUSER_SOURCE_DIR)/postinst $(ADDUSER_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(ADDUSER_SOURCE_DIR)/prerm $(ADDUSER_IPK_DIR)/CONTROL/prerm
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(ADDUSER_IPK_DIR)/CONTROL/postinst
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(ADDUSER_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
 			$(ADDUSER_IPK_DIR)/CONTROL/postinst $(ADDUSER_IPK_DIR)/CONTROL/prerm; \
