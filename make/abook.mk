@@ -40,7 +40,7 @@ ABOOK_IPK_VERSION=2
 
 #
 # ABOOK_CONFFILES should be a list of user-editable files
-#ABOOK_CONFFILES=$(OPTWARE_PREFIX)etc/abook.conf $(OPTWARE_PREFIX)etc/init.d/SXXabook
+#ABOOK_CONFFILES=$(OPTWARE_PREFIX)/etc/abook.conf $(OPTWARE_PREFIX)/etc/init.d/SXXabook
 
 #
 # ABOOK_PATCHES should list any patches, in the the order in
@@ -118,7 +118,7 @@ $(ABOOK_BUILD_DIR)/.configured: $(DL_DIR)/$(ABOOK_SOURCE) $(ABOOK_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
