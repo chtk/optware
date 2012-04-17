@@ -34,7 +34,7 @@ ADNS_IPK_VERSION=2
 
 #
 # ADNS_CONFFILES should be a list of user-editable files
-ADNS_CONFFILES=/$(OPTWARE_PREFIX)etc/adns.conf /$(OPTWARE_PREFIX)etc/init.d/SXXadns
+ADNS_CONFFILES=/$(OPTWARE_PREFIX)/etc/adns.conf /$(OPTWARE_PREFIX)/etc/init.d/SXXadns
 
 #
 # ADNS_PATCHES should list any patches, in the the order in
@@ -107,7 +107,7 @@ $(ADNS_BUILD_DIR)/.configured: $(DL_DIR)/$(ADNS_SOURCE) $(ADNS_PATCHES) make/adn
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=/opt \
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -179,20 +179,20 @@ $(ADNS_IPK_DIR)/CONTROL/control:
 #
 $(ADNS_IPK): $(ADNS_BUILD_DIR)/.built
 	rm -rf $(ADNS_IPK_DIR) $(BUILD_DIR)/adns_*_$(TARGET_ARCH).ipk
-	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib/
-	#install -m 644 $(ADNS_BUILD_DIR)/src/libadns.a $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib/libadns.a
+	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib/
+	#install -m 644 $(ADNS_BUILD_DIR)/src/libadns.a $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib/libadns.a
 	install -m 755 $(ADNS_BUILD_DIR)/dynamic/libadns.so.[0-9]*.[0-9]* \
-		 $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib/
-	cd $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib && ln -sf libadns.so.[0-9]*.[0-9]* libadns.so.1
-	ln -sf libadns.so.1 $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib/libadns.so
-	$(STRIP_COMMAND) $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)lib/libadns.so.[0-9]*.[0-9]*
-	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)include/
-	install -m 644 $(ADNS_BUILD_DIR)/src/adns.h $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)include/adns.h
-	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)bin/
-	install -m 755 $(ADNS_BUILD_DIR)/client/adnslogres    $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)bin/adnslogres
-	install -m 755 $(ADNS_BUILD_DIR)/client/adnshost      $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)bin/adnshost
-	install -m 755 $(ADNS_BUILD_DIR)/client/adnsresfilter $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)bin/adnsresfilter
-	$(STRIP_COMMAND) $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)bin/*
+		 $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib/
+	cd $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib && ln -sf libadns.so.[0-9]*.[0-9]* libadns.so.1
+	ln -sf libadns.so.1 $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib/libadns.so
+	$(STRIP_COMMAND) $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/lib/libadns.so.[0-9]*.[0-9]*
+	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/include/
+	install -m 644 $(ADNS_BUILD_DIR)/src/adns.h $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/include/adns.h
+	install -d $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/bin/
+	install -m 755 $(ADNS_BUILD_DIR)/client/adnslogres    $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/bin/adnslogres
+	install -m 755 $(ADNS_BUILD_DIR)/client/adnshost      $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/bin/adnshost
+	install -m 755 $(ADNS_BUILD_DIR)/client/adnsresfilter $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/bin/adnsresfilter
+	$(STRIP_COMMAND) $(ADNS_IPK_DIR)/$(OPTWARE_PREFIX)/bin/*
 	install -d $(ADNS_IPK_DIR)/CONTROL
 	$(MAKE) $(ADNS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ADNS_IPK_DIR)
