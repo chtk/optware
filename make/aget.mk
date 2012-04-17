@@ -125,7 +125,7 @@ $(AGET_BUILD_DIR)/.configured: $(DL_DIR)/$(AGET_SOURCE) $(AGET_PATCHES) make/age
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -185,12 +185,12 @@ $(AGET_IPK_DIR)/CONTROL/control:
 $(AGET_IPK): $(AGET_BUILD_DIR)/.built
 	rm -rf $(AGET_IPK_DIR) $(BUILD_DIR)/aget_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(AGET_BUILD_DIR) DESTDIR=$(AGET_IPK_DIR) install-strip
-	install -d $(AGET_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m755 $(<D)/aget $(AGET_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -d $(AGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/aget
+	install -d $(AGET_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m755 $(<D)/aget $(AGET_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -d $(AGET_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/aget
 	install $(<D)/AUTHORS $(<D)/COPYING $(<D)/ChangeLog $(<D)/INSTALL \
-		$(<D)/README* $(<D)/THANKS $(<D)/TODO $(AGET_IPK_DIR)$(OPTWARE_PREFIX)share/doc/aget/
-	$(STRIP_COMMAND) $(AGET_IPK_DIR)$(OPTWARE_PREFIX)bin/aget
+		$(<D)/README* $(<D)/THANKS $(<D)/TODO $(AGET_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/aget/
+	$(STRIP_COMMAND) $(AGET_IPK_DIR)$(OPTWARE_PREFIX)/bin/aget
 	$(MAKE) $(AGET_IPK_DIR)/CONTROL/control
 	echo $(AGET_CONFFILES) | sed -e 's/ /\n/g' > $(AGET_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(AGET_IPK_DIR)
