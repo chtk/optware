@@ -135,7 +135,7 @@ $(RHTVISION_BUILD_DIR)/.configured: $(DL_DIR)/$(RHTVISION_SOURCE) $(RHTVISION_PA
 		TARGET_ARCH=$(TARGET_ARCH) \
 		LDExtraDirs=$(STAGING_LIB_DIR) \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-debug \
 	)
 #		--build=$(GNU_HOST_NAME) \
@@ -208,13 +208,13 @@ $(RHTVISION_IPK_DIR)/CONTROL/control:
 $(RHTVISION_IPK): $(RHTVISION_BUILD_DIR)/.built
 	rm -rf $(RHTVISION_IPK_DIR) $(BUILD_DIR)/rhtvision_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(RHTVISION_BUILD_DIR) install \
-		prefix=$(RHTVISION_IPK_DIR)/opt
-	rm -f $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)lib/librhtv.a
-	install $(RHTVISION_BUILD_DIR)/examples/demo/demo.exe $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)bin/rhtv-demo
+		prefix=$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)
+	rm -f $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)/lib/librhtv.a
+	install $(RHTVISION_BUILD_DIR)/examples/demo/demo.exe $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)/bin/rhtv-demo
 	$(STRIP_COMMAND) \
-		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)bin/rhtv-config \
-		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)bin/rhtv-demo \
-		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)lib/librhtv.so.[0-9]*.[0-9]*.[0-9]*
+		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)/bin/rhtv-config \
+		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)/bin/rhtv-demo \
+		$(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)/lib/librhtv.so.[0-9]*.[0-9]*.[0-9]*
 #	install -d $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(RHTVISION_SOURCE_DIR)/rhtvision.conf $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)etc/rhtvision.conf
 #	install -d $(RHTVISION_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
