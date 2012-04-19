@@ -1,0 +1,10 @@
+--- server/drivers/mixed/erratic/erratic.cc.orig
++++ server/drivers/mixed/erratic/erratic.cc
+@@ -171,6 +171,7 @@ driver
+ // This must be first per pthread reference
+ #include <pthread.h>
+ 
++#include <cstdlib>
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <unistd.h>

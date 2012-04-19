@@ -49,6 +49,7 @@ PLAYER_IPK_VERSION=3
 #
 PLAYER_PATCHES=$(PLAYER_SOURCE_DIR)/server-Makefile.in.patch
 PLAYER_PATCHES+=$(PLAYER_SOURCE_DIR)/uint.patch
+PLAYER_PATCHES+=$(PLAYER_SOURCE_DIR)/player-cincludes.patch
 
 #
 # If the compilation of the package requires additional
