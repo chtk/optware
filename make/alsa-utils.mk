@@ -122,7 +122,7 @@ $(ALSA-UTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(ALSA-UTILS_SOURCE) $(ALSA-UTILS
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--disable-xmlto \
