@@ -46,7 +46,7 @@ TNFTPD_IPK_VERSION=1
 # TNFTPD_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#TNFTPD_PATCHES=$(TNFTPD_SOURCE_DIR)/configure.patch
+TNFTPD_PATCHES=$(TNFTPD_SOURCE_DIR)/tnftpd-arg_max.patch
 
 #
 # If the compilation of the package requires additional

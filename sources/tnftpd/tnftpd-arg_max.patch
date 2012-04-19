@@ -1,0 +1,11 @@
+--- libnetbsd/glob.c
++++ libnetbsd/glob.c
+@@ -720,7 +720,7 @@ globextend(const Char *path, glob_t *pglob, size_t *limit)
+ 	}
+ 	pathv[pglob->gl_offs + pglob->gl_pathc] = NULL;
+ 
+-	if ((pglob->gl_flags & GLOB_LIMIT) && (newsize + *limit) >= ARG_MAX) {
++	if ((pglob->gl_flags & GLOB_LIMIT) && (newsize + *limit) >= sysconf(_SC_ARG_MAX)) {
+ 		errno = 0;
+ 		return(GLOB_NOSPACE);
+ 	}
