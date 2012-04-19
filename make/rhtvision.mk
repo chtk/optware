@@ -51,6 +51,7 @@ RHTVISION_PATCHES=\
 $(RHTVISION_SOURCE_DIR)/conflib.pl-cross.patch \
 $(RHTVISION_SOURCE_DIR)/config.pl-cross.patch \
 $(RHTVISION_SOURCE_DIR)/gcc4.patch \
+$(RHTVISION_SOURCE_DIR)/rhtvision-cincludes.patch \
 
 #
 # If the compilation of the package requires additional

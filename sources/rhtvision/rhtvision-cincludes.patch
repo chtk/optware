@@ -1,0 +1,10 @@
+--- examples/bhelp/thelp.cc.orig
++++ examples/bhelp/thelp.cc
+@@ -12,6 +12,7 @@ compilers.
+   
+ ***************************************************************************/
+ 
++#include <cstring>
+ #define Uses_stdlib
+ #define Uses_stdio
+ #define Uses_access
