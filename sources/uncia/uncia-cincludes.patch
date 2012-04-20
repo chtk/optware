@@ -1,0 +1,190 @@
+--- libuncia/input/curl.cc
++++ libuncia/input/curl.cc
+@@ -16,6 +16,7 @@
+ //
+ 
+ #include <cerrno>
++#include <cstring>
+ #include <map>
+ 
+ #include <libuncia/error_handler.h>
+diff --git libuncia/input/echo.cc libuncia/input/echo.cc
+index 22111f2..ec7a972 100644
+--- libuncia/input/echo.cc
++++ libuncia/input/echo.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/echo.h>
+ #include <libuncia/input/null.h>
+ 
+diff --git libuncia/input/filter/number_lines.cc libuncia/input/filter/number_lines.cc
+index da992a6..5b71264 100644
+--- libuncia/input/filter/number_lines.cc
++++ libuncia/input/filter/number_lines.cc
+@@ -16,6 +16,7 @@
+ //      <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/filter/number_lines.h>
+ 
+ 
+diff --git libuncia/input/filter/reverse_lines.cc libuncia/input/filter/reverse_lines.cc
+index 5d50507..ad6ab71 100644
+--- libuncia/input/filter/reverse_lines.cc
++++ libuncia/input/filter/reverse_lines.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/filter/reverse_lines.h>
+ 
+ 
+diff --git libuncia/input/filter/sort.cc libuncia/input/filter/sort.cc
+index a2078c5..ba67ac1 100644
+--- libuncia/input/filter/sort.cc
++++ libuncia/input/filter/sort.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/filter/sort.h>
+ 
+ 
+diff --git libuncia/input/filter/tail.cc libuncia/input/filter/tail.cc
+index 07b04a6..c217850 100644
+--- libuncia/input/filter/tail.cc
++++ libuncia/input/filter/tail.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/null.h>
+ #include <libuncia/input/filter/tail.h>
+ 
+diff --git libuncia/input/filter/unique.cc libuncia/input/filter/unique.cc
+index 4191af9..25645da 100644
+--- libuncia/input/filter/unique.cc
++++ libuncia/input/filter/unique.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/filter/unique.h>
+ 
+ 
+diff --git libuncia/input/filter/uudecode.cc libuncia/input/filter/uudecode.cc
+index b540873..45ada77 100644
+--- libuncia/input/filter/uudecode.cc
++++ libuncia/input/filter/uudecode.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/filter/uudecode.h>
+ #include <libuncia/sizeof.h>
+ 
+diff --git libuncia/input/filter/uudecode.h libuncia/input/filter/uudecode.h
+index 78581ce..788a31d 100644
+--- libuncia/input/filter/uudecode.h
++++ libuncia/input/filter/uudecode.h
+@@ -18,6 +18,7 @@
+ #ifndef LIBUNCIA_INPUT_FILTER_UUDECODE_H
+ #define LIBUNCIA_INPUT_FILTER_UUDECODE_H
+ 
++#include <climits>
+ #include <libuncia/input/filter.h>
+ #include <libuncia/istream.h>
+ 
+diff --git libuncia/input/paste.cc libuncia/input/paste.cc
+index 92af970..a993200 100644
+--- libuncia/input/paste.cc
++++ libuncia/input/paste.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/input/paste.h>
+ 
+ 
+diff --git libuncia/istream.cc libuncia/istream.cc
+index fba66af..bfd360d 100644
+--- libuncia/istream.cc
++++ libuncia/istream.cc
+@@ -15,6 +15,7 @@
+ // with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/istream.h>
+ #include <libuncia/istreambuf.h>
+ 
+diff --git libuncia/output/filter/rot47.cc libuncia/output/filter/rot47.cc
+index 55bc466..0de3a58 100644
+--- libuncia/output/filter/rot47.cc
++++ libuncia/output/filter/rot47.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <climits>
+ #include <libuncia/output/filter/rot47.h>
+ 
+ 
+diff --git libuncia/output/filter/uuencode.cc libuncia/output/filter/uuencode.cc
+index 16b585c..e7b0923 100644
+--- libuncia/output/filter/uuencode.cc
++++ libuncia/output/filter/uuencode.cc
+@@ -15,6 +15,7 @@
+ // along with this program. If not, see <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <libuncia/output/filter/uuencode.h>
+ 
+ 
+diff --git libuncia/progname.cc libuncia/progname.cc
+index d3afbcc..a1d9ab8 100644
+--- libuncia/progname.cc
++++ libuncia/progname.cc
+@@ -16,6 +16,7 @@
+ //      <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <cstdio>
+ #include <string>
+ 
+diff --git uncia/argument_source/file.cc uncia/argument_source/file.cc
+index eebcd73..5648e41 100644
+--- uncia/argument_source/file.cc
++++ uncia/argument_source/file.cc
+@@ -16,6 +16,7 @@
+ //      <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <cerrno>
+ #include <iostream>
+ #include <libuncia/progname.h>
+diff --git uncia/argument_source/gnu.cc uncia/argument_source/gnu.cc
+index 14f62d0..23e597d 100644
+--- uncia/argument_source/gnu.cc
++++ uncia/argument_source/gnu.cc
+@@ -16,6 +16,7 @@
+ //      <http://www.gnu.org/licenses/>.
+ //
+ 
++#include <cstring>
+ #include <uncia/argument_source/gnu.h>
+ 
+ 

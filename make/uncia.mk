@@ -46,7 +46,8 @@ UNCIA_IPK_VERSION=1
 # UNCIA_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-UNCIA_PATCHES=$(UNCIA_SOURCE_DIR)/cstdarg.patch
+UNCIA_PATCHES=$(UNCIA_SOURCE_DIR)/cstdarg.patch \
+	$(UNCIA_SOURCE_DIR)/uncia-cincludes.patch \
 
 #
 # If the compilation of the package requires additional
