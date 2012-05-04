@@ -21,7 +21,7 @@
 # "NSLU2 Linux" other developers will feel free to edit.
 #
 HTOP_SITE=http://$(SOURCEFORGE_MIRROR)/sourceforge/htop
-HTOP_VERSION ?= 0.9
+HTOP_VERSION ?= 1.0.1
 HTOP_IPK_VERSION ?= 2
 HTOP_SOURCE=htop-$(HTOP_VERSION).tar.gz
 HTOP_DIR=htop-$(HTOP_VERSION)
@@ -30,7 +30,7 @@ HTOP_MAINTAINER=NSLU2 Linux <nslu2-linux@yahoogroups.com>
 HTOP_DESCRIPTION=An interactive process viewer.
 HTOP_SECTION=misc
 HTOP_PRIORITY=optional
-HTOP_DEPENDS=ncurses
+HTOP_DEPENDS=ncursesw
 HTOP_SUGGESTS=
 HTOP_CONFLICTS=
 
@@ -43,7 +43,9 @@ HTOP_CONFLICTS=
 # HTOP_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#HTOP_PATCHES=
+ifeq (1.0.1:2.3.3, $(HTOP_VERSION):$(LIBNSL_VERSION))
+HTOP_PATCHES=$(HTOP_SOURCE_DIR)/sched_getaffinity.patch
+endif
 
 #
 # If the compilation of the package requires additional
@@ -66,6 +68,9 @@ HTOP_CONFIGURE_ARGS=$(strip \
 $(if $(or $(filter modutils, $(PACKAGES)), \
           $(filter fsg3v4, $(OPTWARE_TARGET))), \
 --enable-plpa-emulate, ))
+ifneq (, $(filter 2.2.5 2.3.2, $(LIBNSL_VERSION)))
+HTOP_CONFIGURE_ARGS+= --disable-native-affinity
+endif
 
 #
 # HTOP_BUILD_DIR is the directory in which the build is done.
@@ -117,7 +122,7 @@ htop-source: $(DL_DIR)/$(HTOP_SOURCE) $(HTOP_PATCHES)
 # shown below to make various patches to it.
 #
 $(HTOP_BUILD_DIR)/.configured: $(DL_DIR)/$(HTOP_SOURCE) $(HTOP_PATCHES) make/htop.mk
-	$(MAKE) ncurses-stage
+	$(MAKE) ncurses-stage ncursesw-stage
 	rm -rf $(BUILD_DIR)/$(HTOP_DIR) $(@D)
 	$(HTOP_UNZIP) $(DL_DIR)/$(HTOP_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(HTOP_PATCHES)" ; \
@@ -130,6 +135,9 @@ $(HTOP_BUILD_DIR)/.configured: $(DL_DIR)/$(HTOP_SOURCE) $(HTOP_PATCHES) make/hto
 ifeq (0.9, $(HTOP_VERSION))
 	sed -i -e 's/out->len/out->chlen/' $(@D)/Process.c
 endif
+	if test `$(TARGET_CC) -dumpversion | cut -c1` = 3 ; \
+		then sed -i -e 's/ -Wextra//' $(@D)/Makefile.in ; \
+	fi
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(HTOP_CPPFLAGS)" \
@@ -144,7 +152,7 @@ endif
 		--disable-static \
 		$(HTOP_CONFIGURE_ARGS) \
 	)
-#	$(PATCH_LIBTOOL) $(HTOP_BUILD_DIR)/libtool
+	$(PATCH_LIBTOOL) $(HTOP_BUILD_DIR)/libtool
 	touch $@
 
 htop-unpack: $(HTOP_BUILD_DIR)/.configured
@@ -165,12 +173,12 @@ htop: $(HTOP_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(HTOP_BUILD_DIR)/.staged: $(HTOP_BUILD_DIR)/.built
-	rm -f $@
-	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
-	touch $@
-
-htop-stage: $(HTOP_BUILD_DIR)/.staged
+#$(HTOP_BUILD_DIR)/.staged: $(HTOP_BUILD_DIR)/.built
+#	rm -f $@
+#	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
+#	touch $@
+#
+#htop-stage: $(HTOP_BUILD_DIR)/.staged
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -205,11 +213,11 @@ $(HTOP_IPK_DIR)/CONTROL/control:
 #
 $(HTOP_IPK): $(HTOP_BUILD_DIR)/.built
 	rm -rf $(HTOP_IPK_DIR) $(BUILD_DIR)/htop_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(HTOP_BUILD_DIR) DESTDIR=$(HTOP_IPK_DIR) install-strip
+	$(MAKE) -C $(HTOP_BUILD_DIR) DESTDIR=$(HTOP_IPK_DIR) transform='' install-strip
 	$(MAKE) $(HTOP_IPK_DIR)/CONTROL/control
 #	echo $(HTOP_CONFFILES) | sed -e 's/ /\n/g' > $(HTOP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HTOP_IPK_DIR)
-
+	$(WHAT_TO_DO_WITH_IPK_DIR) $(HTOP_IPK_DIR)
 #
 # This is called from the top level makefile to create the IPK file.
 #

@@ -19,7 +19,6 @@ UCLIBC_BROKEN_PACKAGES = \
 	 pango \
 	 qemu qemu-libc-i386 quickie \
 	 sm syx \
-	tmux \
 	 uemacs \
 	 gtk vte xchat \
 	 xauth xaw xcursor xfixes xft xrender xmu xt xterm \
@@ -58,8 +57,7 @@ MXML_IPK_VERSION := 1
 MKVTOOLNIX_VERSION := 2.9.8
 MKVTOOLNIX_IPK_VERSION := 2
 
-NGINX_VERSION := 0.8.54
-NGINX_IPK_VERSION := 1
+PSMISC_VERSION := 22.13
 
 SLANG_VERSION := 2.1.4
 SLANG_IPK_VERSION := 1

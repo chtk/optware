@@ -10,6 +10,8 @@ BROKEN_PACKAGES = \
 	golang \
 	libtorrent-rasterbar \
 	linphone \
+	mkvtoolnix \
+	strongswan \
 	telldus-core \
 
 BTPD_VERSION=0.13

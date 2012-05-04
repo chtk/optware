@@ -5,7 +5,6 @@ SPECIFIC_PACKAGES = \
 	ds101g-kernel-modules-fuse \
 	ds101-bootstrap \
 	crosstool-native \
-	mono \
 	redis \
 	py-ctypes \
 	$(PERL_PACKAGES) \
@@ -17,10 +16,9 @@ BROKEN_PACKAGES = \
 	erl-ejabberd \
 	golang \
 	ldconfig \
+	mkvtoolnix \
 	sandbox \
 	telldus-core \
-
-PSMISC_VERSION := 22.11
 
 REDIS_VERSION := 2.0.4
 REDIS_PATCHES := $(SOURCE_DIR)/redis/no_sa_sigaction.patch

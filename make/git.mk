@@ -22,7 +22,7 @@
 # "NSLU2 Linux" other developers will feel free to edit.
 #
 GIT_SITE=http://git-core.googlecode.com/files
-GIT_VERSION=1.7.7.1
+GIT_VERSION=1.7.10
 GIT_IPK_VERSION=1
 GIT_SOURCE=git-$(GIT_VERSION).tar.gz
 GIT_DIR=git-$(GIT_VERSION)
@@ -34,6 +34,9 @@ GIT_PRIORITY=optional
 GIT_DEPENDS=zlib, openssl, libcurl, diffutils, rcs, expat
 ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 GIT_DEPENDS+=, libiconv
+endif
+ifeq ($(GETTEXT_NLS), enable)
+GIT_DEPENDS+=, gettext
 endif
 GIT_SUGGESTS=git-manpages
 GIT_CONFLICTS=
@@ -68,6 +71,9 @@ ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 GIT_LDFLAGS=-liconv
 else
 GIT_LDFLAGS=
+endif
+ifeq ($(LIBC_STYLE), uclibc)
+GIT_LDFLAGS+=-lintl
 endif
 
 GIT_MAKE_FLAGS=$(strip \
@@ -155,6 +161,9 @@ $(GIT_BUILD_DIR)/.configured: $(DL_DIR)/$(GIT_SOURCE) $(GIT_PATCHES) make/git.mk
 ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 	$(MAKE) libiconv-stage
 endif
+ifeq ($(GETTEXT_NLS), enable)
+	$(MAKE) gettext-stage
+endif
 ifneq (,$(filter perl, $(PACKAGES)))
 	$(MAKE) perl-stage
 endif
@@ -192,7 +201,7 @@ $(GIT_BUILD_DIR)/.built: $(GIT_BUILD_DIR)/.configured
 	if ! $(TARGET_CC) -c -o /dev/null $(SOURCE_DIR)/common/tv_nsec.c >/dev/null 2>&1; \
 		then export GIT_NSEC=NO_NSEC=true ; \
 	fi; \
-	PATH="$(STAGING_PREFIX)/bin:$$PATH" \
+	PATH="/usr/bin:$(STAGING_PREFIX)/bin:$$PATH" \
 	$(GIT_PERL_PATH) \
 	$(MAKE) -C $(@D) \
 		$(TARGET_CONFIGURE_OPTS) \
@@ -229,7 +238,7 @@ endif
 	if ! $(TARGET_CC) -c -o /dev/null $(SOURCE_DIR)/common/tv_nsec.c >/dev/null 2>&1; \
 		then export GIT_NSEC=NO_NSEC=true ; \
 	fi; \
-	PATH="$(STAGING_PREFIX)/bin:$$PATH" \
+	PATH="/usr/bin:$(STAGING_PREFIX)/bin:$$PATH" \
 	$(GIT_PERL_PATH) \
 	$(MAKE) -C $(@D) \
 		$(TARGET_CONFIGURE_OPTS) \
