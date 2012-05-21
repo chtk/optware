@@ -76,7 +76,7 @@ AMULE_CONFIGURE_ARGS = \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-debug \
 		--enable-optimize \
 		--enable-alcc \
@@ -94,8 +94,8 @@ AMULE_CONFIGURE_ARGS = \
 		--with-gdlib-prefix=$(STAGING_PREFIX) \
 		--with-libpng-prefix=$(STAGING_PREFIX) \
 		--with-libupnp-prefix=$(STAGING_PREFIX) \
-		--with-wxbase-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/wx-config \
-		--with-wx-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/wx-config \
+		--with-wxbase-config=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin/wx-config \
+		--with-wx-config=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin/wx-config \
 		--with-wx-prefix=$(STAGING_PREFIX) \
 		--with-crypto-prefix=$(STAGING_PREFIX) \
 		--with-zlib=$(STAGING_PREFIX) \
@@ -172,6 +172,8 @@ $(AMULE_BUILD_DIR)/.configured: $(DL_DIR)/$(AMULE_SOURCE) $(AMULE_PATCHES)
 		./configure \
 		$(AMULE_CONFIGURE_ARGS) \
 	)
+		sed -i -e 's,/usr/bin/perl,$(OPTWARE_PREFIX)/bin/perl,g' $(@D)/src/libs/ec/file_generator.pl
+	
 ##	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
 
@@ -238,8 +240,9 @@ $(AMULE_IPK): $(AMULE_BUILD_DIR)/.built
 	$(MAKE) -C $(AMULE_BUILD_DIR) DESTDIR=$(AMULE_IPK_DIR) program_transform_name=s/^$(GNU_TARGET_NAME)-// install-strip
 #	install -d $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(AMULE_SOURCE_DIR)/amule.conf $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/amule.conf
-	install -d $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(AMULE_SOURCE_DIR)/rc.amuled $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S57amuled
+	install -d $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(AMULE_SOURCE_DIR)/rc.amuled $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S57amuled
+	sed -i -e 's,/opt/,$(OPTWARE_TARGET)/,g' $(AMULE_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S57amuled
 	$(MAKE) $(AMULE_IPK_DIR)/CONTROL/control
 #	install -m 755 $(AMULE_SOURCE_DIR)/postinst $(AMULE_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(AMULE_SOURCE_DIR)/prerm $(AMULE_IPK_DIR)/CONTROL/prerm
