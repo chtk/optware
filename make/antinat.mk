@@ -46,7 +46,7 @@ ANTINAT_IPK_VERSION=4
 
 #
 # ANTINAT_CONFFILES should be a list of user-editable files
-ANTINAT_CONFFILES=$(OPTWARE_PREFIX)etc/antinat.xml
+ANTINAT_CONFFILES=$(OPTWARE_PREFIX)/etc/antinat.xml
 
 #
 # ANTINAT_PATCHES should list any patches, in the the order in
@@ -119,7 +119,7 @@ $(ANTINAT_BUILD_DIR)/.configured: $(DL_DIR)/$(ANTINAT_SOURCE) $(ANTINAT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -149,8 +149,8 @@ antinat: $(ANTINAT_BUILD_DIR)/.built
 #
 $(ANTINAT_BUILD_DIR)/.staged: $(ANTINAT_BUILD_DIR)/.built
 	rm -f $(ANTINAT_BUILD_DIR)/.staged
-	$(MAKE) -C $(ANTINAT_BUILD_DIR) DESTDIR=$(STAGING_DIR) prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)install
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libantinat.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libantinat.la
+	$(MAKE) -C $(ANTINAT_BUILD_DIR) DESTDIR=$(STAGING_DIR) prefix=$(STAGING_DIR)$(OPTWARE_PREFIX) install
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libantinat.a $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libantinat.la
 	touch $(ANTINAT_BUILD_DIR)/.staged
 
 antinat-stage: $(ANTINAT_BUILD_DIR)/.staged
@@ -188,13 +188,14 @@ $(ANTINAT_IPK_DIR)/CONTROL/control:
 #
 $(ANTINAT_IPK): $(ANTINAT_BUILD_DIR)/.built
 	rm -rf $(ANTINAT_IPK_DIR) $(BUILD_DIR)/antinat_*_$(TARGET_ARCH).ipk
-	( cd $(ANTINAT_BUILD_DIR) ; make install prefix=$(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX))
-	rm -f $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)lib/libantinat.a
-	$(STRIP_COMMAND) $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)lib/libantinat.so.0.0.0
-	$(STRIP_COMMAND) $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)bin/antinat
+	( cd $(ANTINAT_BUILD_DIR) ; make install prefix=$(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX) )
+	rm -f $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)/lib/libantinat.a
+	$(STRIP_COMMAND) $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)/lib/libantinat.so.0.0.0
+	$(STRIP_COMMAND) $(ANTINAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/antinat
 	$(MAKE) $(ANTINAT_IPK_DIR)/CONTROL/control
 #	install -m 755 $(ANTINAT_SOURCE_DIR)/postinst $(ANTINAT_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(ANTINAT_SOURCE_DIR)/prerm $(ANTINAT_IPK_DIR)/CONTROL/prerm
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(ANTINAT_IPK_DIR)/CONTROL/prerm
 	echo $(ANTINAT_CONFFILES) | sed -e 's/ /\n/g' > $(ANTINAT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ANTINAT_IPK_DIR)
 
