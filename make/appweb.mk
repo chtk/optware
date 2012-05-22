@@ -133,13 +133,13 @@ $(APPWEB_BUILD_DIR)/.configured: $(DL_DIR)/$(APPWEB_SOURCE) $(APPWEB_PATCHES)
 		--type=RELEASE \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--docDir=$(OPTWARE_PREFIX)var/appWeb/doc \
-		--incDir=$(OPTWARE_PREFIX)include \
-		--libDir=$(OPTWARE_PREFIX)lib \
-		--sbinDir=$(OPTWARE_PREFIX)sbin \
-		--srcDir=$(OPTWARE_PREFIX)src \
-		--webDir=$(OPTWARE_PREFIX)var/appWeb/web \
+		--prefix=$(OPTWARE_PREFIX) \
+		--docDir=$(OPTWARE_PREFIX)/var/appWeb/doc \
+		--incDir=$(OPTWARE_PREFIX)/include \
+		--libDir=$(OPTWARE_PREFIX)/lib \
+		--sbinDir=$(OPTWARE_PREFIX)/sbin \
+		--srcDir=$(OPTWARE_PREFIX)/src \
+		--webDir=$(OPTWARE_PREFIX)/var/appWeb/web \
 		--buildNumber=$(APPWEB_IPK_VERSION) \
 		--port=7777 --sslPort=4443 \
 		--disable-static \
@@ -148,10 +148,10 @@ $(APPWEB_BUILD_DIR)/.configured: $(DL_DIR)/$(APPWEB_SOURCE) $(APPWEB_PATCHES)
 		--with-ssl=loadable \
 		--with-openssl=loadable \
 		--with-openssl-iflags="-I$(STAGING_PREFIX)/include/" \
-		--with-openssl-dir="../../staging$(OPTWARE_PREFIX)lib" \
+		--with-openssl-dir="../../staging$(OPTWARE_PREFIX)/lib" \
 		--with-openssl-libs="crypto ssl" \
 		--with-php5=loadable \
-		--with-php5-dir="../../staging$(OPTWARE_PREFIX)lib" \
+		--with-php5-dir="../../staging$(OPTWARE_PREFIX)/lib" \
 		--with-php5-iflags="-I$(STAGING_PREFIX)/include/php/ -I$(STAGING_PREFIX)/include/php/Zend -I$(STAGING_PREFIX)/include/php/TSRM -I$(STAGING_PREFIX)/include/php/main -I$(STAGING_PREFIX)/include/php/regex" \
 		--with-php5-ldflags="$(STAGING_LDFLAGS)" \
 		--with-php5-libs="php5 dl crypt db m xml2 z c" \
@@ -212,74 +212,78 @@ $(APPWEB_IPK): $(APPWEB_BUILD_DIR)/.built
 	rm -rf $(APPWEB_IPK_DIR) $(BUILD_DIR)/appweb_*_$(TARGET_ARCH).ipk
 
 	# Copy shared libraries
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libadminModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libadminModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libappWeb.so.1.0.0 $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libappWeb.so.1.0.0
-	( cd $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib ; ln -s libappWeb.so.1.0.0 libappWeb.so.1 )
-	( cd $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib ; ln -s libappWeb.so.1 libappWeb.so )
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libauthModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libauthModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcapiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libcapiModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcgiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libcgiModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcopyModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libcopyModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libegiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libegiModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libejs.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libejs.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libespModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libespModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libmpr.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libmpr.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libopenSslModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libopenSslModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libphp5Module.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libphp5Module.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libsslModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libsslModule.so
-	install -m 755 $(APPWEB_BUILD_DIR)/bin/libuploadModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib
-	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)lib/libuploadModule.so
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libadminModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libadminModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libappWeb.so.1.0.0 $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libappWeb.so.1.0.0
+	( cd $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib ; ln -s libappWeb.so.1.0.0 libappWeb.so.1 )
+	( cd $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib ; ln -s libappWeb.so.1 libappWeb.so )
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libauthModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libauthModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcapiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libcapiModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcgiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libcgiModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libcopyModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libcopyModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libegiModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libegiModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libejs.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libejs.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libespModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libespModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libmpr.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libmpr.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libopenSslModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libopenSslModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libphp5Module.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libphp5Module.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libsslModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libsslModule.so
+	install -m 755 $(APPWEB_BUILD_DIR)/bin/libuploadModule.so $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	$(STRIP_COMMAND) $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/lib/libuploadModule.so
 
 	# Copy executables
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/appWeb -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin/appWeb
-	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpClient -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin/httpClient
-	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpPassword -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin/httpPassword
-	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpComp -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin/httpComp
-	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/charGen -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)sbin/charGen
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/appWeb -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin/appWeb
+	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpClient -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin/httpClient
+	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpPassword -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin/httpPassword
+	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/httpComp -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin/httpComp
+	$(STRIP_COMMAND) $(APPWEB_BUILD_DIR)/bin/charGen -o $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/sbin/charGen
 
 	# Create log directories
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb/logs
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/logs
 
 	# Copy default site files and certificates
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb/web
-	cp -r $(APPWEB_BUILD_DIR)/appWeb/web $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb/
-	chmod -R a+rX $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb/web
-	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/mime.types $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb
-	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/server.crt $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb
-	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/server.key.pem $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/web
+	cp -r $(APPWEB_BUILD_DIR)/appWeb/web $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/
+	chmod -R a+rX $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/web
+	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/mime.types $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb
+	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/server.crt $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb
+	install -m 644 $(APPWEB_BUILD_DIR)/appWeb/server.key.pem $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb
 
 	# Copy documentation
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)doc/appweb
-	install -m 644 $(APPWEB_BUILD_DIR)/COPYRIGHT.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)doc/appweb/COPYRIGHT.txt
-	install -m 644 $(APPWEB_BUILD_DIR)/README_SRC.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)doc/appweb/README.txt
-	install -m 644 $(APPWEB_BUILD_DIR)/LICENSE.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)doc/appweb/LICENSE.txt
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/doc/appweb
+	install -m 644 $(APPWEB_BUILD_DIR)/COPYRIGHT.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/doc/appweb/COPYRIGHT.txt
+	install -m 644 $(APPWEB_BUILD_DIR)/README_SRC.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/doc/appweb/README.txt
+	install -m 644 $(APPWEB_BUILD_DIR)/LICENSE.TXT $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/doc/appweb/LICENSE.txt
 
 	# Copy service startup and configuration files
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)etc
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/etc
 #	install -m 644 $(APPWEB_SOURCE_DIR)/appWeb-php.conf $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/appWeb.conf
-	install -m 644 $(APPWEB_SOURCE_DIR)/appWeb-php.conf $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)var/appWeb/appWeb.conf
-	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(APPWEB_SOURCE_DIR)/rc.appweb $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S81appweb
+	install -m 644 $(APPWEB_SOURCE_DIR)/appWeb-php.conf $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/appWeb.conf
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/var/appWeb/appWeb.conf
+	install -d $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(APPWEB_SOURCE_DIR)/rc.appweb $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S81appweb
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(APPWEB_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S81appweb
 
 	# Copy ipkg control files
 	$(MAKE) $(APPWEB_IPK_DIR)/CONTROL/control
 	install -m 644 $(APPWEB_SOURCE_DIR)/postinst $(APPWEB_IPK_DIR)/CONTROL/postinst
+	sed -i -e 's,/opt/,$(OPTWARE_TARGET)/,g' $(APPWEB_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(APPWEB_SOURCE_DIR)/prerm $(APPWEB_IPK_DIR)/CONTROL/prerm
+	sed -i -e 's,/opt/,$(OPTWARE_TARGET)/,g' $(APPWEB_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(APPWEB_IPK_DIR)
 
 #
