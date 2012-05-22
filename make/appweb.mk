@@ -154,7 +154,7 @@ $(APPWEB_BUILD_DIR)/.configured: $(DL_DIR)/$(APPWEB_SOURCE) $(APPWEB_PATCHES)
 		--with-php5-dir="../../staging$(OPTWARE_PREFIX)/lib" \
 		--with-php5-iflags="-I$(STAGING_PREFIX)/include/php/ -I$(STAGING_PREFIX)/include/php/Zend -I$(STAGING_PREFIX)/include/php/TSRM -I$(STAGING_PREFIX)/include/php/main -I$(STAGING_PREFIX)/include/php/regex" \
 		--with-php5-ldflags="$(STAGING_LDFLAGS)" \
-		--with-php5-libs="php5 dl crypt db m xml2 z c" \
+		--with-php5-libs="php5 dl crypt db-$(LIBDB_LIB_VERSION) m xml2 z c" \
 		--disable-test \
 	)
 	touch $(APPWEB_BUILD_DIR)/.configured
