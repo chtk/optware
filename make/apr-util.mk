@@ -148,13 +148,13 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--libdir=$(OPTWARE_PREFIX)lib \
+		--prefix=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--libdir=$(OPTWARE_PREFIX)/lib \
 		--disable-static \
 		--enable-layout=GNU \
-		--with-apr=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-gdbm=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-expat=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-apr=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-gdbm=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-expat=$(STAGING_DIR)$(OPTWARE_PREFIX) \
 		--without-freetds \
 		--without-mysql \
 		--without-odbc \
@@ -213,11 +213,11 @@ apr-util-stage: $(APR_UTIL_BUILD_DIR)/.staged
 #
 $(APR_UTIL_IPK): $(APR_UTIL_BUILD_DIR)/.staged
 	rm -rf $(APR_UTIL_IPK_DIR) $(BUILD_DIR)/apr-util_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(APR_UTIL_BUILD_DIR) DESTDIR=$(APR_UTIL_IPK_DIR) libdir=$(OPTWARE_PREFIX)lib prefix=/delete-me install
+	$(MAKE) -C $(APR_UTIL_BUILD_DIR) DESTDIR=$(APR_UTIL_IPK_DIR) libdir=$(OPTWARE_PREFIX)/lib prefix=/delete-me install
 	rm -rf $(APR_UTIL_IPK_DIR)/delete-me
-	rm -f $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	$(STRIP_COMMAND) $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.[0-9]*.[0-9]*.[0-9]*
-	$(STRIP_COMMAND) $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)lib/apr-util*/*.so
+	rm -f $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	$(STRIP_COMMAND) $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so.[0-9]*.[0-9]*.[0-9]*
+	$(STRIP_COMMAND) $(APR_UTIL_IPK_DIR)$(OPTWARE_PREFIX)/lib/apr-util*/*.so
 	$(MAKE) $(APR_UTIL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(APR_UTIL_IPK_DIR)
 
