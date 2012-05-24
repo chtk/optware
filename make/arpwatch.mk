@@ -123,7 +123,7 @@ $(ARPWATCH_BUILD_DIR)/.configured: $(DL_DIR)/$(ARPWATCH_SOURCE) $(ARPWATCH_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -194,11 +194,11 @@ $(ARPWATCH_IPK_DIR)/CONTROL/control:
 #
 $(ARPWATCH_IPK): $(ARPWATCH_BUILD_DIR)/.built
 	rm -rf $(ARPWATCH_IPK_DIR) $(BUILD_DIR)/arpwatch_*_$(TARGET_ARCH).ipk
-	install -d $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)sbin/
+	install -d $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
 	$(MAKE) -C $(ARPWATCH_BUILD_DIR) DESTDIR=$(ARPWATCH_IPK_DIR) install
-	for f in $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)sbin/*; \
+	for f in $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)/sbin/*; \
 		do chmod +w $$f; $(STRIP_COMMAND) $$f; chmod -w $$f; done
-	install -d $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)man/man8
+	install -d $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)/man/man8
 	$(MAKE) -C $(ARPWATCH_BUILD_DIR) DESTDIR=$(ARPWATCH_IPK_DIR) install-man
 #	install -d $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(ARPWATCH_SOURCE_DIR)/arpwatch.conf $(ARPWATCH_IPK_DIR)$(OPTWARE_PREFIX)etc/arpwatch.conf
