@@ -174,20 +174,20 @@ $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)/CONTROL/control:
 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK): $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/.built
 	rm -rf $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR) $(BUILD_DIR)/asterisk14-core-sounds-en-ulaw_*_$(TARGET_ARCH).ipk
 	$(MAKE) $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)/CONTROL/control
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/dictate
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/dictate/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/dictate
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/digits
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/digits/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/digits
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/followme
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/followme/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/followme
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/letters
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/letters/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/letters
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/phonetic
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/phonetic/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/phonetic
-	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/silence
-	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/silence/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/sounds/silence
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/dictate
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/dictate/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/dictate
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/digits
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/digits/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/digits
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/followme
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/followme/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/followme
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/letters
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/letters/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/letters
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/phonetic
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/phonetic/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/phonetic
+	install -d $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/silence
+	install -m 644 $(ASTERISK14_CORE_SOUNDS_EN_ULAW_BUILD_DIR)/silence/*.ulaw $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/sounds/silence
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ASTERISK14_CORE_SOUNDS_EN_ULAW_IPK_DIR)
 
 #
