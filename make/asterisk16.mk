@@ -87,80 +87,80 @@ ASTERISK16_IPK_VERSION=1
 # ASTERISK16_CONFFILES should be a list of user-editable files
 #ASTERISK16_CONFFILES=$(OPTWARE_PREFIX)etc/asterisk16.conf $(OPTWARE_PREFIX)etc/init.d/SXXasterisk16
 ASTERISK16_CONFFILES=\
-$(OPTWARE_PREFIX)etc/asterisk/adsi.conf \
-$(OPTWARE_PREFIX)etc/asterisk/adtranvofr.conf \
-$(OPTWARE_PREFIX)etc/asterisk/agents.conf \
-$(OPTWARE_PREFIX)etc/asterisk/alarmreceiver.conf \
-$(OPTWARE_PREFIX)etc/asterisk/alsa.conf \
-$(OPTWARE_PREFIX)etc/asterisk/amd.conf \
-$(OPTWARE_PREFIX)etc/asterisk/asterisk.adsi \
-$(OPTWARE_PREFIX)etc/asterisk/asterisk.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_adaptive_odbc.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_custom.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_manager.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_odbc.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_pgsql.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_sqlite3_custom.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_tds.conf \
-$(OPTWARE_PREFIX)etc/asterisk/chan_dahdi.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cli.conf \
-$(OPTWARE_PREFIX)etc/asterisk/codecs.conf \
-$(OPTWARE_PREFIX)etc/asterisk/console.conf \
-$(OPTWARE_PREFIX)etc/asterisk/dnsmgr.conf \
-$(OPTWARE_PREFIX)etc/asterisk/dundi.conf \
-$(OPTWARE_PREFIX)etc/asterisk/enum.conf \
-$(OPTWARE_PREFIX)etc/asterisk/extconfig.conf \
-$(OPTWARE_PREFIX)etc/asterisk/extensions.ael \
-$(OPTWARE_PREFIX)etc/asterisk/extensions.conf \
-$(OPTWARE_PREFIX)etc/asterisk/extensions.lua \
-$(OPTWARE_PREFIX)etc/asterisk/extensions_minivm.conf \
-$(OPTWARE_PREFIX)etc/asterisk/features.conf \
-$(OPTWARE_PREFIX)etc/asterisk/festival.conf \
-$(OPTWARE_PREFIX)etc/asterisk/followme.conf \
-$(OPTWARE_PREFIX)etc/asterisk/func_odbc.conf \
-$(OPTWARE_PREFIX)etc/asterisk/gtalk.conf \
-$(OPTWARE_PREFIX)etc/asterisk/h323.conf \
-$(OPTWARE_PREFIX)etc/asterisk/http.conf \
-$(OPTWARE_PREFIX)etc/asterisk/iax.conf \
-$(OPTWARE_PREFIX)etc/asterisk/iaxprov.conf \
-$(OPTWARE_PREFIX)etc/asterisk/indications.conf \
-$(OPTWARE_PREFIX)etc/asterisk/jabber.conf \
-$(OPTWARE_PREFIX)etc/asterisk/jingle.conf \
-$(OPTWARE_PREFIX)etc/asterisk/logger.conf \
-$(OPTWARE_PREFIX)etc/asterisk/manager.conf \
-$(OPTWARE_PREFIX)etc/asterisk/meetme.conf \
-$(OPTWARE_PREFIX)etc/asterisk/mgcp.conf \
-$(OPTWARE_PREFIX)etc/asterisk/minivm.conf \
-$(OPTWARE_PREFIX)etc/asterisk/misdn.conf \
-$(OPTWARE_PREFIX)etc/asterisk/modules.conf \
-$(OPTWARE_PREFIX)etc/asterisk/musiconhold.conf \
-$(OPTWARE_PREFIX)etc/asterisk/muted.conf \
-$(OPTWARE_PREFIX)etc/asterisk/osp.conf \
-$(OPTWARE_PREFIX)etc/asterisk/oss.conf \
-$(OPTWARE_PREFIX)etc/asterisk/phone.conf \
-$(OPTWARE_PREFIX)etc/asterisk/phoneprov.conf \
-$(OPTWARE_PREFIX)etc/asterisk/queuerules.conf \
-$(OPTWARE_PREFIX)etc/asterisk/queues.conf \
-$(OPTWARE_PREFIX)etc/asterisk/res_ldap.conf \
-$(OPTWARE_PREFIX)etc/asterisk/res_odbc.conf \
-$(OPTWARE_PREFIX)etc/asterisk/res_pgsql.conf \
-$(OPTWARE_PREFIX)etc/asterisk/res_snmp.conf \
-$(OPTWARE_PREFIX)etc/asterisk/rpt.conf \
-$(OPTWARE_PREFIX)etc/asterisk/rtp.conf \
-$(OPTWARE_PREFIX)etc/asterisk/say.conf \
-$(OPTWARE_PREFIX)etc/asterisk/sip.conf \
-$(OPTWARE_PREFIX)etc/asterisk/sip_notify.conf \
-$(OPTWARE_PREFIX)etc/asterisk/skinny.conf \
-$(OPTWARE_PREFIX)etc/asterisk/sla.conf \
-$(OPTWARE_PREFIX)etc/asterisk/smdi.conf \
-$(OPTWARE_PREFIX)etc/asterisk/telcordia-1.adsi \
-$(OPTWARE_PREFIX)etc/asterisk/udptl.conf \
-$(OPTWARE_PREFIX)etc/asterisk/unistim.conf \
-$(OPTWARE_PREFIX)etc/asterisk/usbradio.conf \
-$(OPTWARE_PREFIX)etc/asterisk/users.conf \
-$(OPTWARE_PREFIX)etc/asterisk/voicemail.conf \
-$(OPTWARE_PREFIX)etc/asterisk/vpb.conf
+$(OPTWARE_PREFIX)/etc/asterisk/adsi.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/adtranvofr.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/agents.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/alarmreceiver.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/alsa.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/amd.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/asterisk.adsi \
+$(OPTWARE_PREFIX)/etc/asterisk/asterisk.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_adaptive_odbc.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_custom.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_manager.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_odbc.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_pgsql.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_sqlite3_custom.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_tds.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/chan_dahdi.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cli.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/codecs.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/console.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/dnsmgr.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/dundi.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/enum.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/extconfig.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/extensions.ael \
+$(OPTWARE_PREFIX)/etc/asterisk/extensions.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/extensions.lua \
+$(OPTWARE_PREFIX)/etc/asterisk/extensions_minivm.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/features.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/festival.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/followme.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/func_odbc.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/gtalk.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/h323.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/http.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/iax.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/iaxprov.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/indications.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/jabber.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/jingle.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/logger.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/manager.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/meetme.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/mgcp.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/minivm.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/misdn.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/modules.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/musiconhold.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/muted.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/osp.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/oss.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/phone.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/phoneprov.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/queuerules.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/queues.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/res_ldap.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/res_odbc.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/res_pgsql.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/res_snmp.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/rpt.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/rtp.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/say.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/sip.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/sip_notify.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/skinny.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/sla.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/smdi.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/telcordia-1.adsi \
+$(OPTWARE_PREFIX)/etc/asterisk/udptl.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/unistim.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/usbradio.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/users.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/voicemail.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/vpb.conf
 
 #
 # ASTERISK16_PATCHES should list any patches, in the the order in
@@ -305,7 +305,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--with-ssl=$(STAGING_PREFIX) \
@@ -330,8 +330,8 @@ endif
 		--without-dahdi \
 		--without-sdl \
 		$(ASTERISK16_CONFIGURE_OPTS) \
-		--localstatedir=$(OPTWARE_PREFIX)var \
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
+		--localstatedir=$(OPTWARE_PREFIX)/var \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
 	)
 	touch $@
 
@@ -361,7 +361,7 @@ $(ASTERISK16_BUILD_DIR)/.staged: $(ASTERISK16_BUILD_DIR)/.built
 	NOISY_BUILD=yes \
 	ASTCFLAGS="$(ASTERISK16_CPPFLAGS)" \
 	ASTLDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK16_LDFLAGS)" \
-	$(MAKE) -C $(ASTERISK16_BUILD_DIR) DESTDIR=$(STAGING_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)sbin install
+	$(MAKE) -C $(ASTERISK16_BUILD_DIR) DESTDIR=$(STAGING_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)/sbin install
 	touch $(ASTERISK16_BUILD_DIR)/.staged
 
 asterisk16-stage: $(ASTERISK16_BUILD_DIR)/.staged
@@ -402,77 +402,77 @@ $(ASTERISK16_IPK): $(ASTERISK16_BUILD_DIR)/.built
 	NOISY_BUILD=yes \
 	ASTCFLAGS="$(ASTERISK16_CPPFLAGS)" \
 	ASTLDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK16_LDFLAGS)" \
-	$(MAKE) -C $(ASTERISK16_BUILD_DIR) DESTDIR=$(ASTERISK16_IPK_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)sbin install
+	$(MAKE) -C $(ASTERISK16_BUILD_DIR) DESTDIR=$(ASTERISK16_IPK_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)/sbin install
 	NOISY_BUILD=yes \
 	ASTCFLAGS="$(ASTERISK16_CPPFLAGS)" \
 	ASTLDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK16_LDFLAGS)" \
 	$(MAKE) -C $(ASTERISK16_BUILD_DIR) DESTDIR=$(ASTERISK16_IPK_DIR) samples
 
-	sed -i -e 's#/var/spool/asterisk#$(OPTWARE_PREFIX)var/spool/asterisk#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/var/lib/asterisk#$(OPTWARE_PREFIX)var/lib/asterisk#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/var/calls#$(OPTWARE_PREFIX)var/calls#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/usr/bin/streamplayer#$(OPTWARE_PREFIX)sbin/streamplayer#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#$(OPTWARE_PREFIX)opt/#$(OPTWARE_PREFIX)#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
+	sed -i -e 's#/var/spool/asterisk#$(OPTWARE_PREFIX)/var/spool/asterisk#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/var/lib/asterisk#$(OPTWARE_PREFIX)/var/lib/asterisk#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/var/calls#$(OPTWARE_PREFIX)/var/calls#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/usr/bin/streamplayer#$(OPTWARE_PREFIX)/sbin/streamplayer#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/opt/opt/#$(OPTWARE_PREFIX)/#g' $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
 
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => func_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_alsa.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_console.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_gtalk.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_jingle.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_mgcp.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_skinny.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_oss.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_ilbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_lpc10.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_speex.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => format_ogg_vorbis.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => app_festival.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => app_amd.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => app_queue.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_config_ldap.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_config_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_config_sqlite.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_jabber.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_snmp.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_smdi.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_adaptive_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_radius.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_sqlite.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_sqlite3_custom.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_tds.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => func_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_alsa.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_console.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_gtalk.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_jingle.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_mgcp.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_skinny.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_oss.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_ilbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_lpc10.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_speex.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => format_ogg_vorbis.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => app_festival.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => app_amd.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => app_queue.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_config_ldap.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_config_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_config_sqlite.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_jabber.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_snmp.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_smdi.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_adaptive_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_odbc.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_radius.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_sqlite.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_sqlite3_custom.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_tds.so" >> $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
 
-	#cp -r $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/samples
-	#mv $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/samples $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk
+	#cp -r $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/samples
+	#mv $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/samples $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk
 
 	$(MAKE) $(ASTERISK16_IPK_DIR)/CONTROL/control
 	echo $(ASTERISK16_CONFFILES) | sed -e 's/ /\n/g' > $(ASTERISK16_IPK_DIR)/CONTROL/conffiles
 
-	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules/*.so ; do \
+	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/lib/asterisk/modules/*.so ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
-	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/aelparse \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/astcanary \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/asterisk \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/conf2ael \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/hashtest \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/hashtest2 \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/muted \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/refcounter \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/smsq \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/stereorize \
-			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)sbin/streamplayer ; do \
+	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/aelparse \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/astcanary \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/asterisk \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/conf2ael \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hashtest \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hashtest2 \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/muted \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/refcounter \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/smsq \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/stereorize \
+			$(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/sbin/streamplayer ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
-	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/agi-bin/*test ; do \
+	for filetostrip in $(ASTERISK16_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/agi-bin/*test ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
 
