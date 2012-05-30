@@ -277,7 +277,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--without-pwlib \
@@ -294,8 +294,8 @@ endif
 		--with-odbc=$(STAGING_PREFIX) \
 		--without-imap \
 		$(ASTERISK14_CONFIGURE_OPTS) \
-		--localstatedir=$(OPTWARE_PREFIX)var \
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
+		--localstatedir=$(OPTWARE_PREFIX)/var \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
 	)
 	touch $@
 
@@ -325,7 +325,7 @@ $(ASTERISK14_BUILD_DIR)/.staged: $(ASTERISK14_BUILD_DIR)/.built
 	NOISY_BUILD=yes \
 	ASTCFLAGS="$(ASTERISK14_CPPFLAGS)" \
 	ASTLDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK14_LDFLAGS)" \
-	$(MAKE) -C $(ASTERISK14_BUILD_DIR) DESTDIR=$(STAGING_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)sbin install
+	$(MAKE) -C $(ASTERISK14_BUILD_DIR) DESTDIR=$(STAGING_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)/sbin install
 	touch $(ASTERISK14_BUILD_DIR)/.staged
 
 asterisk14-stage: $(ASTERISK14_BUILD_DIR)/.staged
@@ -364,58 +364,58 @@ $(ASTERISK14_IPK_DIR)/CONTROL/control:
 $(ASTERISK14_IPK): $(ASTERISK14_BUILD_DIR)/.built
 	rm -rf $(ASTERISK14_IPK_DIR) $(BUILD_DIR)/asterisk14_*_$(TARGET_ARCH).ipk
 	NOISY_BUILD=yes \
-	$(MAKE) -C $(ASTERISK14_BUILD_DIR) DESTDIR=$(ASTERISK14_IPK_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)sbin install
+	$(MAKE) -C $(ASTERISK14_BUILD_DIR) DESTDIR=$(ASTERISK14_IPK_DIR) ASTSBINDIR=$(OPTWARE_PREFIX)/sbin install
 	NOISY_BUILD=yes \
 	$(MAKE) -C $(ASTERISK14_BUILD_DIR) DESTDIR=$(ASTERISK14_IPK_DIR) samples
 
-	sed -i -e 's#/var/spool/asterisk#$(OPTWARE_PREFIX)var/spool/asterisk#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/var/lib/asterisk#$(OPTWARE_PREFIX)var/lib/asterisk#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/var/calls#$(OPTWARE_PREFIX)var/calls#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#/usr/bin/streamplayer#$(OPTWARE_PREFIX)sbin/streamplayer#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
-	sed -i -e 's#$(OPTWARE_PREFIX)opt/#$(OPTWARE_PREFIX)#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/*
+	sed -i -e 's#/var/spool/asterisk#$(OPTWARE_PREFIX)/var/spool/asterisk#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/var/lib/asterisk#$(OPTWARE_PREFIX)/var/lib/asterisk#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/var/calls#$(OPTWARE_PREFIX)/var/calls#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/usr/bin/streamplayer#$(OPTWARE_PREFIX)/sbin/streamplayer#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
+	sed -i -e 's#/opt/opt/#$(OPTWARE_PREFIX)/#g' $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/*
 
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => func_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_alsa.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_gtalk.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => chan_oss.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_ilbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_lpc10.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => codec_speex.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => format_ogg_vorbis.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_config_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_jabber.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_snmp.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => res_smdi.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_radius.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_sqlite.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
-	echo "noload => cdr_tds.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => func_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_alsa.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_gtalk.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => chan_oss.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_ilbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_lpc10.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => codec_speex.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => format_ogg_vorbis.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_config_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_jabber.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_snmp.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => res_smdi.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_odbc.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_radius.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_sqlite.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
+	echo "noload => cdr_tds.so" >> $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk/modules.conf
 
-	cp -r $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/samples
-	mv $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/samples $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)etc/asterisk
+	cp -r $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/samples
+	mv $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/samples $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/etc/asterisk
 
 	$(MAKE) $(ASTERISK14_IPK_DIR)/CONTROL/control
 	echo $(ASTERISK14_CONFFILES) | sed -e 's/ /\n/g' > $(ASTERISK14_IPK_DIR)/CONTROL/conffiles
 
-	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules/*.so ; do \
+	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/lib/asterisk/modules/*.so ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
-	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/aelparse \
-			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/asterisk \
-			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/muted \
-			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/smsq \
-			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/stereorize \
-			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)sbin/streamplayer ; do \
+	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/aelparse \
+			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/asterisk \
+			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/muted \
+			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/smsq \
+			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/stereorize \
+			$(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/sbin/streamplayer ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
-	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/agi-bin/*test ; do \
+	for filetostrip in $(ASTERISK14_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/agi-bin/*test ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
 
