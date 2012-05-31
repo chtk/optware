@@ -41,10 +41,10 @@ ASTERISK16_ADDONS_IPK_VERSION=1
 #
 # ASTERISK16_ADDONS_CONFFILES should be a list of user-editable files
 ASTERISK16_ADDONS_CONFFILES=\
-$(OPTWARE_PREFIX)etc/asterisk/mobile.conf \
-$(OPTWARE_PREFIX)etc/asterisk/res_mysql.conf \
-$(OPTWARE_PREFIX)etc/asterisk/ooh323.conf \
-$(OPTWARE_PREFIX)etc/asterisk/cdr_mysql.conf
+$(OPTWARE_PREFIX)/etc/asterisk/mobile.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/res_mysql.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/ooh323.conf \
+$(OPTWARE_PREFIX)/etc/asterisk/cdr_mysql.conf
 
 #
 # ASTERISK16_ADDONS_PATCHES should list any patches, in the the order in
@@ -138,7 +138,7 @@ $(ASTERISK16_ADDONS_BUILD_DIR)/.configured: $(DL_DIR)/$(ASTERISK16_ADDONS_SOURCE
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--includedir=$(STAGING_PREFIX)/include \
@@ -146,8 +146,8 @@ $(ASTERISK16_ADDONS_BUILD_DIR)/.configured: $(DL_DIR)/$(ASTERISK16_ADDONS_SOURCE
 		--with-mysqlclient=$(STAGING_PREFIX) \
 		--with-bluetooth=$(STAGING_PREFIX) \
 		--without-spandsp \
-		--localstatedir=$(OPTWARE_PREFIX)var \
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
+		--localstatedir=$(OPTWARE_PREFIX)/var \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
 	)
 	touch $(ASTERISK16_ADDONS_BUILD_DIR)/.configured
 
@@ -215,7 +215,7 @@ $(ASTERISK16_ADDONS_IPK_DIR)/CONTROL/control:
 #
 $(ASTERISK16_ADDONS_IPK): $(ASTERISK16_ADDONS_BUILD_DIR)/.built
 	rm -rf $(ASTERISK16_ADDONS_IPK_DIR) $(BUILD_DIR)/asterisk16-addons_*_$(TARGET_ARCH).ipk
-	install -d $(ASTERISK16_ADDONS_IPK_DIR)$(OPTWARE_PREFIX)var/lib/asterisk/documentation
+	install -d $(ASTERISK16_ADDONS_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/asterisk/documentation
 	ASTCFLAGS="$(ASTERISK16_CPPFLAGS)" \
 	ASTLDFLAGS="$(STAGING_LDFLAGS) $(ASTERISK16_LDFLAGS)" \
 	$(MAKE) -C $(ASTERISK16_ADDONS_BUILD_DIR) DESTDIR=$(ASTERISK16_ADDONS_IPK_DIR) install
@@ -228,7 +228,7 @@ $(ASTERISK16_ADDONS_IPK): $(ASTERISK16_ADDONS_BUILD_DIR)/.built
 
 	echo $(ASTERISK16_ADDONS_CONFFILES) | sed -e 's/ /\n/g' > $(ASTERISK16_ADDONS_IPK_DIR)/CONTROL/conffiles
 
-	for filetostrip in $(ASTERISK16_ADDONS_IPK_DIR)$(OPTWARE_PREFIX)lib/asterisk/modules/*.so ; do \
+	for filetostrip in $(ASTERISK16_ADDONS_IPK_DIR)$(OPTWARE_PREFIX)/lib/asterisk/modules/*.so ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
 
