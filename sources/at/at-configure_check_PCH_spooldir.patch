@@ -1,0 +1,18 @@
+diff --git a/configure b/configure
+index e30f8e4..17726c9 100755
+--- configure.orig
++++ configure
+@@ -2803,6 +2803,13 @@ elif test -d /usr/spool/cron ; then
+ #define SPOOLDIR "/usr/spool/cron"
+ EOF
+ 
++  echo "$ac_t""/tmp/cron" 1>&6
++elif test -d /tmp/cron ; then
++  sp=/tmp/cron
++  cat >> confdefs.h <<\EOF
++#define SPOOLDIR "/usr/spool/cron"
++EOF
++
+   echo "$ac_t""/usr/spool/cron" 1>&6
+ else
+   { echo "configure: error: Cannot determine value for spool directory" 1>&2; exit 1; }

@@ -40,7 +40,7 @@ AT_IPK_VERSION=5
 
 #
 # AT_CONFFILES should be a list of user-editable files
-AT_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S20at
+AT_CONFFILES=$(OPTWARE_PREFIX)/etc/init.d/S20at
 
 #
 # AT_PATCHES should list any patches, in the the order in
@@ -50,6 +50,10 @@ AT_PATCHES=$(AT_SOURCE_DIR)/Makefile.in.patch
 
 ifneq ($(HOSTCC), $(TARGET_CC))
 AT_PATCHES+= $(AT_SOURCE_DIR)/configure.patch
+endif
+
+ifeq ($(OPTWARE_TARGET), pch)
+AT_PATCHES+= $(AT_SOURCE_DIR)/at-configure_check_PCH_spooldir.patch
 endif
 
 ifeq ($(OPTWARE_TARGET), slugosbe)
@@ -128,16 +132,16 @@ $(AT_BUILD_DIR)/.configured: $(DL_DIR)/$(AT_SOURCE) $(AT_PATCHES) make/at.mk
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(AT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(AT_LDFLAGS)" \
-		ac_cv_path_SENDMAIL=$(OPTWARE_PREFIX)sbin/sendmail \
+		ac_cv_path_SENDMAIL=$(OPTWARE_PREFIX)/sbin/sendmail \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		\
-		--with-etcdir=$(OPTWARE_PREFIX)etc \
-		--with-jobdir=$(OPTWARE_PREFIX)var/spool/cron/atjobs \
-		--with-atspool=$(OPTWARE_PREFIX)var/spool/cron/atspool \
+		--with-etcdir=$(OPTWARE_PREFIX)/etc \
+		--with-jobdir=$(OPTWARE_PREFIX)/var/spool/cron/atjobs \
+		--with-atspool=$(OPTWARE_PREFIX)/var/spool/cron/atspool \
 		--with-daemon_username=$(AT_DAEMON) \
 		--with-daemon_groupname=$(AT_DAEMON) \
 		\
@@ -207,15 +211,18 @@ $(AT_IPK_DIR)/CONTROL/control:
 $(AT_IPK): $(AT_BUILD_DIR)/.built
 	rm -rf $(AT_IPK_DIR) $(BUILD_DIR)/at_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(AT_BUILD_DIR) IROOT=$(AT_IPK_DIR) install
-	$(STRIP_COMMAND) $(AT_IPK_DIR)$(OPTWARE_PREFIX)bin/at $(AT_IPK_DIR)$(OPTWARE_PREFIX)sbin/atd
+	$(STRIP_COMMAND) $(AT_IPK_DIR)$(OPTWARE_PREFIX)/bin/at $(AT_IPK_DIR)$(OPTWARE_PREFIX)/sbin/atd
 #	install -d $(AT_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(AT_SOURCE_DIR)/at.conf $(AT_IPK_DIR)$(OPTWARE_PREFIX)etc/at.conf
-	install -d $(AT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(AT_SOURCE_DIR)/rc.at $(AT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S20at
+	install -d $(AT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(AT_SOURCE_DIR)/rc.at $(AT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S20at
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(AT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S20at
 	$(MAKE) $(AT_IPK_DIR)/CONTROL/control
 	install -m 755 $(AT_SOURCE_DIR)/postinst $(AT_IPK_DIR)/CONTROL/postinst
-	sed -ie 's/nobody/$(AT_DAEMON)/g' $(AT_IPK_DIR)/CONTROL/postinst
+	sed -i -e 's/nobody/$(AT_DAEMON)/g' $(AT_IPK_DIR)/CONTROL/postinst
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(AT_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(AT_SOURCE_DIR)/prerm $(AT_IPK_DIR)/CONTROL/prerm
+	sed -i -e 's,/opt/,$(OPTWARE_PREFIX)/,g' $(AT_IPK_DIR)/CONTROL/prerm
 	echo $(AT_CONFFILES) | sed -e 's/ /\n/g' > $(AT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(AT_IPK_DIR)
 
