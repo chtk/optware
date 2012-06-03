@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		\
 		--enable-libdaemon \
 		--with-distro=none \
@@ -224,7 +224,7 @@ $(AVAHI_IPK_DIR)/CONTROL/control:
 $(AVAHI_IPK): $(AVAHI_BUILD_DIR)/.built
 	rm -rf $(AVAHI_IPK_DIR) $(BUILD_DIR)/avahi_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(AVAHI_BUILD_DIR) DESTDIR=$(AVAHI_IPK_DIR) install-strip
-	rm -f $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)lib/libavahi*.la
+	rm -f $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)/lib/libavahi*.la
 #	install -d $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(AVAHI_SOURCE_DIR)/avahi.conf $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/avahi.conf
 #	install -d $(AVAHI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
