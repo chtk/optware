@@ -134,9 +134,9 @@ $(BACULA_BUILD_DIR)/.configured: $(DL_DIR)/$(BACULA_SOURCE) $(BACULA_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--sysconfdir=$(OPTWARE_PREFIX)etc/bacula \
-		--with-scriptdir=$(OPTWARE_PREFIX)etc/bacula/scripts \
+		--prefix=$(OPTWARE_PREFIX) \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc/bacula \
+		--with-scriptdir=$(OPTWARE_PREFIX)/etc/bacula/scripts \
 		--enable-smartalloc \
 		--disable-conio --enable-readline \
 		--with-readline=$(STAGING_PREFIX) \
@@ -210,8 +210,8 @@ $(BACULA_IPK_DIR)/CONTROL/control:
 $(BACULA_IPK): $(BACULA_BUILD_DIR)/.built
 	rm -rf $(BACULA_IPK_DIR) $(BUILD_DIR)/bacula_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BACULA_BUILD_DIR) DESTDIR=$(BACULA_IPK_DIR) install
-	find $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)sbin -type f \! -name btraceback \! -name bacula | xargs $(STRIP_COMMAND)
-	$(STRIP_COMMAND) $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so.*.* $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)lib/bpipe-fd.so
+	find $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)/sbin -type f \! -name btraceback \! -name bacula -exec $(STRIP_COMMAND) '{}' \;
+	$(STRIP_COMMAND) $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)/lib/lib*.so.*.* $(BACULA_IPK_DIR)$(OPTWARE_PREFIX)/lib/bpipe-fd.so
 	$(MAKE) $(BACULA_IPK_DIR)/CONTROL/control
 	echo $(BACULA_CONFFILES) | sed -e 's/ /\n/g' > $(BACULA_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BACULA_IPK_DIR)
