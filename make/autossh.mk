@@ -125,7 +125,7 @@ $(AUTOSSH_BUILD_DIR)/.configured: $(DL_DIR)/$(AUTOSSH_SOURCE) $(AUTOSSH_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -192,8 +192,8 @@ $(AUTOSSH_IPK): $(AUTOSSH_BUILD_DIR)/.built
 	rm -rf $(AUTOSSH_IPK_DIR) $(BUILD_DIR)/autossh_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(AUTOSSH_BUILD_DIR) install \
 		DESTDIR=$(AUTOSSH_IPK_DIR) \
-		prefix=$(AUTOSSH_IPK_DIR)/opt
-	$(STRIP_COMMAND) $(AUTOSSH_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+		prefix=$(AUTOSSH_IPK_DIR)$(OPTWARE_PREFIX)
+	$(STRIP_COMMAND) $(AUTOSSH_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(AUTOSSH_IPK_DIR)/CONTROL/control
 	echo $(AUTOSSH_CONFFILES) | sed -e 's/ /\n/g' > $(AUTOSSH_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(AUTOSSH_IPK_DIR)
