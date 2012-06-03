@@ -69,7 +69,7 @@ $(AUTOCONF_BUILD_DIR)/.configured: $(DL_DIR)/$(AUTOCONF_SOURCE) $(AUTOCONF_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -106,17 +106,17 @@ $(AUTOCONF_IPK_DIR)/CONTROL/control:
 
 $(AUTOCONF_IPK): $(AUTOCONF_BUILD_DIR)/.built
 	rm -rf $(AUTOCONF_IPK_DIR) $(BUILD_DIR)/autoconf_*_$(TARGET_ARCH).ipk
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)info
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)share/autoconf/Autom4te
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)share/autoconf/autoconf
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)share/autoconf/autoscan
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)share/autoconf/autotest
-	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)share/autoconf/m4sugar
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/info
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/share/autoconf/Autom4te
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/share/autoconf/autoconf
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/share/autoconf/autoscan
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/share/autoconf/autotest
+	install -d $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/share/autoconf/m4sugar
 	$(MAKE) -C $(AUTOCONF_BUILD_DIR) DESTDIR=$(AUTOCONF_IPK_DIR) install
-	sed -i -e 's|/usr/bin/m4|$(OPTWARE_PREFIX)bin/m4|g' $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	sed -i -e 's|/usr/bin/perl|$(OPTWARE_PREFIX)bin/perl|g' $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	sed -i -e 's|/usr/bin/m4|$(OPTWARE_PREFIX)/bin/m4|g' $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	sed -i -e 's|/usr/bin/perl|$(OPTWARE_PREFIX)/bin/perl|g' $(AUTOCONF_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(AUTOCONF_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(AUTOCONF_IPK_DIR)
 
