@@ -18,7 +18,7 @@ ATFTP_CONFLICTS=
 
 ATFTP_IPK_VERSION=10
 
-ATFTP_CONFFILES=$(OPTWARE_PREFIX)etc/xinetd.d/atftp
+ATFTP_CONFFILES=$(OPTWARE_PREFIX)/etc/xinetd.d/atftp
 
 ATFTP_PATCHES = $(ATFTP_SOURCE_DIR)/CLK_TCK.patch
 ifeq ($(OPTWARE_TARGET), $(filter cs05q1armel cs05q3armel cs08q1armel fsg3v4 i686g25 slugosbe slugosle slugos5be slugos5le syno-e500 ts509, $(OPTWARE_TARGET)))
@@ -55,7 +55,7 @@ $(ATFTP_BUILD_DIR)/.configured: $(DL_DIR)/$(ATFTP_SOURCE) $(ATFTP_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 	)
 	touch $@
 
@@ -84,14 +84,16 @@ $(ATFTP_IPK_DIR)/CONTROL/control:
 
 $(ATFTP_IPK): $(ATFTP_BUILD_DIR)/.built
 	rm -rf $(ATFTP_IPK_DIR) $(BUILD_DIR)/atftp_*_$(TARGET_ARCH).ipk
-	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(ATFTP_BUILD_DIR)/atftp -o $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)bin/atftp
-	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	$(STRIP_COMMAND) $(ATFTP_BUILD_DIR)/atftpd -o $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)sbin/atftpd
-	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)etc/xinetd.d
-	install -m 644 $(ATFTP_SOURCE_DIR)/atftp $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)etc/xinetd.d/atftp
+	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(ATFTP_BUILD_DIR)/atftp -o $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/bin/atftp
+	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	$(STRIP_COMMAND) $(ATFTP_BUILD_DIR)/atftpd -o $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/atftpd
+	install -d $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d
+	install -m 644 $(ATFTP_SOURCE_DIR)/atftp $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d/atftp
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(ATFTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d/atftp
 	$(MAKE) $(ATFTP_IPK_DIR)/CONTROL/control
 	install -m 644 $(ATFTP_SOURCE_DIR)/postinst $(ATFTP_IPK_DIR)/CONTROL/postinst
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(ATFTP_IPK_DIR)/CONTROL/postinst
 	echo $(ATFTP_CONFFILES) | sed -e 's/ /\n/g' > $(ATFTP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ATFTP_IPK_DIR)
 
