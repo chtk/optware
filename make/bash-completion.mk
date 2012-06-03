@@ -115,7 +115,7 @@ $(BASH_COMPLETION_BUILD_DIR)/.configured: $(DL_DIR)/$(BASH_COMPLETION_SOURCE) $(
 	if test "$(BUILD_DIR)/$(BASH_COMPLETION_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(BASH_COMPLETION_DIR) $(@D) ; \
 	fi
-	sed -i -e 's|/etc/bash_completion|/opt&|' $(@D)/bash_completion*
+	sed -i -e 's|/etc/bash_completion|$(OPTWARE_PREFIX)&|' $(@D)/bash_completion*
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(BASH_COMPLETION_CPPFLAGS)" \
@@ -124,7 +124,7 @@ $(BASH_COMPLETION_BUILD_DIR)/.configured: $(DL_DIR)/$(BASH_COMPLETION_SOURCE) $(
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,11 +190,11 @@ $(BASH_COMPLETION_IPK_DIR)/CONTROL/control:
 $(BASH_COMPLETION_IPK): $(BASH_COMPLETION_BUILD_DIR)/.built
 	rm -rf $(BASH_COMPLETION_IPK_DIR) $(BUILD_DIR)/bash-completion_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<D) DESTDIR=$(BASH_COMPLETION_IPK_DIR) install-strip
-	install -d $(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/bash-completion/contrib
-	mv $(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)etc/bash_completion.d/* \
-		$(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/bash-completion/contrib/
+	install -d $(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/bash-completion/contrib
+	mv $(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)/etc/bash_completion.d/* \
+		$(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/bash-completion/contrib/
 	install -m644 $(<D)/[CRT]* $(<D)/bash_completion \
-		$(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/bash-completion/
+		$(BASH_COMPLETION_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/bash-completion/
 	$(MAKE) $(BASH_COMPLETION_IPK_DIR)/CONTROL/control
 	echo $(BASH_COMPLETION_CONFFILES) | sed -e 's/ /\n/g' > $(BASH_COMPLETION_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BASH_COMPLETION_IPK_DIR)
