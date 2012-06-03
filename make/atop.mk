@@ -116,6 +116,7 @@ $(ATOP_BUILD_DIR)/.configured: $(DL_DIR)/$(ATOP_SOURCE) $(ATOP_PATCHES) make/ato
 	echo "RANLIB=$(TARGET_RANLIB)" >> $(ATOP_MAKEFILE_OPTWARE)
 	echo "STRIP=$(TARGET_STRIP)" >> $(ATOP_MAKEFILE_OPTWARE)
 	echo "" >> $(ATOP_MAKEFILE_OPTWARE)
+	echo "OPTWARE_PREFIX=$(OPTWARE_PREFIX)" >> $(ATOP_MAKEFILE_OPTWARE)
 	echo "OPTWARE_CFLAGS=$(STAGING_CPPFLAGS) -I$(STAGING_INCLUDE_DIR)/ncurses" >> $(ATOP_MAKEFILE_OPTWARE)
 	echo "OPTWARE_LDFLAGS=$(STAGING_LDFLAGS)" >> $(ATOP_MAKEFILE_OPTWARE)
 	echo "" >> $(ATOP_MAKEFILE_OPTWARE)
@@ -180,10 +181,10 @@ $(ATOP_IPK_DIR)/CONTROL/control:
 # You may need to patch your application to make it use these locations.
 #
 $(ATOP_IPK): $(ATOP_BUILD_DIR)/.built
-	mkdir -p $(ATOP_IPK_DIR)/opt
+	mkdir -p $(ATOP_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) -C $(ATOP_BUILD_DIR) install
-	$(TARGET_STRIP) $(ATOP_IPK_DIR)$(OPTWARE_PREFIX)bin/atop
-	# sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXatop
+	$(TARGET_STRIP) $(ATOP_IPK_DIR)$(OPTWARE_PREFIX)/bin/atop
+	# sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/SXXatop
 	$(MAKE) $(ATOP_IPK_DIR)/CONTROL/control
 	# install -m 755 $(ATOP_SOURCE_DIR)/postinst $(ATOP_IPK_DIR)/CONTROL/postinst
 	# sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(XINETD_IPK_DIR)/CONTROL/postinst
