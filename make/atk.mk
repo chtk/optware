@@ -115,7 +115,7 @@ $(ATK_BUILD_DIR)/.configured: $(DL_DIR)/$(ATK_SOURCE) $(ATK_PATCHES) make/atk.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 		--disable-glibtest \
 	)
@@ -144,9 +144,9 @@ atk: $(ATK_BUILD_DIR)/.built
 #
 $(ATK_BUILD_DIR)/.staged: $(ATK_BUILD_DIR)/.built
 	rm -f $@
-	$(MAKE) -C $(ATK_BUILD_DIR) install-strip prefix=$(STAGING_DIR)/opt
+	$(MAKE) -C $(ATK_BUILD_DIR) install-strip prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/atk.pc
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libatk-1.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libatk-1.0.la
 	touch $@
 
 atk-stage: $(ATK_BUILD_DIR)/.staged
@@ -166,8 +166,8 @@ atk-stage: $(ATK_BUILD_DIR)/.staged
 $(ATK_IPK): $(ATK_BUILD_DIR)/.built
 	rm -rf $(ATK_IPK_DIR) $(BUILD_DIR)/atk_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ATK_BUILD_DIR) DESTDIR=$(ATK_IPK_DIR) install-strip
-	rm -f $(ATK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	rm -rf $(ATK_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
+	rm -f $(ATK_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	rm -rf $(ATK_IPK_DIR)$(OPTWARE_PREFIX)/share/gtk-doc
 	$(MAKE) $(ATK_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ATK_IPK_DIR)
 
