@@ -70,7 +70,7 @@ $(AUTOMAKE19_BUILD_DIR)/.configured: $(DL_DIR)/$(AUTOMAKE19_SOURCE) $(AUTOMAKE19
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -107,16 +107,16 @@ $(AUTOMAKE19_IPK_DIR)/CONTROL/control:
 
 $(AUTOMAKE19_IPK): $(AUTOMAKE19_BUILD_DIR)/.built
 	rm -rf $(AUTOMAKE19_IPK_DIR) $(BUILD_DIR)/automake19_*_$(TARGET_ARCH).ipk
-	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)info
-	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)share/aclocal-1.9
-	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)share/automake-1.9/Automake
-	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)share/automake-1.9/am
+	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/info
+	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/share/aclocal-1.9
+	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/share/automake-1.9/Automake
+	install -d $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/share/automake-1.9/am
 	$(MAKE) -C $(AUTOMAKE19_BUILD_DIR) DESTDIR=$(AUTOMAKE19_IPK_DIR) install
-	sed -i -e 's|/usr/bin/perl|$(OPTWARE_PREFIX)bin/perl|g' $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	sed -i -e 's|/usr/bin/perl|$(OPTWARE_PREFIX)/bin/perl|g' $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(AUTOMAKE19_IPK_DIR)/CONTROL/control
-	rm -f $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)info/dir
-	(cd $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)bin; \
+	rm -f $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/info/dir
+	(cd $(AUTOMAKE19_IPK_DIR)$(OPTWARE_PREFIX)/bin; \
 		rm automake aclocal; \
 		ln -s automake-1.9 automake; \
 		ln -s aclocal-1.9 aclocal; \
