@@ -141,7 +141,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 	);
 	touch $@
 
@@ -189,15 +189,16 @@ $(BASH_IPK_DIR)/CONTROL/control:
 #
 $(BASH_IPK): $(BASH_BUILD_DIR)/.built
 	rm -rf $(BASH_IPK_DIR) $(BUILD_DIR)/bash_*_$(TARGET_ARCH).ipk
-	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(BASH_BUILD_DIR)/bash -o $(BASH_IPK_DIR)$(OPTWARE_PREFIX)bin/bash
-	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)etc 
-	install -m 644 $(BASH_SOURCE_DIR)/profile $(BASH_IPK_DIR)$(OPTWARE_PREFIX)etc/profile
+	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(BASH_BUILD_DIR)/bash -o $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/bin/bash
+	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/etc 
+	install -m 644 $(BASH_SOURCE_DIR)/profile $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/etc/profile
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/etc/profile
 ifeq ($(OPTWARE_WRITE_OUTSIDE_OPT_ALLOWED),true)
-	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(BASH_SOURCE_DIR)/rc.bash $(BASH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05bash
+	install -d $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(BASH_SOURCE_DIR)/rc.bash $(BASH_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05bash
 	install -d $(BASH_IPK_DIR)/bin
-	ln -s $(OPTWARE_PREFIX)bin/bash $(BASH_IPK_DIR)/bin/bash
+	ln -s $(OPTWARE_PREFIX)/bin/bash $(BASH_IPK_DIR)/bin/bash
 endif
 	$(MAKE) $(BASH_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BASH_IPK_DIR)
