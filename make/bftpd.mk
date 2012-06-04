@@ -40,7 +40,7 @@ BFTPD_IPK_VERSION=1
 
 #
 # BFTPD_CONFFILES should be a list of user-editable files
-BFTPD_CONFFILES=$(OPTWARE_PREFIX)etc/bftpd.conf
+BFTPD_CONFFILES=$(OPTWARE_PREFIX)/etc/bftpd.conf
 
 #
 # BFTPD_PATCHES should list any patches, in the the order in
@@ -116,11 +116,11 @@ $(BFTPD_BUILD_DIR)/.configured: $(DL_DIR)/$(BFTPD_SOURCE) $(BFTPD_PATCHES) make/
 		then mv $(BUILD_DIR)/$(BFTPD_DIR) $(@D) ; \
 	fi
 	sed -i -e '/INSTALL/s/-[go] 0//g' \
-	       -e 's| /var/| $$(DESTDIR)$(OPTWARE_PREFIX)var/|' \
+	       -e 's| /var/| $$(DESTDIR)$(OPTWARE_PREFIX)/var/|' \
 	       -e '/^CFLAGS/s|$$| $$(CPPFLAGS)|' \
-	       -e 's|/etc/|$(OPTWARE_PREFIX)etc/|g' \
+	       -e 's|/etc/|$(OPTWARE_PREFIX)/etc/|g' \
 		$(@D)/Makefile.in
-	sed -i -e 's|/etc/|$(OPTWARE_PREFIX)etc/|g' $(@D)/mypaths.h
+	sed -i -e 's|/etc/|$(OPTWARE_PREFIX)/etc/|g' $(@D)/mypaths.h
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(BFTPD_CPPFLAGS)" \
@@ -130,9 +130,9 @@ $(BFTPD_BUILD_DIR)/.configured: $(DL_DIR)/$(BFTPD_SOURCE) $(BFTPD_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
-		--localstatedir=$(OPTWARE_PREFIX)var \
+		--prefix=$(OPTWARE_PREFIX) \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
+		--localstatedir=$(OPTWARE_PREFIX)/var \
 		--enable-libz \
 		--disable-nls \
 		--disable-static \
@@ -202,14 +202,14 @@ $(BFTPD_IPK_DIR)/CONTROL/control:
 #
 $(BFTPD_IPK): $(BFTPD_BUILD_DIR)/.built
 	rm -rf $(BFTPD_IPK_DIR) $(BUILD_DIR)/bftpd_*_$(TARGET_ARCH).ipk
-	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc
-	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)man/man8
-	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)var/log
-	touch $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/bftpd.conf
+	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/etc
+	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/man/man8
+	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/var/log
+	touch $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/etc/bftpd.conf
 	$(MAKE) -C $(BFTPD_BUILD_DIR) DESTDIR=$(BFTPD_IPK_DIR) install
-	$(STRIP_COMMAND) $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)sbin/bftpd
-	rm -f $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)var/log/bftpd.log
+	$(STRIP_COMMAND) $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/bftpd
+	rm -f $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)/var/log/bftpd.log
 #	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(BFTPD_SOURCE_DIR)/bftpd.conf $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/bftpd.conf
 #	install -d $(BFTPD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
