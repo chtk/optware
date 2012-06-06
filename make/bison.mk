@@ -79,11 +79,11 @@ $(BISON_BUILD_DIR)/.configured: $(DL_DIR)/$(BISON_SOURCE) $(BISON_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	);
 ifneq ($(HOSTCC), $(TARGET_CC))
-	sed -i -e '/^#define M4/s|^.*$$|#define M4 "$(OPTWARE_PREFIX)bin/m4"|' $(@D)/lib/config.h
+	sed -i -e '/^#define M4/s|^.*$$|#define M4 "$(OPTWARE_PREFIX)/bin/m4"|' $(@D)/lib/config.h
 endif
 	touch $@
 
@@ -143,23 +143,23 @@ $(BISON_IPK_DIR)/CONTROL/control:
 #
 # You may need to patch your application to make it use these locations.
 #
-	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/bin/
 
 
 $(BISON_IPK): $(BISON_BUILD_DIR)/.built
 	rm -rf $(BISON_IPK_DIR) $(BUILD_DIR)/bison_*_$(TARGET_ARCH).ipk
-	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)bin $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
+	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/bin $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
 	$(MAKE) -C $(BISON_BUILD_DIR) DESTDIR=$(BISON_IPK_DIR) install-strip
 # for now ignore the locale files
 #	$(STRIP_COMMAND) $(BISON_DIR)/src/bison -o $(BISON_IPK_DIR)$(OPTWARE_PREFIX)bin/bison
-	cp $(BISON_BUILD_DIR)/src/yacc $(BISON_IPK_DIR)$(OPTWARE_PREFIX)bin/yacc
-	cp $(BISON_BUILD_DIR)/data/README   $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
-	cp $(BISON_BUILD_DIR)/data/c.m4     $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
-	cp $(BISON_BUILD_DIR)/data/glr.c    $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
-	cp $(BISON_BUILD_DIR)/data/lalr1.cc $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
-	cp $(BISON_BUILD_DIR)/data/yacc.c   $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison
-	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison/m4
-	cp -a $(BISON_BUILD_DIR)/m4 $(BISON_IPK_DIR)$(OPTWARE_PREFIX)share/bison/m4
+	cp $(BISON_BUILD_DIR)/src/yacc $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/bin/yacc
+	cp $(BISON_BUILD_DIR)/data/README   $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
+	cp $(BISON_BUILD_DIR)/data/c.m4     $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
+	cp $(BISON_BUILD_DIR)/data/glr.c    $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
+	cp $(BISON_BUILD_DIR)/data/lalr1.cc $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
+	cp $(BISON_BUILD_DIR)/data/yacc.c   $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison
+	install -d $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison/m4
+	cp -a $(BISON_BUILD_DIR)/m4 $(BISON_IPK_DIR)$(OPTWARE_PREFIX)/share/bison/m4
 	$(MAKE) $(BISON_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BISON_IPK_DIR)
 
