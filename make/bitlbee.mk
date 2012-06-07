@@ -44,7 +44,7 @@ BITLBEE_IPK_VERSION ?= 1
 
 #
 # BITLBEE_CONFFILES should be a list of user-editable files
-BITLBEE_CONFFILES=$(OPTWARE_PREFIX)etc/bitlbee/bitlbee.conf $(OPTWARE_PREFIX)etc/xinetd.d/bitlbee
+BITLBEE_CONFFILES=$(OPTWARE_PREFIX)/etc/bitlbee/bitlbee.conf $(OPTWARE_PREFIX)/etc/xinetd.d/bitlbee
 
 #
 # BITLBEE_PATCHES should list any patches, in the the order in
@@ -133,17 +133,17 @@ endif
                 PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
                 PKG_CONFIG_LIBDIR="$(STAGING_LIB_DIR)/pkgconfig" \
 		STAGING_DIR=$(STAGING_DIR) \
-		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$(PATH) \
+		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin:$(PATH) \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--cpu=$(TARGET_ARCH) \
 		--ssl=gnutls \
 		--msn=1 \
 		--yahoo=1 \
 		--otr=1 \
-		--mandir=$(OPTWARE_PREFIX)man \
-		--datadir=$(OPTWARE_PREFIX)var/bitlbee \
-		--config=$(OPTWARE_PREFIX)var/bitlbee \
+		--mandir=$(OPTWARE_PREFIX)/man \
+		--datadir=$(OPTWARE_PREFIX)/var/bitlbee \
+		--config=$(OPTWARE_PREFIX)/var/bitlbee \
 	)
 	sed -i -e '/BITLBEE_VERSION/d' $(@D)/config.h
 	touch $@
@@ -207,13 +207,16 @@ $(BITLBEE_IPK_DIR)/CONTROL/control:
 $(BITLBEE_IPK): $(BITLBEE_BUILD_DIR)/.built
 	rm -rf $(BITLBEE_IPK_DIR) $(BUILD_DIR)/bitlbee_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BITLBEE_BUILD_DIR) DESTDIR=$(BITLBEE_IPK_DIR) install
-	install -d $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)etc/bitlbee
-	install -m 644 $(BITLBEE_BUILD_DIR)/bitlbee.conf $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)etc/bitlbee/bitlbee.conf
-	install -d $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)etc/xinetd.d
-	install -m 755 $(BITLBEE_SOURCE_DIR)/xinetd.bitlbee $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)etc/xinetd.d/bitlbee
+	install -d $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)/etc/bitlbee
+	install -m 644 $(BITLBEE_BUILD_DIR)/bitlbee.conf $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)/etc/bitlbee/bitlbee.conf
+	install -d $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d
+	install -m 755 $(BITLBEE_SOURCE_DIR)/xinetd.bitlbee $(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d/bitlbee
 	$(MAKE) $(BITLBEE_IPK_DIR)/CONTROL/control
 	install -m 755 $(BITLBEE_SOURCE_DIR)/postinst $(BITLBEE_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(BITLBEE_SOURCE_DIR)/prerm $(BITLBEE_IPK_DIR)/CONTROL/prerm
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(BITLBEE_IPK_DIR)$(OPTWARE_PREFIX)/etc/xinetd.d/bitlbee \
+		$(BITLBEE_IPK_DIR)/CONTROL/postinst
 	echo $(BITLBEE_CONFFILES) | sed -e 's/ /\n/g' > $(BITLBEE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BITLBEE_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(BITLBEE_IPK_DIR)
