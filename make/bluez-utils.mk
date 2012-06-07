@@ -42,16 +42,16 @@ BLUEZ-UTILS_IPK_VERSION=3
 #
 # BLUEZ-UTILS_CONFFILES should be a list of user-editable files
 BLUEZ-UTILS_CONFFILES=\
-$(OPTWARE_PREFIX)etc/bluetooth/hcid.conf \
-$(OPTWARE_PREFIX)etc/bluetooth/echo.service \
-$(OPTWARE_PREFIX)etc/bluetooth/input.service \
-$(OPTWARE_PREFIX)etc/bluetooth/serial.service \
-$(OPTWARE_PREFIX)etc/bluetooth/network.service \
-$(OPTWARE_PREFIX)etc/bluetooth/rfcomm.conf \
-$(OPTWARE_PREFIX)etc/dbus-1/system.d/bluetooth.conf \
-$(OPTWARE_PREFIX)etc/init.d/bluetooth \
-$(OPTWARE_PREFIX)etc/default/bluetooth \
-$(OPTWARE_PREFIX)etc/udev/bluetooth.rules \
+$(OPTWARE_PREFIX)/etc/bluetooth/hcid.conf \
+$(OPTWARE_PREFIX)/etc/bluetooth/echo.service \
+$(OPTWARE_PREFIX)/etc/bluetooth/input.service \
+$(OPTWARE_PREFIX)/etc/bluetooth/serial.service \
+$(OPTWARE_PREFIX)/etc/bluetooth/network.service \
+$(OPTWARE_PREFIX)/etc/bluetooth/rfcomm.conf \
+$(OPTWARE_PREFIX)/etc/dbus-1/system.d/bluetooth.conf \
+$(OPTWARE_PREFIX)/etc/init.d/bluetooth \
+$(OPTWARE_PREFIX)/etc/default/bluetooth \
+$(OPTWARE_PREFIX)/etc/udev/bluetooth.rules \
 
 
 #
@@ -144,7 +144,7 @@ $(BLUEZ-UTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(BLUEZ-UTILS_SOURCE) $(BLUEZ-UT
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-all \
 		$(BLUEZ-UTILS_CONFIG_ARGS) \
 		--disable-glib \
