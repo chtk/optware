@@ -192,6 +192,10 @@ $(BLUEZ2-UTILS_IPK): $(BLUEZ2-UTILS_BUILD_DIR)/.built
 	install -m 0644 $(BLUEZ2-UTILS_SOURCE_DIR)/bluetooth.default $(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/default/bluetooth
 	install -d $(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
 	install -m 0755 $(BLUEZ2-UTILS_SOURCE_DIR)/bluetooth.init $(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S75bluez-utils
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/bluetooth/hcid.conf \
+		$(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/default/bluetooth \
+		$(BLUEZ2-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S75bluez-utils
 	$(MAKE) $(BLUEZ2-UTILS_IPK_DIR)/CONTROL/control
 	echo $(BLUEZ2-UTILS_CONFFILES) | sed -e 's/ /\n/g' > $(BLUEZ2-UTILS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BLUEZ2-UTILS_IPK_DIR)
