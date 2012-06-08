@@ -128,7 +128,7 @@ endif
 	sed -i \
 	    -e 's/install -o root -g root/install /' \
 	    -e '/root:tty/s/^/#/' \
-	    -e 's|/usr/|$(OPTWARE_PREFIX)|g' \
+	    -e 's|/usr/|$(OPTWARE_PREFIX)/|g' \
 		$(BSDMAINUTILS_BUILD_DIR)/Makefile \
 		$(BSDMAINUTILS_BUILD_DIR)/*.mk \
 		$(BSDMAINUTILS_BUILD_DIR)/*/*/Makefile \
@@ -141,7 +141,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -211,26 +211,26 @@ $(BSDMAINUTILS_IPK): $(BSDMAINUTILS_BUILD_DIR)/.built
 	rm -rf $(BSDMAINUTILS_IPK_DIR) $(BUILD_DIR)/bsdmainutils_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BSDMAINUTILS_BUILD_DIR) install \
 		DESTDIR=$(BSDMAINUTILS_IPK_DIR) \
-		sysconfdir=$(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc
-	rm -rf $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)games $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)share/man/man6
-	$(STRIP_COMMAND) `ls $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/* | egrep -v bin/lorder`
-	rm -f $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/cal
+		sysconfdir=$(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc
+	rm -rf $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/games $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man6
+	$(STRIP_COMMAND) `ls $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/* | egrep -v bin/lorder`
+	rm -f $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/cal
 	$(MAKE) $(BSDMAINUTILS_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm
-	cd $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin; \
+	cd $(BSDMAINUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin; \
 	for f in *; do \
 	    mv $$f bsdmainutils-$$f; \
-	    echo "update-alternatives --install $(OPTWARE_PREFIX)bin/$$f $$f $(OPTWARE_PREFIX)bin/bsdmainutils-$$f 50" \
+	    echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/$$f $$f $(OPTWARE_PREFIX)/bin/bsdmainutils-$$f 50" \
 		>> $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst; \
-	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)bin/bsdmainutils-$$f" \
+	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)/bin/bsdmainutils-$$f" \
 		>> $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm; \
 	done
-	echo "update-alternatives --install $(OPTWARE_PREFIX)bin/cal cal $(OPTWARE_PREFIX)bin/ncal 50" \
+	echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/cal cal $(OPTWARE_PREFIX)/bin/ncal 50" \
 	    >> $(BSDMAINUTILS_IPK_DIR)/CONTROL/postinst
-	echo "update-alternatives --remove cal $(OPTWARE_PREFIX)bin/ncal" \
+	echo "update-alternatives --remove cal $(OPTWARE_PREFIX)/bin/ncal" \
 	    >> $(BSDMAINUTILS_IPK_DIR)/CONTROL/prerm
-	d=$(OPTWARE_PREFIX)share/man/man1; \
+	d=$(OPTWARE_PREFIX)/share/man/man1; \
 	cd $(BSDMAINUTILS_IPK_DIR)/$$d; \
 	for f in *; do \
 	    mv $$f bsdmainutils-$$f; \
