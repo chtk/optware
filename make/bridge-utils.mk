@@ -124,7 +124,7 @@ $(BRIDGE-UTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(BRIDGE-UTILS_SOURCE) $(BRIDGE
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,7 +191,7 @@ $(BRIDGE-UTILS_IPK): $(BRIDGE-UTILS_BUILD_DIR)/.built
 	rm -rf $(BRIDGE-UTILS_IPK_DIR) $(BUILD_DIR)/bridge-utils_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BRIDGE-UTILS_BUILD_DIR) install \
 		DESTDIR=$(BRIDGE-UTILS_IPK_DIR) SUBDIRS="brctl doc"
-	$(STRIP_COMMAND) $(BRIDGE-UTILS_IPK_DIR)$(OPTWARE_PREFIX)sbin/brctl
+	$(STRIP_COMMAND) $(BRIDGE-UTILS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/brctl
 	$(MAKE) $(BRIDGE-UTILS_IPK_DIR)/CONTROL/control
 	echo $(BRIDGE-UTILS_CONFFILES) | sed -e 's/ /\n/g' > $(BRIDGE-UTILS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BRIDGE-UTILS_IPK_DIR)
