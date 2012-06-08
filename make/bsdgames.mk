@@ -46,7 +46,7 @@ BSDGAMES_IPK_VERSION=1
 # BSDGAMES_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#BSDGAMES_PATCHES=$(BSDGAMES_SOURCE_DIR)/configure.patch
+BSDGAMES_PATCHES=$(BSDGAMES_SOURCE_DIR)/bsdgames-ncurses.patch
 
 #
 # If the compilation of the package requires additional
@@ -121,6 +121,7 @@ $(BSDGAMES_BUILD_DIR)/.configured: $(DL_DIR)/$(BSDGAMES_SOURCE) $(BSDGAMES_PATCH
 	sed -i -e 's|strfile -rs|strfile.host -rs|g' \
 		$(BSDGAMES_BUILD_DIR)/fortune/datfiles/Makefrag
 	cp $(BSDGAMES_SOURCE_DIR)/config.params $(BSDGAMES_BUILD_DIR)/
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" $(BSDGAMES_BUILD_DIR)/config.params
 ifeq (uclibc, $(LIBC_STYLE))
 	sed -i -e "/bsd_games_cfg_no_build_dirs/s/='/='dm /" $(BSDGAMES_BUILD_DIR)/config.params
 endif
@@ -133,7 +134,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -152,7 +153,7 @@ $(BSDGAMES_BUILD_DIR)/.built: $(BSDGAMES_BUILD_DIR)/.configured
 		;
 	$(MAKE) -C $(BSDGAMES_BUILD_DIR) \
 		CC=$(HOSTCC) \
-		OPTIMIZE="-O2 -I$(HOST_STAGING_INCLUDE_DIR)" \
+		OPTIMIZE="-O2 -I$(STAGING_INCLUDE_DIR)" \
 		hack/makedefs \
 		fortune/strfile/strfile \
 		monop/initdeck \
@@ -218,8 +219,8 @@ $(BSDGAMES_IPK): $(BSDGAMES_BUILD_DIR)/.built
 		INSTALL_PREFIX=$(BSDGAMES_IPK_DIR) \
 		;
 	$(STRIP_COMMAND) \
-		$(BSDGAMES_IPK_DIR)$(OPTWARE_PREFIX)bin/strfile \
-		`ls $(BSDGAMES_IPK_DIR)$(OPTWARE_PREFIX)games/* | egrep -v '/countmail|/rot13|/wargames|/wtf'`
+		$(BSDGAMES_IPK_DIR)$(OPTWARE_PREFIX)/bin/strfile \
+		`ls $(BSDGAMES_IPK_DIR)$(OPTWARE_PREFIX)/games/* | egrep -v '/countmail|/rot13|/wargames|/wtf'`
 	$(MAKE) $(BSDGAMES_IPK_DIR)/CONTROL/control
 	echo $(BSDGAMES_CONFFILES) | sed -e 's/ /\n/g' > $(BSDGAMES_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BSDGAMES_IPK_DIR)
