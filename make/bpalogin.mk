@@ -41,7 +41,7 @@ BPALOGIN_IPK_VERSION=3
 
 #
 # BPALOGIN_CONFFILES should be a list of user-editable files
-BPALOGIN_CONFFILES=$(OPTWARE_PREFIX)etc/bpalogin.conf $(OPTWARE_PREFIX)etc/init.d/S05bpalogin
+BPALOGIN_CONFFILES=$(OPTWARE_PREFIX)/etc/bpalogin.conf $(OPTWARE_PREFIX)/etc/init.d/S05bpalogin
 
 #
 # BPALOGIN_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(BPALOGIN_BUILD_DIR)/.configured: $(DL_DIR)/$(BPALOGIN_SOURCE) $(BPALOGIN_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -186,15 +186,20 @@ $(BPALOGIN_IPK_DIR)/CONTROL/control:
 #
 $(BPALOGIN_IPK): $(BPALOGIN_BUILD_DIR)/.built
 	rm -rf $(BPALOGIN_IPK_DIR) $(BUILD_DIR)/bpalogin_*_$(TARGET_ARCH).ipk
-	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	install -m 755 $(BPALOGIN_BUILD_DIR)/bpalogin $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)sbin/bpalogin
-	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 644 $(BPALOGIN_SOURCE_DIR)/bpalogin.conf $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)etc/bpalogin.conf
-	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(BPALOGIN_SOURCE_DIR)/rc.bpalogin $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05bpalogin
+	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	install -m 755 $(BPALOGIN_BUILD_DIR)/bpalogin $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/sbin/bpalogin
+	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 644 $(BPALOGIN_SOURCE_DIR)/bpalogin.conf $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/bpalogin.conf
+	install -d $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(BPALOGIN_SOURCE_DIR)/rc.bpalogin $(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05bpalogin
 	$(MAKE) $(BPALOGIN_IPK_DIR)/CONTROL/control
 	install -m 755 $(BPALOGIN_SOURCE_DIR)/postinst $(BPALOGIN_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(BPALOGIN_SOURCE_DIR)/prerm $(BPALOGIN_IPK_DIR)/CONTROL/prerm
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/bpalogin.conf \
+		$(BPALOGIN_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05bpalogin \
+		$(BPALOGIN_IPK_DIR)/CONTROL/postinst \
+		$(BPALOGIN_IPK_DIR)/CONTROL/prerm
 	echo $(BPALOGIN_CONFFILES) | sed -e 's/ /\n/g' > $(BPALOGIN_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BPALOGIN_IPK_DIR)
 
