@@ -126,7 +126,7 @@ $(BTPD_BUILD_DIR)/.configured: $(DL_DIR)/$(BTPD_SOURCE) $(BTPD_PATCHES) make/btp
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -192,8 +192,8 @@ $(BTPD_IPK_DIR)/CONTROL/control:
 $(BTPD_IPK): $(BTPD_BUILD_DIR)/.built
 	rm -rf $(BTPD_IPK_DIR) $(BUILD_DIR)/btpd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BTPD_BUILD_DIR) DESTDIR=$(BTPD_IPK_DIR) install-strip
-	install -d $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/btpd
-	install $(BTPD_BUILD_DIR)/[CR]* $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)share/doc/btpd/
+	install -d $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/btpd
+	install $(BTPD_BUILD_DIR)/[CR]* $(BTPD_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/btpd/
 	$(MAKE) $(BTPD_IPK_DIR)/CONTROL/control
 	echo $(BTPD_CONFFILES) | sed -e 's/ /\n/g' > $(BTPD_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BTPD_IPK_DIR)
