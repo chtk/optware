@@ -121,11 +121,11 @@ $(BZR_BUILD_DIR)/.configured: $(DL_DIR)/$(BZR_SOURCE) $(BZR_PATCHES) make/bzr.mk
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)/lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)/bin"; \
 	    ) >> setup.cfg; \
 	)
 	# 2.6
@@ -138,11 +138,11 @@ $(BZR_BUILD_DIR)/.configured: $(DL_DIR)/$(BZR_SOURCE) $(BZR_PATCHES) make/bzr.mk
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)/lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.6"; \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.6"; \
 		echo "[install]"; \
-		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)/bin"; \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -227,9 +227,9 @@ $(PY25-BZR_IPK): $(BZR_BUILD_DIR)/.built
 	rm -rf $(BUILD_DIR)/py*-bzr_*.ipk
 	rm -rf $(PY25-BZR_IPK_DIR) $(BUILD_DIR)/py25-bzr_*_$(TARGET_ARCH).ipk
 	(cd $(BZR_BUILD_DIR)/2.5; \
-	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-BZR_IPK_DIR) --prefix=/opt; \
+	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install --root=$(PY25-BZR_IPK_DIR) --prefix=$(OPTWARE_PREFIX); \
 	)
-	$(STRIP_COMMAND) $(PY25-BZR_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/bzrlib/*.so
+	$(STRIP_COMMAND) $(PY25-BZR_IPK_DIR)$(OPTWARE_PREFIX)/lib/python2.5/site-packages/bzrlib/*.so
 	$(MAKE) $(PY25-BZR_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-BZR_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(PY25-BZR_IPK_DIR)
@@ -237,12 +237,12 @@ $(PY25-BZR_IPK): $(BZR_BUILD_DIR)/.built
 $(PY26-BZR_IPK): $(BZR_BUILD_DIR)/.built
 	rm -rf $(PY26-BZR_IPK_DIR) $(BUILD_DIR)/py26-bzr_*_$(TARGET_ARCH).ipk
 	(cd $(BZR_BUILD_DIR)/2.6; \
-	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-BZR_IPK_DIR) --prefix=/opt; \
+	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install --root=$(PY26-BZR_IPK_DIR) --prefix=$(OPTWARE_PREFIX); \
 	)
-	$(STRIP_COMMAND) $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.6/site-packages/bzrlib/*.so
-	for f in $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)*bin/*; \
+	$(STRIP_COMMAND) $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)/lib/python2.6/site-packages/bzrlib/*.so
+	for f in $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)/*bin/*; \
 		do mv $$f `echo $$f | sed 's|$$|-2.6|'`; done
-	rm -rf $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)man
+	rm -rf $(PY26-BZR_IPK_DIR)$(OPTWARE_PREFIX)/man
 	$(MAKE) $(PY26-BZR_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY26-BZR_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(PY26-BZR_IPK_DIR)
