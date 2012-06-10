@@ -44,14 +44,14 @@ bzip2-unpack: $(BZIP2_BUILD_DIR)/.configured
 $(BZIP2_BUILD_DIR)/.built: $(BZIP2_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(BZIP2_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(BZIP2_LDFLAGS)" \
 		-f Makefile \
 		libbz2.a bzip2 bzip2recover
 	$(MAKE) -C $(@D) \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(BZIP2_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(BZIP2_LDFLAGS)" \
@@ -67,8 +67,8 @@ $(BZIP2_BUILD_DIR)/.staged: $(BZIP2_BUILD_DIR)/.built
 	install -d $(STAGING_LIB_DIR)
 	install -m 644 $(BZIP2_BUILD_DIR)/libbz2.a $(STAGING_LIB_DIR)
 	install -m 644 $(BZIP2_BUILD_DIR)/libbz2.so.$(BZIP2_LIB_VERSION) $(STAGING_LIB_DIR)
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libbz2.so.$(BZIP2_LIB_VERSION) libbz2.so.1.0
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libbz2.so.1.0 libbz2.so
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libbz2.so.$(BZIP2_LIB_VERSION) libbz2.so.1.0
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libbz2.so.1.0 libbz2.so
 	touch $@
 
 bzip2-stage: $(BZIP2_BUILD_DIR)/.staged
@@ -93,25 +93,25 @@ $(BZIP2_IPK_DIR)/CONTROL/control:
 
 $(BZIP2_IPK): $(BZIP2_BUILD_DIR)/.built
 	rm -rf $(BZIP2_IPK_DIR) $(BUILD_DIR)/bzip2_*_$(TARGET_ARCH).ipk
-	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(BZIP2_BUILD_DIR)/bzip2 -o $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)bin/bzip2-bzip2
-	$(STRIP_COMMAND) $(BZIP2_BUILD_DIR)/bzip2recover -o $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)bin/bzip2recover
-	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)include
-	install -m 644 $(BZIP2_BUILD_DIR)/bzlib.h $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)include
-	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(BZIP2_BUILD_DIR)/libbz2.so.$(BZIP2_LIB_VERSION) $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)lib
-	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)lib && ln -fs libbz2.so.$(BZIP2_LIB_VERSION) libbz2.so.1.0
-	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)lib && ln -fs libbz2.so.1.0 libbz2.so
-	$(STRIP_COMMAND) $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)lib/libbz2.so.$(BZIP2_LIB_VERSION)
-	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)doc/bzip2
-	install -m 644 $(BZIP2_BUILD_DIR)/manual*.html $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)doc/bzip2
-	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -fs bzip2 bzcat
+	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(BZIP2_BUILD_DIR)/bzip2 -o $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/bin/bzip2-bzip2
+	$(STRIP_COMMAND) $(BZIP2_BUILD_DIR)/bzip2recover -o $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/bin/bzip2recover
+	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/include
+	install -m 644 $(BZIP2_BUILD_DIR)/bzlib.h $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/include
+	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(BZIP2_BUILD_DIR)/libbz2.so.$(BZIP2_LIB_VERSION) $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libbz2.so.$(BZIP2_LIB_VERSION) libbz2.so.1.0
+	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libbz2.so.1.0 libbz2.so
+	$(STRIP_COMMAND) $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/lib/libbz2.so.$(BZIP2_LIB_VERSION)
+	install -d $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/doc/bzip2
+	install -m 644 $(BZIP2_BUILD_DIR)/manual*.html $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/doc/bzip2
+	cd $(BZIP2_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -fs bzip2 bzcat
 	$(MAKE) $(BZIP2_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/bzip2 bzip2 $(OPTWARE_PREFIX)bin/bzip2-bzip2 80" \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/bzip2 bzip2 $(OPTWARE_PREFIX)/bin/bzip2-bzip2 80" \
 	) > $(BZIP2_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove bzip2 $(OPTWARE_PREFIX)bin/bzip2-bzip2" \
+	 echo "update-alternatives --remove bzip2 $(OPTWARE_PREFIX)/bin/bzip2-bzip2" \
 	) > $(BZIP2_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
