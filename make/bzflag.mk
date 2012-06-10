@@ -115,7 +115,7 @@ $(BZFLAG_BUILD_DIR)/.configured: $(DL_DIR)/$(BZFLAG_SOURCE) $(BZFLAG_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-x \
 		--disable-nls \
 		--disable-client \
@@ -184,9 +184,9 @@ $(BZFLAG_IPK): $(BZFLAG_BUILD_DIR)/.built
 	rm -rf $(BZFLAG_IPK_DIR) $(BUILD_DIR)/bzflag_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(BZFLAG_BUILD_DIR) DESTDIR=$(BZFLAG_IPK_DIR) install
 	# contents of /share are not needed by a dedicated server
-	rm -rf $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)share
+	rm -rf $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)/share
 	# strip binaries
-	$(STRIP_COMMAND) $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)bin/bzfs $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)bin/bzadmin
+	$(STRIP_COMMAND) $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)/bin/bzfs $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)/bin/bzadmin
 #	install -d $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 755 $(BZFLAG_SOURCE_DIR)/bzflag.conf $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/bzflag.conf
 #	install -d $(BZFLAG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
