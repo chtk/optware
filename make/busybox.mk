@@ -156,7 +156,7 @@ $(BUSYBOX_BUILD_DIR)/.staged: $(BUSYBOX_BUILD_DIR)/.built
 	CPPFLAGS="$(STAGING_CPPFLAGS) $(BUSYBOX_CPPFLAGS)" \
 	LDFLAGS="$(STAGING_LDFLAGS) $(BUSYBOX_LDFLAGS)" \
 	$(BUSYBOX_BUILD_EXTRA_ENV) \
-	$(MAKE) CROSS="$(TARGET_CROSS)" CONFIG_PREFIX="$(STAGING_DIR)/opt" \
+	$(MAKE) CROSS="$(TARGET_CROSS)" CONFIG_PREFIX="$(STAGING_DIR)$(OPTWARE_PREFIX)" \
 		HOSTCC=$(HOSTCC) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" -C $(BUSYBOX_BUILD_DIR) install
 	touch $@
@@ -223,36 +223,36 @@ $(BUSYBOX_IPK_DIR)-links/CONTROL/control:
 #
 $(BUSYBOX_IPK): $(BUSYBOX_BUILD_DIR)/.built
 	rm -rf $(BUSYBOX_IPK_DIR) $(BUILD_DIR)/busybox_*_$(TARGET_ARCH).ipk
-	install -d $(BUSYBOX_IPK_DIR)/opt
+	install -d $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)
 	CPPFLAGS="$(STAGING_CPPFLAGS) $(BUSYBOX_CPPFLAGS)" \
 	LDFLAGS="$(STAGING_LDFLAGS) $(BUSYBOX_LDFLAGS)" \
 	$(BUSYBOX_BUILD_EXTRA_ENV) \
-	$(MAKE) CROSS="$(TARGET_CROSS)" CONFIG_PREFIX="$(BUSYBOX_IPK_DIR)/opt" \
+	$(MAKE) CROSS="$(TARGET_CROSS)" CONFIG_PREFIX="$(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)" \
 		HOSTCC=$(HOSTCC) CC=$(TARGET_CC) STRIP=$(TARGET_STRIP) \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" -C $(BUSYBOX_BUILD_DIR) install
 	rm -rf $(BUSYBOX_IPK_DIR)-base
-	install -d $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)bin
-	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)bin/busybox $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)bin
+	install -d $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)/bin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)/bin/busybox $(BUSYBOX_IPK_DIR)-base$(OPTWARE_PREFIX)/bin
 	$(MAKE) $(BUSYBOX_IPK_DIR)-base/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BUSYBOX_IPK_DIR)-base
 	rm -rf $(BUSYBOX_IPK_DIR)-links
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
-	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)bin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
-	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)sbin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
-	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/chroot $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin/
-	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/ifconfig $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin/
-	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin/syslogd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec/
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/bin
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/libexec
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)/bin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/bin
+	mv $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)/sbin/* $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin/chroot $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/bin/
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin/ifconfig $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/bin/
+	mv $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin/syslogd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/libexec/
 	$(MAKE) $(BUSYBOX_IPK_DIR)-links/CONTROL/control
 	echo "#!/bin/sh" > $(BUSYBOX_IPK_DIR)-links/CONTROL/postinst
 	echo "#!/bin/sh" > $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm
 	for d in bin libexec sbin; do \
-	    cd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)$$d; \
+	    cd $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/$$d; \
 	    for l in *; do \
-		echo "update-alternatives --install '$(OPTWARE_PREFIX)$$d/$$l' '$$l' $(OPTWARE_PREFIX)bin/busybox 30" \
+		echo "update-alternatives --install '$(OPTWARE_PREFIX)/$$d/$$l' '$$l' $(OPTWARE_PREFIX)/bin/busybox 30" \
 		    >> $(BUSYBOX_IPK_DIR)-links/CONTROL/postinst; \
-		echo "update-alternatives --remove '$$l' $(OPTWARE_PREFIX)bin/busybox" \
+		echo "update-alternatives --remove '$$l' $(OPTWARE_PREFIX)/bin/busybox" \
 		    >> $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm; \
 	    done; \
 	done
@@ -260,12 +260,12 @@ $(BUSYBOX_IPK): $(BUSYBOX_BUILD_DIR)/.built
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
 			$(BUSYBOX_IPK_DIR)-links/CONTROL/postinst $(BUSYBOX_IPK_DIR)-links/CONTROL/prerm; \
 	fi
-	rm -rf $(BUSYBOX_IPK_DIR)-links/opt
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)bin
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)libexec
-	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)sbin
+	rm -rf $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/bin
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/libexec
+	install -d $(BUSYBOX_IPK_DIR)-links$(OPTWARE_PREFIX)/sbin
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BUSYBOX_IPK_DIR)-links
-	rm -rf $(BUSYBOX_IPK_DIR)/opt
+	rm -rf $(BUSYBOX_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) $(BUSYBOX_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(BUSYBOX_IPK_DIR)
 
