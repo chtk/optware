@@ -100,7 +100,7 @@ $(CDARGS_BUILD_DIR)/.configured: $(DL_DIR)/$(CDARGS_SOURCE)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -161,16 +161,18 @@ $(CDARGS_IPK_DIR)/CONTROL/control:
 #
 $(CDARGS_IPK): $(CDARGS_BUILD_DIR)/.built
 	rm -rf $(CDARGS_IPK_DIR) $(BUILD_DIR)/cdargs_*_$(TARGET_ARCH).ipk
-	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)var/lib/cdargs
-	install -m 755 $(CDARGS_BUILD_DIR)/contrib/cdargs-bash.sh $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)var/lib/cdargs	
-	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(CDARGS_BUILD_DIR)/src/cdargs $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -m 644 $(CDARGS_BUILD_DIR)/doc/cdargs.1 $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/cdargs
+	install -m 755 $(CDARGS_BUILD_DIR)/contrib/cdargs-bash.sh $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/var/lib/cdargs	
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(CDARGS_BUILD_DIR)/src/cdargs $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	install -d $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -m 644 $(CDARGS_BUILD_DIR)/doc/cdargs.1 $(CDARGS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
 	$(MAKE) $(CDARGS_IPK_DIR)/CONTROL/control
 	echo $(CDARGS_CONFFILES) | sed -e 's/ /\n/g' > $(CDARGS_IPK_DIR)/CONTROL/conffiles
 	install -m 644 $(CDARGS_SOURCE_DIR)/postinst $(CDARGS_IPK_DIR)/CONTROL/postinst
+	sed -i -e "s#/opt/#$(OPTWARE_PREFIX)/#g" \
+		$(CDARGS_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CDARGS_IPK_DIR)
 
 #
