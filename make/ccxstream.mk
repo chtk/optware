@@ -135,15 +135,19 @@ $(CCXSTREAM_IPK_DIR)/CONTROL/control:
 #
 $(CCXSTREAM_IPK): $(CCXSTREAM_BUILD_DIR)/.built
 	rm -rf $(CCXSTREAM_IPK_DIR) $(CCXSTREAM_IPK)
-	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)doc/ccxstream
-	install -m 644 $(CCXSTREAM_BUILD_DIR)/README $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)doc/ccxstream
-	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	$(STRIP_COMMAND) $(CCXSTREAM_BUILD_DIR)/ccxstream -o $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)sbin/ccxstream
-	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(CCXSTREAM_SOURCE_DIR)/rc.ccxstream $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S75ccxstream
+	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/doc/ccxstream
+	install -m 644 $(CCXSTREAM_BUILD_DIR)/README $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/doc/ccxstream
+	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	$(STRIP_COMMAND) $(CCXSTREAM_BUILD_DIR)/ccxstream -o $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/sbin/ccxstream
+	install -d $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(CCXSTREAM_SOURCE_DIR)/rc.ccxstream $(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S75ccxstream
 	$(MAKE) $(CCXSTREAM_IPK_DIR)/CONTROL/control
 	install -m 644 $(CCXSTREAM_SOURCE_DIR)/postinst $(CCXSTREAM_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(CCXSTREAM_SOURCE_DIR)/prerm $(CCXSTREAM_IPK_DIR)/CONTROL/prerm
+	sed -i -e "s#/opt/#$(OPTWARE_PREFIX)/#g" \
+		$(CCXSTREAM_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S75ccxstream \
+		$(CCXSTREAM_IPK_DIR)/CONTROL/postinst  \
+		$(CCXSTREAM_SOURCE_DIR)/prerm $(CCXSTREAM_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CCXSTREAM_IPK_DIR)
 
 #
