@@ -128,7 +128,7 @@ $(CAIRO_BUILD_DIR)/.configured: $(DL_DIR)/$(CAIRO_SOURCE) $(CAIRO_PATCHES) make/
 		--target=$(GNU_TARGET_NAME) \
 		--x-includes=$(STAGING_INCLUDE_DIR) \
 		--x-libraries=$(STAGING_LIB_DIR) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(CAIRO_BUILD_DIR)/libtool
@@ -156,9 +156,9 @@ cairo: $(CAIRO_BUILD_DIR)/.built
 #
 $(CAIRO_BUILD_DIR)/.staged: $(CAIRO_BUILD_DIR)/.built
 	rm -f $@
-	$(MAKE) -C $(CAIRO_BUILD_DIR) install-strip prefix=$(STAGING_DIR)/opt
+	$(MAKE) -C $(CAIRO_BUILD_DIR) install-strip prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/cairo*.pc
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libcairo*.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libcairo*.la
 	touch $@
 
 cairo-stage: $(CAIRO_BUILD_DIR)/.staged
@@ -178,8 +178,8 @@ cairo-stage: $(CAIRO_BUILD_DIR)/.staged
 $(CAIRO_IPK): $(CAIRO_BUILD_DIR)/.built
 	rm -rf $(CAIRO_IPK_DIR) $(BUILD_DIR)/cairo_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CAIRO_BUILD_DIR) DESTDIR=$(CAIRO_IPK_DIR) install-strip
-	rm -f $(CAIRO_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	rm -rf $(CAIRO_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
+	rm -f $(CAIRO_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	rm -rf $(CAIRO_IPK_DIR)$(OPTWARE_PREFIX)/share/gtk-doc
 	$(MAKE) $(CAIRO_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CAIRO_IPK_DIR)
 
