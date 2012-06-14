@@ -124,7 +124,7 @@ $(CADAVER_BUILD_DIR)/.configured: $(DL_DIR)/$(CADAVER_SOURCE) $(CADAVER_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-included-neon \
 		--with-libs=$(STAGING_PREFIX) \
 		--with-ssl=openssl \
@@ -194,7 +194,7 @@ $(CADAVER_IPK_DIR)/CONTROL/control:
 $(CADAVER_IPK): $(CADAVER_BUILD_DIR)/.built
 	rm -rf $(CADAVER_IPK_DIR) $(BUILD_DIR)/cadaver_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CADAVER_BUILD_DIR) DESTDIR=$(CADAVER_IPK_DIR) install
-	$(STRIP_COMMAND) $(CADAVER_IPK_DIR)$(OPTWARE_PREFIX)bin/cadaver
+	$(STRIP_COMMAND) $(CADAVER_IPK_DIR)$(OPTWARE_PREFIX)/bin/cadaver
 	$(MAKE) $(CADAVER_IPK_DIR)/CONTROL/control
 	echo $(CADAVER_CONFFILES) | sed -e 's/ /\n/g' > $(CADAVER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CADAVER_IPK_DIR)
