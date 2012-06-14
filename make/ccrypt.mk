@@ -123,7 +123,7 @@ $(CCRYPT_BUILD_DIR)/.configured: $(DL_DIR)/$(CCRYPT_SOURCE) $(CCRYPT_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,8 +189,8 @@ $(CCRYPT_IPK_DIR)/CONTROL/control:
 $(CCRYPT_IPK): $(CCRYPT_BUILD_DIR)/.built
 	rm -rf $(CCRYPT_IPK_DIR) $(BUILD_DIR)/ccrypt_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CCRYPT_BUILD_DIR) DESTDIR=$(CCRYPT_IPK_DIR) install-strip
-	install -d $(CCRYPT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ccrypt
-	install $(CCRYPT_BUILD_DIR)/[ACNR]* $(CCRYPT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ccrypt
+	install -d $(CCRYPT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ccrypt
+	install $(CCRYPT_BUILD_DIR)/[ACNR]* $(CCRYPT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ccrypt
 	$(MAKE) $(CCRYPT_IPK_DIR)/CONTROL/control
 	echo $(CCRYPT_CONFFILES) | sed -e 's/ /\n/g' > $(CCRYPT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CCRYPT_IPK_DIR)
