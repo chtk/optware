@@ -201,7 +201,7 @@ $(PY25-CHEROKEE-SCGI_IPK): $(CHEROKEE-PYSCGI_BUILD_DIR)/.built
 	rm -rf $(PY25-CHEROKEE-SCGI_IPK_DIR) $(BUILD_DIR)/py25-cherokee-scgi_*_$(TARGET_ARCH).ipk
 	(cd $(CHEROKEE-PYSCGI_BUILD_DIR)/2.5; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
-	    --root=$(PY25-CHEROKEE-SCGI_IPK_DIR) --prefix=/opt; \
+	    --root=$(PY25-CHEROKEE-SCGI_IPK_DIR) --prefix=$(OPTWARE_PREFIX); \
 	)
 	$(MAKE) $(PY25-CHEROKEE-SCGI_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY25-CHEROKEE-SCGI_IPK_DIR)
@@ -210,7 +210,7 @@ $(PY26-CHEROKEE-SCGI_IPK): $(CHEROKEE-PYSCGI_BUILD_DIR)/.built
 	rm -rf $(PY26-CHEROKEE-SCGI_IPK_DIR) $(BUILD_DIR)/py26-cherokee-scgi_*_$(TARGET_ARCH).ipk
 	(cd $(CHEROKEE-PYSCGI_BUILD_DIR)/2.6; \
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install \
-	    --root=$(PY26-CHEROKEE-SCGI_IPK_DIR) --prefix=/opt; \
+	    --root=$(PY26-CHEROKEE-SCGI_IPK_DIR) --prefix=$(OPTWARE_PREFIX); \
 	)
 	$(MAKE) $(PY26-CHEROKEE-SCGI_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PY26-CHEROKEE-SCGI_IPK_DIR)
