@@ -122,18 +122,18 @@ $(CLEARSILVER_BUILD_DIR)/.configured: $(DL_DIR)/$(CLEARSILVER_SOURCE) $(CLEARSIL
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.4"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.4"; \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.4"; \
 		echo "[install]"; \
-		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)/bin"; \
 	    ) > python/setup.cfg; \
 	    ( \
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.5"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)/bin"; \
 	    ) > python2.5/setup.cfg; \
 	)
 	(cd $(CLEARSILVER_BUILD_DIR); \
@@ -145,12 +145,12 @@ $(CLEARSILVER_BUILD_DIR)/.configured: $(DL_DIR)/$(CLEARSILVER_SOURCE) $(CLEARSIL
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(CLEARSILVER_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(CLEARSILVER_LDFLAGS)" \
-		PYTHON_SITE="$(OPTWARE_PREFIX)lib/python2.4/site-packages" \
+		PYTHON_SITE="$(OPTWARE_PREFIX)/lib/python2.4/site-packages" \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-apache \
 		--disable-csharp \
 		--disable-java \
@@ -174,7 +174,7 @@ $(CLEARSILVER_BUILD_DIR)/.built: $(CLEARSILVER_BUILD_DIR)/.configured
 	rm -f $(CLEARSILVER_BUILD_DIR)/.built
 	$(MAKE) -C $(CLEARSILVER_BUILD_DIR)
 	$(MAKE) -C $(CLEARSILVER_BUILD_DIR)/python2.5 \
-		PYTHON_SITE=$(OPTWARE_PREFIX)lib/python2.5/site-packages
+		PYTHON_SITE=$(OPTWARE_PREFIX)/lib/python2.5/site-packages
 	touch $(CLEARSILVER_BUILD_DIR)/.built
 
 #
@@ -226,10 +226,10 @@ $(CLEARSILVER_IPK_DIR)/CONTROL/control:
 $(CLEARSILVER_IPK): $(CLEARSILVER_BUILD_DIR)/.built
 	rm -rf $(CLEARSILVER_IPK_DIR) $(BUILD_DIR)/clearsilver_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CLEARSILVER_BUILD_DIR) DESTDIR=$(CLEARSILVER_IPK_DIR) install
-	$(STRIP_COMMAND) $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) -C $(CLEARSILVER_BUILD_DIR)/python2.5 DESTDIR=$(CLEARSILVER_IPK_DIR) install \
-		PYTHON_SITE=$(OPTWARE_PREFIX)lib/python2.5/site-packages
-	$(STRIP_COMMAND) `find $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.so'`
+		PYTHON_SITE=$(OPTWARE_PREFIX)/lib/python2.5/site-packages
+	$(STRIP_COMMAND) `find $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)/lib -name '*.so'`
 #	install -d $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(CLEARSILVER_SOURCE_DIR)/clearsilver.conf $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)etc/clearsilver.conf
 #	install -d $(CLEARSILVER_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
