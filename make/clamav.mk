@@ -46,7 +46,7 @@ CLAMAV_IPK_VERSION=1
 
 #
 # CLAMAV_CONFFILES should be a list of user-editable files
-CLAMAV_CONFFILES=$(OPTWARE_PREFIX)etc/clamd.conf $(OPTWARE_PREFIX)etc/freshclam.conf $(OPTWARE_PREFIX)etc/init.d/S98clamav
+CLAMAV_CONFFILES=$(OPTWARE_PREFIX)/etc/clamd.conf $(OPTWARE_PREFIX)/etc/freshclam.conf $(OPTWARE_PREFIX)/etc/init.d/S98clamav
 
 #
 # CLAMAV_PATCHES should list any patches, in the the order in
@@ -131,13 +131,13 @@ $(CLAMAV_BUILD_DIR)/.configured: $(DL_DIR)/$(CLAMAV_SOURCE) $(CLAMAV_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-clamav \
 		--disable-static \
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
-		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--mandir=$(OPTWARE_PREFIX)man	\
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
+		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--mandir=$(OPTWARE_PREFIX)/man	\
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
@@ -150,7 +150,7 @@ clamav-unpack: $(CLAMAV_BUILD_DIR)/.configured
 $(CLAMAV_BUILD_DIR)/.built: $(CLAMAV_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		CPPFLAGS="$(STAGING_CPPFLAGS) $(CLAMAV_CPPFLAGS) -DCLAMAV_tmpdir=\\\"$(OPTWARE_PREFIX)tmp\\\""
+		CPPFLAGS="$(STAGING_CPPFLAGS) $(CLAMAV_CPPFLAGS) -DCLAMAV_tmpdir=\\\"$(OPTWARE_PREFIX)/tmp\\\""
 	touch $@
 
 #
@@ -203,19 +203,22 @@ $(CLAMAV_IPK): $(CLAMAV_BUILD_DIR)/.built
 	rm -rf $(CLAMAV_IPK_DIR) $(BUILD_DIR)/clamav_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CLAMAV_BUILD_DIR) install-strip \
 		DESTDIR=$(CLAMAV_IPK_DIR) transform=""
-	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)tmp/
-	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 644 $(CLAMAV_SOURCE_DIR)/clamd.conf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)etc/clamd.conf
-	install -m 644 $(CLAMAV_SOURCE_DIR)/freshclam.conf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)etc/freshclam.conf
-	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(CLAMAV_SOURCE_DIR)/rc.clamav $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S98clamav
+	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/tmp/
+	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 644 $(CLAMAV_SOURCE_DIR)/clamd.conf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/etc/clamd.conf
+	install -m 644 $(CLAMAV_SOURCE_DIR)/freshclam.conf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/etc/freshclam.conf
+	install -d $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(CLAMAV_SOURCE_DIR)/rc.clamav $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S98clamav
 	$(MAKE) $(CLAMAV_IPK_DIR)/CONTROL/control
 	install -m 755 $(CLAMAV_SOURCE_DIR)/postinst $(CLAMAV_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(CLAMAV_SOURCE_DIR)/prerm $(CLAMAV_IPK_DIR)/CONTROL/prerm
 	echo $(CLAMAV_CONFFILES) | sed -e 's/ /\n/g' > $(CLAMAV_IPK_DIR)/CONTROL/conffiles
-	rm $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)bin/clamav-config # contains staging paths
-	rm $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)lib/libclamav.la # contains staging paths
-	rm -rf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig/ # contains staging paths
+	sed -i -e "s#/opt/#$(OPTWARE_PREFIX)#g" \
+		$(subst $(OPTWARE_PREFIX), $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX), $(CLAMAV_CONFFILES)) \
+		$(CLAMAV_IPK_DIR)/CONTROL/postinst
+	rm $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/bin/clamav-config # contains staging paths
+	rm $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/lib/libclamav.la # contains staging paths
+	rm -rf $(CLAMAV_IPK_DIR)$(OPTWARE_PREFIX)/lib/pkgconfig/ # contains staging paths
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CLAMAV_IPK_DIR)
 
 #
