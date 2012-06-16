@@ -117,7 +117,7 @@ $(CKSFV_BUILD_DIR)/.configured: $(DL_DIR)/$(CKSFV_SOURCE) $(CKSFV_PATCHES) make/
 	fi
 	(cd $(@D); \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--package-prefix=$(CKSFV_IPK_DIR) \
 	)
 #	$(PATCH_LIBTOOL) $(CKSFV_BUILD_DIR)/libtool
@@ -186,7 +186,7 @@ $(CKSFV_IPK_DIR)/CONTROL/control:
 $(CKSFV_IPK): $(CKSFV_BUILD_DIR)/.built
 	rm -rf $(CKSFV_IPK_DIR) $(BUILD_DIR)/cksfv_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CKSFV_BUILD_DIR) DESTDIR=$(CKSFV_IPK_DIR) install
-	$(STRIP_COMMAND) $(CKSFV_IPK_DIR)$(OPTWARE_PREFIX)bin/cksfv
+	$(STRIP_COMMAND) $(CKSFV_IPK_DIR)$(OPTWARE_PREFIX)/bin/cksfv
 	$(MAKE) $(CKSFV_IPK_DIR)/CONTROL/control
 	echo $(CKSFV_CONFFILES) | sed -e 's/ /\n/g' > $(CKSFV_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CKSFV_IPK_DIR)
