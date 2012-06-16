@@ -115,7 +115,7 @@ $(CHRPATH_BUILD_DIR)/.configured: $(DL_DIR)/$(CHRPATH_SOURCE) $(CHRPATH_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $(CHRPATH_BUILD_DIR)/.configured
@@ -179,8 +179,8 @@ $(CHRPATH_IPK_DIR)/CONTROL/control:
 $(CHRPATH_IPK): $(CHRPATH_BUILD_DIR)/.built
 	rm -rf $(CHRPATH_IPK_DIR) $(BUILD_DIR)/chrpath_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CHRPATH_BUILD_DIR) DESTDIR=$(CHRPATH_IPK_DIR) install
-	cd $(CHRPATH_IPK_DIR)$(OPTWARE_PREFIX)bin; ln -s $(GNU_TARGET_NAME)-chrpath chrpath
-	$(STRIP_COMMAND) $(CHRPATH_IPK_DIR)$(OPTWARE_PREFIX)bin/$(GNU_TARGET_NAME)-chrpath
+	cd $(CHRPATH_IPK_DIR)$(OPTWARE_PREFIX)/bin; ln -s $(GNU_TARGET_NAME)-chrpath chrpath
+	$(STRIP_COMMAND) $(CHRPATH_IPK_DIR)$(OPTWARE_PREFIX)/bin/$(GNU_TARGET_NAME)-chrpath
 	$(MAKE) $(CHRPATH_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CHRPATH_IPK_DIR)
 
