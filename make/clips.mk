@@ -117,10 +117,10 @@ $(CLIPS_BUILD_DIR)/.configured: $(DL_DIR)/$(CLIPS_SOURCE) $(DL_DIR)/$(CLIPS_SOUR
 	mv $(BUILD_DIR)/$(CLIPS_DIR) $(CLIPS_BUILD_DIR)
 	cd $(@D); unzip $(DL_DIR)/$(CLIPS_SOURCE2); cp makefile.gcc clipssrc/Makefile
 	if test -n "$(CLIPS_PATCHES)"; then \
-		cat $(CLIPS_PATCHES) | patch -bd $(@D) -p0; \
+		cat $(CLIPS_PATCHES) | sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | patch -bd $(@D) -p0; \
 	fi
 	sed -i -e '/soname/s/libclips.so/&.6/' $(@D)/clipssrc/Makefile
-	sed -i -e '/HELP_DEFAULT/s|clips.hlp|$(OPTWARE_PREFIX)share/doc/clips/&|' $(@D)/clipssrc/setup.h
+	sed -i -e '/HELP_DEFAULT/s|clips.hlp|$(OPTWARE_PREFIX)/share/doc/clips/&|' $(@D)/clipssrc/setup.h
 	touch $@
 
 clips-unpack: $(CLIPS_BUILD_DIR)/.configured
@@ -200,18 +200,18 @@ $(CLIPS-DEV_IPK_DIR)/CONTROL/control:
 $(CLIPS_IPK) $(CLIPS-DEV_IPK): $(CLIPS_BUILD_DIR)/.built
 	rm -rf $(CLIPS_IPK_DIR) $(BUILD_DIR)/clips_*_$(TARGET_ARCH).ipk
 	$(TARGET_CONFIGURE_OPTS) \
-	$(MAKE) -C $(CLIPS_BUILD_DIR)/clipssrc DESTDIR=$(CLIPS_IPK_DIR) install
-	cd $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)lib && \
+	$(MAKE) -C $(CLIPS_BUILD_DIR)/clipssrc OPTWARE_PREFIX=$(OPTWARE_PREFIX) DESTDIR=$(CLIPS_IPK_DIR) install
+	cd $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)/lib && \
 	mv libclips.so libclips.so.$(CLIPS_VERSION) && \
 	ln -s libclips.so.$(CLIPS_VERSION) libclips.so.6 && \
 	ln -s libclips.so.6 libclips.so
-	install -d $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/clips
-	install $(CLIPS_BUILD_DIR)/clips.hlp $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/clips/
+	install -d $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/clips
+	install $(CLIPS_BUILD_DIR)/clips.hlp $(CLIPS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/clips/
 	$(MAKE) $(CLIPS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CLIPS_IPK_DIR)
 	# header files
-	install -d $(CLIPS-DEV_IPK_DIR)$(OPTWARE_PREFIX)include/clips
-	install $(CLIPS_BUILD_DIR)/clipssrc/*.h $(CLIPS-DEV_IPK_DIR)$(OPTWARE_PREFIX)include/clips/
+	install -d $(CLIPS-DEV_IPK_DIR)$(OPTWARE_PREFIX)/include/clips
+	install $(CLIPS_BUILD_DIR)/clipssrc/*.h $(CLIPS-DEV_IPK_DIR)$(OPTWARE_PREFIX)/include/clips/
 	$(MAKE) $(CLIPS-DEV_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CLIPS-DEV_IPK_DIR)
 
