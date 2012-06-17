@@ -142,7 +142,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--enable-shared=clink \
 		--enable-static=no \
@@ -187,7 +187,7 @@ clinkcc: $(CLINKCC_BUILD_DIR)/.built
 # If you are building a library, then you need to stage it too.
 #
 $(CLINKCC_BUILD_DIR)/.staged: $(CLINKCC_BUILD_DIR)/.built
-	rm -f $@ $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libclink.a
+	rm -f $@ $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libclink.a
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
 	touch $@
 
