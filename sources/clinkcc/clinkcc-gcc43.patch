@@ -1,0 +1,257 @@
+diff --git a/include/cybergarage/http/HTTPPacket.h b/include/cybergarage/http/HTTPPacket.h
+index 36ade70..d334520 100644
+--- a/include/cybergarage/http/HTTPPacket.h
++++ b/include/cybergarage/http/HTTPPacket.h
+@@ -22,6 +22,8 @@
+ #include <cybergarage/http/HTTPDate.h>
+ 
+ #include <string>
++#include <cstdlib>
++#include <cstring>
+ #include <vector>
+ #include <sstream>
+ 
+diff --git a/include/cybergarage/http/HTTPStatus.h b/include/cybergarage/http/HTTPStatus.h
+index 3506e6f..0961408 100644
+--- a/include/cybergarage/http/HTTPStatus.h
++++ b/include/cybergarage/http/HTTPStatus.h
+@@ -17,6 +17,7 @@
+ #define _CHTTP_HTTPSTATUS_H_
+ 
+ #include <string>
++#include <cstdlib>
+ 
+ namespace CyberHTTP {
+ 
+diff --git a/include/cybergarage/io/StringBufferInputStream.h b/include/cybergarage/io/StringBufferInputStream.h
+index f3b6eda..7b00c4d 100644
+--- a/include/cybergarage/io/StringBufferInputStream.h
++++ b/include/cybergarage/io/StringBufferInputStream.h
+@@ -18,6 +18,7 @@
+ 
+ #include <stdio.h>
+ #include <string>
++#include <cstring>
+ #include <cybergarage/io/File.h>
+ #include <cybergarage/io/InputStream.h>
+ 
+diff --git a/include/cybergarage/upnp/Argument.h b/include/cybergarage/upnp/Argument.h
+index 163e11c..b43393b 100644
+--- a/include/cybergarage/upnp/Argument.h
++++ b/include/cybergarage/upnp/Argument.h
+@@ -16,6 +16,7 @@
+ #ifndef _CLINK_ARGUMENT_H_
+ #define _CLINK_ARGUMENT_H_
+ 
++#include <cstdlib>
+ #include <cybergarage/util/StringUtil.h>
+ #include <cybergarage/xml/Node.h>
+ #include <cybergarage/upnp/xml/ArgumentData.h>
+diff --git a/include/cybergarage/upnp/media/server/object/ContentNode.h b/include/cybergarage/upnp/media/server/object/ContentNode.h
+index 1780fa5..93b730a 100644
+--- a/include/cybergarage/upnp/media/server/object/ContentNode.h
++++ b/include/cybergarage/upnp/media/server/object/ContentNode.h
+@@ -19,6 +19,7 @@
+ #include <string>
+ #include <sstream>
+ #include <iostream>
++#include <cstdlib>
+ 
+ #include <cybergarage/xml/Node.h>
+ #include <cybergarage/upnp/media/server/UPnP.h>
+diff --git a/include/cybergarage/upnp/media/server/object/ContentProperty.h b/include/cybergarage/upnp/media/server/object/ContentProperty.h
+index 45bf99d..c5355b7 100644
+--- a/include/cybergarage/upnp/media/server/object/ContentProperty.h
++++ b/include/cybergarage/upnp/media/server/object/ContentProperty.h
+@@ -18,6 +18,7 @@
+ 
+ #include <string>
+ #include <sstream>
++#include <cstdlib>
+ #include <cybergarage/xml/AttributeList.h>
+ 
+ namespace CyberLink {
+diff --git a/include/cybergarage/xml/Parser.h b/include/cybergarage/xml/Parser.h
+index af626d3..d23bc9b 100644
+--- a/include/cybergarage/xml/Parser.h
++++ b/include/cybergarage/xml/Parser.h
+@@ -18,6 +18,7 @@
+ 
+ #include <stdio.h>
+ #include <string>
++#include <cstring>
+ #include <cybergarage/xml/XML.h>
+ #include <cybergarage/xml/Node.h>
+ #include <cybergarage/io/File.h>
+diff --git a/src/cybergarage/http/HTTPHeader.cpp b/src/cybergarage/http/HTTPHeader.cpp
+index f098f14..ef26c94 100644
+--- a/src/cybergarage/http/HTTPHeader.cpp
++++ b/src/cybergarage/http/HTTPHeader.cpp
+@@ -17,6 +17,8 @@
+ ******************************************************************/
+ 
+ #include <string>
++#include <cstdlib>
++#include <cstring>
+ #include <cybergarage/http/HTTPHeader.h>
+ #include <cybergarage/util/StringUtil.h>
+ #include <cybergarage/io/StringReader.h>
+diff --git a/src/cybergarage/io/File.cpp b/src/cybergarage/io/File.cpp
+index 4e2a196..72b72e3 100644
+--- a/src/cybergarage/io/File.cpp
++++ b/src/cybergarage/io/File.cpp
+@@ -37,6 +37,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <cstring>
+ 
+ #if defined(WIN32)
+ #include <windows.h>
+diff --git a/src/cybergarage/net/DatagramSocket.cpp b/src/cybergarage/net/DatagramSocket.cpp
+index 613c0de..6d337a6 100644
+--- a/src/cybergarage/net/DatagramSocket.cpp
++++ b/src/cybergarage/net/DatagramSocket.cpp
+@@ -30,6 +30,8 @@
+ #include <cybergarage/net/SocketUtil.h>
+ 
+ #include <stdio.h>
++#include <cstring>
++#include <cstdlib>
+ 
+ using namespace CyberNet;
+ 
+diff --git a/src/cybergarage/net/HostInterface.cpp b/src/cybergarage/net/HostInterface.cpp
+index dcb7b0b..e9ec5ad 100644
+--- a/src/cybergarage/net/HostInterface.cpp
++++ b/src/cybergarage/net/HostInterface.cpp
+@@ -38,6 +38,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <cstdlib>
+ 
+ #if (defined(WIN32) || defined(__CYGWIN__)) && !defined(ITRON)
+ 	#include <Iptypes.h>
+diff --git a/src/cybergarage/net/MulticastSocket.cpp b/src/cybergarage/net/MulticastSocket.cpp
+index 7c9eaff..400b417 100644
+--- a/src/cybergarage/net/MulticastSocket.cpp
++++ b/src/cybergarage/net/MulticastSocket.cpp
+@@ -28,6 +28,7 @@
+ #include <cybergarage/net/HostInterface.h>
+ #include <cybergarage/util/StringUtil.h>
+ #include <stdio.h>
++#include <cstring>
+ 
+ using namespace CyberNet;
+ 
+diff --git a/src/cybergarage/net/SocketUtil.cpp b/src/cybergarage/net/SocketUtil.cpp
+index 09f2dd8..f227783 100644
+--- a/src/cybergarage/net/SocketUtil.cpp
++++ b/src/cybergarage/net/SocketUtil.cpp
+@@ -24,6 +24,7 @@
+ #include <cybergarage/net/SocketUtil.h>
+ 
+ #include <stdio.h>
++#include <cstring>
+ 
+ using namespace CyberNet;
+ 
+diff --git a/src/cybergarage/upnp/media/server/object/format/GIFFormat.cpp b/src/cybergarage/upnp/media/server/object/format/GIFFormat.cpp
+index d12e291..13e16d7 100644
+--- a/src/cybergarage/upnp/media/server/object/format/GIFFormat.cpp
++++ b/src/cybergarage/upnp/media/server/object/format/GIFFormat.cpp
+@@ -14,6 +14,7 @@
+ ******************************************************************/
+ 
+ #include <stdio.h>
++#include <cstring>
+ #include <cybergarage/upnp/media/server/object/format/GIFFormat.h>
+ 
+ using namespace CyberLink;
+diff --git a/src/cybergarage/upnp/media/server/object/format/ID3Frame.cpp b/src/cybergarage/upnp/media/server/object/format/ID3Frame.cpp
+index c07d7b9..7efb9e1 100644
+--- a/src/cybergarage/upnp/media/server/object/format/ID3Frame.cpp
++++ b/src/cybergarage/upnp/media/server/object/format/ID3Frame.cpp
+@@ -13,6 +13,7 @@
+ *
+ ******************************************************************/
+ 
++#include <cstring>
+ #include <cybergarage/upnp/media/server/object/format/ID3Frame.h>
+ 
+ using namespace std;
+diff --git a/src/cybergarage/upnp/media/server/object/format/PNGFormat.cpp b/src/cybergarage/upnp/media/server/object/format/PNGFormat.cpp
+index 067d843..7c55154 100644
+--- a/src/cybergarage/upnp/media/server/object/format/PNGFormat.cpp
++++ b/src/cybergarage/upnp/media/server/object/format/PNGFormat.cpp
+@@ -14,6 +14,7 @@
+ ******************************************************************/
+ 
+ #include <stdio.h>
++#include <cstring>
+ #include <cybergarage/upnp/media/server/object/format/PNGFormat.h>
+ 
+ using namespace CyberLink;
+diff --git a/src/cybergarage/upnp/media/server/object/search/IdSearchCap.cpp b/src/cybergarage/upnp/media/server/object/search/IdSearchCap.cpp
+index cf18233..35e5db9 100644
+--- a/src/cybergarage/upnp/media/server/object/search/IdSearchCap.cpp
++++ b/src/cybergarage/upnp/media/server/object/search/IdSearchCap.cpp
+@@ -14,6 +14,7 @@
+ ******************************************************************/
+ 
+ #include <string>
++#include <cstring>
+ #include <cybergarage/upnp/media/server/object/ContentNode.h>
+ #include <cybergarage/upnp/media/server/object/search/IdSearchCap.h>
+ 
+diff --git a/src/cybergarage/upnp/media/server/object/search/TitleSearchCap.cpp b/src/cybergarage/upnp/media/server/object/search/TitleSearchCap.cpp
+index 04f6987..9a4f6d0 100644
+--- a/src/cybergarage/upnp/media/server/object/search/TitleSearchCap.cpp
++++ b/src/cybergarage/upnp/media/server/object/search/TitleSearchCap.cpp
+@@ -14,6 +14,7 @@
+ ******************************************************************/
+ 
+ #include <string>
++#include <cstring>
+ #include <cybergarage/upnp/media/server/object/ContentNode.h>
+ #include <cybergarage/upnp/media/server/object/search/TitleSearchCap.h>
+ 
+diff --git a/src/cybergarage/upnp/ssdp/SSDP.cpp b/src/cybergarage/upnp/ssdp/SSDP.cpp
+index 5eecc84..84d6b94 100644
+--- a/src/cybergarage/upnp/ssdp/SSDP.cpp
++++ b/src/cybergarage/upnp/ssdp/SSDP.cpp
+@@ -14,6 +14,8 @@
+ ******************************************************************/
+ 
+ #include <string>
++#include <cstdlib>
++#include <cstring>
+ #include <cybergarage/upnp/ssdp/SSDP.h>
+ 
+ using namespace std;
+diff --git a/src/cybergarage/xml/Node.cpp b/src/cybergarage/xml/Node.cpp
+index ed43fdf..68271e1 100644
+--- a/src/cybergarage/xml/Node.cpp
++++ b/src/cybergarage/xml/Node.cpp
+@@ -32,6 +32,8 @@
+ #include <cybergarage/xml/Node.h>
+ 
+ #include <stdio.h>
++#include <cstdlib>
++#include <cstring>
+ 
+ using namespace std;
+ using namespace CyberXML;
+diff --git a/src/cybergarage/xml/XML.cpp b/src/cybergarage/xml/XML.cpp
+index 4d76c3d..d15fcac 100644
+--- a/src/cybergarage/xml/XML.cpp
++++ b/src/cybergarage/xml/XML.cpp
+@@ -51,6 +51,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <cstdlib>
+ 
+ using namespace std;
+ using namespace CyberXML;

@@ -55,7 +55,7 @@ CLINKCC_IPK_VERSION=1
 # CLINKCC_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#CLINKCC_PATCHES=$(CLINKCC_SOURCE_DIR)/configure.patch
+CLINKCC_PATCHES=$(CLINKCC_SOURCE_DIR)/clinkcc-gcc43.patch
 
 #
 # If the compilation of the package requires additional
@@ -125,7 +125,7 @@ endif
 	$(CLINKCC_UNZIP) $(DL_DIR)/$(CLINKCC_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(CLINKCC_PATCHES)" ; \
 		then cat $(CLINKCC_PATCHES) | \
-		patch -d $(BUILD_DIR)/$(CLINKCC_DIR) -p0 ; \
+		patch -d $(BUILD_DIR)/$(CLINKCC_DIR) -p1 ; \
 	fi
 	if test "$(BUILD_DIR)/$(CLINKCC_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(CLINKCC_DIR) $(@D) ; \
