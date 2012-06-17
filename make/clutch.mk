@@ -43,7 +43,7 @@ CLUTCH_IPK_VERSION=4
 
 #
 # CLUTCH_CONFFILES should be a list of user-editable files
-CLUTCH_CONFFILES=$(OPTWARE_PREFIX)etc/clutch.conf $(OPTWARE_PREFIX)etc/init.d/S88clutch
+CLUTCH_CONFFILES=$(OPTWARE_PREFIX)/etc/clutch.conf $(OPTWARE_PREFIX)/etc/init.d/S88clutch
 
 #
 # CLUTCH_PATCHES should list any patches, in the the order in
@@ -192,12 +192,12 @@ $(CLUTCH_IPK_DIR)/CONTROL/control:
 $(CLUTCH_IPK): $(CLUTCH_BUILD_DIR)/.built
 	rm -rf $(CLUTCH_IPK_DIR) $(BUILD_DIR)/clutch_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(CLUTCH_BUILD_DIR) DESTDIR=$(CLUTCH_IPK_DIR) install-strip
-	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)share/www/lighttpd/clutch
-	cp -rp $(CLUTCH_BUILD_DIR)/* $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)share/www/lighttpd/clutch/
-	install -m 644 $(CLUTCH_SOURCE_DIR)/clutch.conf $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)etc/clutch.conf
-	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(CLUTCH_SOURCE_DIR)/rc.clutch $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S88clutch
+	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/share/www/lighttpd/clutch
+	cp -rp $(CLUTCH_BUILD_DIR)/* $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/share/www/lighttpd/clutch/
+	install -m 644 $(CLUTCH_SOURCE_DIR)/clutch.conf $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/etc/clutch.conf
+	install -d $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(CLUTCH_SOURCE_DIR)/rc.clutch $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S88clutch
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXclutch
 	$(MAKE) $(CLUTCH_IPK_DIR)/CONTROL/control
 	install -m 755 $(CLUTCH_SOURCE_DIR)/postinst $(CLUTCH_IPK_DIR)/CONTROL/postinst
@@ -208,6 +208,9 @@ $(CLUTCH_IPK): $(CLUTCH_BUILD_DIR)/.built
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
 			$(CLUTCH_IPK_DIR)/CONTROL/postinst $(CLUTCH_IPK_DIR)/CONTROL/prerm; \
 	fi
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(subst $(OPTWARE_PREFIX), $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX), $(CLUTCH_CONFFILES)) \
+		$(CLUTCH_IPK_DIR)/CONTROL/postinst
 	echo $(CLUTCH_CONFFILES) | sed -e 's/ /\n/g' > $(CLUTCH_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CLUTCH_IPK_DIR)
 
