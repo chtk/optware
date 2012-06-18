@@ -123,7 +123,7 @@ $(CORKSCREW_BUILD_DIR)/.configured: $(DL_DIR)/$(CORKSCREW_SOURCE) $(CORKSCREW_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,9 +189,9 @@ $(CORKSCREW_IPK_DIR)/CONTROL/control:
 $(CORKSCREW_IPK): $(CORKSCREW_BUILD_DIR)/.built
 	rm -rf $(CORKSCREW_IPK_DIR) $(BUILD_DIR)/corkscrew_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CORKSCREW_BUILD_DIR) DESTDIR=$(CORKSCREW_IPK_DIR) install
-	$(STRIP_COMMAND) $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)bin/corkscrew
-	install -d $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)share/doc/corkscrew
-	install $(CORKSCREW_BUILD_DIR)/[ACINRT]* $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)share/doc/corkscrew
+	$(STRIP_COMMAND) $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)/bin/corkscrew
+	install -d $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/corkscrew
+	install $(CORKSCREW_BUILD_DIR)/[ACINRT]* $(CORKSCREW_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/corkscrew
 	$(MAKE) $(CORKSCREW_IPK_DIR)/CONTROL/control
 	echo $(CORKSCREW_CONFFILES) | sed -e 's/ /\n/g' > $(CORKSCREW_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CORKSCREW_IPK_DIR)
