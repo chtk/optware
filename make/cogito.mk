@@ -130,7 +130,7 @@ cogito: $(COGITO_BUILD_DIR)/.built
 #
 $(COGITO_BUILD_DIR)/.staged: $(COGITO_BUILD_DIR)/.built
 	rm -f $(COGITO_BUILD_DIR)/.staged
-	$(MAKE) -C $(COGITO_BUILD_DIR) HOME=$(STAGING_DIR)$(OPTWARE_PREFIX)install
+	$(MAKE) -C $(COGITO_BUILD_DIR) HOME=$(STAGING_DIR)$(OPTWARE_PREFIX) install
 	touch $(COGITO_BUILD_DIR)/.staged
 
 cogito-stage: $(COGITO_BUILD_DIR)/.staged
@@ -167,8 +167,8 @@ $(COGITO_IPK_DIR)/CONTROL/control:
 #
 $(COGITO_IPK): $(COGITO_BUILD_DIR)/.built
 	rm -rf $(COGITO_IPK_DIR) $(BUILD_DIR)/cogito_*_$(TARGET_ARCH).ipk
-	install -d $(COGITO_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(MAKE) -C $(COGITO_BUILD_DIR) DESTDIR=$(COGITO_IPK_DIR) prefix=$(OPTWARE_PREFIX)install
+	install -d $(COGITO_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(MAKE) -C $(COGITO_BUILD_DIR) DESTDIR=$(COGITO_IPK_DIR) prefix=$(OPTWARE_PREFIX) install
 	$(MAKE) $(COGITO_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(COGITO_IPK_DIR)
 
