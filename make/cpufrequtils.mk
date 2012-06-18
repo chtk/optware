@@ -156,7 +156,7 @@ cpufrequtils: $(CPUFREQUTILS_BUILD_DIR)/.built
 #
 $(CPUFREQUTILS_BUILD_DIR)/.staged: $(CPUFREQUTILS_BUILD_DIR)/.built
 	rm -f $@
-	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) CROSS=${TARGET_CROSS} NLS=false LIBTOOL=$(STAGING_PREFIX)/bin/libtool bindir=$(OPTWARE_PREFIX)bin includedir=$(OPTWARE_PREFIX)include libdir=$(OPTWARE_PREFIX)lib install-lib
+	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) CROSS=${TARGET_CROSS} NLS=false LIBTOOL=$(STAGING_PREFIX)/bin/libtool bindir=$(OPTWARE_PREFIX)/bin includedir=$(OPTWARE_PREFIX)/include libdir=$(OPTWARE_PREFIX)/lib install-lib
 	touch $@
 
 cpufrequtils-stage: $(CPUFREQUTILS_BUILD_DIR)/.staged
@@ -194,9 +194,9 @@ $(CPUFREQUTILS_IPK_DIR)/CONTROL/control:
 #
 $(CPUFREQUTILS_IPK): $(CPUFREQUTILS_BUILD_DIR)/.built
 	rm -rf $(CPUFREQUTILS_IPK_DIR) $(BUILD_DIR)/cpufrequtils_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(CPUFREQUTILS_BUILD_DIR) DESTDIR=$(CPUFREQUTILS_IPK_DIR) CROSS=${TARGET_CROSS} NLS=false LIBTOOL=$(STAGING_PREFIX)/bin/libtool bindir=$(OPTWARE_PREFIX)bin libdir=$(OPTWARE_PREFIX)lib includedir=$(OPTWARE_PREFIX)include install-lib install-tools
-	rm -f $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)lib/libcpufreq.a
-	$(STRIP_COMMAND) $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)lib/libcpufreq.so.0.0.0
+	$(MAKE) -C $(CPUFREQUTILS_BUILD_DIR) DESTDIR=$(CPUFREQUTILS_IPK_DIR) CROSS=${TARGET_CROSS} NLS=false LIBTOOL=$(STAGING_PREFIX)/bin/libtool bindir=$(OPTWARE_PREFIX)/bin libdir=$(OPTWARE_PREFIX)/lib includedir=$(OPTWARE_PREFIX)/include install-lib install-tools
+	rm -f $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)/lib/libcpufreq.a
+	$(STRIP_COMMAND) $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)/lib/libcpufreq.so.0.0.0
 #	install -d $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(CPUFREQUTILS_SOURCE_DIR)/cpufrequtils.conf $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/cpufrequtils.conf
 #	install -d $(CPUFREQUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
