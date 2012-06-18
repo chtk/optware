@@ -126,7 +126,7 @@ $(CONNECT_BUILD_DIR)/.configured: $(DL_DIR)/$(CONNECT_SOURCE) $(CONNECT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -198,9 +198,9 @@ $(CONNECT_IPK_DIR)/CONTROL/control:
 $(CONNECT_IPK): $(CONNECT_BUILD_DIR)/.built
 	rm -rf $(CONNECT_IPK_DIR) $(BUILD_DIR)/connect_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(CONNECT_BUILD_DIR) DESTDIR=$(CONNECT_IPK_DIR) install-strip
-	install -d $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install $(CONNECT_BUILD_DIR)/connect $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)bin/connect
+	install -d $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install $(CONNECT_BUILD_DIR)/connect $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(CONNECT_IPK_DIR)$(OPTWARE_PREFIX)/bin/connect
 	$(MAKE) $(CONNECT_IPK_DIR)/CONTROL/control
 #	echo $(CONNECT_CONFFILES) | sed -e 's/ /\n/g' > $(CONNECT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CONNECT_IPK_DIR)
