@@ -158,9 +158,9 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-gmp \
-		--datarootdir=$(OPTWARE_PREFIX)\
+		--datarootdir=$(OPTWARE_PREFIX) \
 		--cache-file=config.cache \
 	)
 	touch $@
@@ -229,21 +229,21 @@ $(COREUTILS_IPK_DIR)/CONTROL/control:
 $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 	rm -rf $(COREUTILS_IPK_DIR) $(BUILD_DIR)/coreutils_*_$(TARGET_ARCH).ipk
 	# Install binaries
-	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin
 	$(MAKE) -C $(COREUTILS_BUILD_DIR) DESTDIR=$(COREUTILS_IPK_DIR) install-exec
 	# copy su - can't install it as install only works for root
-	cp -p $(COREUTILS_BUILD_DIR)/src/su $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/su
+	cp -p $(COREUTILS_BUILD_DIR)/src/su $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/su
 	# Install makefiles
-	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)man/man1	
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1	
 	$(MAKE) -C $(COREUTILS_BUILD_DIR)/man DESTDIR=$(COREUTILS_IPK_DIR) install
-	$(STRIP_COMMAND) $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/* $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)lib/coreutils/lib*.so
+	$(STRIP_COMMAND) $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/* $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/lib/coreutils/lib*.so
 	$(MAKE) $(COREUTILS_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(COREUTILS_IPK_DIR)/CONTROL/postinst
-	(echo "/bin/chown 0:0 $(OPTWARE_PREFIX)bin/coreutils-su"; \
-	 echo "/bin/chmod 4755 $(OPTWARE_PREFIX)bin/coreutils-su"; \
+	(echo "/bin/chown 0:0 $(OPTWARE_PREFIX)/bin/coreutils-su"; \
+	 echo "/bin/chmod 4755 $(OPTWARE_PREFIX)/bin/coreutils-su"; \
 	) >> $(COREUTILS_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(COREUTILS_IPK_DIR)/CONTROL/prerm
-	cd $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin; \
+	cd $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin; \
 	for p in *; do \
 	    if test "$$p" = "["; then \
 		q=coreutils-lbracket; \
@@ -251,7 +251,7 @@ $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 		q=coreutils-$$p; \
 	    fi; \
 	    mv $$p $$q; \
-	    echo "update-alternatives --install '$(OPTWARE_PREFIX)bin/$$p' '$$p' '$$q' 50" \
+	    echo "update-alternatives --install '$(OPTWARE_PREFIX)/bin/$$p' '$$p' '$$q' 50" \
 		>> $(COREUTILS_IPK_DIR)/CONTROL/postinst; \
 	    echo "update-alternatives --remove '$$p' '$$q'" \
 		>> $(COREUTILS_IPK_DIR)/CONTROL/prerm; \
@@ -261,10 +261,10 @@ $(COREUTILS_IPK): $(COREUTILS_BUILD_DIR)/.built
 			$(COREUTILS_IPK_DIR)/CONTROL/postinst $(COREUTILS_IPK_DIR)/CONTROL/prerm; \
 	fi
 ifeq ($(OPTWARE_WRITE_OUTSIDE_OPT_ALLOWED),true)
-	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(COREUTILS_SOURCE_DIR)/rc.coreutils $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05coreutils
+	install -d $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(COREUTILS_SOURCE_DIR)/rc.coreutils $(COREUTILS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05coreutils
 	install -d $(COREUTILS_IPK_DIR)/usr/bin
-	ln -s $(OPTWARE_PREFIX)bin/env $(COREUTILS_IPK_DIR)/usr/bin/env
+	ln -s $(OPTWARE_PREFIX)/bin/env $(COREUTILS_IPK_DIR)/usr/bin/env
 endif
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(COREUTILS_IPK_DIR)
 
