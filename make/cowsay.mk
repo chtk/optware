@@ -105,8 +105,8 @@ $(COWSAY_BUILD_DIR)/.configured: $(DL_DIR)/$(COWSAY_SOURCE) $(COWSAY_PATCHES) ma
 	if test "$(BUILD_DIR)/$(COWSAY_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(COWSAY_DIR) $(@D) ; \
 	fi
-	sed -i -e '/%BANGPERL%/s|$$usethisperl|$(OPTWARE_PREFIX)bin/perl|' \
-	       -e '/%PREFIX%/s|$$PREFIX|/opt|' \
+	sed -i -e '/%BANGPERL%/s|$$usethisperl|$(OPTWARE_PREFIX)/bin/perl|' \
+	       -e '/%PREFIX%/s|$$PREFIX|$(OPTWARE_PREFIX)|' \
 	       $(@D)/install.sh
 	touch $@
 
@@ -166,7 +166,7 @@ $(COWSAY_IPK_DIR)/CONTROL/control:
 $(COWSAY_IPK): $(COWSAY_BUILD_DIR)/.built
 	rm -rf $(COWSAY_IPK_DIR) $(BUILD_DIR)/cowsay_*_$(TARGET_ARCH).ipk
 	install -m 644 $(COWSAY_SOURCE_DIR)/nslu2.cow $(COWSAY_BUILD_DIR)/cows/nslu2.cow
-	cd $(COWSAY_BUILD_DIR); sh ./install.sh $(COWSAY_IPK_DIR)/opt
+	cd $(COWSAY_BUILD_DIR); sh ./install.sh $(COWSAY_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) $(COWSAY_IPK_DIR)/CONTROL/control
 	echo $(COWSAY_CONFFILES) | sed -e 's/ /\n/g' > $(COWSAY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(COWSAY_IPK_DIR)
