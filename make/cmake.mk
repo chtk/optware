@@ -75,6 +75,8 @@ CMAKE_SOURCE_DIR=$(SOURCE_DIR)/cmake
 CMAKE_IPK_DIR=$(BUILD_DIR)/cmake-$(CMAKE_VERSION)-ipk
 CMAKE_IPK=$(BUILD_DIR)/cmake_$(CMAKE_VERSION)-$(CMAKE_IPK_VERSION)_$(TARGET_ARCH).ipk
 
+CMAKE_INCLUDE_PATH=$(STAGING_INCLUDE_DIR)
+
 .PHONY: cmake-source cmake-unpack cmake cmake-stage cmake-ipk cmake-clean cmake-dirclean cmake-check
 
 #
@@ -111,7 +113,7 @@ cmake-source: $(DL_DIR)/$(CMAKE_SOURCE) $(CMAKE_PATCHES)
 # shown below to make various patches to it.
 #
 $(CMAKE_BUILD_DIR)/.configured: $(DL_DIR)/$(CMAKE_SOURCE) $(CMAKE_PATCHES) make/cmake.mk
-#	$(MAKE) <bar>-stage <baz>-stage
+	$(MAKE) ncurses-stage
 	rm -rf $(BUILD_DIR)/$(CMAKE_DIR) $(@D)
 	$(CMAKE_UNZIP) $(DL_DIR)/$(CMAKE_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(CMAKE_PATCHES)" ; \
@@ -125,6 +127,7 @@ $(CMAKE_BUILD_DIR)/.configured: $(DL_DIR)/$(CMAKE_SOURCE) $(CMAKE_PATCHES) make/
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(CMAKE_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(CMAKE_LDFLAGS)" \
+		CMAKE_INCLUDE_PATH="$(CMAKE_INCLUDE_PATH)" \
 		./configure \
 		--prefix=$(OPTWARE_PREFIX) \
 		--no-qt-gui \
