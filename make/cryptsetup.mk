@@ -131,8 +131,8 @@ $(CRYPTSETUP_BUILD_DIR)/.configured: $(DL_DIR)/$(CRYPTSETUP_SOURCE) $(CRYPTSETUP
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
                 --with-libgcrypt-prefix=$(STAGING_PREFIX) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--mandir=$(OPTWARE_PREFIX)man \
+		--prefix=$(OPTWARE_PREFIX) \
+		--mandir=$(OPTWARE_PREFIX)/man \
 		--disable-nls \
 		--disable-static \
 	)
