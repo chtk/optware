@@ -124,8 +124,8 @@ $(CTRLPROXY_BUILD_DIR)/.configured: $(DL_DIR)/$(CTRLPROXY_SOURCE) $(CTRLPROXY_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--oldincludedir=$(STAGING_DIR)$(OPTWARE_PREFIX)include \
-		--prefix=$(OPTWARE_PREFIX)\
+		--oldincludedir=$(STAGING_DIR)$(OPTWARE_PREFIX)/include \
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-gcov \
 		--disable-nls \
 	)
@@ -191,7 +191,7 @@ $(CTRLPROXY_IPK): $(CTRLPROXY_BUILD_DIR)/.built
 	rm -rf $(CTRLPROXY_IPK_DIR) $(BUILD_DIR)/ctrlproxy_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CTRLPROXY_BUILD_DIR) DESTDIR=$(CTRLPROXY_IPK_DIR) \
 		all install-dirs install-bin install-data install-doc
-	$(STRIP_COMMAND) $(CTRLPROXY_IPK_DIR)$(OPTWARE_PREFIX)*bin/*
+	$(STRIP_COMMAND) $(CTRLPROXY_IPK_DIR)$(OPTWARE_PREFIX)/*bin/*
 	$(MAKE) $(CTRLPROXY_IPK_DIR)/CONTROL/control
 	echo $(CTRLPROXY_CONFFILES) | sed -e 's/ /\n/g' > $(CTRLPROXY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CTRLPROXY_IPK_DIR)
