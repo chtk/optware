@@ -124,7 +124,7 @@ $(CRYPTCAT_BUILD_DIR)/.configured: $(DL_DIR)/$(CRYPTCAT_SOURCE) $(CRYPTCAT_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -197,11 +197,11 @@ $(CRYPTCAT_IPK_DIR)/CONTROL/control:
 $(CRYPTCAT_IPK): $(CRYPTCAT_BUILD_DIR)/.built
 	rm -rf $(CRYPTCAT_IPK_DIR) $(BUILD_DIR)/cryptcat_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(CRYPTCAT_BUILD_DIR) DESTDIR=$(CRYPTCAT_IPK_DIR) install-strip
-	install -d $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -m 755 $(CRYPTCAT_BUILD_DIR)/cryptcat $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -d $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/cryptcat
-	install -m 644 $(CRYPTCAT_BUILD_DIR)/[CR]* $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/cryptcat/
-	$(STRIP_COMMAND) $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/cryptcat
+	install -d $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -m 755 $(CRYPTCAT_BUILD_DIR)/cryptcat $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -d $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/cryptcat
+	install -m 644 $(CRYPTCAT_BUILD_DIR)/[CR]* $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/cryptcat/
+	$(STRIP_COMMAND) $(CRYPTCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/cryptcat
 	$(MAKE) $(CRYPTCAT_IPK_DIR)/CONTROL/control
 	echo $(CRYPTCAT_CONFFILES) | sed -e 's/ /\n/g' > $(CRYPTCAT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CRYPTCAT_IPK_DIR)
