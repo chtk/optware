@@ -111,7 +111,7 @@ $(CTORRENT_BUILD_DIR)/.configured: $(DL_DIR)/$(CTORRENT_SOURCE) $(CTORRENT_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -167,8 +167,8 @@ $(CTORRENT_IPK_DIR)/CONTROL/control:
 #
 $(CTORRENT_IPK): $(CTORRENT_BUILD_DIR)/.built
 	rm -rf $(CTORRENT_IPK_DIR) $(CTORRENT_IPK)
-	install -d $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(CTORRENT_BUILD_DIR)/ctorrent -o $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)bin/ctorrent
+	install -d $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(CTORRENT_BUILD_DIR)/ctorrent -o $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)/bin/ctorrent
 #	install -d $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(CTORRENT_SOURCE_DIR)/rc.ctorrent $(CTORRENT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXctorrent
 	$(MAKE) $(CTORRENT_IPK_DIR)/CONTROL/control
