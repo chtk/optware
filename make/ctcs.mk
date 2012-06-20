@@ -34,7 +34,7 @@ CTCS_IPK_VERSION=10
 #
 # currently, there is a init.d script that starts the server and
 # a configuration file with startup options
-CTCS_CONFFILES=$(OPTWARE_PREFIX)etc/ctcs.conf $(OPTWARE_PREFIX)etc/init.d/S90ctcs
+CTCS_CONFFILES=$(OPTWARE_PREFIX)/etc/ctcs.conf $(OPTWARE_PREFIX)/etc/init.d/S90ctcs
 
 #
 # CTCS_PATCHES should list any patches, in the the order in
@@ -103,6 +103,7 @@ $(CTCS_BUILD_DIR)/.configured: $(DL_DIR)/$(CTCS_SOURCE) $(CTCS_PATCHES) make/ctc
 	$(CTCS_UNZIP) $(DL_DIR)/$(CTCS_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(CTCS_PATCHES)" ; \
 		then cat $(CTCS_PATCHES) | \
+		sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | \
 		patch -d $(BUILD_DIR)/$(CTCS_DIR) -p1 ; \
 	fi
 	if test "$(BUILD_DIR)/$(CTCS_DIR)" != "$(CTCS_BUILD_DIR)" ; \
@@ -159,18 +160,24 @@ $(CTCS_IPK_DIR)/CONTROL/control:
 #
 $(CTCS_IPK): $(CTCS_BUILD_DIR)/.built
 	rm -rf $(CTCS_IPK_DIR) $(BUILD_DIR)/ctcs_*_$(TARGET_ARCH).ipk
-	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(CTCS_BUILD_DIR)/ctcs $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)bin/ctcs
-	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)doc/ctcs
-	install -m 755 $(CTCS_SOURCE_DIR)/README.nslu2 $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)doc/ctcs/README.nslu2
-	install -m 755 $(CTCS_SOURCE_DIR)/readme.txt $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)doc/ctcs/readme.txt
-	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)etc
-	install -m 755 $(CTCS_SOURCE_DIR)/ctcs.conf $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)etc/ctcs.conf
-	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(CTCS_SOURCE_DIR)/rc.ctcs $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S90ctcs
+	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(CTCS_BUILD_DIR)/ctcs $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/bin/ctcs
+	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/doc/ctcs
+	install -m 755 $(CTCS_SOURCE_DIR)/README.nslu2 $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/doc/ctcs/README.nslu2
+	install -m 755 $(CTCS_SOURCE_DIR)/readme.txt $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/doc/ctcs/readme.txt
+	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc
+	install -m 755 $(CTCS_SOURCE_DIR)/ctcs.conf $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc/ctcs.conf
+	install -d $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(CTCS_SOURCE_DIR)/rc.ctcs $(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S90ctcs
 	$(MAKE) $(CTCS_IPK_DIR)/CONTROL/control
 	install -m 755 $(CTCS_SOURCE_DIR)/postinst $(CTCS_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(CTCS_SOURCE_DIR)/prerm $(CTCS_IPK_DIR)/CONTROL/prerm
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/doc/ctcs/README.nslu2 \
+		$(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc/ctcs.conf \
+		$(CTCS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S90ctcs \
+		$(CTCS_IPK_DIR)/CONTROL/postinst \
+		$(CTCS_IPK_DIR)/CONTROL/prerm
 	echo $(CTCS_CONFFILES) | sed -e 's/ /\n/g' > $(CTCS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CTCS_IPK_DIR)
 
