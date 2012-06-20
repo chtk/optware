@@ -124,7 +124,7 @@ $(DMSETUP_BUILD_DIR)/.configured: $(DL_DIR)/$(DMSETUP_SOURCE) $(DMSETUP_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -193,8 +193,8 @@ $(DMSETUP_IPK): $(DMSETUP_BUILD_DIR)/.built
 		DESTDIR=$(DMSETUP_IPK_DIR) \
 		OWNER="" GROUP=""
 	for f in \
-		$(DMSETUP_IPK_DIR)$(OPTWARE_PREFIX)sbin/dmsetup \
-		$(DMSETUP_IPK_DIR)$(OPTWARE_PREFIX)lib/libdevmapper.so.[0-9]*.[0-9]* ; \
+		$(DMSETUP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/dmsetup \
+		$(DMSETUP_IPK_DIR)$(OPTWARE_PREFIX)/lib/libdevmapper.so.[0-9]*.[0-9]* ; \
 	do chmod +w $$f; $(STRIP_COMMAND) $$f; chmod -w $$f; done
 	$(MAKE) $(DMSETUP_IPK_DIR)/CONTROL/control
 	echo $(DMSETUP_CONFFILES) | sed -e 's/ /\n/g' > $(DMSETUP_IPK_DIR)/CONTROL/conffiles
