@@ -40,7 +40,7 @@ CUPS-PDF_IPK_VERSION=1
 
 #
 # CUPS-PDF_CONFFILES should be a list of user-editable files
-CUPS-PDF_CONFFILES=$(OPTWARE_PREFIX)etc/cups/cups-pdf.conf
+CUPS-PDF_CONFFILES=$(OPTWARE_PREFIX)/etc/cups/cups-pdf.conf
 
 #
 # CUPS-PDF_PATCHES should list any patches, in the the order in
@@ -179,28 +179,28 @@ $(CUPS-PDF_IPK_DIR)/CONTROL/control:
 $(CUPS-PDF_IPK): $(CUPS-PDF_BUILD_DIR)/.built
 	rm -rf $(CUPS-PDF_IPK_DIR) $(BUILD_DIR)/cups-pdf_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(CUPS-PDF_BUILD_DIR) DESTDIR=$(CUPS-PDF_IPK_DIR) install-strip
-	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)lib/cups/backend
+	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/lib/cups/backend
 	$(STRIP_COMMAND) $(CUPS-PDF_BUILD_DIR)/src/cups-pdf \
-		-o $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)lib/cups/backend/cups-pdf
-	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)etc/cups
-	install -m 644 $(CUPS-PDF_BUILD_DIR)/extra/cups-pdf.conf $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)etc/cups
-	sed -i -e 's| /var/| $(OPTWARE_PREFIX)var/|g' \
-	       -e 's|/usr/bin/gs|$(OPTWARE_PREFIX)bin/gs|' \
-		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)etc/cups/cups-pdf.conf
-	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)var/tmp
-	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)share/cups/model
+		-o $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/lib/cups/backend/cups-pdf
+	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/etc/cups
+	install -m 644 $(CUPS-PDF_BUILD_DIR)/extra/cups-pdf.conf $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/etc/cups
+	sed -i -e 's| /var/| $(OPTWARE_PREFIX)/var/|g' \
+	       -e 's|/usr/bin/gs|$(OPTWARE_PREFIX)/bin/gs|' \
+		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/etc/cups/cups-pdf.conf
+	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/var/tmp
+	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/share/cups/model
 	install -m 644 $(CUPS-PDF_BUILD_DIR)/extra/CUPS-PDF.ppd \
-		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)share/cups/model/
-	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/cups-pdf/examples/
+		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/share/cups/model/
+	install -d $(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/cups-pdf/examples/
 	install \
 		$(CUPS-PDF_BUILD_DIR)/ChangeLog \
 		$(CUPS-PDF_BUILD_DIR)/COPYING \
 		$(CUPS-PDF_BUILD_DIR)/README \
-		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/cups-pdf/
+		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/cups-pdf/
 	cp -rp \
 		$(CUPS-PDF_BUILD_DIR)/contrib/cups-pdf-dispatch* \
 		$(CUPS-PDF_BUILD_DIR)/contrib/pstitleiconv* \
-		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/cups-pdf/examples/
+		$(CUPS-PDF_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/cups-pdf/examples/
 	$(MAKE) $(CUPS-PDF_IPK_DIR)/CONTROL/control
 	echo $(CUPS-PDF_CONFFILES) | sed -e 's/ /\n/g' > $(CUPS-PDF_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CUPS-PDF_IPK_DIR)
