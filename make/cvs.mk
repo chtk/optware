@@ -86,7 +86,7 @@ $(CVS_BUILD_DIR)/.configured: $(DL_DIR)/$(CVS_SOURCE) $(CVS_PATCHES) make/cvs.mk
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_HOST_NAME) \
 		--without-gssapi \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 	);
 	touch $@
 
@@ -150,7 +150,7 @@ $(CVS_IPK): $(CVS_BUILD_DIR)/.built
 	rm -rf $(CVS_IPK_DIR) $(BUILD_DIR)/ushare_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CVS_BUILD_DIR) DESTDIR=$(CVS_IPK_DIR) install-strip
 #	$(STRIP_COMMAND) $(CVS_BUILD_DIR)/src/cvs -o $(CVS_IPK_DIR)$(OPTWARE_PREFIX)bin/cvs
-	install -d $(CVS_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(CVS_IPK_DIR)$(OPTWARE_PREFIX)/bin/
 	$(MAKE) $(CVS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CVS_IPK_DIR)
 
