@@ -49,7 +49,7 @@ DANSGUARDIAN_IPK_VERSION=2
 # DANSGUARDIAN_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#DANSGUARDIAN_PATCHES=$(DANSGUARDIAN_SOURCE_DIR)/configure.patch
+DANSGUARDIAN_PATCHES=$(DANSGUARDIAN_SOURCE_DIR)/dansguardian-cincludes.patch
 
 #
 # If the compilation of the package requires additional
@@ -131,7 +131,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
