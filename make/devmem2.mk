@@ -179,9 +179,9 @@ $(DEVMEM2_IPK_DIR)/CONTROL/control:
 #
 $(DEVMEM2_IPK): $(DEVMEM2_BUILD_DIR)/.built
 	rm -rf $(DEVMEM2_IPK_DIR) $(BUILD_DIR)/devmem2_*_$(TARGET_ARCH).ipk
-	install -d $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(<D)/devmem2 $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)bin/devmem2
-	$(STRIP_COMMAND) $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)bin/devmem2
+	install -d $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(<D)/devmem2 $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)/bin/devmem2
+	$(STRIP_COMMAND) $(DEVMEM2_IPK_DIR)$(OPTWARE_PREFIX)/bin/devmem2
 	$(MAKE) $(DEVMEM2_IPK_DIR)/CONTROL/control
 #	echo $(DEVMEM2_CONFFILES) | sed -e 's/ /\n/g' > $(DEVMEM2_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DEVMEM2_IPK_DIR)
