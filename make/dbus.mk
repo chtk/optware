@@ -37,7 +37,7 @@ DBUS_CONFLICTS=
 
 #
 # DBUS_CONFFILES should be a list of user-editable files
-DBUS_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S20dbus $(OPTWARE_PREFIX)etc/default/dbus
+DBUS_CONFFILES=$(OPTWARE_PREFIX)/etc/init.d/S20dbus $(OPTWARE_PREFIX)/etc/default/dbus
 
 #
 # DBUS_PATCHES should list any patches, in the the order in
@@ -131,7 +131,7 @@ $(DBUS_BUILD_DIR)/.configured: $(DL_DIR)/$(DBUS_SOURCE) $(DBUS_PATCHES) make/dbu
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-abstract-sockets \
 		--with-xml=expat \
 		--without-x \
@@ -208,22 +208,25 @@ $(DBUS_IPK): $(DBUS_BUILD_DIR)/.built
 	rm -rf $(DBUS_IPK_DIR) $(BUILD_DIR)/dbus_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DBUS_BUILD_DIR) DESTDIR=$(DBUS_IPK_DIR) transform='' install
 	$(STRIP_COMMAND) \
-		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)bin/* \
-		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)libexec/dbus-daemon-launch-helper \
-		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)lib/libdbus-*.so.*.*.*
+		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/bin/* \
+		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/libexec/dbus-daemon-launch-helper \
+		$(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/lib/libdbus-*.so.*.*.*
 #	install -d $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(DBUS_SOURCE_DIR)/dbus.conf $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/dbus.conf
-	install -d $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/default
-	install -m 644 $(DBUS_SOURCE_DIR)/dbus.default $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/default/dbus
-	install -d $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(DBUS_SOURCE_DIR)/dbus.init $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S20dbus
-	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S20dbus
+	install -d $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/default
+	install -m 644 $(DBUS_SOURCE_DIR)/dbus.default $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/default/dbus
+	install -d $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(DBUS_SOURCE_DIR)/dbus.init $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S20dbus
+	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DBUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S20dbus
 	$(MAKE) $(DBUS_IPK_DIR)/CONTROL/control
 	install -m 755 $(DBUS_SOURCE_DIR)/postinst $(DBUS_IPK_DIR)/CONTROL/postinst
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DBUS_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(DBUS_SOURCE_DIR)/prerm $(DBUS_IPK_DIR)/CONTROL/prerm
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DBUS_IPK_DIR)/CONTROL/prerm
 	echo $(DBUS_CONFFILES) | sed -e 's/ /\n/g' > $(DBUS_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(DBUS_IPK_DIR)$(OPTWARE_PREFIX),$(DBUS_CONFFILES)) \
+		$(DBUS_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DBUS_IPK_DIR)
 
 #
