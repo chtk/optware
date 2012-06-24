@@ -124,7 +124,7 @@ $(DCLED_BUILD_DIR)/.configured: $(DL_DIR)/$(DCLED_SOURCE) $(DCLED_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -192,11 +192,11 @@ $(DCLED_IPK_DIR)/CONTROL/control:
 $(DCLED_IPK): $(DCLED_BUILD_DIR)/.built
 	rm -rf $(DCLED_IPK_DIR) $(BUILD_DIR)/dcled_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(DCLED_BUILD_DIR) DESTDIR=$(DCLED_IPK_DIR) install-strip
-	install -d $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install $(<D)/dcled $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)bin/dcled
-	$(STRIP_COMMAND) $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)bin/dcled
-	install -d $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)share/doc/dcled
-	install $(<D)/README $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)share/doc/dcled/
+	install -d $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install $(<D)/dcled $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)/bin/dcled
+	$(STRIP_COMMAND) $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)/bin/dcled
+	install -d $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/dcled
+	install $(<D)/README $(DCLED_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/dcled/
 	$(MAKE) $(DCLED_IPK_DIR)/CONTROL/control
 	echo $(DCLED_CONFFILES) | sed -e 's/ /\n/g' > $(DCLED_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DCLED_IPK_DIR)
