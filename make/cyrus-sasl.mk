@@ -37,7 +37,7 @@ CYRUS-SASL_IPK_VERSION=2
 
 #
 # CYRUS-SASL_CONFFILES should be a list of user-editable files
-CYRUS-SASL_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S52saslauthd
+CYRUS-SASL_CONFFILES=$(OPTWARE_PREFIX)/etc/init.d/S52saslauthd
 
 #
 # CYRUS-SASL_PATCHES should list any patches, in the the order in
@@ -100,17 +100,17 @@ $(CYRUS-SASL_BUILD_DIR)/.configured: $(DL_DIR)/$(CYRUS-SASL_SOURCE) $(CYRUS-SASL
 # We have to remove double blanks. Otherwise configure of saslauthd fails.
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
-		CPPFLAGS="$(strip $(STAGING_CPPFLAGS))" \
-		CFLAGS="$(strip $(STAGING_CPPFLAGS))" \
+		CPPFLAGS="$(strip $(subst -D_GNU_SOURCE, ,$(STAGING_CPPFLAGS)))" \
+		CFLAGS="$(strip $(subst -D_GNU_SOURCE, ,$(STAGING_CPPFLAGS)))" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(CYRUS-SASL_LDFLAGS)" \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--with-plugindir=$(OPTWARE_PREFIX)lib/sasl2 \
-		--with-saslauthd=$(OPTWARE_PREFIX)var/state/saslauthd \
-		--with-dbpath=$(OPTWARE_PREFIX)etc/sasl2 \
+		--prefix=$(OPTWARE_PREFIX)/\
+		--with-plugindir=$(OPTWARE_PREFIX)/lib/sasl2 \
+		--with-saslauthd=$(OPTWARE_PREFIX)/var/state/saslauthd \
+		--with-dbpath=$(OPTWARE_PREFIX)/etc/sasl2 \
 		--with-openssl="$(STAGING_PREFIX)" \
 		--enable-anon \
 		--enable-plain \
@@ -201,30 +201,34 @@ $(CYRUS-SASL_IPK): $(CYRUS-SASL_BUILD_DIR)/.built
 	rm -rf $(CYRUS-SASL_IPK_DIR) $(BUILD_DIR)/cyrus-sasl_*_$(TARGET_ARCH).ipk
 	rm -rf $(CYRUS-SASL-LIBS_IPK_DIR) $(BUILD_DIR)/cyrus-sasl-libs_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(CYRUS-SASL_BUILD_DIR) DESTDIR=$(CYRUS-SASL_IPK_DIR) install-strip
-	rm -f $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)lib/libsasl2.la
-	rm -f $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)lib/sasl2/*.la
+	rm -f $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/lib/libsasl2.la
+	rm -f $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/lib/sasl2/*.la
 	find $(CYRUS-SASL_IPK_DIR) -type d -exec chmod go+rx {} \;
-	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)sbin/*
-	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
-	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)lib/sasl2/*.so
-	install -d $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)var/state/saslauthd
-	install -d $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
+	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/sbin/*
+	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so
+	$(STRIP_COMMAND) $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/lib/sasl2/*.so
+	install -d $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/var/state/saslauthd
+	install -d $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
 ifeq ($(OPTWARE_TARGET),ds101g)
-	install -m 755 $(CYRUS-SASL_SOURCE_DIR)/rc.saslauthd.ds101g $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52saslauthd
+	install -m 755 $(CYRUS-SASL_SOURCE_DIR)/rc.saslauthd.ds101g $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S52saslauthd
 else
-	install -m 755 $(CYRUS-SASL_SOURCE_DIR)/rc.saslauthd $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52saslauthd
+	install -m 755 $(CYRUS-SASL_SOURCE_DIR)/rc.saslauthd $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S52saslauthd
 endif
 	### build cyrus-sasl-libs
 	$(MAKE) $(CYRUS-SASL-LIBS_IPK_DIR)/CONTROL/control
-	install -d $(CYRUS-SASL-LIBS_IPK_DIR)/opt
-	mv $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)include $(CYRUS-SASL-LIBS_IPK_DIR)/opt
-	mv $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)lib $(CYRUS-SASL-LIBS_IPK_DIR)/opt
+	install -d $(CYRUS-SASL-LIBS_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/include $(CYRUS-SASL-LIBS_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX)/lib $(CYRUS-SASL-LIBS_IPK_DIR)$(OPTWARE_PREFIX)
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CYRUS-SASL-LIBS_IPK_DIR)
 	### build the main ipk
 	$(MAKE) $(CYRUS-SASL_IPK_DIR)/CONTROL/control
 	install -m 644 $(CYRUS-SASL_SOURCE_DIR)/postinst $(CYRUS-SASL_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(CYRUS-SASL_SOURCE_DIR)/prerm $(CYRUS-SASL_IPK_DIR)/CONTROL/prerm
 	echo $(CYRUS-SASL_CONFFILES) | sed -e 's/ /\n/g' > $(CYRUS-SASL_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(CYRUS-SASL_IPK_DIR)$(OPTWARE_PREFIX),$(CYRUS-SASL_CONFFILES)) \
+		$(CYRUS-SASL_IPK_DIR)/CONTROL/postinst \
+		$(CYRUS-SASL_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(CYRUS-SASL_IPK_DIR)
 #
 # This is called from the top level makefile to create the IPK file.
