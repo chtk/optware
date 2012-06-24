@@ -184,11 +184,11 @@ $(DCRAW_IPK_DIR)/CONTROL/control:
 #
 $(DCRAW_IPK): $(DCRAW_BUILD_DIR)/.built
 	rm -rf $(DCRAW_IPK_DIR) $(BUILD_DIR)/dcraw_*_$(TARGET_ARCH).ipk
-	install -d $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install $(DCRAW_BUILD_DIR)/dcraw $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)bin/dcraw
-	install -d $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
-	install $(DL_DIR)/dcraw.1 $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
+	install -d $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install $(DCRAW_BUILD_DIR)/dcraw $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)/bin/dcraw
+	install -d $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1
+	install $(DL_DIR)/dcraw.1 $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/
 #	$(MAKE) -C $(DCRAW_BUILD_DIR) DESTDIR=$(DCRAW_IPK_DIR) install-strip
 #	install -d $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(DCRAW_SOURCE_DIR)/dcraw.conf $(DCRAW_IPK_DIR)$(OPTWARE_PREFIX)etc/dcraw.conf
