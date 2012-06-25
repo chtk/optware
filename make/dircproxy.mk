@@ -40,7 +40,7 @@ DIRCPROXY_IPK_VERSION=1
 
 #
 # DIRCPROXY_CONFFILES should be a list of user-editable files
-DIRCPROXY_CONFFILES=$(OPTWARE_PREFIX)etc/dircproxy.conf $(OPTWARE_PREFIX)etc/init.d/SXXdircproxy
+DIRCPROXY_CONFFILES=$(OPTWARE_PREFIX)/etc/dircproxy.conf $(OPTWARE_PREFIX)/etc/init.d/SXXdircproxy
 
 #
 # DIRCPROXY_PATCHES should list any patches, in the the order in
@@ -123,7 +123,7 @@ $(DIRCPROXY_BUILD_DIR)/.configured: $(DL_DIR)/$(DIRCPROXY_SOURCE) $(DIRCPROXY_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
