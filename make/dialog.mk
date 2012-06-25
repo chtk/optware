@@ -123,7 +123,7 @@ $(DIALOG_BUILD_DIR)/.configured: $(DL_DIR)/$(DIALOG_SOURCE) $(DIALOG_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,7 +190,7 @@ $(DIALOG_IPK_DIR)/CONTROL/control:
 $(DIALOG_IPK): $(DIALOG_BUILD_DIR)/.built
 	rm -rf $(DIALOG_IPK_DIR) $(BUILD_DIR)/dialog_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DIALOG_BUILD_DIR) DESTDIR=$(DIALOG_IPK_DIR) install
-	$(STRIP_COMMAND) $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)bin/dialog
+	$(STRIP_COMMAND) $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)/bin/dialog
 #	install -d $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(DIALOG_SOURCE_DIR)/dialog.conf $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/dialog.conf
 #	install -d $(DIALOG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
