@@ -99,7 +99,7 @@ $(DIFFUTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(DIFFUTILS_SOURCE) $(DIFFUTILS_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -126,13 +126,17 @@ diffutils: $(DIFFUTILS_BUILD_DIR)/.built
 #
 $(DIFFUTILS_BUILD_DIR)/.staged: $(DIFFUTILS_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -m 644 $(DIFFUTILS_BUILD_DIR)/diffutils.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(DIFFUTILS_BUILD_DIR)/libdiffutils.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(DIFFUTILS_BUILD_DIR)/libdiffutils.so.$(DIFFUTILS_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libdiffutils.so.$(DIFFUTILS_VERSION) libdiffutils.so.1
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libdiffutils.so.$(DIFFUTILS_VERSION) libdiffutils.so
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+#	install -m 644 $(DIFFUTILS_BUILD_DIR)/diffutils.h $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 755 $(DIFFUTILS_BUILD_DIR)/src/cmp $(STAGING_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(DIFFUTILS_BUILD_DIR)/src/diff $(STAGING_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(DIFFUTILS_BUILD_DIR)/src/diff3 $(STAGING_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(DIFFUTILS_BUILD_DIR)/src/sdiff $(STAGING_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 644 $(DIFFUTILS_BUILD_DIR)/lib/libdiffutils.a $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+#	install -m 644 $(DIFFUTILS_BUILD_DIR)/lib/libdiffutils.so.$(DIFFUTILS_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libdiffutils.so.$(DIFFUTILS_VERSION) libdiffutils.so.1
+#	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libdiffutils.so.$(DIFFUTILS_VERSION) libdiffutils.so
 	touch $@
 
 diffutils-stage: $(DIFFUTILS_BUILD_DIR)/.staged
@@ -169,18 +173,18 @@ $(DIFFUTILS_IPK_DIR)/CONTROL/control:
 #
 $(DIFFUTILS_IPK): $(DIFFUTILS_BUILD_DIR)/.built
 	rm -rf $(DIFFUTILS_IPK_DIR) $(BUILD_DIR)/diffutils_*_$(TARGET_ARCH).ipk
-	install -d $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/cmp -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/diffutils-cmp
-	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/diff -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/diffutils-diff
-	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/diff3 -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/diffutils-diff3
-	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/sdiff -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/diffutils-sdiff
+	install -d $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/cmp -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/diffutils-cmp
+	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/diff -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/diffutils-diff
+	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/diff3 -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/diffutils-diff3
+	$(STRIP_COMMAND) $(DIFFUTILS_BUILD_DIR)/src/sdiff -o $(DIFFUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/diffutils-sdiff
 	$(MAKE) $(DIFFUTILS_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(DIFFUTILS_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(DIFFUTILS_IPK_DIR)/CONTROL/prerm
 	for f in cmp diff diff3 sdiff; do \
-	    echo "update-alternatives --install $(OPTWARE_PREFIX)bin/$$f $$f $(OPTWARE_PREFIX)bin/diffutils-$$f 80" \
+	    echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/$$f $$f $(OPTWARE_PREFIX)/bin/diffutils-$$f 80" \
 		>> $(DIFFUTILS_IPK_DIR)/CONTROL/postinst; \
-	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)bin/diffutils-$$f" \
+	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)/bin/diffutils-$$f" \
 		>> $(DIFFUTILS_IPK_DIR)/CONTROL/prerm; \
 	done
 	if test -n "$(UPD-ALT_PREFIX)"; then \
