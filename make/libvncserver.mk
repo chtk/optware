@@ -124,7 +124,7 @@ $(LIBVNCSERVER_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBVNCSERVER_SOURCE) $(LIBVNC
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--without-x \
@@ -195,11 +195,11 @@ $(LIBVNCSERVER_IPK_DIR)/CONTROL/control:
 $(LIBVNCSERVER_IPK): $(LIBVNCSERVER_BUILD_DIR)/.built
 	rm -rf $(LIBVNCSERVER_IPK_DIR) $(BUILD_DIR)/libvncserver_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBVNCSERVER_BUILD_DIR) DESTDIR=$(LIBVNCSERVER_IPK_DIR) install-strip
-	rm -f $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	install -d $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)share/libvncserver/examples
+	rm -f $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	install -d $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)/share/libvncserver/examples
 	cd $(LIBVNCSERVER_BUILD_DIR)/examples/.libs/; \
 	for f in *; do \
-		$(STRIP_COMMAND) $$f -o $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)share/libvncserver/examples/$$f; \
+		$(STRIP_COMMAND) $$f -o $(LIBVNCSERVER_IPK_DIR)$(OPTWARE_PREFIX)/share/libvncserver/examples/$$f; \
 	done
 	$(MAKE) $(LIBVNCSERVER_IPK_DIR)/CONTROL/control
 	echo $(LIBVNCSERVER_CONFFILES) | sed -e 's/ /\n/g' > $(LIBVNCSERVER_IPK_DIR)/CONTROL/conffiles
