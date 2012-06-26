@@ -151,10 +151,12 @@ $(DOKUWIKI_IPK_DIR)/CONTROL/control:
 #
 $(DOKUWIKI_IPK): $(DOKUWIKI_BUILD_DIR)/.configured
 	rm -rf $(DOKUWIKI_IPK_DIR) $(BUILD_DIR)/dokuwiki_*_$(TARGET_ARCH).ipk
-	install -d $(DOKUWIKI_IPK_DIR)$(OPTWARE_PREFIX)share/www/dokuwiki/data/changes.log
-	cp -a $(DOKUWIKI_BUILD_DIR)/* $(DOKUWIKI_IPK_DIR)$(OPTWARE_PREFIX)share/www/dokuwiki	
+	install -d $(DOKUWIKI_IPK_DIR)$(OPTWARE_PREFIX)/share/www/dokuwiki/data/changes.log
+	cp -a $(DOKUWIKI_BUILD_DIR)/* $(DOKUWIKI_IPK_DIR)$(OPTWARE_PREFIX)/share/www/dokuwiki	
 	$(MAKE) $(DOKUWIKI_IPK_DIR)/CONTROL/control
 	install -m 755 $(DOKUWIKI_SOURCE_DIR)/postinst $(DOKUWIKI_IPK_DIR)/CONTROL/postinst
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(DOKUWIKI_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(DOKUWIKI_SOURCE_DIR)/prerm $(DOKUWIKI_IPK_DIR)/CONTROL/prerm
 	#echo $(DOKUWIKI_CONFFILES) | sed -e 's/ /\n/g' > $(DOKUWIKI_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DOKUWIKI_IPK_DIR)
