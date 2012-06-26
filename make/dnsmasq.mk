@@ -19,7 +19,7 @@ DNSMASQ_CONFLICTS=
 DNSMASQ_IPK_VERSION=1
 
 # DNSMASQ_CONFFILES should be a list of user-editable files
-DNSMASQ_CONFFILES=$(OPTWARE_PREFIX)etc/dnsmasq.conf
+DNSMASQ_CONFFILES=$(OPTWARE_PREFIX)/etc/dnsmasq.conf
 
 DNSMASQ_PATCHES=$(DNSMASQ_SOURCE_DIR)/conffile.patch $(DNSMASQ_SOURCE_DIR)/src-dnsmasq.h.patch
 
@@ -75,22 +75,26 @@ $(DNSMASQ_IPK_DIR)/CONTROL/control:
 
 $(DNSMASQ_IPK): $(DNSMASQ_BUILD_DIR)/.built
 	rm -rf $(DNSMASQ_IPK_DIR) $(BUILD_DIR)/dnsmasq_*_$(TARGET_ARCH).ipk
-	install -d $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)sbin $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	$(STRIP_COMMAND) $(DNSMASQ_BUILD_DIR)/src/dnsmasq -o $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)sbin/dnsmasq
-	install -m 644 $(DNSMASQ_BUILD_DIR)/dnsmasq.conf.example $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)etc/dnsmasq.conf
-	install -m 755 $(DNSMASQ_SOURCE_DIR)/rc.dnsmasq $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S56dnsmasq
+	install -d $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/sbin $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	$(STRIP_COMMAND) $(DNSMASQ_BUILD_DIR)/src/dnsmasq -o $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/sbin/dnsmasq
+	install -m 644 $(DNSMASQ_BUILD_DIR)/dnsmasq.conf.example $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/etc/dnsmasq.conf
+	install -m 755 $(DNSMASQ_SOURCE_DIR)/rc.dnsmasq $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S56dnsmasq
 	$(MAKE) $(DNSMASQ_IPK_DIR)/CONTROL/control	
 	echo $(DNSMASQ_CONFFILES) | sed -e 's/ /\n/g' > $(DNSMASQ_IPK_DIR)/CONTROL/conffiles
 	install -m 644 $(DNSMASQ_SOURCE_DIR)/postinst $(DNSMASQ_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(DNSMASQ_SOURCE_DIR)/prerm $(DNSMASQ_IPK_DIR)/CONTROL/prerm
-	install -d $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)man/man8 $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)doc/dnsmasq
-	install -m 644 $(DNSMASQ_BUILD_DIR)/man/dnsmasq.8  $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)man/man8/dnsmasq.8
+	install -d $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/man/man8 $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq
+	install -m 644 $(DNSMASQ_BUILD_DIR)/man/dnsmasq.8  $(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/man/man8/dnsmasq.8
 	install -m 644 $(DNSMASQ_BUILD_DIR)/dnsmasq.conf.example \
-		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)doc/dnsmasq/dnsmasq.conf.example
+		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq/dnsmasq.conf.example
 	install -m 644 $(DNSMASQ_BUILD_DIR)/doc.html \
-		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)doc/dnsmasq/doc.html
+		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq/doc.html
 	install -m 644 $(DNSMASQ_BUILD_DIR)/setup.html \
-		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)doc/dnsmasq/setup.html
+		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq/setup.html
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(subst $(OPTWARE_PREFIX),$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX),$(DNSMASQ_CONFFILES)) \
+		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S56dnsmasq \
+		$(DNSMASQ_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DNSMASQ_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(DNSMASQ_IPK_DIR)
 
