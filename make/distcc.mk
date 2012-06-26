@@ -48,7 +48,7 @@ $(DISTCC_SOURCE_DIR)/lzo-minilzo.c.patch
 # compilation or linking flags, then list them here.
 #
 DISTCC_CPPFLAGS=
-DISTCC_LDFLAGS=
+DISTCC_LDFLAGS=-L$(STAGING_PREFIX)/lib
 
 #
 # DISTCC_BUILD_DIR is the directory in which the build is done.
@@ -106,12 +106,12 @@ $(DISTCC_BUILD_DIR)/.configured: $(DL_DIR)/$(DISTCC_SOURCE) $(DISTCC_PATCHES) ma
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(DISTCC_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(DISTCC_LDFLAGS)" \
-		PYTHON=$(OPTWARE_PREFIX)bin/python2.5 \
+		PYTHON=$(OPTWARE_PREFIX)/bin/python2.5 \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-avahi \
 	)
 	touch $@
@@ -171,8 +171,8 @@ $(DISTCC_IPK): $(DISTCC_BUILD_DIR)/.built
 	$(MAKE) -C $(DISTCC_BUILD_DIR) install \
 		DESTDIR=$(DISTCC_IPK_DIR) \
 		INCLUDESERVER_PYTHON=$(HOST_STAGING_PREFIX)/bin/python2.5
-	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)bin/*distcc*
-	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.5/site-packages/include_server/*.so
+	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)/bin/*distcc*
+	$(STRIP_COMMAND) $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)/lib/python2.5/site-packages/include_server/*.so
 #	install -d $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(DISTCC_SOURCE_DIR)/rc.distcc $(DISTCC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdistcc
 	$(MAKE) $(DISTCC_IPK_DIR)/CONTROL/control
