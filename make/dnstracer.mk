@@ -123,7 +123,7 @@ $(DNSTRACER_BUILD_DIR)/.configured: $(DL_DIR)/$(DNSTRACER_SOURCE) $(DNSTRACER_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-ipv6 \
 		--disable-nls \
 		--disable-static \
@@ -190,7 +190,7 @@ $(DNSTRACER_IPK_DIR)/CONTROL/control:
 $(DNSTRACER_IPK): $(DNSTRACER_BUILD_DIR)/.built
 	rm -rf $(DNSTRACER_IPK_DIR) $(BUILD_DIR)/dnstracer_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DNSTRACER_BUILD_DIR) DESTDIR=$(DNSTRACER_IPK_DIR) install
-	$(STRIP_COMMAND) $(DNSTRACER_IPK_DIR)$(OPTWARE_PREFIX)bin/dnstracer
+	$(STRIP_COMMAND) $(DNSTRACER_IPK_DIR)$(OPTWARE_PREFIX)/bin/dnstracer
 	$(MAKE) $(DNSTRACER_IPK_DIR)/CONTROL/control
 	echo $(DNSTRACER_CONFFILES) | sed -e 's/ /\n/g' > $(DNSTRACER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DNSTRACER_IPK_DIR)
