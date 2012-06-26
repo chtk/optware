@@ -135,7 +135,7 @@ $(DIRECTFB_BUILD_DIR)/.configured: $(DL_DIR)/$(DIRECTFB_SOURCE) $(DIRECTFB_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		\
 		--enable-jpeg \
 		--enable-png \
@@ -219,7 +219,7 @@ $(DIRECTFB_IPK): $(DIRECTFB_BUILD_DIR)/.built
 	rm -rf $(DIRECTFB_IPK_DIR) $(BUILD_DIR)/directfb_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DIRECTFB_BUILD_DIR) install-strip \
 		DESTDIR=$(DIRECTFB_IPK_DIR)
-	find $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)lib -name '*.la' | xargs rm -f
+	find $(DIRECTFB_IPK_DIR)$(OPTWARE_PREFIX)/lib -name '*.la' | xargs rm -f
 	$(MAKE) $(DIRECTFB_IPK_DIR)/CONTROL/control
 	echo $(DIRECTFB_CONFFILES) | sed -e 's/ /\n/g' > $(DIRECTFB_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DIRECTFB_IPK_DIR)
