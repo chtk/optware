@@ -123,7 +123,7 @@ $(DOSFSTOOLS_BUILD_DIR)/.configured: $(DL_DIR)/$(DOSFSTOOLS_SOURCE) $(DOSFSTOOLS
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -157,8 +157,8 @@ dosfstools: $(DOSFSTOOLS_BUILD_DIR)/.built
 #	rm -f $@
 #	$(MAKE) -C $(@D) install \
 		DESTDIR=$(STAGING_DIR) \
-		PREFIX=$(OPTWARE_PREFIX)\
-		MANDIR=$(OPTWARE_PREFIX)share/man/man8 \
+		PREFIX=$(OPTWARE_PREFIX) \
+		MANDIR=$(OPTWARE_PREFIX)/share/man/man8 \
 		;
 #	touch $@
 #
@@ -199,10 +199,10 @@ $(DOSFSTOOLS_IPK): $(DOSFSTOOLS_BUILD_DIR)/.built
 	rm -rf $(DOSFSTOOLS_IPK_DIR) $(BUILD_DIR)/dosfstools_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DOSFSTOOLS_BUILD_DIR) install \
 		DESTDIR=$(DOSFSTOOLS_IPK_DIR) \
-		PREFIX=$(OPTWARE_PREFIX)\
-		MANDIR=$(OPTWARE_PREFIX)share/man/man8 \
+		PREFIX=$(OPTWARE_PREFIX) \
+		MANDIR=$(OPTWARE_PREFIX)/share/man/man8 \
 		;
-	$(STRIP_COMMAND) $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin/dosfs* $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)sbin/mkdosfs
+	$(STRIP_COMMAND) $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/dosfs* $(DOSFSTOOLS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/mkdosfs
 	$(MAKE) $(DOSFSTOOLS_IPK_DIR)/CONTROL/control
 	echo $(DOSFSTOOLS_CONFFILES) | sed -e 's/ /\n/g' > $(DOSFSTOOLS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DOSFSTOOLS_IPK_DIR)
