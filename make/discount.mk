@@ -121,12 +121,12 @@ $(DISCOUNT_BUILD_DIR)/.configured: $(DL_DIR)/$(DISCOUNT_SOURCE) $(DISCOUNT_PATCH
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(DISCOUNT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(DISCOUNT_LDFLAGS)" \
 		./configure.sh \
-		--prefix=$(OPTWARE_PREFIX)\
-		--confdir=$(OPTWARE_PREFIX)etc \
+		--prefix=$(OPTWARE_PREFIX) \
+		--confdir=$(OPTWARE_PREFIX)/etc \
 		--enable-all-features \
 	)
 	sed -i -e 's:@DWORD@:unsigned long:g' $(@D)/mkdio.h
-	sed -i -e '/PATH_SED/{s:".*":"$(OPTWARE_PREFIX)bin/sed"\n#define DWORD unsigned long:}' $(@D)/config.h
+	sed -i -e '/PATH_SED/{s:".*":"$(OPTWARE_PREFIX)/bin/sed"\n#define DWORD unsigned long:}' $(@D)/config.h
 #	$(PATCH_LIBTOOL) $(@D)/libtool
 #		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
@@ -199,9 +199,9 @@ $(DISCOUNT_IPK_DIR)/CONTROL/control:
 #
 $(DISCOUNT_IPK): $(DISCOUNT_BUILD_DIR)/.built
 	rm -rf $(DISCOUNT_IPK_DIR) $(BUILD_DIR)/discount_*_$(TARGET_ARCH).ipk
-	install -d $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)bin $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)include $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)lib
+	install -d $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)/bin $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)/include $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)/lib
 	$(MAKE) -C $(DISCOUNT_BUILD_DIR) DESTDIR=$(DISCOUNT_IPK_DIR) install.everything
-	$(STRIP_COMMAND) $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(DISCOUNT_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(DISCOUNT_IPK_DIR)/CONTROL/control
 	echo $(DISCOUNT_CONFFILES) | sed -e 's/ /\n/g' > $(DISCOUNT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DISCOUNT_IPK_DIR)
