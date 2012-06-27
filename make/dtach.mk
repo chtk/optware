@@ -123,7 +123,7 @@ $(DTACH_BUILD_DIR)/.configured: $(DL_DIR)/$(DTACH_SOURCE) $(DTACH_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,11 +189,11 @@ $(DTACH_IPK_DIR)/CONTROL/control:
 $(DTACH_IPK): $(DTACH_BUILD_DIR)/.built
 	rm -rf $(DTACH_IPK_DIR) $(BUILD_DIR)/dtach_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(DTACH_BUILD_DIR) DESTDIR=$(DTACH_IPK_DIR) install-strip
-	install -d $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install $(DTACH_BUILD_DIR)/dtach $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)bin/dtach
-	install -d $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
-	install $(DTACH_BUILD_DIR)/dtach.1 $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
+	install -d $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install $(DTACH_BUILD_DIR)/dtach $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)/bin/dtach
+	install -d $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1
+	install $(DTACH_BUILD_DIR)/dtach.1 $(DTACH_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/
 	$(MAKE) $(DTACH_IPK_DIR)/CONTROL/control
 #	echo $(DTACH_CONFFILES) | sed -e 's/ /\n/g' > $(DTACH_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DTACH_IPK_DIR)
