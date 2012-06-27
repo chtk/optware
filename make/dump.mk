@@ -125,7 +125,7 @@ $(DUMP_BUILD_DIR)/.configured: $(DL_DIR)/$(DUMP_SOURCE) $(DUMP_PATCHES) make/dum
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 	);
 #	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
@@ -189,10 +189,10 @@ $(DUMP_IPK_DIR)/CONTROL/control:
 $(DUMP_IPK): $(DUMP_BUILD_DIR)/.built
 	rm -rf $(DUMP_IPK_DIR) $(BUILD_DIR)/dump_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DUMP_BUILD_DIR) install \
-	    prefix=$(DUMP_IPK_DIR)$(OPTWARE_PREFIX)\
+	    prefix=$(DUMP_IPK_DIR)$(OPTWARE_PREFIX) \
 	    INSTALLBIN='/usr/bin/install -m 0755' \
 	    INSTALLMAN='/usr/bin/install -m 0644'
-	$(STRIP_COMMAND) $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/dump $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/restore $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)sbin/rmt
+	$(STRIP_COMMAND) $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/dump $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/restore $(DUMP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/rmt
 	$(MAKE) $(DUMP_IPK_DIR)/CONTROL/control
 	echo $(DUMP_CONFFILES) | sed -e 's/ /\n/g' > $(DUMP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DUMP_IPK_DIR)
