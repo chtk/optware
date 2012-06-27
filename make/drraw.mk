@@ -24,7 +24,7 @@ DRRAW_IPK_VERSION=2
 
 #
 # DRRAW_CONFFILES should be a list of user-editable files
-DRRAW_CONFFILES=$(OPTWARE_PREFIX)etc/drraw.conf
+DRRAW_CONFFILES=$(OPTWARE_PREFIX)/etc/drraw.conf
 
 #
 # DRRAW_PATCHES should list any patches, in the the order in
@@ -95,6 +95,7 @@ $(DRRAW_BUILD_DIR)/.configured: $(DL_DIR)/$(DRRAW_SOURCE) $(DRRAW_PATCHES) make/
 	$(DRRAW_UNZIP) $(DL_DIR)/$(DRRAW_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(DRRAW_PATCHES)" ; \
 		then cat $(DRRAW_PATCHES) | \
+		sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | \
 		patch -d $(BUILD_DIR)/$(DRRAW_DIR) -p0 ; \
 	fi
 	if test "$(BUILD_DIR)/$(DRRAW_DIR)" != "$(DRRAW_BUILD_DIR)" ; \
@@ -150,20 +151,23 @@ $(DRRAW_IPK_DIR)/CONTROL/control:
 #
 $(DRRAW_IPK): $(DRRAW_BUILD_DIR)/.built
 	rm -rf $(DRRAW_IPK_DIR) $(BUILD_DIR)/drraw_*_$(TARGET_ARCH).ipk
-	install -d $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)share/www/cgi-bin
-	install -m 644 $(DRRAW_BUILD_DIR)/drraw.cgi $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)share/www/cgi-bin/drraw.cgi
+	install -d $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)/share/www/cgi-bin
+	install -m 644 $(DRRAW_BUILD_DIR)/drraw.cgi $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)/share/www/cgi-bin/drraw.cgi
 ifeq ($(OPTWARE_TARGET), fsg3v4)
 	install -d $(DRRAW_IPK_DIR)/var/www/cgi-bin
-	ln -s $(OPTWARE_PREFIX)share/www/cgi-bin/drraw.cgi $(DRRAW_IPK_DIR)/var/www/cgi-bin/drraw.cgi
+	ln -s $(OPTWARE_PREFIX)/share/www/cgi-bin/drraw.cgi $(DRRAW_IPK_DIR)/var/www/cgi-bin/drraw.cgi
 endif
-	install -d $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 644 $(DRRAW_SOURCE_DIR)/drraw.conf $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)etc/drraw.conf
+	install -d $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 644 $(DRRAW_SOURCE_DIR)/drraw.conf $(DRRAW_IPK_DIR)$(OPTWARE_PREFIX)/etc/drraw.conf
 	$(MAKE) $(DRRAW_IPK_DIR)/CONTROL/control
 	install -m 755 $(DRRAW_SOURCE_DIR)/postinst $(DRRAW_IPK_DIR)/CONTROL/postinst
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DRRAW_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(DRRAW_SOURCE_DIR)/prerm $(DRRAW_IPK_DIR)/CONTROL/prerm
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DRRAW_IPK_DIR)/CONTROL/prerm
 	echo $(DRRAW_CONFFILES) | sed -e 's/ /\n/g' > $(DRRAW_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(subst $(OPTWARE_PREFIX),$(DRRAW_IPK_DIR)$(OPTWARE_PREFIX),$(DRRAW_CONFFILES)) \
+		$(DRRAW_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DRRAW_IPK_DIR)
 
 #
