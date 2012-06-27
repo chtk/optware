@@ -105,7 +105,7 @@ $(DSTAT_BUILD_DIR)/.configured: $(DL_DIR)/$(DSTAT_SOURCE) $(DSTAT_PATCHES) make/
 	if test "$(BUILD_DIR)/$(DSTAT_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(DSTAT_DIR) $(@D) ; \
 	fi
-	sed -i -e 's@#!/usr/bin/env python@#!$(OPTWARE_PREFIX)bin/python@' $(@D)/dstat
+	sed -i -e 's@#!/usr/bin/env python@#!$(OPTWARE_PREFIX)/bin/python@' $(@D)/dstat
 	touch $@
 
 dstat-unpack: $(DSTAT_BUILD_DIR)/.configured
@@ -115,7 +115,7 @@ dstat-unpack: $(DSTAT_BUILD_DIR)/.configured
 #
 $(DSTAT_BUILD_DIR)/.built: $(DSTAT_BUILD_DIR)/.configured
 	rm -f $@
-	$(MAKE) -C $(@D) prefix=$(OPTWARE_PREFIX)sysconfdir=$(OPTWARE_PREFIX)etc
+	$(MAKE) -C $(@D) prefix=$(OPTWARE_PREFIX) sysconfdir=$(OPTWARE_PREFIX)/etc
 	touch $@
 
 #
@@ -167,7 +167,7 @@ $(DSTAT_IPK_DIR)/CONTROL/control:
 $(DSTAT_IPK): $(DSTAT_BUILD_DIR)/.built
 	rm -rf $(DSTAT_IPK_DIR) $(BUILD_DIR)/dstat_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(DSTAT_BUILD_DIR) install \
-		DESTDIR=$(DSTAT_IPK_DIR) prefix=$(OPTWARE_PREFIX)sysconfdir=$(OPTWARE_PREFIX)etc
+		DESTDIR=$(DSTAT_IPK_DIR) prefix=$(OPTWARE_PREFIX) sysconfdir=$(OPTWARE_PREFIX)/etc
 	$(MAKE) $(DSTAT_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DSTAT_IPK_DIR)
 
