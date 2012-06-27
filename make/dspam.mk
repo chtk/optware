@@ -41,7 +41,7 @@ DSPAM_IPK_VERSION=1
 
 #
 # DSPAM_CONFFILES should be a list of user-editable files
-DSPAM_CONFFILES=$(OPTWARE_PREFIX)etc/dspam.conf $(OPTWARE_PREFIX)etc/init.d/SXXdspam
+DSPAM_CONFFILES=$(OPTWARE_PREFIX)/etc/dspam.conf $(OPTWARE_PREFIX)/etc/init.d/SXXdspam
 
 #
 # DSPAM_PATCHES should list any patches, in the the order in
@@ -54,7 +54,7 @@ DSPAM_PATCHES=$(DSPAM_SOURCE_DIR)/dspam-configure-cross.patch
 # compilation or linking flags, then list them here.
 #
 DSPAM_CPPFLAGS ?=
-DSPAM_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)lib/dspam
+DSPAM_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)/lib/dspam
 ifeq ($(LIBC_STYLE), uclibc)
 DSPAM_LDFLAGS += -lpthread
 endif
@@ -131,7 +131,7 @@ $(DSPAM_BUILD_DIR)/.configured: $(DL_DIR)/$(DSPAM_SOURCE) $(DSPAM_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	  	--with-storage-driver=hash_drv,mysql_drv,pgsql_drv \
@@ -242,12 +242,12 @@ $(DSPAM_IPK): $(DSPAM_BUILD_DIR)/.built
 #	install -m 755 $(DSPAM_SOURCE_DIR)/rc.dspam $(DSPAM_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXdspam
 
 	# Split into the different packages
-	install -d $(DSPAM_PGSQL_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam
-	mv $(DSPAM_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam/libpgsql* $(DSPAM_PGSQL_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam
+	install -d $(DSPAM_PGSQL_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam
+	mv $(DSPAM_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam/libpgsql* $(DSPAM_PGSQL_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam
 	$(MAKE) $(DSPAM_PGSQL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DSPAM_PGSQL_IPK_DIR)
-	install -d $(DSPAM_MYSQL_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam
-	mv $(DSPAM_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam/libmysql* $(DSPAM_MYSQL_IPK_DIR)$(OPTWARE_PREFIX)lib/dspam
+	install -d $(DSPAM_MYSQL_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam
+	mv $(DSPAM_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam/libmysql* $(DSPAM_MYSQL_IPK_DIR)$(OPTWARE_PREFIX)/lib/dspam
 	$(MAKE) $(DSPAM_MYSQL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DSPAM_MYSQL_IPK_DIR)
 
