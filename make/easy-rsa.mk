@@ -156,7 +156,7 @@ $(EASY-RSA_IPK_DIR)/CONTROL/control:
 #
 $(EASY-RSA_IPK): $(EASY-RSA_BUILD_DIR)/.built
 	rm -rf $(EASY-RSA_IPK_DIR) $(BUILD_DIR)/easy-rsa_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(EASY-RSA_BUILD_DIR) DESTDIR=$(EASY-RSA_IPK_DIR) PREFIX=$(OPTWARE_PREFIX)share/easy-rsa install
+	$(MAKE) -C $(EASY-RSA_BUILD_DIR) DESTDIR=$(EASY-RSA_IPK_DIR) PREFIX=$(OPTWARE_PREFIX)/share/easy-rsa install
 	$(MAKE) $(EASY-RSA_IPK_DIR)/CONTROL/control
 	echo $(EASY-RSA_CONFFILES) | sed -e 's/ /\n/g' > $(EASY-RSA_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(EASY-RSA_IPK_DIR)
