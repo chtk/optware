@@ -123,7 +123,7 @@ $(ENDIAN_BUILD_DIR)/.configured: $(DL_DIR)/$(ENDIAN_SOURCE) $(ENDIAN_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -192,11 +192,11 @@ $(ENDIAN_IPK_DIR)/CONTROL/control:
 #
 $(ENDIAN_IPK): $(ENDIAN_BUILD_DIR)/.built
 	rm -rf $(ENDIAN_IPK_DIR) $(BUILD_DIR)/endian_*_$(TARGET_ARCH).ipk
-	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
 	$(MAKE) -C $(ENDIAN_BUILD_DIR) install \
-		DESTDIR=$(ENDIAN_IPK_DIR) PREFIX=$(ENDIAN_IPK_DIR)/opt
-	$(STRIP_COMMAND) $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)bin/endian
+		DESTDIR=$(ENDIAN_IPK_DIR) PREFIX=$(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)
+	$(STRIP_COMMAND) $(ENDIAN_IPK_DIR)$(OPTWARE_PREFIX)/bin/endian
 	$(MAKE) $(ENDIAN_IPK_DIR)/CONTROL/control
 #	echo $(ENDIAN_CONFFILES) | sed -e 's/ /\n/g' > $(ENDIAN_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ENDIAN_IPK_DIR)
