@@ -46,7 +46,7 @@ EGGDROP_IPK_VERSION=3
 
 #
 # EGGDROP_CONFFILES should be a list of user-editable files
-EGGDROP_CONFFILES=$(OPTWARE_PREFIX)etc/eggdrop.conf $(OPTWARE_PREFIX)etc/init.d/S50eggdrop
+EGGDROP_CONFFILES=$(OPTWARE_PREFIX)/etc/eggdrop.conf $(OPTWARE_PREFIX)/etc/init.d/S50eggdrop
 
 #
 # EGGDROP_PATCHES should list any patches, in the the order in
@@ -120,7 +120,7 @@ $(EGGDROP_BUILD_DIR)/.configured: $(DL_DIR)/$(EGGDROP_SOURCE) $(EGGDROP_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)share/eggdrop \
+		--prefix=$(OPTWARE_PREFIX)/share/eggdrop \
 		--disable-nls \
 		--with-tclinc=$(STAGING_INCLUDE_DIR)/tcl.h \
 		--with-tcllib=$(STAGING_LIB_DIR)/libtcl.so \
@@ -177,15 +177,18 @@ $(EGGDROP_IPK_DIR)/CONTROL/control:
 #
 $(EGGDROP_IPK): $(EGGDROP_BUILD_DIR)/.built
 	rm -rf $(EGGDROP_IPK_DIR) $(BUILD_DIR)/eggdrop_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(EGGDROP_BUILD_DIR) DEST=$(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)share/eggdrop install
-	$(STRIP_COMMAND) $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)share/eggdrop/eggdrop-$(EGGDROP_VERSION)
-	$(STRIP_COMMAND) $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)share/eggdrop/modules-$(EGGDROP_VERSION)/*.so
-	mv $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)share/eggdrop/eggdrop.conf $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)share/eggdrop/eggdrop-orig.conf
+	$(MAKE) -C $(EGGDROP_BUILD_DIR) DEST=$(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/share/eggdrop install
+	$(STRIP_COMMAND) $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/share/eggdrop/eggdrop-$(EGGDROP_VERSION)
+	$(STRIP_COMMAND) $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/share/eggdrop/modules-$(EGGDROP_VERSION)/*.so
+	mv $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/share/eggdrop/eggdrop.conf $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/share/eggdrop/eggdrop-orig.conf
 	$(MAKE) $(EGGDROP_IPK_DIR)/CONTROL/control
-	install -d $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(EGGDROP_SOURCE_DIR)/rc.eggdrop $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S50eggdrop
-	install -m 644 $(EGGDROP_BUILD_DIR)/eggdrop.conf $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(EGGDROP_SOURCE_DIR)/rc.eggdrop $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S50eggdrop
+	install -m 644 $(EGGDROP_BUILD_DIR)/eggdrop.conf $(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 	install -m 755 $(EGGDROP_SOURCE_DIR)/postinst $(EGGDROP_IPK_DIR)/CONTROL/postinst
+	sed -i -e "s#/opt/#Â$(OPTWARE_PREFIX)/#g" \
+		$(subst $Â$(OPTWARE_PREFIX),$(EGGDROP_IPK_DIR)$(OPTWARE_PREFIX), $(EGGDROP_CONFFILES)) \
+		$(EGGDROP_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(EGGDROP_IPK_DIR)
 
 #
