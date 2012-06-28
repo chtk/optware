@@ -114,7 +114,7 @@ $(ELINKS_BUILD_DIR)/.configured: $(DL_DIR)/$(ELINKS_SOURCE) $(ELINKS_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--enable-256-colors \
 		--with-spidermonkey=$(STAGING_PREFIX) \
@@ -186,7 +186,7 @@ $(ELINKS_IPK): $(ELINKS_BUILD_DIR)/.built
 	$(TARGET_CONFIGURE_OPTS) \
 	$(MAKE) -C $(ELINKS_BUILD_DIR) DESTDIR=$(ELINKS_IPK_DIR) \
 		$(ELINKS_VERBOSE) install
-	$(STRIP_COMMAND) $(ELINKS_IPK_DIR)$(OPTWARE_PREFIX)bin/elinks
+	$(STRIP_COMMAND) $(ELINKS_IPK_DIR)$(OPTWARE_PREFIX)/bin/elinks
 	$(MAKE) $(ELINKS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ELINKS_IPK_DIR)
 
