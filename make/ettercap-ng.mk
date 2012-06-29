@@ -58,7 +58,7 @@ ETTERCAP-NG_PATCHES=$(ETTERCAP-NG_SOURCE_DIR)/configure.in.patch
 # If the compilation of the package requires additional
 # compilation or linking flags, then list them here.
 #
-ETTERCAP-NG_CPPFLAGS=-I$(STAGING_INCLUDE_DIR)/ncurses -I$(STAGING_INCLUDE_DIR)/libnet11
+ETTERCAP-NG_CPPFLAGS=-I$(STAGING_INCLUDE_DIR)/ncurses -I$(STAGING_INCLUDE_DIR)/libnet11 -DLTDL_SHLIB_EXT='\".so\"'
 ETTERCAP-NG_LDFLAGS=-L$(STAGING_LIB_DIR)/libnet11
 
 #
@@ -137,7 +137,7 @@ $(ETTERCAP-NG_BUILD_DIR)/.configured: $(DL_DIR)/$(ETTERCAP-NG_SOURCE) $(ETTERCAP
 		--with-libtool \
 		--with-libpcap=$(STAGING_PREFIX) \
 		--with-libnet=$(STAGING_PREFIX) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--disable-gtk \
