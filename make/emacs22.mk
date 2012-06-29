@@ -109,7 +109,7 @@ $(EMACS22_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(EMACS22_SOURCE) #
 	fi
 	(cd $(EMACS22_HOST_BUILD_DIR); \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-x \
 		--without-sound \
 		--disable-nls \
@@ -159,7 +159,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-x \
 		--without-sound \
 		--disable-nls \
@@ -175,9 +175,9 @@ emacs22-unpack: $(EMACS22_BUILD_DIR)/.configured
 $(EMACS22_BUILD_DIR)/.built: $(EMACS22_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(EMACS22_BUILD_DIR) \
-		EMACS22_HOST_BUILD_DIR=$(EMACS22_HOST_BUILD_DIR) \
-		EMACS=$(EMACS22_HOST_BUILD_DIR)/src/emacs \
-		BUILT-EMACS=$(EMACS22_HOST_BUILD_DIR)/src/emacs \
+		EMACS22_HOST_BUILD_DIR=$(EMACS22_BUILD_DIR) \
+		EMACS=$(EMACS22_BUILD_DIR)/src/emacs \
+		BUILT-EMACS=$(EMACS22_BUILD_DIR)/src/emacs \
 		TARGET_LIBDIR=$(TARGET_USRLIBDIR) \
 		;
 	touch $@
@@ -232,28 +232,31 @@ $(EMACS22_IPK): $(EMACS22_BUILD_DIR)/.built
 	rm -rf $(EMACS22_IPK_DIR) $(BUILD_DIR)/emacs22_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(EMACS22_BUILD_DIR) DESTDIR=$(EMACS22_IPK_DIR) install \
 		EMACS22_HOST_BUILD_DIR=$(EMACS22_HOST_BUILD_DIR) \
-		EMACS=$(EMACS22_HOST_BUILD_DIR)/src/emacs \
-		BUILT-EMACS=$(EMACS22_HOST_BUILD_DIR)/src/emacs \
+		EMACS=$(EMACS22_BUILD_DIR)/src/emacs \
+		BUILT-EMACS=$(EMACS22_BUILD_DIR)/src/emacs \
 		TARGET_LIBDIR=$(TARGET_USRLIBDIR) \
 		;
-	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/ctags $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/ctags-emacs
-	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/ctags.1 $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/ctags-emacs.1
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/bin/ctags $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/bin/ctags-emacs
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/ctags.1 $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/ctags-emacs.1
 	$(STRIP_COMMAND) `echo \
-		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/* \
-		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)libexec/emacs/$(EMACS22_VERSION)/$(GNU_TARGET_NAME)/* \
+		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/bin/* \
+		$(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/libexec/emacs/$(EMACS22_VERSION)/$(GNU_TARGET_NAME)/* \
 		| tr ' ' '\n' \
 		| egrep -v '/grep-changelog$$|/rcs-checkin$$|/rcs2log$$|/vcdiff$$'`
-	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)bin/emacs-$(EMACS22_VERSION) $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/lisp/temacs
-	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/info/dir*
-	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/etc/images
-	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/etc/tree-widget
-	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)share/emacs/$(EMACS22_VERSION)/lisp/obsolete
+	mv $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/bin/emacs-$(EMACS22_VERSION) $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/emacs/$(EMACS22_VERSION)/lisp/temacs
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/info/dir*
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/emacs/$(EMACS22_VERSION)/etc/images
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/emacs/$(EMACS22_VERSION)/etc/tree-widget
+	rm -rf $(EMACS22_IPK_DIR)$(OPTWARE_PREFIX)/share/emacs/$(EMACS22_VERSION)/lisp/obsolete
 	$(MAKE) $(EMACS22_IPK_DIR)/CONTROL/control
 	install -m 644 $(EMACS22_SOURCE_DIR)/postinst $(EMACS22_IPK_DIR)/CONTROL/
 	sed -i -e 's/$${EMACS_VERSION}/$(EMACS22_VERSION)/g' $(EMACS22_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(EMACS22_SOURCE_DIR)/prerm $(EMACS22_IPK_DIR)/CONTROL/
 	sed -i -e 's/$${EMACS_VERSION}/$(EMACS22_VERSION)/g' $(EMACS22_IPK_DIR)/CONTROL/prerm
 	echo $(EMACS22_CONFFILES) | sed -e 's/ /\n/g' > $(EMACS22_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s#/opt/#$(OPTWARE_PREFIX)/#g" \
+		$(EMACS22_IPK_DIR)/CONTROL/prerm \
+		$(EMACS22_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(EMACS22_IPK_DIR)
 
 #
