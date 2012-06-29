@@ -124,7 +124,7 @@ $(FDUPES_BUILD_DIR)/.configured: $(DL_DIR)/$(FDUPES_SOURCE) $(FDUPES_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -140,8 +140,8 @@ $(FDUPES_BUILD_DIR)/.built: $(FDUPES_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) fdupes \
 		$(TARGET_CONFIGURE_OPTS) \
-		INSTALLDIR=$(OPTWARE_PREFIX)bin \
-		MANPAGEDIR=$(OPTWARE_PREFIX)man \
+		INSTALLDIR=$(OPTWARE_PREFIX)/bin \
+		MANPAGEDIR=$(OPTWARE_PREFIX)/man \
 		;
 	touch $@
 
@@ -193,14 +193,14 @@ $(FDUPES_IPK_DIR)/CONTROL/control:
 #
 $(FDUPES_IPK): $(FDUPES_BUILD_DIR)/.built
 	rm -rf $(FDUPES_IPK_DIR) $(BUILD_DIR)/fdupes_*_$(TARGET_ARCH).ipk
-	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/bin $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
 	$(MAKE) -C $(FDUPES_BUILD_DIR) install \
-		INSTALLDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin \
-		MANPAGEDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)man \
+		INSTALLDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/bin \
+		MANPAGEDIR=$(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/man \
 		;
-	$(STRIP_COMMAND) $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fdupes
-	install -m644 $(FDUPES_BUILD_DIR)/[CIRT]* $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fdupes/
+	$(STRIP_COMMAND) $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/fdupes
+	install -m644 $(FDUPES_BUILD_DIR)/[CIRT]* $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/fdupes/
 #	install -m 644 $(FDUPES_SOURCE_DIR)/fdupes.conf $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/fdupes.conf
 #	install -d $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(FDUPES_SOURCE_DIR)/rc.fdupes $(FDUPES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfdupes
