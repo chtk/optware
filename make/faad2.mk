@@ -131,7 +131,7 @@ $(FAAD2_BUILD_DIR)/.configured: $(DL_DIR)/$(FAAD2_SOURCE) $(FAAD2_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--without-bmp \
@@ -201,7 +201,7 @@ $(FAAD2_IPK_DIR)/CONTROL/control:
 $(FAAD2_IPK): $(FAAD2_BUILD_DIR)/.built
 	rm -rf $(FAAD2_IPK_DIR) $(BUILD_DIR)/faad2_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FAAD2_BUILD_DIR) DESTDIR=$(FAAD2_IPK_DIR) install-strip
-	$(STRIP_COMMAND) $(FAAD2_IPK_DIR)$(OPTWARE_PREFIX)lib/libfaad.so.[0-9].[0-9].[0-9]
+	$(STRIP_COMMAND) $(FAAD2_IPK_DIR)$(OPTWARE_PREFIX)/lib/libfaad.so.[0-9].[0-9].[0-9]
 #	install -d $(FAAD2_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FAAD2_SOURCE_DIR)/faad2.conf $(FAAD2_IPK_DIR)$(OPTWARE_PREFIX)etc/faad2.conf
 #	install -d $(FAAD2_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
