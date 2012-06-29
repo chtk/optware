@@ -125,7 +125,7 @@ $(EZ-IPUPDATE_BUILD_DIR)/.configured: $(DL_DIR)/$(EZ-IPUPDATE_SOURCE) $(EZ-IPUPD
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,9 +191,9 @@ $(EZ-IPUPDATE_IPK_DIR)/CONTROL/control:
 $(EZ-IPUPDATE_IPK): $(EZ-IPUPDATE_BUILD_DIR)/.built
 	rm -rf $(EZ-IPUPDATE_IPK_DIR) $(BUILD_DIR)/ez-ipupdate_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(EZ-IPUPDATE_BUILD_DIR) DESTDIR=$(EZ-IPUPDATE_IPK_DIR) install
-	$(STRIP_COMMAND) $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)bin/ez-ipupdate
-	install -d $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ez-ipupdate
-	install -m 644 $(EZ-IPUPDATE_BUILD_DIR)/[CR]* $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ez-ipupdate
+	$(STRIP_COMMAND) $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)/bin/ez-ipupdate
+	install -d $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ez-ipupdate
+	install -m 644 $(EZ-IPUPDATE_BUILD_DIR)/[CR]* $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ez-ipupdate
 #	install -d $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(EZ-IPUPDATE_SOURCE_DIR)/rc.ez-ipupdate $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXez-ipupdate
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(EZ-IPUPDATE_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXez-ipupdate
