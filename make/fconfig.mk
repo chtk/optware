@@ -123,7 +123,7 @@ $(FCONFIG_BUILD_DIR)/.configured: $(DL_DIR)/$(FCONFIG_SOURCE) $(FCONFIG_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -193,9 +193,9 @@ $(FCONFIG_IPK_DIR)/CONTROL/control:
 $(FCONFIG_IPK): $(FCONFIG_BUILD_DIR)/.built
 	rm -rf $(FCONFIG_IPK_DIR) $(BUILD_DIR)/fconfig_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FCONFIG_BUILD_DIR) DESTDIR=$(FCONFIG_IPK_DIR) install-strip
-	install -d $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	install -m 755 $(FCONFIG_BUILD_DIR)/fconfig $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	$(STRIP_COMMAND) $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)sbin/fconfig
+	install -d $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	install -m 755 $(FCONFIG_BUILD_DIR)/fconfig $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	$(STRIP_COMMAND) $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)/sbin/fconfig
 #	install -m 644 $(FCONFIG_SOURCE_DIR)/fconfig.conf $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/fconfig.conf
 #	install -d $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(FCONFIG_SOURCE_DIR)/rc.fconfig $(FCONFIG_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXfconfig
