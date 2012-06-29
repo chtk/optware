@@ -91,7 +91,7 @@ $(ESPGS_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(ESPGS_SOURCE) $(ESP
 	$(ESPGS_UNZIP) $(DL_DIR)/$(ESPGS_SOURCE) | tar -C $(HOST_BUILD_DIR) -xvf -
 	mv $(HOST_BUILD_DIR)/$(ESPGS_DIR) $(ESPGS_HOST_BUILD_DIR)
 	cd $(ESPGS_HOST_BUILD_DIR); \
-		./configure --prefix=/opt
+		./configure --prefix=$(OPTWARE_PREFIX)
 	mkdir -p $(ESPGS_HOST_BUILD_DIR)/obj
 	$(MAKE) -C $(ESPGS_HOST_BUILD_DIR) ./obj/echogs
 	touch $@
@@ -120,7 +120,7 @@ $(ESPGS_BUILD_DIR)/.configured: $(DL_DIR)/$(ESPGS_SOURCE) $(ESPGS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-x \
 		--with-ijs \
 		--disable-nls \
@@ -190,13 +190,13 @@ $(ESPGS_IPK): $(ESPGS_BUILD_DIR)/.built
 	$(MAKE) -C $(ESPGS_BUILD_DIR) install \
 		DESTDIR=$(ESPGS_IPK_DIR) \
 		install_prefix=$(ESPGS_IPK_DIR) \
-		prefix=$(OPTWARE_PREFIX)\
+		prefix=$(OPTWARE_PREFIX) \
 		ECHOGS_XE=$(ESPGS_BUILD_DIR)/obj/echogs.build \
 		GENARCH_XE=$(ESPGS_BUILD_DIR)/obj/genarch.build \
 		GENCONF_XE=$(ESPGS_BUILD_DIR)/obj/genconf.build \
 		;
-	sed -i -e 's|/usr/share|$(OPTWARE_PREFIX)share|' $(ESPGS_IPK_DIR)$(OPTWARE_PREFIX)lib/cups/filter/psto*
-	$(STRIP_COMMAND) $(ESPGS_IPK_DIR)$(OPTWARE_PREFIX)bin/gs
+	sed -i -e 's|/usr/share|$(OPTWARE_PREFIX)/share|' $(ESPGS_IPK_DIR)$(OPTWARE_PREFIX)/lib/cups/filter/psto*
+	$(STRIP_COMMAND) $(ESPGS_IPK_DIR)$(OPTWARE_PREFIX)/bin/gs
 	$(MAKE) $(ESPGS_IPK_DIR)/CONTROL/control
 	echo $(ESPGS_CONFFILES) | sed -e 's/ /\n/g' > $(ESPGS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ESPGS_IPK_DIR)
