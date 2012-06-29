@@ -142,7 +142,7 @@ $(ESNIPER_BUILD_DIR)/.configured: $(DL_DIR)/$(ESNIPER_SOURCE) $(ESNIPER_PATCHES)
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--with-curl-config=$(STAGING_DIR)/bin/curl-config \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -208,7 +208,7 @@ $(ESNIPER_IPK_DIR)/CONTROL/control:
 $(ESNIPER_IPK): $(ESNIPER_BUILD_DIR)/.built
 	rm -rf $(ESNIPER_IPK_DIR) $(BUILD_DIR)/esniper_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ESNIPER_BUILD_DIR) DESTDIR=$(ESNIPER_IPK_DIR) install-strip
-	install -d $(ESNIPER_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(ESNIPER_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 	$(MAKE) $(ESNIPER_IPK_DIR)/CONTROL/control
 #	echo $(ESNIPER_CONFFILES) | sed -e 's/ /\n/g' > $(ESNIPER_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ESNIPER_IPK_DIR)
