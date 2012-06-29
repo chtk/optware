@@ -40,7 +40,7 @@ FCRON_IPK_VERSION=1
 
 #
 # FCRON_CONFFILES should be a list of user-editable files
-FCRON_CONFFILES=$(OPTWARE_PREFIX)etc/fcron.conf $(OPTWARE_PREFIX)etc/fcron.allow $(OPTWARE_PREFIX)etc/fcron.deny
+FCRON_CONFFILES=$(OPTWARE_PREFIX)/etc/fcron.conf $(OPTWARE_PREFIX)/etc/fcron.allow $(OPTWARE_PREFIX)/etc/fcron.deny
 
 #
 # FCRON_PATCHES should list any patches, in the the order in
@@ -125,7 +125,7 @@ $(FCRON_BUILD_DIR)/.configured: $(DL_DIR)/$(FCRON_SOURCE) $(FCRON_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,7 +191,7 @@ $(FCRON_IPK_DIR)/CONTROL/control:
 $(FCRON_IPK): $(FCRON_BUILD_DIR)/.built
 	rm -rf $(FCRON_IPK_DIR) $(BUILD_DIR)/fcron_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FCRON_BUILD_DIR) DESTDIR=$(FCRON_IPK_DIR) install-staged
-	$(STRIP_COMMAND) $(FCRON_IPK_DIR)$(OPTWARE_PREFIX)*bin/fcron*
+	$(STRIP_COMMAND) $(FCRON_IPK_DIR)$(OPTWARE_PREFIX)/*bin/fcron*
 #	install -d $(FCRON_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FCRON_SOURCE_DIR)/fcron.conf $(FCRON_IPK_DIR)$(OPTWARE_PREFIX)etc/fcron.conf
 #	install -d $(FCRON_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
