@@ -108,7 +108,7 @@ $(EXPAT_BUILD_DIR)/.configured: $(DL_DIR)/$(EXPAT_SOURCE) $(EXPAT_PATCHES) make/
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--disable-static \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -140,7 +140,7 @@ $(EXPAT_BUILD_DIR)/.staged: $(EXPAT_BUILD_DIR)/.built
 		./libtool --mode=install install -c libexpat.la $(STAGING_LIB_DIR)/libexpat.la ; \
 		install -c -m 644 ./lib/expat.h ./lib/expat_external.h $(STAGING_INCLUDE_DIR) ; \
 	)
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libexpat.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libexpat.la
 	touch $@
 
 expat-stage: $(EXPAT_BUILD_DIR)/.staged
@@ -177,14 +177,14 @@ $(EXPAT_IPK_DIR)/CONTROL/control:
 #
 $(EXPAT_IPK): $(EXPAT_BUILD_DIR)/.built
 	rm -rf $(EXPAT_IPK_DIR) $(BUILD_DIR)/expat_*_$(TARGET_ARCH).ipk
-	install -d $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)lib $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)include
+	install -d $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/lib $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/include
 	(cd $(EXPAT_BUILD_DIR); \
-		./libtool --mode=install install -c libexpat.la $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)lib/libexpat.la ; \
-		install -c -m 644 ./lib/expat.h ./lib/expat_external.h $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)include ; \
+		./libtool --mode=install install -c libexpat.la $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/lib/libexpat.la ; \
+		install -c -m 644 ./lib/expat.h ./lib/expat_external.h $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/include ; \
 	)
-	$(STRIP_COMMAND) $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)lib/libexpat.so
+	$(STRIP_COMMAND) $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/lib/libexpat.so
 	# avoid problems with libtool later
-	rm -f $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)lib/libexpat.la
+	rm -f $(EXPAT_IPK_DIR)$(OPTWARE_PREFIX)/lib/libexpat.la
 	$(MAKE) $(EXPAT_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(EXPAT_IPK_DIR)
 
