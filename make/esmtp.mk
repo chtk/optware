@@ -115,12 +115,12 @@ $(ESMTP_BUILD_DIR)/.configured: $(DL_DIR)/$(ESMTP_SOURCE) $(ESMTP_PATCHES) make/
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(ESMTP_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(ESMTP_LDFLAGS)" \
-		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)bin:$$PATH \
+		PATH=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin:$$PATH \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-libesmtp=$(STAGING_LIB_DIR) \
 		--disable-nls \
 	)
@@ -185,10 +185,10 @@ $(ESMTP_IPK_DIR)/CONTROL/control:
 $(ESMTP_IPK): $(ESMTP_BUILD_DIR)/.built
 	rm -rf $(ESMTP_IPK_DIR) $(BUILD_DIR)/esmtp_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ESMTP_BUILD_DIR) DESTDIR=$(ESMTP_IPK_DIR) install-strip
-	install -d $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	#install -m 644 $(ESMTP_SOURCE_DIR)/esmtp.conf $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)etc/esmtp.conf
-	#install -d $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	#install -m 755 $(ESMTP_SOURCE_DIR)/rc.esmtp $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXesmtp
+	install -d $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	#install -m 644 $(ESMTP_SOURCE_DIR)/esmtp.conf $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/esmtp.conf
+	#install -d $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	#install -m 755 $(ESMTP_SOURCE_DIR)/rc.esmtp $(ESMTP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/SXXesmtp
 	$(MAKE) $(ESMTP_IPK_DIR)/CONTROL/control
 	#install -m 755 $(ESMTP_SOURCE_DIR)/postinst $(ESMTP_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(ESMTP_SOURCE_DIR)/prerm $(ESMTP_IPK_DIR)/CONTROL/prerm
