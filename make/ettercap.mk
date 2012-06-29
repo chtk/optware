@@ -135,7 +135,7 @@ $(ETTERCAP_BUILD_DIR)/.configured: $(DL_DIR)/$(ETTERCAP_SOURCE) $(ETTERCAP_PATCH
 		--includedir=$(STAGING_INCLUDE_DIR) \
 		--without-openssl \
 		--with-libtool \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--disable-gtk \
@@ -204,7 +204,7 @@ $(ETTERCAP_IPK_DIR)/CONTROL/control:
 $(ETTERCAP_IPK): $(ETTERCAP_BUILD_DIR)/.built
 	rm -rf $(ETTERCAP_IPK_DIR) $(BUILD_DIR)/ettercap_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ETTERCAP_BUILD_DIR) DESTDIR=$(ETTERCAP_IPK_DIR) install
-	$(STRIP_COMMAND) $(ETTERCAP_IPK_DIR)$(OPTWARE_PREFIX)sbin/ettercap
+	$(STRIP_COMMAND) $(ETTERCAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/ettercap
 	$(MAKE) $(ETTERCAP_IPK_DIR)/CONTROL/control
 	echo $(ETTERCAP_CONFFILES) | sed -e 's/ /\n/g' > $(ETTERCAP_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ETTERCAP_IPK_DIR)
