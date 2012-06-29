@@ -123,7 +123,7 @@ $(FANN_BUILD_DIR)/.configured: $(DL_DIR)/$(FANN_SOURCE) $(FANN_PATCHES) make/fan
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -151,7 +151,7 @@ fann: $(FANN_BUILD_DIR)/.built
 $(FANN_BUILD_DIR)/.staged: $(FANN_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(FANN_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
-	sed -i -e '/^prefix=/s|=/opt|=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/fann.pc
+	sed -i -e '/^prefix=/s|=$(OPTWARE_PREFIX)|=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/fann.pc
 	touch $@
 
 fann-stage: $(FANN_BUILD_DIR)/.staged
