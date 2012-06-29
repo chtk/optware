@@ -38,12 +38,12 @@ FETCHMAIL_IPK_VERSION=1
 
 #
 # FETCHMAIL_CONFFILES should be a list of user-editable files
-FETCHMAIL_CONFFILES=$(OPTWARE_PREFIX)etc/fetchmailrc $(OPTWARE_PREFIX)etc/init.d/S52fetchmail
+FETCHMAIL_CONFFILES=$(OPTWARE_PREFIX)/etc/fetchmailrc $(OPTWARE_PREFIX)/etc/init.d/S52fetchmail
 
 ifeq ($(OPTWARE_TARGET),ds101g)
 FETCHMAIL_LOGGING=--syslog
 else
-FETCHMAIL_LOGGING=-L $(OPTWARE_PREFIX)var/log/fetchmail
+FETCHMAIL_LOGGING=-L $(OPTWARE_PREFIX)/var/log/fetchmail
 endif
 
 #
@@ -122,11 +122,11 @@ $(FETCHMAIL_BUILD_DIR)/.configured: $(DL_DIR)/$(FETCHMAIL_SOURCE) $(FETCHMAIL_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-ssl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-ssl=$(STAGING_DIR)$(OPTWARE_PREFIX) \
 		--without-kerberos5 \
 		--without-kerberos \
 		--without-hesiod \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--program-prefix= \
 	)
@@ -198,17 +198,21 @@ $(FETCHMAIL_IPK_DIR)/CONTROL/control:
 $(FETCHMAIL_IPK): $(FETCHMAIL_BUILD_DIR)/.built
 	rm -rf $(FETCHMAIL_IPK_DIR) $(BUILD_DIR)/fetchmail_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FETCHMAIL_BUILD_DIR) DESTDIR=$(FETCHMAIL_IPK_DIR) install
-	$(STRIP_COMMAND) $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)bin/fetchmail
+	$(STRIP_COMMAND) $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/bin/fetchmail
 	find $(FETCHMAIL_IPK_DIR) -type d -exec chmod go+rx {} \;
-	install -d $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 600 $(FETCHMAIL_SOURCE_DIR)/fetchmailrc $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/fetchmailrc
-	install -d $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(FETCHMAIL_SOURCE_DIR)/rc.fetchmail $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52fetchmail
-	sed -i -e 's|@LOGGING@|${FETCHMAIL_LOGGING}|' $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52fetchmail
+	install -d $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 600 $(FETCHMAIL_SOURCE_DIR)/fetchmailrc $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/etc/fetchmailrc
+	install -d $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(FETCHMAIL_SOURCE_DIR)/rc.fetchmail $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S52fetchmail
+	sed -i -e 's|@LOGGING@|${FETCHMAIL_LOGGING}|' $(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S52fetchmail
 	$(MAKE) $(FETCHMAIL_IPK_DIR)/CONTROL/control
 	install -m 644 $(FETCHMAIL_SOURCE_DIR)/postinst $(FETCHMAIL_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FETCHMAIL_SOURCE_DIR)/prerm $(FETCHMAIL_IPK_DIR)/CONTROL/prerm
 	echo $(FETCHMAIL_CONFFILES) | sed -e 's/ /\n/g' > $(FETCHMAIL_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(subst $(OPTWARE_PREFIX),$(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX),$(FETCHMAIL_CONFFILES)) \
+		$(FETCHMAIL_IPK_DIR)/CONTROL/postinst \
+		$(FETCHMAIL_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FETCHMAIL_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(FETCHMAIL_IPK_DIR)
 
