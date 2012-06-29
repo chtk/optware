@@ -171,9 +171,9 @@ $(FBCAT_IPK_DIR)/CONTROL/control:
 #
 $(FBCAT_IPK): $(FBCAT_BUILD_DIR)/.built
 	rm -rf $(FBCAT_IPK_DIR) $(BUILD_DIR)/fbcat_*_$(TARGET_ARCH).ipk
-	install -d $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -m 755 $(FBCAT_BUILD_DIR)/fbcat $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -m 755 $(FBCAT_BUILD_DIR)/fbgrab $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -m 755 $(FBCAT_BUILD_DIR)/fbcat $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -m 755 $(FBCAT_BUILD_DIR)/fbgrab $(FBCAT_IPK_DIR)$(OPTWARE_PREFIX)/bin/
 	$(MAKE) $(FBCAT_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FBCAT_IPK_DIR)
 
