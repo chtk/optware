@@ -126,7 +126,7 @@ $(ENSCRIPT_BUILD_DIR)/.configured: $(DL_DIR)/$(ENSCRIPT_SOURCE) $(ENSCRIPT_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 --disable-dependency-tracking \
 		--disable-nls \
 		--disable-static \
@@ -193,7 +193,7 @@ $(ENSCRIPT_IPK_DIR)/CONTROL/control:
 $(ENSCRIPT_IPK): $(ENSCRIPT_BUILD_DIR)/.built
 	rm -rf $(ENSCRIPT_IPK_DIR) $(BUILD_DIR)/enscript_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ENSCRIPT_BUILD_DIR) DESTDIR=$(ENSCRIPT_IPK_DIR) install-strip
-	rm -rf $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)info/dir*
+	rm -rf $(ENSCRIPT_IPK_DIR)$(OPTWARE_PREFIX)/info/dir*
 	$(MAKE) $(ENSCRIPT_IPK_DIR)/CONTROL/control
 	echo $(ENSCRIPT_CONFFILES) | sed -e 's/ /\n/g' > $(ENSCRIPT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ENSCRIPT_IPK_DIR)
