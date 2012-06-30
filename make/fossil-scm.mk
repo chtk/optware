@@ -124,7 +124,7 @@ $(FOSSIL-SCM_BUILD_DIR)/.configured: $(DL_DIR)/$(FOSSIL-SCM_SOURCE) $(FOSSIL-SCM
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -193,9 +193,9 @@ $(FOSSIL-SCM_IPK_DIR)/CONTROL/control:
 $(FOSSIL-SCM_IPK): $(FOSSIL-SCM_BUILD_DIR)/.built
 	rm -rf $(FOSSIL-SCM_IPK_DIR) $(BUILD_DIR)/fossil-scm_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FOSSIL-SCM_BUILD_DIR) DESTDIR=$(FOSSIL-SCM_IPK_DIR) install-strip
-	install -d $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m755 $(<D)/fossil $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)bin/fossil
+	install -d $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m755 $(<D)/fossil $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(FOSSIL-SCM_IPK_DIR)$(OPTWARE_PREFIX)/bin/fossil
 	$(MAKE) $(FOSSIL-SCM_IPK_DIR)/CONTROL/control
 	echo $(FOSSIL-SCM_CONFFILES) | sed -e 's/ /\n/g' > $(FOSSIL-SCM_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FOSSIL-SCM_IPK_DIR)
