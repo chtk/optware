@@ -43,7 +43,7 @@ FINCH_IPK_VERSION=2
 # compilation or linking flags, then list them here.
 #
 FINCH_CPPFLAGS=
-FINCH_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)lib/purple-2
+FINCH_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)/lib/purple-2
 
 #
 # FINCH_BUILD_DIR is the directory in which the build is done.
@@ -121,7 +121,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-consoleui \
 		--disable-gtkui \
 		--with-gnutls-includes=$(STAGING_INCLUDE_DIR) \
@@ -199,8 +199,8 @@ $(FINCH_IPK_DIR)/CONTROL/control:
 $(FINCH_IPK): $(FINCH_BUILD_DIR)/.built
 	rm -rf $(FINCH_IPK_DIR) $(BUILD_DIR)/finch_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FINCH_BUILD_DIR) DESTDIR=$(FINCH_IPK_DIR) install-strip transform=""
-	rm -f $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)lib/finch/*.la $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)lib/purple-2/*.la
-	rm -f $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)lib/libpurple.la $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)lib/libgnt.la 
+	rm -f $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)/lib/finch/*.la $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)/lib/purple-2/*.la
+	rm -f $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)/lib/libpurple.la $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)/lib/libgnt.la 
 #	install -d $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FINCH_SOURCE_DIR)/finch.conf $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)etc/finch.conf
 #	install -d $(FINCH_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
