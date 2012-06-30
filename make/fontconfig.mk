@@ -125,10 +125,10 @@ $(FONTCONFIG_BUILD_DIR)/.configured: $(DL_DIR)/fontconfig-$(FONTCONFIG_VERSION).
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--with-default-fonts=$(OPTWARE_PREFIX)share/fonts \
+		--prefix=$(OPTWARE_PREFIX) \
+		--with-default-fonts=$(OPTWARE_PREFIX)/share/fonts \
 		--without-add-fonts \
-		--with-freetype-config=$(STAGING_DIR)$(OPTWARE_PREFIX)bin/freetype-config \
+		--with-freetype-config=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin/freetype-config \
 		--disable-docs \
 		--disable-static \
 	)
@@ -177,7 +177,7 @@ fontconfig-stage: $(FONTCONFIG_BUILD_DIR)/.staged
 $(FONTCONFIG_IPK): $(FONTCONFIG_BUILD_DIR)/.built
 	rm -rf $(FONTCONFIG_IPK_DIR) $(BUILD_DIR)/fontconfig_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FONTCONFIG_BUILD_DIR) DESTDIR=$(FONTCONFIG_IPK_DIR) install-strip
-	rm -f $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(FONTCONFIG_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	$(MAKE) $(FONTCONFIG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FONTCONFIG_IPK_DIR)
 
