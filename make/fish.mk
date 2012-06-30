@@ -136,7 +136,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-xsel \
 		--disable-nls \
 		--disable-static \
@@ -204,7 +204,7 @@ $(FISH_IPK_DIR)/CONTROL/control:
 $(FISH_IPK): $(FISH_BUILD_DIR)/.built
 	rm -rf $(FISH_IPK_DIR) $(BUILD_DIR)/fish_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FISH_BUILD_DIR) DESTDIR=$(FISH_IPK_DIR) install
-	$(STRIP_COMMAND) $(FISH_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(FISH_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(FISH_IPK_DIR)/CONTROL/control
 	echo $(FISH_CONFFILES) | sed -e 's/ /\n/g' > $(FISH_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FISH_IPK_DIR)
