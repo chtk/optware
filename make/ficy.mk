@@ -53,10 +53,11 @@ FICY_CONFFILES=
 # FICY_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
+FICY_PATCHES=$(FICY_SOURCE_DIR)/ficy-cincludes.patch
 ifeq ($(LIBC_STYLE), uclibc)
-FICY_PATCHES=$(FICY_SOURCE_DIR)/uclibc-readline.patch
-else
-FICY_PATCHES=
+FICY_PATCHES+=$(FICY_SOURCE_DIR)/uclibc-readline.patch
+#else
+#FICY_PATCHES=
 endif
 
 #
@@ -181,13 +182,13 @@ $(FICY_IPK_DIR)/CONTROL/control:
 #
 $(FICY_IPK): $(FICY_BUILD_DIR)/.built
 	rm -rf $(FICY_IPK_DIR) $(BUILD_DIR)/ficy_*_$(TARGET_ARCH).ipk
-	mkdir -p $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(FICY_BUILD_DIR)/fIcy $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(FICY_BUILD_DIR)/fPls $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(FICY_BUILD_DIR)/fResync $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin/fIcy 
-	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin/fPls
-	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)bin/fResync
+	mkdir -p $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(FICY_BUILD_DIR)/fIcy $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(FICY_BUILD_DIR)/fPls $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(FICY_BUILD_DIR)/fResync $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin/fIcy 
+	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin/fPls
+	$(STRIP_COMMAND) $(FICY_IPK_DIR)$(OPTWARE_PREFIX)/bin/fResync
 	$(MAKE) $(FICY_IPK_DIR)/CONTROL/control
 	echo $(FICY_CONFFILES) | sed -e 's/ /\n/g' > $(FICY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FICY_IPK_DIR)
