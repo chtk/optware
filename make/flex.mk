@@ -40,12 +40,12 @@ $(FLEX_BUILD_DIR)/.configured: $(DL_DIR)/$(FLEX_SOURCE) make/flex.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-shared \
 		--disable-static \
 		--disable-nls \
 	)
-	sed -i -e 's|/usr/bin|$(OPTWARE_PREFIX)bin|'  $(@D)/config.h
+	sed -i -e 's|/usr/bin|$(OPTWARE_PREFIX)/bin|'  $(@D)/config.h
 	touch $@
 
 flex-unpack: $(FLEX_BUILD_DIR)/.configured
@@ -69,9 +69,9 @@ flex: $(FLEX_BUILD_DIR)/.built
 $(FLEX_BUILD_DIR)/.staged: $(FLEX_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
-ifneq ($(HOSTCC), $(TARGET_CC)) # prevent PATH=staging$(OPTWARE_PREFIX)bin problems
-	if test -x $(STAGING_DIR)$(OPTWARE_PREFIX)bin/flex ;\
-		 then rm $(STAGING_DIR)$(OPTWARE_PREFIX)bin/flex ;\
+ifneq ($(HOSTCC), $(TARGET_CC)) # prevent PATH=staging$(OPTWARE_PREFIX)/bin problems
+	if test -x $(STAGING_DIR)$(OPTWARE_PREFIX)/bin/flex ;\
+		 then rm $(STAGING_DIR)$(OPTWARE_PREFIX)/bin/flex ;\
 	fi
 endif
 	touch $@
@@ -95,7 +95,7 @@ $(FLEX_IPK_DIR)/CONTROL/control:
 $(FLEX_IPK): $(FLEX_BUILD_DIR)/.built
 	rm -rf $(FLEX_IPK_DIR) $(BUILD_DIR)/flex_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FLEX_BUILD_DIR) DESTDIR=$(FLEX_IPK_DIR) install-strip
-	rm -rf $(FLEX_IPK_DIR)$(OPTWARE_PREFIX)man
+	rm -rf $(FLEX_IPK_DIR)$(OPTWARE_PREFIX)/man
 	$(MAKE) $(FLEX_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FLEX_IPK_DIR)
 
