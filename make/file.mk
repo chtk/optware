@@ -98,7 +98,7 @@ $(FILE_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(FILE_SOURCE) make/fi
 	(cd $(@D); \
 		CPPFLAGS="-I$(HOST_STAGING_INCLUDE_DIR)" \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -215,13 +215,16 @@ $(FILE_IPK): $(FILE_BUILD_DIR)/.built
 	$(MAKE) -C $(FILE_BUILD_DIR) install-strip \
 		DESTDIR=$(FILE_IPK_DIR) \
 		FILE_COMPILE=$(FILE_HOST_BUILD_DIR)/src/file
-	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)lib/libmagic.la
-	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file/magic.mgc
-	install -d $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file
-	cp -rp $(FILE_BUILD_DIR)/magic/Magdir $(FILE_IPK_DIR)$(OPTWARE_PREFIX)share/file/magic
+	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)/lib/libmagic.la
+	rm -f $(FILE_IPK_DIR)$(OPTWARE_PREFIX)/share/file/magic.mgc
+	install -d $(FILE_IPK_DIR)$(OPTWARE_PREFIX)/share/file
+	cp -rp $(FILE_BUILD_DIR)/magic/Magdir $(FILE_IPK_DIR)$(OPTWARE_PREFIX)/share/file/magic
 	$(MAKE) $(FILE_IPK_DIR)/CONTROL/control
 	install -m 644 $(FILE_SOURCE_DIR)/postinst $(FILE_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FILE_SOURCE_DIR)/prerm $(FILE_IPK_DIR)/CONTROL/prerm
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(FILE_IPK_DIR)/CONTROL/postinst \
+		$(FILE_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FILE_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(FILE_IPK_DIR)
 
