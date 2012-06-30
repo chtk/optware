@@ -119,7 +119,7 @@ $(FIXESEXT_PATCHES) make/fixesext.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	touch $@
