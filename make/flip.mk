@@ -179,11 +179,11 @@ $(FLIP_IPK_DIR)/CONTROL/control:
 #
 $(FLIP_IPK): $(FLIP_BUILD_DIR)/.built
 	rm -rf $(FLIP_IPK_DIR) $(BUILD_DIR)/flip_*_$(TARGET_ARCH).ipk
-	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install $(FLIP_BUILD_DIR)/flip $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)bin/flip
-	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)share/doc/flip/
-	echo $(FLIP_SITE) > $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)share/doc/flip/url.txt
+	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install $(FLIP_BUILD_DIR)/flip $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)/bin/flip
+	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/flip/
+	echo $(FLIP_SITE) > $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/flip/url.txt
 #	$(MAKE) -C $(FLIP_BUILD_DIR) DESTDIR=$(FLIP_IPK_DIR) install-strip
 #	install -d $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FLIP_SOURCE_DIR)/flip.conf $(FLIP_IPK_DIR)$(OPTWARE_PREFIX)etc/flip.conf
