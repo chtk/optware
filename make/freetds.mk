@@ -41,7 +41,7 @@ FREETDS_IPK_VERSION=4
 
 #
 # FREETDS_CONFFILES should be a list of user-editable files
-FREETDS_CONFFILES=$(OPTWARE_PREFIX)etc/freetds/freetds.conf $(OPTWARE_PREFIX)etc/freetds/locales.conf $(OPTWARE_PREFIX)etc/freetds/pool.conf
+FREETDS_CONFFILES=$(OPTWARE_PREFIX)/etc/freetds/freetds.conf $(OPTWARE_PREFIX)/etc/freetds/locales.conf $(OPTWARE_PREFIX)/etc/freetds/pool.conf
 
 #
 # FREETDS_PATCHES should list any patches, in the the order in
@@ -118,8 +118,8 @@ $(FREETDS_BUILD_DIR)/.configured: $(DL_DIR)/$(FREETDS_SOURCE) $(FREETDS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--sysconfdir=$(OPTWARE_PREFIX)etc/freetds \
+		--prefix=$(OPTWARE_PREFIX) \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc/freetds \
 		--enable-msdblib \
 		--enable-odbc \
 		--disable-nls \
@@ -194,7 +194,7 @@ $(FREETDS_IPK_DIR)/CONTROL/control:
 $(FREETDS_IPK): $(FREETDS_BUILD_DIR)/.built
 	rm -rf $(FREETDS_IPK_DIR) $(BUILD_DIR)/freetds_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FREETDS_BUILD_DIR) DESTDIR=$(FREETDS_IPK_DIR) install-strip
-	rm -f $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 #	install -d $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FREETDS_SOURCE_DIR)/freetds.conf $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/freetds.conf
 #	install -d $(FREETDS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
