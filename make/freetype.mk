@@ -37,7 +37,7 @@ FREETYPE_IPK_VERSION=1
 
 #
 # FREETYPE_CONFFILES should be a list of user-editable files
-FREETYPE_CONFFILES=$(OPTWARE_PREFIX)etc/freetype.conf $(OPTWARE_PREFIX)etc/init.d/SXXfreetype
+FREETYPE_CONFFILES=$(OPTWARE_PREFIX)/etc/freetype.conf $(OPTWARE_PREFIX)/etc/init.d/SXXfreetype
 
 #
 # FREETYPE_PATCHES should list any patches, in the the order in
@@ -127,7 +127,7 @@ $(FREETYPE_BUILD_DIR)/.configured: $(DL_DIR)/$(FREETYPE_SOURCE) $(FREETYPE_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/builds/unix/libtool
@@ -156,7 +156,7 @@ $(FREETYPE_BUILD_DIR)/.staged: $(FREETYPE_BUILD_DIR)/.built
 	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR) install
 	sed -ie 's%includedir=$${*prefix}*/include%includedir=$(STAGING_INCLUDE_DIR)%' $(STAGING_PREFIX)/bin/freetype-config
 	install -d $(STAGING_DIR)/bin
-	cp $(STAGING_DIR)$(OPTWARE_PREFIX)bin/freetype-config $(STAGING_DIR)/bin/freetype-config
+	cp $(STAGING_DIR)$(OPTWARE_PREFIX)/bin/freetype-config $(STAGING_DIR)/bin/freetype-config
 	rm -f $(STAGING_LIB_DIR)/libfreetype.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/freetype2.pc
 	touch $@
@@ -178,8 +178,8 @@ freetype-stage: $(FREETYPE_BUILD_DIR)/.staged
 $(FREETYPE_IPK): $(FREETYPE_BUILD_DIR)/.built
 	rm -rf $(FREETYPE_IPK_DIR) $(BUILD_DIR)/freetype_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FREETYPE_BUILD_DIR) DESTDIR=$(FREETYPE_IPK_DIR) install
-	$(STRIP_COMMAND) $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
-	rm -f $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	$(STRIP_COMMAND) $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so
+	rm -f $(FREETYPE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	$(MAKE) $(FREETYPE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FREETYPE_IPK_DIR)
 
