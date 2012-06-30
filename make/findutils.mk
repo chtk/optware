@@ -150,7 +150,7 @@ $(FINDUTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(FINDUTILS_SOURCE) $(FINDUTILS_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -190,20 +190,20 @@ findutils: $(FINDUTILS_BUILD_DIR)/.built
 #
 $(FINDUTILS_IPK): $(FINDUTILS_BUILD_DIR)/.built
 	rm -rf $(FINDUTILS_IPK_DIR) $(BUILD_DIR)/findutils_*_$(TARGET_ARCH).ipk
-	install -d $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(FINDUTILS_BUILD_DIR)/find/find -o $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/findutils-find
-	$(STRIP_COMMAND) $(FINDUTILS_BUILD_DIR)/xargs/xargs -o $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/findutils-xargs
-	install -d $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -m 644 $(FINDUTILS_BUILD_DIR)/find/find.1 $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -m 644 $(FINDUTILS_BUILD_DIR)/xargs/xargs.1 $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)man/man1
+	install -d $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(FINDUTILS_BUILD_DIR)/find/find -o $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/findutils-find
+	$(STRIP_COMMAND) $(FINDUTILS_BUILD_DIR)/xargs/xargs -o $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/findutils-xargs
+	install -d $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -m 644 $(FINDUTILS_BUILD_DIR)/find/find.1 $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -m 644 $(FINDUTILS_BUILD_DIR)/xargs/xargs.1 $(FINDUTILS_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
 	make  $(FINDUTILS_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/find find $(OPTWARE_PREFIX)bin/findutils-find 80"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/xargs xargs $(OPTWARE_PREFIX)bin/findutils-xargs 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/find find $(OPTWARE_PREFIX)/bin/findutils-find 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/xargs xargs $(OPTWARE_PREFIX)/bin/findutils-xargs 80"; \
 	) > $(FINDUTILS_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove find $(OPTWARE_PREFIX)bin/findutils-find"; \
-	 echo "update-alternatives --remove xargs $(OPTWARE_PREFIX)bin/findutils-xargs"; \
+	 echo "update-alternatives --remove find $(OPTWARE_PREFIX)/bin/findutils-find"; \
+	 echo "update-alternatives --remove xargs $(OPTWARE_PREFIX)/bin/findutils-xargs"; \
 	) > $(FINDUTILS_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
@@ -213,8 +213,8 @@ $(FINDUTILS_IPK): $(FINDUTILS_BUILD_DIR)/.built
 
 $(FINDUTILS_DOC_IPK): $(FINDUTILS_BUILD_DIR)/.built
 	rm -rf $(FINDUTILS_DOC_IPK_DIR) $(BUILD_DIR)/findutils-doc_*_$(TARGET_ARCH).ipk
-	install -d $(FINDUTILS_DOC_IPK_DIR)$(OPTWARE_PREFIX)doc/findutils
-	install -m 644 $(FINDUTILS_BUILD_DIR)/doc/find.i* $(FINDUTILS_DOC_IPK_DIR)$(OPTWARE_PREFIX)doc/findutils
+	install -d $(FINDUTILS_DOC_IPK_DIR)$(OPTWARE_PREFIX)/doc/findutils
+	install -m 644 $(FINDUTILS_BUILD_DIR)/doc/find.i* $(FINDUTILS_DOC_IPK_DIR)$(OPTWARE_PREFIX)/doc/findutils
 	make  $(FINDUTILS_DOC_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FINDUTILS_DOC_IPK_DIR)
 
