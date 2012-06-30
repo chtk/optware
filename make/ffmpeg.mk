@@ -151,7 +151,7 @@ $(FFMPEG_BUILD_DIR)/.configured: $(DL_DIR)/$(FFMPEG_SOURCE) $(FFMPEG_PATCHES) ma
 		--disable-static \
 		--enable-gpl \
 		--enable-postproc \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 	)
 ifeq ($(LIBC_STYLE), uclibc)
 #	No lrintf() support in uClibc 0.9.28
@@ -188,9 +188,9 @@ $(FFMPEG_BUILD_DIR)/.staged: $(FFMPEG_BUILD_DIR)/.built
 	rm -f $@
 	rm -rf $(STAGING_INCLUDE_DIR)/ffmpeg $(STAGING_INCLUDE_DIR)/postproc
 	$(MAKE) -C $(@D) install \
-		mandir=$(STAGING_DIR)$(OPTWARE_PREFIX)man \
-		bindir=$(STAGING_DIR)$(OPTWARE_PREFIX)bin \
-		prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		mandir=$(STAGING_DIR)$(OPTWARE_PREFIX)/man \
+		bindir=$(STAGING_DIR)$(OPTWARE_PREFIX)/bin \
+		prefix=$(STAGING_DIR)$(OPTWARE_PREFIX) \
 		DESTDIR=$(STAGING_DIR)
 	install -d $(STAGING_INCLUDE_DIR)/ffmpeg $(STAGING_INCLUDE_DIR)/postproc
 	cp -p	$(STAGING_INCLUDE_DIR)/libavcodec/* \
@@ -241,14 +241,14 @@ $(FFMPEG_IPK_DIR)/CONTROL/control:
 #
 $(FFMPEG_IPK): $(FFMPEG_BUILD_DIR)/.built
 	rm -rf $(FFMPEG_IPK_DIR) $(BUILD_DIR)/ffmpeg_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(FFMPEG_BUILD_DIR) mandir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)man \
-		bindir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin libdir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib \
-		prefix=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)DESTDIR=$(FFMPEG_IPK_DIR) \
+	$(MAKE) -C $(FFMPEG_BUILD_DIR) mandir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/man \
+		bindir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/bin libdir=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/lib \
+		prefix=$(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)  DESTDIR=$(FFMPEG_IPK_DIR) \
 		LDCONFIG='$$(warning ldconfig disabled when building package)' install
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin/ffmpeg
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)bin/ffserver
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
-	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)lib/vhook/*.so
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/bin/ffmpeg
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/bin/ffserver
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so
+	$(TARGET_STRIP) $(FFMPEG_IPK_DIR)$(OPTWARE_PREFIX)/lib/vhook/*.so
 	$(MAKE) $(FFMPEG_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FFMPEG_IPK_DIR)
 
