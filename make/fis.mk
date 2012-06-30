@@ -166,9 +166,9 @@ $(FIS_IPK_DIR)/CONTROL/control:
 #
 $(FIS_IPK): $(FIS_BUILD_DIR)/.built
 	rm -rf $(FIS_IPK_DIR) $(BUILD_DIR)/fis_*_$(TARGET_ARCH).ipk
-	install -d $(FIS_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	install -m 755 $(FIS_BUILD_DIR)/fis $(FIS_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	$(STRIP_COMMAND) $(FIS_IPK_DIR)$(OPTWARE_PREFIX)sbin/fis
+	install -d $(FIS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	install -m 755 $(FIS_BUILD_DIR)/fis $(FIS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	$(STRIP_COMMAND) $(FIS_IPK_DIR)$(OPTWARE_PREFIX)/sbin/fis
 	$(MAKE) $(FIS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FIS_IPK_DIR)
 
