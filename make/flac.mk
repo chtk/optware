@@ -45,7 +45,7 @@ FLAC_CONFFILES=
 # FLAC_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#FLAC_PATCHES=$(FLAC_SOURCE_DIR)/configure.patch
+FLAC_PATCHES=$(FLAC_SOURCE_DIR)/cincludes.patch
 
 #
 # If the compilation of the package requires additional
@@ -109,7 +109,7 @@ $(FLAC_BUILD_DIR)/.configured: $(DL_DIR)/$(FLAC_SOURCE) $(FLAC_PATCHES) make/fla
 	rm -rf $(BUILD_DIR)/$(FLAC_DIR) $(@D)
 	$(FLAC_UNZIP) $(DL_DIR)/$(FLAC_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(FLAC_PATCHES)"; \
-		then cat $(FLAC_PATCHES) | patch -d $(BUILD_DIR)/$(FLAC_DIR) -p0; \
+		then cat $(FLAC_PATCHES) | patch -d $(BUILD_DIR)/$(FLAC_DIR) -p1; \
 	fi
 	mv $(BUILD_DIR)/$(FLAC_DIR) $(@D)
 	sed -i -e '/LOCAL_EXTRA_LDFLAGS.*read_only_relocs/d' $(@D)/src/libFLAC/Makefile.in
@@ -124,7 +124,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-ogg=$(STAGING_PREFIX) \
 		--disable-xmms-plugin \
 		--disable-nls \
@@ -192,13 +192,13 @@ $(FLAC_IPK_DIR)/CONTROL/control:
 $(FLAC_IPK): $(FLAC_BUILD_DIR)/.built
 	rm -rf $(FLAC_IPK_DIR) $(BUILD_DIR)/flac_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(FLAC_BUILD_DIR) DESTDIR=$(FLAC_IPK_DIR) install
-	rm -f $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.a $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.la
-	$(STRIP_COMMAND) $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)bin/*flac
-	$(STRIP_COMMAND) $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)lib/libFLAC*.so.*.*.*
-	#[JEC]install -d $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	#[JEC]install -m 644 $(FLAC_SOURCE_DIR)/flac.conf $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)etc/flac.conf
-	#[JEC]install -d $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	#[JEC]install -m 755 $(FLAC_SOURCE_DIR)/rc.flac $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXflac
+	rm -f $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/lib/lib*.a $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/lib/lib*.la
+	$(STRIP_COMMAND) $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/bin/*flac
+	$(STRIP_COMMAND) $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/lib/libFLAC*.so.*.*.*
+	#[JEC]install -d $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	#[JEC]install -m 644 $(FLAC_SOURCE_DIR)/flac.conf $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/etc/flac.conf
+	#[JEC]install -d $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	#[JEC]install -m 755 $(FLAC_SOURCE_DIR)/rc.flac $(FLAC_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/SXXflac
 	$(MAKE) $(FLAC_IPK_DIR)/CONTROL/control
 	#[JEC]install -m 755 $(FLAC_SOURCE_DIR)/postinst $(FLAC_IPK_DIR)/CONTROL/postinst
 	#[JEC]install -m 755 $(FLAC_SOURCE_DIR)/prerm $(FLAC_IPK_DIR)/CONTROL/prerm
