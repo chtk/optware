@@ -130,8 +130,7 @@ $(GAMBIT-C_BUILD_DIR)/.configured: $(DL_DIR)/$(GAMBIT-C_SOURCE) $(GAMBIT-C_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--enable-single-host \
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-gcc-opts \
 		--enable-shared \
 		--disable-nls \
@@ -198,9 +197,9 @@ $(GAMBIT-C_IPK_DIR)/CONTROL/control:
 #
 $(GAMBIT-C_IPK): $(GAMBIT-C_BUILD_DIR)/.built
 	rm -rf $(GAMBIT-C_IPK_DIR) $(BUILD_DIR)/gambit-c_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(GAMBIT-C_BUILD_DIR) prefix=$(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)install
-	$(STRIP_COMMAND) $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)bin/gs[ci] $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)lib/lib*.so
-	sed -i -e 's|$(STAGING_DIR)||g; s|$(TARGET_CC)|$(OPTWARE_PREFIX)bin/gcc|' $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)bin/gambc-cc
+	$(MAKE) -C $(GAMBIT-C_BUILD_DIR) prefix=$(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX) install
+	$(STRIP_COMMAND) $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)/bin/gs[ci] $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)/lib/lib*.so
+	sed -i -e 's|$(STAGING_DIR)||g; s|$(TARGET_CC)|$(OPTWARE_PREFIX)/bin/gcc|' $(GAMBIT-C_IPK_DIR)$(OPTWARE_PREFIX)/bin/gambc-cc
 	$(MAKE) $(GAMBIT-C_IPK_DIR)/CONTROL/control
 	echo $(GAMBIT-C_CONFFILES) | sed -e 's/ /\n/g' > $(GAMBIT-C_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GAMBIT-C_IPK_DIR)
