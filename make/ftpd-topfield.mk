@@ -167,17 +167,21 @@ $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/control:
 #
 $(FTPD-TOPFIELD_IPK): $(FTPD-TOPFIELD_BUILD_DIR)/.built
 	rm -rf $(FTPD-TOPFIELD_IPK_DIR) $(BUILD_DIR)/ftpd-topfield_*_$(TARGET_ARCH).ipk
-	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	install -m 755 $(FTPD-TOPFIELD_BUILD_DIR)/ftpd $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/ftpd-topfield
-	$(STRIP_COMMAND) $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)sbin/ftpd-topfield
+	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	install -m 755 $(FTPD-TOPFIELD_BUILD_DIR)/ftpd $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/ftpd-topfield
+	$(STRIP_COMMAND) $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/ftpd-topfield
 #	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FTPD-TOPFIELD_SOURCE_DIR)/ftpd-topfield.conf $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/ftpd-topfield.conf
-	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/rc.ftpd-topfield $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S67ftpd-topfield
+	install -d $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/rc.ftpd-topfield $(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S67ftpd-topfield
 	$(MAKE) $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/control
 	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/postinst $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(FTPD-TOPFIELD_SOURCE_DIR)/prerm $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/prerm
 	echo $(FTPD-TOPFIELD_CONFFILES) | sed -e 's/ /\n/g' > $(FTPD-TOPFIELD_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+		$(subst $(OPTWARE_PREFIX),$(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX),$(FTPD-TOPFIELD_CONFFILES)) \
+		$(FTPD-TOPFIELD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S67ftpd-topfield \
+		$(FTPD-TOPFIELD_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FTPD-TOPFIELD_IPK_DIR)
 
 #
