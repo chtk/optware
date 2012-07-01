@@ -110,7 +110,7 @@ $(GAWK_BUILD_DIR)/.configured: $(DL_DIR)/$(GAWK_SOURCE) $(GAWK_PATCHES) make/gaw
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 ifeq ($(HOST_MACHINE),armv5b)
@@ -182,17 +182,17 @@ $(GAWK_IPK_DIR)/CONTROL/control:
 #
 $(GAWK_IPK): $(GAWK_BUILD_DIR)/.built
 	rm -rf $(GAWK_IPK_DIR) $(BUILD_DIR)/gawk_*_$(TARGET_ARCH).ipk
-	install -d $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	install -d $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)/bin
 	$(MAKE) -C $(GAWK_BUILD_DIR) DESTDIR=$(GAWK_IPK_DIR) install-strip
-	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)share/info/dir
-	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin/gawk-$(GAWK_VERSION)
-	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)bin/pgawk-$(GAWK_VERSION)
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)/info/dir $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)/share/info/dir
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)/bin/gawk-$(GAWK_VERSION)
+	rm -f $(GAWK_IPK_DIR)$(OPTWARE_PREFIX)/bin/pgawk-$(GAWK_VERSION)
 	$(MAKE) $(GAWK_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/awk awk $(OPTWARE_PREFIX)bin/gawk 80"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/awk awk $(OPTWARE_PREFIX)/bin/gawk 80"; \
 	) > $(GAWK_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove awk $(OPTWARE_PREFIX)bin/gawk"; \
+	 echo "update-alternatives --remove awk $(OPTWARE_PREFIX)/bin/gawk"; \
 	) > $(GAWK_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
