@@ -53,7 +53,7 @@ FUPPES_IPK_VERSION=2
 # FUPPES_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-FUPPES_PATCHES=
+FUPPES_PATCHES=$(FUPPES_SOURCE_DIR)/fuppes-cincludes.patch
 ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 #FUPPES_PATCHES=$(FUPPES_SOURCE_DIR)/libiconv.patch
 endif
@@ -159,13 +159,13 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-lame \
 		--disable-twolame \
 		--disable-nls \
 		--disable-static \
 	)
-	sed -i -e 's|-I$(OPTWARE_PREFIX)include | |g' $(@D)/Makefile $(@D)/src/Makefile
+	sed -i -e 's|-I$(OPTWARE_PREFIX)/include | |g' $(@D)/Makefile $(@D)/src/Makefile
 	$(PATCH_LIBTOOL) $(@D)/libtool
 	touch $@
 
