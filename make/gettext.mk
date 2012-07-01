@@ -139,7 +139,7 @@ $(GETTEXT_BUILD_DIR)/.configured: $(DL_DIR)/$(GETTEXT_SOURCE) $(GETTEXT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--$(GETTEXT_NLS)-nls \
 		--disable-static \
 	)
@@ -208,7 +208,7 @@ $(GETTEXT_IPK_DIR)/CONTROL/control:
 $(GETTEXT_IPK): $(GETTEXT_BUILD_DIR)/.built
 	rm -rf $(GETTEXT_IPK_DIR) $(BUILD_DIR)/gettext_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GETTEXT_BUILD_DIR) DESTDIR=$(GETTEXT_IPK_DIR) install
-	$(STRIP_COMMAND) $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so*
+	$(STRIP_COMMAND) $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so*
 #	install -d $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 755 $(GETTEXT_SOURCE_DIR)/gettext.conf $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/gettext.conf
 #	install -d $(GETTEXT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
