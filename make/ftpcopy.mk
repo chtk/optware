@@ -138,7 +138,7 @@ $(FTPCOPY_BUILD_DIR)/.configured: $(DL_DIR)/$(FTPCOPY_SOURCE) $(FTPCOPY_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -219,9 +219,9 @@ $(FTPCOPY_IPK_DIR)/CONTROL/control:
 $(FTPCOPY_IPK): $(FTPCOPY_BUILD_DIR)/.built
 	rm -rf $(FTPCOPY_IPK_DIR) $(BUILD_DIR)/ftpcopy_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FTPCOPY_BUILD_DIR) DESTDIR=$(FTPCOPY_IPK_DIR) install-strip
-	install -d $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install $(FTPCOPY_BUILD_DIR)/command/* $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/ftpcopy $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)bin/ftpls
+	install -d $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install $(FTPCOPY_BUILD_DIR)/command/* $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)/bin/ftpcopy $(FTPCOPY_IPK_DIR)$(OPTWARE_PREFIX)/bin/ftpls
 	$(MAKE) $(FTPCOPY_IPK_DIR)/CONTROL/control
 	echo $(FTPCOPY_CONFFILES) | sed -e 's/ /\n/g' > $(FTPCOPY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FTPCOPY_IPK_DIR)
