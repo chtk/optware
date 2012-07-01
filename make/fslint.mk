@@ -116,7 +116,7 @@ $(FSLINT_BUILD_DIR)/.configured: $(DL_DIR)/$(FSLINT_SOURCE) $(FSLINT_PATCHES) ma
 		then mv $(BUILD_DIR)/$(FSLINT_DIR) $(@D) ; \
 	fi
 	sed -i -e '1s|^#!.*|#!/usr/bin/env python|' $(@D)/fslint/supprt/md5sum_approx
-	find $(@D)/fslint -type f | xargs sed -i -e '1s|#!/bin/bash|#!$(OPTWARE_PREFIX)bin/bash|'
+	find $(@D)/fslint -type f | xargs sed -i -e '1s|#!/bin/bash|#!$(OPTWARE_PREFIX)/bin/bash|'
 #	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(FSLINT_CPPFLAGS)" \
@@ -125,7 +125,7 @@ $(FSLINT_BUILD_DIR)/.configured: $(DL_DIR)/$(FSLINT_SOURCE) $(FSLINT_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,12 +191,12 @@ $(FSLINT_IPK_DIR)/CONTROL/control:
 $(FSLINT_IPK): $(FSLINT_BUILD_DIR)/.built
 	rm -rf $(FSLINT_IPK_DIR) $(BUILD_DIR)/fslint_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(FSLINT_BUILD_DIR) DESTDIR=$(FSLINT_IPK_DIR) install-strip
-	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)bin
-	cp -a $(FSLINT_BUILD_DIR)/fslint/* $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -m644 $(FSLINT_BUILD_DIR)/man/fslint.1 $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fslint
-	install -m644 $(FSLINT_BUILD_DIR)/doc/* $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)share/doc/fslint/
+	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	cp -a $(FSLINT_BUILD_DIR)/fslint/* $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -m644 $(FSLINT_BUILD_DIR)/man/fslint.1 $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/fslint
+	install -m644 $(FSLINT_BUILD_DIR)/doc/* $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/fslint/
 #	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(FSLINT_SOURCE_DIR)/fslint.conf $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)etc/fslint.conf
 #	install -d $(FSLINT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
