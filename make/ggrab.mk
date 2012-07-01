@@ -188,9 +188,9 @@ $(GGRAB_IPK_DIR)/CONTROL/control:
 $(GGRAB_IPK): $(GGRAB_BUILD_DIR)/.built
 	rm -rf $(GGRAB_IPK_DIR) $(BUILD_DIR)/ggrab_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(GGRAB_BUILD_DIR) DESTDIR=$(GGRAB_IPK_DIR) install-strip
-	install -d $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(GGRAB_BUILD_DIR)/ggrab $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)bin/ggrab
-	install -m 755 $(GGRAB_BUILD_DIR)/sserver $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)bin/sserver
+	install -d $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(GGRAB_BUILD_DIR)/ggrab $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)/bin/ggrab
+	install -m 755 $(GGRAB_BUILD_DIR)/sserver $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)/bin/sserver
 #	install -d $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(GGRAB_SOURCE_DIR)/ggrab.conf $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)etc/ggrab.conf
 #	install -d $(GGRAB_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
