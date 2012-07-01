@@ -68,6 +68,7 @@ $(FREEZE_BUILD_DIR)/.configured: $(DL_DIR)/$(FREEZE_SOURCE) $(FREEZE_PATCHES) ma
 	$(FREEZE_UNZIP) $(DL_DIR)/$(FREEZE_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(FREEZE_PATCHES)" ; \
 		then cat $(FREEZE_PATCHES) | \
+		sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | \
 		patch -d $(BUILD_DIR)/$(FREEZE_DIR) -p0 ; \
 	fi
 	if test "$(BUILD_DIR)/$(FREEZE_DIR)" != "$(FREEZE_BUILD_DIR)" ; \
@@ -81,7 +82,7 @@ $(FREEZE_BUILD_DIR)/.configured: $(DL_DIR)/$(FREEZE_SOURCE) $(FREEZE_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -135,11 +136,11 @@ $(FREEZE_IPK_DIR)/CONTROL/control:
 #
 $(FREEZE_IPK): $(FREEZE_BUILD_DIR)/.built
 	rm -rf $(FREEZE_IPK_DIR) $(BUILD_DIR)/freeze_*_$(TARGET_ARCH).ipk
-	install -d $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
-	$(MAKE) -C $(FREEZE_BUILD_DIR) prefix=$(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)install
-	$(STRIP_COMMAND) $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)bin/freeze
-	$(STRIP_COMMAND) $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)bin/statist
+	install -d $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1
+	$(MAKE) -C $(FREEZE_BUILD_DIR) prefix=$(FREEZE_IPK_DIR)$(OPTWARE_PREFIX) install
+	$(STRIP_COMMAND) $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)/bin/freeze
+	$(STRIP_COMMAND) $(FREEZE_IPK_DIR)$(OPTWARE_PREFIX)/bin/statist
 	$(MAKE) $(FREEZE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(FREEZE_IPK_DIR)
 
