@@ -37,7 +37,7 @@ GIFTGNUTELLA_IPK_VERSION=1
 
 #
 # GIFTGNUTELLA_CONFFILES should be a list of user-editable files
-GIFTGNUTELLA_CONFFILES=$(OPTWARE_PREFIX)etc/gift-gnutella.conf $(OPTWARE_PREFIX)etc/init.d/SXXgift-gnutella
+GIFTGNUTELLA_CONFFILES=$(OPTWARE_PREFIX)/etc/gift-gnutella.conf $(OPTWARE_PREFIX)/etc/init.d/SXXgift-gnutella
 
 #
 # GIFTGNUTELLA_PATCHES should list any patches, in the the order in
@@ -108,11 +108,11 @@ $(GIFTGNUTELLA_BUILD_DIR)/.configured: $(DL_DIR)/$(GIFTGNUTELLA_SOURCE) $(GIFTGN
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(GIFTGNUTELLA_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(GIFTGNUTELLA_LDFLAGS)" \
 		./configure \
-		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX) \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -139,13 +139,13 @@ gift-gnutella: $(GIFTGNUTELLA_BUILD_DIR)/.built
 #
 $(GIFTGNUTELLA_BUILD_DIR).staged: $(GIFTGNUTELLA_BUILD_DIR)/.built
 	rm -f $@
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/gift-gnutella.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/libgift-gnutella.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) libgift-gnutella.so.1
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) libgift-gnutella.so
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/gift-gnutella.h $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/libgift-gnutella.a $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) libgift-gnutella.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libgift-gnutella.so.$(GIFTGNUTELLA_VERSION) libgift-gnutella.so
 	touch $@
 
 gift-gnutella-stage: $(GIFTGNUTELLA_BUILD_DIR)/.built
@@ -182,13 +182,13 @@ $(GIFTGNUTELLA_IPK_DIR)/CONTROL/control:
 #
 $(GIFTGNUTELLA_IPK): $(GIFTGNUTELLA_BUILD_DIR)/.built
 	rm -rf $(GIFTGNUTELLA_IPK_DIR) $(BUILD_DIR)/gift-gnutella_*_$(TARGET_ARCH).ipk
-	install -d $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT
-	$(STRIP_COMMAND) $(GIFTGNUTELLA_BUILD_DIR)/src/.libs/libGnutella.so -o $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libGnutella.so
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/src/.libs/libGnutella.la $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libGnutella.la
-	install -d $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/Gnutella
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/Gnutella.conf.template $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/Gnutella/Gnutella.conf.template
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/hostiles.txt $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/Gnutella/hostiles.txt
-	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/gwebcaches $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/Gnutella/gwebcaches
+	install -d $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT
+	$(STRIP_COMMAND) $(GIFTGNUTELLA_BUILD_DIR)/src/.libs/libGnutella.so -o $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT/libGnutella.so
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/src/.libs/libGnutella.la $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT/libGnutella.la
+	install -d $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/Gnutella
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/Gnutella.conf.template $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/Gnutella/Gnutella.conf.template
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/hostiles.txt $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/Gnutella/hostiles.txt
+	install -m 644 $(GIFTGNUTELLA_BUILD_DIR)/data/gwebcaches $(GIFTGNUTELLA_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/Gnutella/gwebcaches
 	install -d $(GIFTGNUTELLA_IPK_DIR)/CONTROL
 	$(MAKE) $(GIFTGNUTELLA_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFTGNUTELLA_IPK_DIR)
