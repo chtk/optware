@@ -37,7 +37,7 @@ GIFT_IPK_VERSION=5
 
 #
 # GIFT_CONFFILES should be a list of user-editable files
-GIFT_CONFFILES=$(OPTWARE_PREFIX)/share/giFT/giftd.conf $(OPTWARE_PREFIX)/etc/init.d/S30giftd /usr/sbin/giftd_wrapper
+GIFT_CONFFILES=$(OPTWARE_PREFIX)/share/giFT/giftd.conf $(OPTWARE_PREFIX)/etc/init.d/S30giftd $(OPTWARE_PREFIX)/sbin/giftd_wrapper
 
 #
 # GIFT_PATCHES should list any patches, in the the order in
