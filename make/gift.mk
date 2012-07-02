@@ -37,7 +37,7 @@ GIFT_IPK_VERSION=5
 
 #
 # GIFT_CONFFILES should be a list of user-editable files
-GIFT_CONFFILES=$(OPTWARE_PREFIX)share/giFT/giftd.conf $(OPTWARE_PREFIX)etc/init.d/S30giftd /usr/sbin/giftd_wrapper
+GIFT_CONFFILES=$(OPTWARE_PREFIX)/share/giFT/giftd.conf $(OPTWARE_PREFIX)/etc/init.d/S30giftd /usr/sbin/giftd_wrapper
 
 #
 # GIFT_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(GIFT_BUILD_DIR)/.configured: $(DL_DIR)/$(GIFT_SOURCE) $(GIFT_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-ogg=$(STAGING_PREFIX) \
 		--with-vorbis=$(STAGING_PREFIX) \
 		--disable-nls \
@@ -134,9 +134,9 @@ gift: $(GIFT_BUILD_DIR)/.built
 $(GIFT_BUILD_DIR)/.staged: $(GIFT_BUILD_DIR)/.built
 	rm -f $(GIFT_BUILD_DIR)/.staged
 	$(MAKE) -C $(GIFT_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
-	sed -i -e 's|^prefix=/opt|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libgift.pc
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgift.la $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiftproto.la
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)bin/giftd $(STAGING_DIR)$(OPTWARE_PREFIX)bin/gift-setup
+	sed -i -e 's|^prefix=$(OPTWARE_PREFIX)|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libgift.pc
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgift.la $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgiftproto.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/bin/giftd $(STAGING_DIR)$(OPTWARE_PREFIX)/bin/gift-setup
 	touch $(GIFT_BUILD_DIR)/.staged
 
 gift-stage: $(GIFT_BUILD_DIR)/.staged
@@ -174,12 +174,15 @@ $(GIFT_IPK_DIR)/CONTROL/control:
 $(GIFT_IPK): $(GIFT_BUILD_DIR)/.built
 	rm -rf $(GIFT_IPK_DIR) $(BUILD_DIR)/gift_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GIFT_BUILD_DIR) DESTDIR=$(GIFT_IPK_DIR) install-strip
-	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(GIFT_SOURCE_DIR)/S30giftd $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S30giftd
-	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	install -m 755 $(GIFT_SOURCE_DIR)/giftd_wrapper $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(GIFT_SOURCE_DIR)/S30giftd $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S30giftd
+	install -d $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	install -m 755 $(GIFT_SOURCE_DIR)/giftd_wrapper $(GIFT_IPK_DIR)$(OPTWARE_PREFIX)/sbin
 	install -d $(GIFT_IPK_DIR)/CONTROL
 	$(MAKE) $(GIFT_IPK_DIR)/CONTROL/control
+	for f in $(subst $(OPTWARE_PREFIX),$(GIFT_IPK_DIR)$(OPTWARE_PREFIX),$(GIFT_CONFFILES)); do \
+		[ -f $$f ] && sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" $$f || true; \
+	done
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFT_IPK_DIR)
 
 #
