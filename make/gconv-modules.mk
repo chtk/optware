@@ -106,7 +106,7 @@ else
     endif
 endif
 	$(MAKE) $(GCONV_MODULES_IPK_DIR)/CONTROL/control
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(subst $(OPTWARE_PREFIX),$(GCONV_MODULES_IPK_DIR)$(OPTWARE_PREFIX),$(GCONV_MODULES_CONFFILES)) \
 		$(GCONV_MODULES_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05gconv-modules \
 		$(GCONV_MODULES_IPK_DIR)/CONTROL/postinst

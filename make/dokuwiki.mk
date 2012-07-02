@@ -155,7 +155,7 @@ $(DOKUWIKI_IPK): $(DOKUWIKI_BUILD_DIR)/.configured
 	cp -a $(DOKUWIKI_BUILD_DIR)/* $(DOKUWIKI_IPK_DIR)$(OPTWARE_PREFIX)/share/www/dokuwiki	
 	$(MAKE) $(DOKUWIKI_IPK_DIR)/CONTROL/control
 	install -m 755 $(DOKUWIKI_SOURCE_DIR)/postinst $(DOKUWIKI_IPK_DIR)/CONTROL/postinst
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(DOKUWIKI_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(DOKUWIKI_SOURCE_DIR)/prerm $(DOKUWIKI_IPK_DIR)/CONTROL/prerm
 	#echo $(DOKUWIKI_CONFFILES) | sed -e 's/ /\n/g' > $(DOKUWIKI_IPK_DIR)/CONTROL/conffiles

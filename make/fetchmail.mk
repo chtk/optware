@@ -209,7 +209,7 @@ $(FETCHMAIL_IPK): $(FETCHMAIL_BUILD_DIR)/.built
 	install -m 644 $(FETCHMAIL_SOURCE_DIR)/postinst $(FETCHMAIL_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FETCHMAIL_SOURCE_DIR)/prerm $(FETCHMAIL_IPK_DIR)/CONTROL/prerm
 	echo $(FETCHMAIL_CONFFILES) | sed -e 's/ /\n/g' > $(FETCHMAIL_IPK_DIR)/CONTROL/conffiles
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(subst $(OPTWARE_PREFIX),$(FETCHMAIL_IPK_DIR)$(OPTWARE_PREFIX),$(FETCHMAIL_CONFFILES)) \
 		$(FETCHMAIL_IPK_DIR)/CONTROL/postinst \
 		$(FETCHMAIL_IPK_DIR)/CONTROL/prerm

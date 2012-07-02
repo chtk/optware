@@ -113,7 +113,7 @@ $(DROPBEAR_IPK): $(DROPBEAR_BUILD_DIR)/.built
                         $(DROPBEAR_IPK_DIR)/CONTROL/postinst $(DROPBEAR_IPK_DIR)/CONTROL/prerm; \
         fi
 	echo $(DROPBEAR_CONFFILES) | sed -e 's/ /\n/g' > $(DROPBEAR_IPK_DIR)/CONTROL/conffiles
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(subst $(OPTWARE_PREFIX),$(DROPBEAR_IPK_DIR)$(OPTWARE_PREFIX), $(DROPBEAR_CONFFILES)) \
 		$(DROPBEAR_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S51dropbear \
 		$(DROPBEAR_IPK_DIR)/CONTROL/prerm \

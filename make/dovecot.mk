@@ -248,7 +248,7 @@ $(DOVECOT_IPK): $(DOVECOT_BUILD_DIR)/.built
 	echo $(DOVECOT_CONFFILES) | sed -e 's/ /\n/g' > $(DOVECOT_IPK_DIR)/CONTROL/conffiles
 	rm -rf $(DOVECOT_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/dovecot
 	echo $(DOVECOT_CONFFILES) | sed -e 's/ /\n/g' > $(DOVECOT_IPK_DIR)/CONTROL/conffiles
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(DOVECOT_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S90dovecot \
 		$(DOVECOT_IPK_DIR)/CONTROL/prerm \
 		$(DOVECOT_IPK_DIR)/CONTROL/postinst

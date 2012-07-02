@@ -165,7 +165,7 @@ endif
 #	install -m 755 $(DRRAW_SOURCE_DIR)/prerm $(DRRAW_IPK_DIR)/CONTROL/prerm
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(DRRAW_IPK_DIR)/CONTROL/prerm
 	echo $(DRRAW_CONFFILES) | sed -e 's/ /\n/g' > $(DRRAW_IPK_DIR)/CONTROL/conffiles
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(subst $(OPTWARE_PREFIX),$(DRRAW_IPK_DIR)$(OPTWARE_PREFIX),$(DRRAW_CONFFILES)) \
 		$(DRRAW_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(DRRAW_IPK_DIR)

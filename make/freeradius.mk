@@ -245,7 +245,7 @@ $(FREERADIUS_IPK): $(FREERADIUS_BUILD_DIR)/.built
 	$(MAKE) $(FREERADIUS_IPK_DIR)/CONTROL/control
 	install -m 644 $(FREERADIUS_SOURCE_DIR)/postinst $(FREERADIUS_IPK_DIR)/CONTROL/postinst
 	install -m 644 $(FREERADIUS_SOURCE_DIR)/prerm $(FREERADIUS_IPK_DIR)/CONTROL/prerm
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)/doc/.radius/raddb/radiusd.conf \
 		$(FREERADIUS_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S55freeradius \
 		$(FREERADIUS_IPK_DIR)/CONTROL/postinst \

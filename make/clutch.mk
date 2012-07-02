@@ -208,7 +208,7 @@ $(CLUTCH_IPK): $(CLUTCH_BUILD_DIR)/.built
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
 			$(CLUTCH_IPK_DIR)/CONTROL/postinst $(CLUTCH_IPK_DIR)/CONTROL/prerm; \
 	fi
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt,$(OPTWARE_PREFIX),g" \
 		$(subst $(OPTWARE_PREFIX), $(CLUTCH_IPK_DIR)$(OPTWARE_PREFIX), $(CLUTCH_CONFFILES)) \
 		$(CLUTCH_IPK_DIR)/CONTROL/postinst
 	echo $(CLUTCH_CONFFILES) | sed -e 's/ /\n/g' > $(CLUTCH_IPK_DIR)/CONTROL/conffiles
