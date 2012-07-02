@@ -38,7 +38,7 @@ GIFTFASTTRACK_IPK_VERSION=1
 
 #
 # GIFTFASTTRACK_CONFFILES should be a list of user-editable files
-GIFTFASTTRACK_CONFFILES=$(OPTWARE_PREFIX)etc/giFT-FastTrack.conf $(OPTWARE_PREFIX)etc/init.d/SXXgiFT-FastTrack
+GIFTFASTTRACK_CONFFILES=$(OPTWARE_PREFIX)/etc/giFT-FastTrack.conf $(OPTWARE_PREFIX)/etc/init.d/SXXgiFT-FastTrack
 
 #
 # GIFTFASTTRACK_PATCHES should list any patches, in the the order in
@@ -111,7 +111,7 @@ $(GIFTFASTTRACK_BUILD_DIR)/.configured: $(DL_DIR)/$(GIFTFASTTRACK_SOURCE) $(GIFT
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $(GIFTFASTTRACK_BUILD_DIR)/.configured
@@ -131,16 +131,16 @@ gift-fasttrack: $(GIFTFASTTRACK_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION): $(GIFTFASTTRACK_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/giFT-FastTrack.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/libgiFT-FastTrack.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) libgiFT-FastTrack.so.1
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) libgiFT-FastTrack.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION): $(GIFTFASTTRACK_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/giFT-FastTrack.h $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/libgiFT-FastTrack.a $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) libgiFT-FastTrack.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION) libgiFT-FastTrack.so
 
-giFT-FastTrack-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION)
+giFT-FastTrack-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgiFT-FastTrack.so.$(GIFTFASTTRACK_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -174,13 +174,13 @@ $(GIFTFASTTRACK_IPK_DIR)/CONTROL/control:
 #
 $(GIFTFASTTRACK_IPK): $(GIFTFASTTRACK_BUILD_DIR)/.built
 	rm -rf $(GIFTFASTTRACK_IPK_DIR) $(BUILD_DIR)/gift-fasttrack_*_$(TARGET_ARCH).ipk
-	install -d $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT
-	$(STRIP_COMMAND) $(GIFTFASTTRACK_BUILD_DIR)/src/.libs/libFastTrack.so -o $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libFastTrack.so
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/src/.libs/libFastTrack.la $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)lib/giFT/libFastTrack.la
-	install -d $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/FastTrack
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/FastTrack.conf.template $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/FastTrack/FastTrack.conf.template
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/banlist $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/FastTrack/banlist
-	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/nodes $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)share/giFT/FastTrack/nodes
+	install -d $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT
+	$(STRIP_COMMAND) $(GIFTFASTTRACK_BUILD_DIR)/src/.libs/libFastTrack.so -o $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT/libFastTrack.so
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/src/.libs/libFastTrack.la $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/lib/giFT/libFastTrack.la
+	install -d $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/FastTrack
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/FastTrack.conf.template $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/FastTrack/FastTrack.conf.template
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/banlist $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/FastTrack/banlist
+	install -m 644 $(GIFTFASTTRACK_BUILD_DIR)/data/nodes $(GIFTFASTTRACK_IPK_DIR)$(OPTWARE_PREFIX)/share/giFT/FastTrack/nodes
 	install -d $(GIFTFASTTRACK_IPK_DIR)/CONTROL
 	$(MAKE) $(GIFTFASTTRACK_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIFTFASTTRACK_IPK_DIR)
