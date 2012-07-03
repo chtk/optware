@@ -46,7 +46,7 @@ GKRELLMD_IPK_VERSION=3
 
 #
 # GKRELLMD_CONFFILES should be a list of user-editable files
-GKRELLMD_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S60gkrellmd
+GKRELLMD_CONFFILES=$(OPTWARE_PREFIX)/etc/init.d/S60gkrellmd
 
 #
 # GKRELLMD_PATCHES should list any patches, in the the order in
@@ -183,9 +183,9 @@ $(GKRELLMD_IPK_DIR)/CONTROL/control:
 #
 $(GKRELLMD_IPK): $(GKRELLMD_BUILD_DIR)/.built
 	rm -rf $(GKRELLMD_IPK_DIR) $(BUILD_DIR)/gkrellmd_*_$(TARGET_ARCH).ipk
-	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)sbin $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	$(STRIP_COMMAND) $(GKRELLMD_BUILD_DIR)/server/gkrellmd -o $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)sbin/gkrellmd
-	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S60gkrellmd
+	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)/sbin $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	$(STRIP_COMMAND) $(GKRELLMD_BUILD_DIR)/server/gkrellmd -o $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/gkrellmd
+	install -m 755 $(GKRELLMD_SOURCE_DIR)/rc.gkrellmd $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S60gkrellmd
 #	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(GKRELLMD_SOURCE_DIR)/gkrellmd.conf $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/gkrellmd.conf
 #	install -d $(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
@@ -201,6 +201,8 @@ $(GKRELLMD_IPK): $(GKRELLMD_BUILD_DIR)/.built
 			$(GKRELLMD_IPK_DIR)/CONTROL/postinst $(GKRELLMD_IPK_DIR)/CONTROL/prerm; \
 	fi
 	echo $(GKRELLMD_CONFFILES) | sed -e 's/ /\n/g' > $(GKRELLMD_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(GKRELLMD_IPK_DIR)$(OPTWARE_PREFIX),$(GKRELLMD_CONFFILES))
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GKRELLMD_IPK_DIR)
 
 #
