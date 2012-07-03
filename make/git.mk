@@ -171,6 +171,7 @@ endif
 	$(GIT_UNZIP) $(DL_DIR)/$(GIT_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(GIT_PATCHES)" ; \
 		then cat $(GIT_PATCHES) | \
+		sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | \
 		patch -d $(BUILD_DIR)/$(GIT_DIR) -p1 ; \
 	fi
 	if test "$(BUILD_DIR)/$(GIT_DIR)" != "$(GIT_BUILD_DIR)" ; \
@@ -184,7 +185,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -210,7 +211,7 @@ $(GIT_BUILD_DIR)/.built: $(GIT_BUILD_DIR)/.configured
 		NO_TCLTK=true \
 		$$GIT_NSEC \
 		$(GIT_MAKE_FLAGS) \
-		prefix=$(OPTWARE_PREFIX)all strip
+		prefix=$(OPTWARE_PREFIX) all strip
 	touch $@
 
 #
@@ -230,6 +231,7 @@ endif
 	$(GIT_UNZIP) $(DL_DIR)/$(GIT-LITE_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	if test -n "$(GIT_PATCHES)" ; \
 		then cat $(GIT-LITE_PATCHES) | \
+		sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | \
 		patch -d $(BUILD_DIR)/$(GIT-LITE_DIR) -p1 ; \
 	fi
 	if test "$(BUILD_DIR)/$(GIT-LITE_DIR)" != "$(@D)" ; \
@@ -247,7 +249,7 @@ endif
 		NO_TCLTK=true \
 		$$GIT_NSEC \
 		$(GIT_MAKE_FLAGS) \
-		prefix=$(OPTWARE_PREFIX)all strip
+		prefix=$(OPTWARE_PREFIX) all strip
 	touch $@
 #
 # If you are building a library, then you need to stage it too.
@@ -348,16 +350,16 @@ $(GIT_IPK): $(GIT_BUILD_DIR)/.built
 		NO_TCLTK=true \
 		$$GIT_NSEC \
 		$(GIT_MAKE_FLAGS) \
-		prefix=$(OPTWARE_PREFIX)\
+		prefix=$(OPTWARE_PREFIX) \
 		install
 ifneq (,$(filter perl, $(PACKAGES)))
-	for f in `find $(GIT_IPK_DIR)$(OPTWARE_PREFIX)lib -name perllocal.pod`; \
+	for f in `find $(GIT_IPK_DIR)$(OPTWARE_PREFIX)/lib -name perllocal.pod`; \
 		do mv $$f $$f.git; done
 endif
-	rm -f $(GIT_IPK_DIR)$(OPTWARE_PREFIX)bin/git
-	ln -s ../libexec/git-core/git $(GIT_IPK_DIR)$(OPTWARE_PREFIX)bin/git
-	install -d $(GIT_IPK_DIR)$(OPTWARE_PREFIX)etc/bash_completion.d
-	install $(<D)/contrib/completion/git-completion.bash $(GIT_IPK_DIR)$(OPTWARE_PREFIX)etc/bash_completion.d
+	rm -f $(GIT_IPK_DIR)$(OPTWARE_PREFIX)/bin/git
+	ln -s ../libexec/git-core/git $(GIT_IPK_DIR)$(OPTWARE_PREFIX)/bin/git
+	install -d $(GIT_IPK_DIR)$(OPTWARE_PREFIX)/etc/bash_completion.d
+	install $(<D)/contrib/completion/git-completion.bash $(GIT_IPK_DIR)$(OPTWARE_PREFIX)/etc/bash_completion.d
 	$(MAKE) $(GIT_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIT_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(GIT_IPK_DIR)
@@ -378,22 +380,22 @@ $(GIT-LITE_IPK): $(GIT-LITE_BUILD_DIR)/.built
 		BUILT_INS= \
 		$$GIT_NSEC \
 		$(GIT_MAKE_FLAGS) \
-		prefix=$(OPTWARE_PREFIX)\
+		prefix=$(OPTWARE_PREFIX) \
 		install
-	( cd $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)bin ; \
+	( cd $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)/bin ; \
 	  rm -f git-cvsserver git-receive-pack git-shell git-upload-archive git-upload-pack git-remote-* )
-	rm -f $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)bin/git
-	ln -s ../libexec/git-core/git $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)bin/git
-	rm -rf $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)lib
-	rm -rf $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)share/man
+	rm -f $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)/bin/git
+	ln -s ../libexec/git-core/git $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)/bin/git
+	rm -rf $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	rm -rf $(GIT-LITE_IPK_DIR)$(OPTWARE_PREFIX)/share/man
 	$(MAKE) $(GIT-LITE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIT-LITE_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(GIT-LITE_IPK_DIR)
 
 $(GIT-MANPAGES_IPK): $(DL_DIR)/$(GIT-MANPAGES_SOURCE)
 	rm -rf $(GIT-MANPAGES_IPK_DIR) $(BUILD_DIR)/git-manpages_*_$(TARGET_ARCH).ipk
-	install -d $(GIT-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)man
-	tar -xzvf $(DL_DIR)/$(GIT-MANPAGES_SOURCE) -C $(GIT-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)man
+	install -d $(GIT-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)/man
+	tar -xzvf $(DL_DIR)/$(GIT-MANPAGES_SOURCE) -C $(GIT-MANPAGES_IPK_DIR)$(OPTWARE_PREFIX)/man
 	$(MAKE) $(GIT-MANPAGES_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GIT-MANPAGES_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(GIT-MANPAGES_IPK_DIR)
