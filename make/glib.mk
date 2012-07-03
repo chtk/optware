@@ -104,7 +104,7 @@ $(GLIB_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(GLIB_SOURCE) make/gl
 	mv $(HOST_BUILD_DIR)/$(GLIB_DIR) $(@D)
 	(cd $(@D); \
 		./configure \
-		--prefix=/opt	\
+		--prefix=$(OPTWARE_PREFIX) \
 	)
 	$(MAKE) -C $(@D)
 	touch $@
@@ -166,7 +166,7 @@ endif
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
 		--cache-file=arm.cache \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		$(GLIB_CONFIG_OPT) \
 		--disable-nls \
 		--disable-static \
@@ -197,13 +197,13 @@ glib: $(GLIB_BUILD_DIR)/.built
 #
 $(GLIB_BUILD_DIR)/.staged: $(GLIB_BUILD_DIR)/.built
 	rm -f $@
-	$(MAKE) -C $(@D) install-strip prefix=$(STAGING_DIR)/opt
+	$(MAKE) -C $(@D) install-strip prefix=$(STAGING_DIR)$(OPTWARE_PREFIX)
 	install $(@D)/glibconfig.h $(STAGING_INCLUDE_DIR)/glib-2.0/
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgio-2.0.la
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libglib-2.0.la
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgmodule-2.0.la
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgobject-2.0.la
-	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libgthread-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgio-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libglib-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgmodule-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgobject-2.0.la
+	rm -rf $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libgthread-2.0.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' \
                -e 's|glib_mkenums=.*|glib_mkenums=$${prefix}/bin/glib-mkenums|' \
 		$(STAGING_LIB_DIR)/pkgconfig/gio*-2.0.pc \
@@ -248,9 +248,9 @@ $(GLIB_IPK_DIR)/CONTROL/control:
 #
 $(GLIB_IPK): $(GLIB_BUILD_DIR)/.built
 	rm -rf $(GLIB_IPK_DIR) $(BUILD_DIR)/glib_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(GLIB_BUILD_DIR) install-strip prefix=$(GLIB_IPK_DIR)/opt
-	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)share/gtk-doc
-	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)man
+	$(MAKE) -C $(GLIB_BUILD_DIR) install-strip prefix=$(GLIB_IPK_DIR)$(OPTWARE_PREFIX)
+	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)/share/gtk-doc
+	rm -rf $(GLIB_IPK_DIR)$(OPTWARE_PREFIX)/man
 	$(MAKE) $(GLIB_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GLIB_IPK_DIR)
 
