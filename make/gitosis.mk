@@ -121,9 +121,9 @@ $(GITOSIS_BUILD_DIR)/.configured: $(DL_DIR)/gitosis-$(GITOSIS_VERSION).tar.gz ma
 	(cd $(@D)/2.5; \
 		( \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.5"; \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.5"; \
 		echo "[install]"; \
-		echo "install_scripts=$(OPTWARE_PREFIX)bin"; \
+		echo "install_scripts=$(OPTWARE_PREFIX)/bin"; \
 		) > setup.cfg \
 	)
 	touch $@
@@ -191,12 +191,14 @@ $(GITOSIS_IPK): $(GITOSIS_BUILD_DIR)/.built
 	cd $(<D)/2.5; \
 		PYTHONPATH=$(STAGING_LIB_DIR)/python2.5/site-packages \
 		$(HOST_STAGING_PREFIX)/bin/python2.5 setup.py install \
-		--root=$(GITOSIS_IPK_DIR) --prefix=/opt
-	install -d $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/gitosis
-	install $(<D)/2.5/[CMRT]* $(<D)/2.5/example.conf $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/gitosis/
+		--root=$(GITOSIS_IPK_DIR) --prefix=$(OPTWARE_PREFIX)
+	install -d $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/gitosis
+	install $(<D)/2.5/[CMRT]* $(<D)/2.5/example.conf $(GITOSIS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/gitosis/
 	$(MAKE) $(GITOSIS_IPK_DIR)/CONTROL/control
 	install -m 755 $(GITOSIS_SOURCE_DIR)/postinst $(GITOSIS_IPK_DIR)/CONTROL/postinst
 	echo $(GITOSIS_CONFFILES) | sed -e 's/ /\n/g' > $(GITOSIS_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(GITOSIS_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GITOSIS_IPK_DIR)
 
 #
