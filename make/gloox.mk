@@ -126,7 +126,7 @@ $(GLOOX_BUILD_DIR)/.configured: $(DL_DIR)/$(GLOOX_SOURCE) $(GLOOX_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -208,10 +208,10 @@ $(GLOOX_IPK): $(GLOOX_BUILD_DIR)/.built
 	rm -rf $(GLOOX_IPK_DIR) $(BUILD_DIR)/gloox_*_$(TARGET_ARCH).ipk
 	rm -rf $(GLOOX-DEV_IPK_DIR) $(BUILD_DIR)/gloox-dev_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GLOOX_BUILD_DIR) DESTDIR=$(GLOOX_IPK_DIR) install-strip
-	install -d $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
-	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)include $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)
-	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
-	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
+	install -d $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)/include $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)/lib/pkgconfig $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)/lib/
+	mv $(GLOOX_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la $(GLOOX-DEV_IPK_DIR)$(OPTWARE_PREFIX)/lib/
 	$(MAKE) $(GLOOX-DEV_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GLOOX-DEV_IPK_DIR)
 	$(MAKE) $(GLOOX_IPK_DIR)/CONTROL/control
