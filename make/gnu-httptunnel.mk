@@ -123,7 +123,7 @@ $(GNU_HTTPTUNNEL_BUILD_DIR)/.configured: $(DL_DIR)/$(GNU_HTTPTUNNEL_SOURCE) $(GN
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -189,7 +189,7 @@ $(GNU_HTTPTUNNEL_IPK_DIR)/CONTROL/control:
 $(GNU_HTTPTUNNEL_IPK): $(GNU_HTTPTUNNEL_BUILD_DIR)/.built
 	rm -rf $(GNU_HTTPTUNNEL_IPK_DIR) $(BUILD_DIR)/gnu-httptunnel_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GNU_HTTPTUNNEL_BUILD_DIR) DESTDIR=$(GNU_HTTPTUNNEL_IPK_DIR) install
-	$(STRIP_COMMAND) $(GNU_HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)bin/ht*
+	$(STRIP_COMMAND) $(GNU_HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)/bin/ht*
 #	install -d $(GNU_HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(GNU_HTTPTUNNEL_SOURCE_DIR)/gnu-httptunnel.conf $(GNU_HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/gnu-httptunnel.conf
 #	install -d $(GNU_HTTPTUNNEL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
