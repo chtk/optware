@@ -125,12 +125,12 @@ $(GNUPG1_BUILD_DIR)/.configured: $(DL_DIR)/$(GNUPG1_SOURCE) $(GNUPG1_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-libusb=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-readline=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-libcurl=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-ldap=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--prefix=$(OPTWARE_PREFIX)\
+		--with-libusb=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-zlib=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-readline=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-libcurl=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-ldap=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		$(GNUPG1_CFG_OPTS) \
 	)
@@ -195,7 +195,7 @@ $(GNUPG1_IPK_DIR)/CONTROL/control:
 $(GNUPG1_IPK): $(GNUPG1_BUILD_DIR)/.built
 	rm -rf $(GNUPG1_IPK_DIR) $(BUILD_DIR)/gnupg1_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(<D) DESTDIR=$(GNUPG1_IPK_DIR) install-strip
-	mv $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)share/gnupg $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)share/gnupg1
+	mv $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)/share/gnupg $(GNUPG1_IPK_DIR)$(OPTWARE_PREFIX)/share/gnupg1
 	$(MAKE) $(GNUPG1_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GNUPG1_IPK_DIR)
 
