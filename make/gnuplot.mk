@@ -137,7 +137,7 @@ endif
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(GNUPLOT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(GNUPLOT_LDFLAGS)" \
-		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)bin:${PATH}" \
+		PATH="$(STAGING_DIR)$(OPTWARE_PREFIX)/bin:${PATH}" \
 		PKG_CONFIG_PATH="$(STAGING_LIB_DIR)/pkgconfig" \
 		PKG_CONFIG_LIBDIR="$(STAGING_LIB_DIR)/pkgconfig" \
 		./configure \
@@ -145,13 +145,13 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--without-x   \
-		--with-readline=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-png=$(STAGING_DIR)$(OPTWARE_PREFIX)\
-		--with-gd=$(STAGING_DIR)$(OPTWARE_PREFIX)\
+		--with-readline=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-png=$(STAGING_DIR)$(OPTWARE_PREFIX) \
+		--with-gd=$(STAGING_DIR)$(OPTWARE_PREFIX) \
 		--without-lisp-files \
 		--without-tutorial \
 		--disable-wxwidgets \
