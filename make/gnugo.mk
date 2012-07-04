@@ -105,7 +105,7 @@ $(GNUGO_HOST_BUILD_DIR)/.built: host/.configured $(DL_DIR)/$(GNUGO_SOURCE) make/
 	fi
 	(cd $(GNUGO_HOST_BUILD_DIR); \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -156,7 +156,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -222,8 +222,8 @@ $(GNUGO_IPK_DIR)/CONTROL/control:
 $(GNUGO_IPK): $(GNUGO_BUILD_DIR)/.built
 	rm -rf $(GNUGO_IPK_DIR) $(BUILD_DIR)/gnugo_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GNUGO_BUILD_DIR) DESTDIR=$(GNUGO_IPK_DIR) install
-	$(STRIP_COMMAND) $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)bin/gnugo
-	rm -f $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	$(STRIP_COMMAND) $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)/bin/gnugo
+	rm -f $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)/info/dir $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)/info/dir.old
 #	install -d $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(GNUGO_SOURCE_DIR)/gnugo.conf $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)etc/gnugo.conf
 #	install -d $(GNUGO_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
