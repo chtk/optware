@@ -126,7 +126,7 @@ $(HASERL_BUILD_DIR)/.configured: $(DL_DIR)/$(HASERL_SOURCE) $(HASERL_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--with-lua \
@@ -149,7 +149,7 @@ $(HASERL_BUILD_DIR)/.configured: $(DL_DIR)/$(HASERL_SOURCE) $(HASERL_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--without-lua \
@@ -220,10 +220,10 @@ $(HASERL_IPK_DIR)/CONTROL/control:
 $(HASERL_IPK): $(HASERL_BUILD_DIR)/.built
 	rm -rf $(HASERL_IPK_DIR) $(BUILD_DIR)/haserl_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HASERL_BUILD_DIR)/with-lua DESTDIR=$(HASERL_IPK_DIR) install-strip
-	mv $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)bin/haserl $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)bin/haserl-with-lua
-	install $(HASERL_BUILD_DIR)/without-lua/src/haserl $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)bin/haserl-without-lua
-	$(STRIP_COMMAND) $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)bin/haserl-without-lua
-	cd $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)bin && ln -sf haserl-without-lua haserl
+	mv $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)/bin/haserl $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)/bin/haserl-with-lua
+	install $(HASERL_BUILD_DIR)/without-lua/src/haserl $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)/bin/haserl-without-lua
+	$(STRIP_COMMAND) $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)/bin/haserl-without-lua
+	cd $(HASERL_IPK_DIR)$(OPTWARE_PREFIX)/bin && ln -sf haserl-without-lua haserl
 	$(MAKE) $(HASERL_IPK_DIR)/CONTROL/control
 	echo $(HASERL_CONFFILES) | sed -e 's/ /\n/g' > $(HASERL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HASERL_IPK_DIR)
