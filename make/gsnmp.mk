@@ -124,7 +124,7 @@ $(GSNMP_BUILD_DIR)/.configured: $(DL_DIR)/$(GSNMP_SOURCE) $(GSNMP_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -191,8 +191,8 @@ $(GSNMP_IPK_DIR)/CONTROL/control:
 $(GSNMP_IPK): $(GSNMP_BUILD_DIR)/.built
 	rm -rf $(GSNMP_IPK_DIR) $(BUILD_DIR)/gsnmp_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GSNMP_BUILD_DIR) DESTDIR=$(GSNMP_IPK_DIR) install
-	$(STRIP_COMMAND) $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)bin/gsnmp-get \
-	    $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)lib/libgsnmp.so.[0-9]*.[0-9]*.[0-9]*
+	$(STRIP_COMMAND) $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)/bin/gsnmp-get \
+	    $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)/lib/libgsnmp.so.[0-9]*.[0-9]*.[0-9]*
 #	install -d $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(GSNMP_SOURCE_DIR)/gsnmp.conf $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)etc/gsnmp.conf
 #	install -d $(GSNMP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
