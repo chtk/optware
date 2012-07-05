@@ -121,7 +121,7 @@ $(XFIXES_BUILD_DIR)/.configured: $(DL_DIR)/xfixes-$(XFIXES_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	touch $@
@@ -169,7 +169,7 @@ $(XFIXES_IPK): $(XFIXES_BUILD_DIR)/.built
 	rm -rf $(XFIXES_IPK_DIR) $(BUILD_DIR)/xfixes_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(XFIXES_BUILD_DIR) DESTDIR=$(XFIXES_IPK_DIR) install-strip
 	$(MAKE) $(XFIXES_IPK_DIR)/CONTROL/control
-	rm -f $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(XFIXES_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(XFIXES_IPK_DIR)
 
 #
