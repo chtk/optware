@@ -124,10 +124,10 @@ $(GPGME_BUILD_DIR)/.configured: $(DL_DIR)/$(GPGME_SOURCE) $(GPGME_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-gpg-error-prefix=$(STAGING_PREFIX) \
-		--with-gpg=$(OPTWARE_PREFIX)bin/gpg \
-		--with-gpgsm=$(OPTWARE_PREFIX)bin/gpgsm \
+		--with-gpg=$(OPTWARE_PREFIX)/bin/gpg \
+		--with-gpgsm=$(OPTWARE_PREFIX)/bin/gpgsm \
 		--with-pth=$(STAGING_PREFIX) \
 		--without-pth-test \
 		--disable-nls \
