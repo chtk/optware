@@ -99,7 +99,7 @@ $(GZIP_BUILD_DIR)/.configured: $(DL_DIR)/$(GZIP_SOURCE) $(GZIP_PATCHES) make/gzi
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -151,21 +151,21 @@ $(GZIP_IPK_DIR)/CONTROL/control:
 #
 $(GZIP_IPK): $(GZIP_BUILD_DIR)/.built
 	rm -rf $(GZIP_IPK_DIR) $(BUILD_DIR)/gzip_*_$(TARGET_ARCH).ipk
-	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)lib
-	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)info
-	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	$(MAKE) -C $(GZIP_BUILD_DIR) prefix=$(GZIP_IPK_DIR)$(OPTWARE_PREFIX)install
+	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)/info
+	install -d $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	$(MAKE) -C $(GZIP_BUILD_DIR) prefix=$(GZIP_IPK_DIR)$(OPTWARE_PREFIX) install
 	$(MAKE) $(GZIP_IPK_DIR)/CONTROL/control
 	echo "#!/bin/sh" > $(GZIP_IPK_DIR)/CONTROL/postinst
 	echo "#!/bin/sh" > $(GZIP_IPK_DIR)/CONTROL/prerm
-	cd $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)bin; \
+	cd $(GZIP_IPK_DIR)$(OPTWARE_PREFIX)/bin; \
 	for f in gunzip gzip zcat; do \
 	    mv $$f gzip-$$f; \
 	    $(STRIP_COMMAND) gzip-$$f; \
-	    echo "update-alternatives --install $(OPTWARE_PREFIX)bin/$$f $$f $(OPTWARE_PREFIX)bin/gzip-$$f 80" \
+	    echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/$$f $$f $(OPTWARE_PREFIX)/bin/gzip-$$f 80" \
 		>> $(GZIP_IPK_DIR)/CONTROL/postinst; \
-	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)bin/gzip-$$f" \
+	    echo "update-alternatives --remove $$f $(OPTWARE_PREFIX)/bin/gzip-$$f" \
 		>> $(GZIP_IPK_DIR)/CONTROL/prerm; \
 	done
 	if test -n "$(UPD-ALT_PREFIX)"; then \
