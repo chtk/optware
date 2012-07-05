@@ -129,7 +129,7 @@ $(HD2U_BUILD_DIR)/.configured: $(DL_DIR)/$(HD2U_SOURCE) $(HD2U_PATCHES) make/hd2
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -199,11 +199,11 @@ $(HD2U_IPK): $(HD2U_BUILD_DIR)/.built
 	rm -rf $(HD2U_IPK_DIR) $(BUILD_DIR)/hd2u_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HD2U_BUILD_DIR) install \
 		DESTDIR=$(HD2U_IPK_DIR) \
-		prefix=$(HD2U_IPK_DIR)$(OPTWARE_PREFIX)\
+		prefix=$(HD2U_IPK_DIR)$(OPTWARE_PREFIX) \
 		;
-	$(STRIP_COMMAND) $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	mv $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)bin/dos2unix $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)bin/hd2u-dos2unix
-	install -d $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)share/doc/hd2u
+	$(STRIP_COMMAND) $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	mv $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)/bin/dos2unix $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)/bin/hd2u-dos2unix
+	install -d $(HD2U_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/hd2u
 	install $(HD2U_BUILD_DIR)/AUTHORS \
 		$(HD2U_BUILD_DIR)/ChangeLog \
 		$(HD2U_BUILD_DIR)/COPYING \
@@ -212,13 +212,13 @@ $(HD2U_IPK): $(HD2U_BUILD_DIR)/.built
 		$(HD2U_BUILD_DIR)/NEWS \
 		$(HD2U_BUILD_DIR)/README \
 		$(HD2U_BUILD_DIR)/TODO \
-		$(HD2U_IPK_DIR)$(OPTWARE_PREFIX)share/doc/hd2u/
+		$(HD2U_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/hd2u/
 	$(MAKE) $(HD2U_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/dos2unix dos2unix $(OPTWARE_PREFIX)bin/hd2u-dos2unix 60"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/dos2unix dos2unix $(OPTWARE_PREFIX)/bin/hd2u-dos2unix 60"; \
 	) > $(HD2U_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove dos2unix $(OPTWARE_PREFIX)bin/hd2u-dos2unix"; \
+	 echo "update-alternatives --remove dos2unix $(OPTWARE_PREFIX)/bin/hd2u-dos2unix"; \
 	) > $(HD2U_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
