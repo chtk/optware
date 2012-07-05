@@ -125,7 +125,7 @@ $(HAPROXY_BUILD_DIR)/.configured: $(DL_DIR)/$(HAPROXY_SOURCE) $(HAPROXY_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -198,12 +198,12 @@ $(HAPROXY_IPK_DIR)/CONTROL/control:
 $(HAPROXY_IPK): $(HAPROXY_BUILD_DIR)/.built
 	rm -rf $(HAPROXY_IPK_DIR) $(BUILD_DIR)/haproxy_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(HAPROXY_BUILD_DIR) DESTDIR=$(HAPROXY_IPK_DIR) install-strip
-	install -d $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	install -m 755 $(HAPROXY_BUILD_DIR)/haproxy $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)sbin/
-	$(STRIP_COMMAND) $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)sbin/haproxy
-	install -d $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)share/haproxy/
-	cp -r $(HAPROXY_BUILD_DIR)/doc $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)share/haproxy/
-	cp -r $(HAPROXY_BUILD_DIR)/examples $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)share/haproxy/
+	install -d $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	install -m 755 $(HAPROXY_BUILD_DIR)/haproxy $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/sbin/
+	$(STRIP_COMMAND) $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/sbin/haproxy
+	install -d $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/share/haproxy/
+	cp -r $(HAPROXY_BUILD_DIR)/doc $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/share/haproxy/
+	cp -r $(HAPROXY_BUILD_DIR)/examples $(HAPROXY_IPK_DIR)$(OPTWARE_PREFIX)/share/haproxy/
 	$(MAKE) $(HAPROXY_IPK_DIR)/CONTROL/control
 	echo $(HAPROXY_CONFFILES) | sed -e 's/ /\n/g' > $(HAPROXY_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HAPROXY_IPK_DIR)
