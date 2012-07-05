@@ -144,7 +144,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		$(GSASL_CONFIG_OPTS) \
 		--disable-rpath \
 		--disable-nls \
@@ -229,7 +229,7 @@ $(GSASL_IPK_DIR)/CONTROL/control:
 $(LIBGSASL_IPK): $(GSASL_BUILD_DIR)/.built
 	rm -rf $(LIBGSASL_IPK_DIR) $(BUILD_DIR)/libgsasl_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(GSASL_BUILD_DIR)/lib install-strip DESTDIR=$(LIBGSASL_IPK_DIR)
-	rm -f $(LIBGSASL_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(LIBGSASL_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	$(MAKE) $(LIBGSASL_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBGSASL_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(LIBGSASL_IPK_DIR)
@@ -239,7 +239,7 @@ $(GSASL_IPK): $(GSASL_BUILD_DIR)/.built
 	$(MAKE) -C $(GSASL_BUILD_DIR) install-strip \
 		DESTDIR=$(GSASL_IPK_DIR)
 #		SUBDIRS=`sed -n -e '/^SUBDIRS *=/{s/^.*= //;s/lib //;p}' $(GSASL_BUILD_DIR)/Makefile`
-	rm -rf $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)include $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)lib
+	rm -rf $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)/include $(GSASL_IPK_DIR)$(OPTWARE_PREFIX)/lib
 	$(MAKE) $(GSASL_IPK_DIR)/CONTROL/control
 	echo $(GSASL_CONFFILES) | sed -e 's/ /\n/g' > $(GSASL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(GSASL_IPK_DIR)
