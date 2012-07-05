@@ -125,7 +125,7 @@ hdparm-unpack: $(HDPARM_BUILD_DIR)/.configured
 $(HDPARM_BUILD_DIR)/.built: $(HDPARM_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		binprefix=$(OPTWARE_PREFIX)manprefix=$(OPTWARE_PREFIX)\
+		binprefix=$(OPTWARE_PREFIX) manprefix=$(OPTWARE_PREFIX) \
 		CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(HDPARM_LDFLAGS)" \
 		STRIP=$(TARGET_STRIP)
@@ -150,18 +150,18 @@ hdparm: $(HDPARM_BUILD_DIR)/.built
 #
 $(HDPARM_IPK): $(HDPARM_BUILD_DIR)/.built
 	rm -rf $(HDPARM_IPK_DIR) $(BUILD_DIR)/hdparm_*_$(TARGET_ARCH).ipk
-	install -d $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)/sbin
 	$(MAKE) -C $(HDPARM_BUILD_DIR) DESTDIR=$(HDPARM_IPK_DIR) install \
-		binprefix=$(OPTWARE_PREFIX)manprefix=$(OPTWARE_PREFIX)\
+		binprefix=$(OPTWARE_PREFIX) manprefix=$(OPTWARE_PREFIX) \
 		CC=$(TARGET_CC) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
-	$(STRIP_COMMAND) $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm
-	mv $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)sbin/hdparm-hdparm
+	$(STRIP_COMMAND) $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hdparm
+	mv $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hdparm $(HDPARM_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hdparm-hdparm
 	$(MAKE) $(HDPARM_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)sbin/hdparm hdparm $(OPTWARE_PREFIX)sbin/hdparm-hdparm 50" ; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/sbin/hdparm hdparm $(OPTWARE_PREFIX)/sbin/hdparm-hdparm 50" ; \
 	) > $(HDPARM_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh" ; \
-	 echo "update-alternatives --remove hdparm $(OPTWARE_PREFIX)sbin/hdparm-hdparm" ; \
+	 echo "update-alternatives --remove hdparm $(OPTWARE_PREFIX)/sbin/hdparm-hdparm" ; \
 	) > $(HDPARM_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
