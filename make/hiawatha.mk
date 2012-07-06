@@ -41,10 +41,10 @@ HIAWATHA_IPK_VERSION=1
 #
 # HIAWATHA_CONFFILES should be a list of user-editable files
 HIAWATHA_CONFFILES=\
-$(OPTWARE_PREFIX)etc/hiawatha/mimetype.conf \
-$(OPTWARE_PREFIX)etc/hiawatha/hiawatha.conf \
-$(OPTWARE_PREFIX)etc/hiawatha/php-fcgi.conf \
-$(OPTWARE_PREFIX)etc/hiawatha/cgi-wrapper.conf \
+$(OPTWARE_PREFIX)/etc/hiawatha/mimetype.conf \
+$(OPTWARE_PREFIX)/etc/hiawatha/hiawatha.conf \
+$(OPTWARE_PREFIX)/etc/hiawatha/php-fcgi.conf \
+$(OPTWARE_PREFIX)/etc/hiawatha/cgi-wrapper.conf \
 
 #
 # HIAWATHA_PATCHES should list any patches, in the the order in
@@ -125,13 +125,13 @@ $(HIAWATHA_BUILD_DIR)/.configured: $(DL_DIR)/$(HIAWATHA_SOURCE) $(HIAWATHA_PATCH
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(HIAWATHA_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(HIAWATHA_LDFLAGS)" \
 		ac_cv_file__dev_urandom=/dev/urandom \
-		webrootdir=$(OPTWARE_PREFIX)share/www/hiawatha \
+		webrootdir=$(OPTWARE_PREFIX)/share/www/hiawatha \
                 ac_cv_lib_xslt_xsltApplyStylesheet=yes \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
