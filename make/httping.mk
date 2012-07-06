@@ -115,7 +115,7 @@ $(HTTPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HTTPING_SOURCE) $(HTTPING_PATCHES)
 	if test "$(BUILD_DIR)/$(HTTPING_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(HTTPING_DIR) $(@D) ; \
 	fi
-	sed -i -e 's:/usr/:$(OPTWARE_PREFIX):g' $(@D)/Makefile
+	sed -i -e 's:/usr/:$(OPTWARE_PREFIX)/:g' $(@D)/Makefile
 #	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(HTTPING_CPPFLAGS)" \
@@ -124,7 +124,7 @@ $(HTTPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HTTPING_SOURCE) $(HTTPING_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -142,7 +142,7 @@ $(HTTPING_BUILD_DIR)/.built: $(HTTPING_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(HTTPING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(HTTPING_LDFLAGS)" \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 		;
 	touch $@
 
@@ -195,8 +195,8 @@ $(HTTPING_IPK_DIR)/CONTROL/control:
 $(HTTPING_IPK): $(HTTPING_BUILD_DIR)/.built
 	rm -rf $(HTTPING_IPK_DIR) $(BUILD_DIR)/httping_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HTTPING_BUILD_DIR) DESTDIR=$(HTTPING_IPK_DIR) install \
-		STRIP=: PREFIX=/opt
-	$(STRIP_COMMAND) $(HTTPING_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+		STRIP=: PREFIX=$(OPTWARE_PREFIX)
+	$(STRIP_COMMAND) $(HTTPING_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	$(MAKE) $(HTTPING_IPK_DIR)/CONTROL/control
 	echo $(HTTPING_CONFFILES) | sed -e 's/ /\n/g' > $(HTTPING_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HTTPING_IPK_DIR)
