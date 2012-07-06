@@ -112,7 +112,7 @@ $(HUGS_BUILD_DIR)/.configured: $(DL_DIR)/$(HUGS_SOURCE) $(HUGS_PATCHES)
 #	$(MAKE) <bar>-stage <baz>-stage
 	rm -rf $(BUILD_DIR)/$(HUGS_DIR) $(HUGS_BUILD_DIR)
 	$(HUGS_UNZIP) $(DL_DIR)/$(HUGS_SOURCE) | tar -C $(BUILD_DIR) -xvf -
-	cat $(HUGS_PATCHES) | patch -d $(BUILD_DIR)/$(HUGS_DIR) -p1
+	cat $(HUGS_PATCHES) | sed -e "s,/opt/,$(OPTWARE_PREFIX)/,g" | patch -d $(BUILD_DIR)/$(HUGS_DIR) -p1
 	mv $(BUILD_DIR)/$(HUGS_DIR) $(HUGS_BUILD_DIR)
 	(cd $(HUGS_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
@@ -122,7 +122,7 @@ $(HUGS_BUILD_DIR)/.configured: $(DL_DIR)/$(HUGS_SOURCE) $(HUGS_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $(HUGS_BUILD_DIR)/.configured
@@ -186,9 +186,9 @@ $(HUGS_IPK): $(HUGS_BUILD_DIR)/.built
 	rm -rf $(HUGS_IPK_DIR) $(BUILD_DIR)/hugs_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HUGS_BUILD_DIR) DESTDIR=$(HUGS_IPK_DIR) install
 	for f in \
-        	$(HUGS_IPK_DIR)$(OPTWARE_PREFIX)bin/ffihugs \
-        	$(HUGS_IPK_DIR)$(OPTWARE_PREFIX)bin/runhugs \
-                `find $(HUGS_IPK_DIR)$(OPTWARE_PREFIX)lib/hugs/packages -name '*.so'`; \
+        	$(HUGS_IPK_DIR)$(OPTWARE_PREFIX)/bin/ffihugs \
+        	$(HUGS_IPK_DIR)$(OPTWARE_PREFIX)/bin/runhugs \
+                `find $(HUGS_IPK_DIR)$(OPTWARE_PREFIX)/lib/hugs/packages -name '*.so'`; \
             do $(STRIP_COMMAND) $$f; done
 	$(MAKE) $(HUGS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HUGS_IPK_DIR)
