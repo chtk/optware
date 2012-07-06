@@ -117,7 +117,7 @@ $(HEXCURSE_BUILD_DIR)/.configured: $(DL_DIR)/$(HEXCURSE_SOURCE) $(HEXCURSE_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $(HEXCURSE_BUILD_DIR)/.configured
@@ -181,7 +181,7 @@ $(HEXCURSE_IPK_DIR)/CONTROL/control:
 $(HEXCURSE_IPK): $(HEXCURSE_BUILD_DIR)/.built
 	rm -rf $(HEXCURSE_IPK_DIR) $(BUILD_DIR)/hexcurse_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(HEXCURSE_BUILD_DIR) DESTDIR=$(HEXCURSE_IPK_DIR) install
-	$(STRIP_COMMAND) $(HEXCURSE_IPK_DIR)$(OPTWARE_PREFIX)bin/hexcurse
+	$(STRIP_COMMAND) $(HEXCURSE_IPK_DIR)$(OPTWARE_PREFIX)/bin/hexcurse
 	$(MAKE) $(HEXCURSE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HEXCURSE_IPK_DIR)
 
