@@ -120,7 +120,7 @@ $(HPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HPING_SOURCE) $(HPING_PATCHES) make/
 	cd $(HPING_BUILD_DIR); \
         sed -i \
         	-e 's|-L/usr/local/lib|$(STAGING_LDFLAGS)|' \
-        	-e 's|/usr/sbin|$(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin|g' \
+        	-e 's|/usr/sbin|$(HPING_IPK_DIR)$(OPTWARE_PREFIX)/sbin|g' \
         	-e '/ln -s/d' \
         	Makefile.in; \
 	sed -i -e 's|<net/bpf.h>|<pcap-bpf.h>|' libpcap_stuff.c script.c; \
@@ -141,7 +141,7 @@ $(HPING_BUILD_DIR)/.configured: $(DL_DIR)/$(HPING_SOURCE) $(HPING_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--no-tcl \
 		--disable-nls \
 		--disable-static \
@@ -212,14 +212,14 @@ $(HPING_IPK_DIR)/CONTROL/control:
 #
 $(HPING_IPK): $(HPING_BUILD_DIR)/.built
 	rm -rf $(HPING_IPK_DIR) $(BUILD_DIR)/hping_*_$(TARGET_ARCH).ipk
-	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
-	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin
+	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man8
+	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)/sbin
 	$(MAKE) -C $(HPING_BUILD_DIR) \
         	DESTDIR=$(HPING_IPK_DIR) \
-        	INSTALL_MANPATH=$(HPING_IPK_DIR)$(OPTWARE_PREFIX)share/man \
+        	INSTALL_MANPATH=$(HPING_IPK_DIR)$(OPTWARE_PREFIX)/share/man \
         	install
-	$(STRIP_COMMAND) $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin/hping3
-	cd $(HPING_IPK_DIR)$(OPTWARE_PREFIX)sbin; \
+	$(STRIP_COMMAND) $(HPING_IPK_DIR)$(OPTWARE_PREFIX)/sbin/hping3
+	cd $(HPING_IPK_DIR)$(OPTWARE_PREFIX)/sbin; \
         	ln -s hping3 hping; \
         	ln -s hping3 hping2;
 #	install -d $(HPING_IPK_DIR)$(OPTWARE_PREFIX)etc/
