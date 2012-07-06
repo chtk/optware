@@ -41,7 +41,7 @@ HEYU_IPK_VERSION=1
 
 #
 # HEYU_CONFFILES should be a list of user-editable files
-HEYU_CONFFILES=$(OPTWARE_PREFIX)etc/init.d/S99heyu #$(OPTWARE_PREFIX)etc/heyu/x10.conf $(OPTWARE_PREFIX)etc/heyu/x10.sched
+HEYU_CONFFILES=$(OPTWARE_PREFIX)/etc/init.d/S99heyu #$(OPTWARE_PREFIX)/etc/heyu/x10.conf $(OPTWARE_PREFIX)/etc/heyu/x10.sched
 
 #
 # HEYU_PATCHES should list any patches, in the the order in
@@ -139,7 +139,7 @@ $(HEYU_BUILD_DIR)/.built: $(HEYU_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
 		CC=$(TARGET_CC) LD=$(TARGET_LD) \
-		CFLAGS="$(STAGING_CPPFLAGS) -I$(@D) \$$(DFLAGS) -DLOCKDIR=\\\"$(OPTWARE_PREFIX)var/run/heyu\\\" -DSYSBASEDIR=\\\"$(OPTWARE_PREFIX)etc/heyu\\\" -DSPOOLDIR=\\\"$(OPTWARE_PREFIX)var/spool/heyu\\\" " \
+		CFLAGS="$(STAGING_CPPFLAGS) -I$(@D) \$$(DFLAGS) -DLOCKDIR=\\\"$(OPTWARE_PREFIX)/var/run/heyu\\\" -DSYSBASEDIR=\\\"$(OPTWARE_PREFIX)/etc/heyu\\\" -DSPOOLDIR=\\\"$(OPTWARE_PREFIX)/var/spool/heyu\\\" " \
 		LDFLAGS="$(STAGING_LDFLAGS)"
 	touch $@
 
@@ -191,24 +191,27 @@ $(HEYU_IPK_DIR)/CONTROL/control:
 #
 $(HEYU_IPK): $(HEYU_BUILD_DIR)/.built
 	rm -rf $(HEYU_IPK_DIR) $(BUILD_DIR)/heyu_*_$(TARGET_ARCH).ipk
-	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)man/man5
-	install -d -m0777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)etc/heyu
-	install -d -m1777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)var/spool/heyu
-	install -d -m0777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)var/run/heyu
-	install -m0644 $(HEYU_BUILD_DIR)/x10config.sample $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)etc/heyu/x10.conf.sample
-	install -m0644 $(HEYU_BUILD_DIR)/x10.sched.sample $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)etc/heyu/
-	install -m0755 $(HEYU_BUILD_DIR)/heyu $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(TARGET_STRIP) $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)bin/heyu
-	install -m0644 $(HEYU_BUILD_DIR)/*.1 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
-	install -m0644 $(HEYU_BUILD_DIR)/*.5 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)man/man5/
-	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(HEYU_SOURCE_DIR)/rc.heyu $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S99heyu
+	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/man/man5
+	install -d -m0777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/etc/heyu
+	install -d -m1777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/var/spool/heyu
+	install -d -m0777 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/var/run/heyu
+	install -m0644 $(HEYU_BUILD_DIR)/x10config.sample $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/etc/heyu/x10.conf.sample
+	install -m0644 $(HEYU_BUILD_DIR)/x10.sched.sample $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/etc/heyu/
+	install -m0755 $(HEYU_BUILD_DIR)/heyu $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(TARGET_STRIP) $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/bin/heyu
+	install -m0644 $(HEYU_BUILD_DIR)/*.1 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/
+	install -m0644 $(HEYU_BUILD_DIR)/*.5 $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/man/man5/
+	install -d $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(HEYU_SOURCE_DIR)/rc.heyu $(HEYU_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S99heyu
 	$(MAKE) $(HEYU_IPK_DIR)/CONTROL/control
 	install -m 755 $(HEYU_SOURCE_DIR)/postinst $(HEYU_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(HEYU_SOURCE_DIR)/prerm $(HEYU_IPK_DIR)/CONTROL/prerm
 	echo $(HEYU_CONFFILES) | sed -e 's/ /\n/g' > $(HEYU_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(HEYU_IPK_DIR)$(OPTWARE_PREFIX),$(HEYU_CONFFILES)) \
+		$(HEYU_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(HEYU_IPK_DIR)
 
 #
