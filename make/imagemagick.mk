@@ -122,7 +122,7 @@ $(IMAGEMAGICK_BUILD_DIR)/.configured: $(DL_DIR)/$(IMAGEMAGICK_SOURCE) $(IMAGEMAG
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-openmp \
 		--without-perl \
 		--without-x \
@@ -202,36 +202,36 @@ $(IMAGEMAGICK_IPK_DIR)/CONTROL/control:
 $(IMAGEMAGICK_IPK): $(IMAGEMAGICK_BUILD_DIR)/.built
 	rm -rf $(IMAGEMAGICK_IPK_DIR) $(BUILD_DIR)/imagemagick_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IMAGEMAGICK_BUILD_DIR) DESTDIR=$(IMAGEMAGICK_IPK_DIR) transform='' install-am
-	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/libltdl*
+	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/lib/libltdl*
 #	rm -f $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
+	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/lib/ \
 		-name '*.a' \
 		-exec rm -f {} \;
 #	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
 		-name '*.la' \
 		-exec rm -f {} \;
-	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/ \
+	find $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/lib/ \
 		-name '*.so' \
 		-exec chmod +w {} \; \
 		-exec $(STRIP_COMMAND) {} \; \
 		-exec chmod -w {} \;
-	for f in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so.*; \
+	for f in $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so.*; \
 		do \
 		exec chmod +w $$f; \
 		$(STRIP_COMMAND) $$f; \
 		exec chmod +w $$f; \
 		done
-	cp $(IMAGEMAGICK_BUILD_DIR)/Magick++/bin/Magick++-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
-	cp $(IMAGEMAGICK_BUILD_DIR)/magick/Magick-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
-	cp $(IMAGEMAGICK_BUILD_DIR)/wand/Wand-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/Magick++/bin/Magick++-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/magick/Magick-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	cp $(IMAGEMAGICK_BUILD_DIR)/wand/Wand-config $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin
 	for f in `ls $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs`; \
 		do \
-		$(STRIP_COMMAND) $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs/$$f -o $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/$$f; \
-		$(STRIP_COMMAND) $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)bin/$$f; \
+		$(STRIP_COMMAND) $(IMAGEMAGICK_BUILD_DIR)/utilities/.libs/$$f -o $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin/$$f; \
+		$(STRIP_COMMAND) $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/bin/$$f; \
 		done
-	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)share/ImageMagick-$(IMAGEMAGICK_VER)/www
-	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)share/ImageMagick-$(IMAGEMAGICK_VER)/images
+	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/share/ImageMagick-$(IMAGEMAGICK_VER)/www
+	rm -rf $(IMAGEMAGICK_IPK_DIR)$(OPTWARE_PREFIX)/share/ImageMagick-$(IMAGEMAGICK_VER)/images
 	$(MAKE) $(IMAGEMAGICK_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IMAGEMAGICK_IPK_DIR)
 
