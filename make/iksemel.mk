@@ -124,7 +124,7 @@ $(IKSEMEL_BUILD_DIR)/.configured: $(DL_DIR)/$(IKSEMEL_SOURCE) $(IKSEMEL_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
@@ -194,10 +194,10 @@ $(IKSEMEL_IPK): $(IKSEMEL_BUILD_DIR)/.built
 	rm -rf $(IKSEMEL_IPK_DIR) $(BUILD_DIR)/iksemel_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IKSEMEL_BUILD_DIR) DESTDIR=$(IKSEMEL_IPK_DIR) install
 	$(MAKE) $(IKSEMEL_IPK_DIR)/CONTROL/control
-	for filetostrip in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/ikslint \
-				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/iksperf \
-				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)bin/iksroster \
-				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)lib/libiksemel.so.* ; do \
+	for filetostrip in $(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)/bin/ikslint \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)/bin/iksperf \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)/bin/iksroster \
+				$(IKSEMEL_IPK_DIR)$(OPTWARE_PREFIX)/lib/libiksemel.so.* ; do \
 		$(STRIP_COMMAND) $$filetostrip; \
 	done
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IKSEMEL_IPK_DIR)
