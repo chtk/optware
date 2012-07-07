@@ -129,7 +129,7 @@ $(II_BUILD_DIR)/.configured: $(DL_DIR)/$(II_SOURCE) $(II_PATCHES) make/ii.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -144,7 +144,7 @@ ii-unpack: $(II_BUILD_DIR)/.configured
 $(II_BUILD_DIR)/.built: $(II_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(@D) \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(II_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(II_LDFLAGS)" \
@@ -201,8 +201,8 @@ $(II_IPK_DIR)/CONTROL/control:
 $(II_IPK): $(II_BUILD_DIR)/.built
 	rm -rf $(II_IPK_DIR) $(BUILD_DIR)/ii_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(II_BUILD_DIR) install \
-		DESTDIR=$(II_IPK_DIR) PREFIX=/opt
-	$(STRIP_COMMAND) $(II_IPK_DIR)$(OPTWARE_PREFIX)bin/ii
+		DESTDIR=$(II_IPK_DIR) PREFIX=$(OPTWARE_PREFIX)
+	$(STRIP_COMMAND) $(II_IPK_DIR)$(OPTWARE_PREFIX)/bin/ii
 	$(MAKE) $(II_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(II_IPK_DIR)
 
