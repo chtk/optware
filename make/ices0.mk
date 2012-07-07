@@ -139,7 +139,7 @@ endif
 	fi
 ifeq (yes, $(ICES0_WITH_PERL))
 	sed -i -e '/PERLCFLAGS=/s|`.*`|"-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR)"|' \
-	       -e '/PERLLIBS=/s|`.*`|"-Wl,-E -L$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR) -Wl,-rpath,$(OPTWARE_PREFIX)lib/$(PERL_LIB_CORE_DIR) -lperl -lnsl -ldl -lm -lcrypt -lutil -lc"|' \
+	       -e '/PERLLIBS=/s|`.*`|"-Wl,-E -L$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR) -Wl,-rpath,$(OPTWARE_PREFIX)/lib/$(PERL_LIB_CORE_DIR) -lperl -lnsl -ldl -lm -lcrypt -lutil -lc"|' \
 		$(@D)/configure
 	if test "$(PERL_MAJOR_VER)" = "5.8"; then \
 		sed -i -e '/PERLLIBS=/s|-lperl|$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR)/../auto/DynaLoader/DynaLoader.a &|' $(@D)/configure; \
@@ -155,7 +155,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--without-faad \
 		--without-flac \
 		--without-lame \
