@@ -54,7 +54,8 @@ ID3LIB_IPK_VERSION=4
 # ID3LIB_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-ID3LIB_PATCHES=$(ID3LIB_SOURCE_DIR)/wchar.patch
+ID3LIB_PATCHES=$(ID3LIB_SOURCE_DIR)/wchar.patch \
+	$(ID3LIB_SOURCE_DIR)/id3lib-cincludes.patch
 
 #
 # If the compilation of the package requires additional
@@ -146,7 +147,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -174,7 +175,7 @@ id3lib: $(ID3LIB_BUILD_DIR)/.built
 $(ID3LIB_BUILD_DIR)/.staged: $(ID3LIB_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(ID3LIB_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libid3.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libid3.la
 	touch $@
 
 id3lib-stage: $(ID3LIB_BUILD_DIR)/.staged
