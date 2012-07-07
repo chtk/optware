@@ -122,7 +122,7 @@ $(ICE_BUILD_DIR)/.configured: $(DL_DIR)/ice-$(ICE_VERSION).tar.gz \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(ICE_BUILD_DIR)/libtool
@@ -163,7 +163,7 @@ $(ICE_IPK): $(ICE_BUILD_DIR)/.built
 	rm -rf $(ICE_IPK_DIR) $(BUILD_DIR)/ice_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ICE_BUILD_DIR) DESTDIR=$(ICE_IPK_DIR) install-strip
 	$(MAKE) $(ICE_IPK_DIR)/CONTROL/control
-	rm -f $(ICE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
+	rm -f $(ICE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(ICE_IPK_DIR)
 
 #
