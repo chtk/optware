@@ -116,8 +116,8 @@ $(IMAP_BUILD_DIR)/.configured: $(DL_DIR)/$(IMAP_SOURCE) $(IMAP_PATCHES)
 	$(IMAP_UNZIP) $(DL_DIR)/$(IMAP_SOURCE) | tar -C $(BUILD_DIR) -xvf -
 	mv $(BUILD_DIR)/$(IMAP_DIR) $(IMAP_BUILD_DIR)
 	cat $(IMAP_PATCHES) | patch -d $(IMAP_BUILD_DIR) -p1
-	sed -i -e 's!/usr!/opt!g' $(IMAP_BUILD_DIR)/src/osdep/unix/Makefile
-	sed -i -e 's!/var!$(OPTWARE_PREFIX)var!g' $(IMAP_BUILD_DIR)/src/osdep/unix/Makefile
+	sed -i -e 's!/usr!$(OPTWARE_PREFIX)!g' $(IMAP_BUILD_DIR)/src/osdep/unix/Makefile
+	sed -i -e 's!/var!$(OPTWARE_PREFIX)/var!g' $(IMAP_BUILD_DIR)/src/osdep/unix/Makefile
 	touch $(IMAP_BUILD_DIR)/.configured
 
 imap-unpack: $(IMAP_BUILD_DIR)/.configured
@@ -127,7 +127,7 @@ imap-unpack: $(IMAP_BUILD_DIR)/.configured
 #
 $(IMAP_BUILD_DIR)/.built: $(IMAP_BUILD_DIR)/.configured
 	rm -f $(IMAP_BUILD_DIR)/.built
-	$(MAKE) -C $(IMAP_BUILD_DIR) slx CC=$(TARGET_CC) AR=$(TARGET_AR) RANLIB=$(TARGET_RANLIB) EXTRACFLAGS="$(STAGING_CPPFLAGS) $(IMAP_CPPFLAGS)" EXTRALDFLAGS="$(STAGING_LDFLAGS) $(IMAP_LDFLAGS)" SSLDIR=$(OPTWARE_PREFIX)SSLINCLUDE=$(STAGING_INCLUDE_DIR)/openssl SHLIBBASE=c-client SHLIBNAME=libc-client.so.0
+	$(MAKE) -C $(IMAP_BUILD_DIR) slx CC=$(TARGET_CC) AR=$(TARGET_AR) RANLIB=$(TARGET_RANLIB) EXTRACFLAGS="$(STAGING_CPPFLAGS) $(IMAP_CPPFLAGS)" EXTRALDFLAGS="$(STAGING_LDFLAGS) $(IMAP_LDFLAGS)" SSLDIR=$(OPTWARE_PREFIX) SSLINCLUDE=$(STAGING_INCLUDE_DIR)/openssl SHLIBBASE=c-client SHLIBNAME=libc-client.so.0
 	touch $(IMAP_BUILD_DIR)/.built
 
 #
@@ -194,25 +194,25 @@ $(IMAP_IPK): $(IMAP_BUILD_DIR)/.built
 	# make imap-libs ipk
 	rm -rf $(IMAP_LIBS_IPK_DIR) $(BUILD_DIR)/imap-libs_*_$(TARGET_ARCH).ipk
 	$(MAKE) $(IMAP_LIBS_IPK_DIR)/CONTROL/control
-	install -d $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib
-	cp -a $(IMAP_BUILD_DIR)/c-client/libc-client.so* $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib
-	chmod a+rx $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/*
-	$(TARGET_STRIP) $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)lib/libc-client.so.0
+	install -d $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	cp -a $(IMAP_BUILD_DIR)/c-client/libc-client.so* $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	chmod a+rx $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)/lib/*
+	$(TARGET_STRIP) $(IMAP_LIBS_IPK_DIR)$(OPTWARE_PREFIX)/lib/libc-client.so.0
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IMAP_LIBS_IPK_DIR)
 	# make main ipk
 	rm -rf $(IMAP_IPK_DIR) $(BUILD_DIR)/imap_*_$(TARGET_ARCH).ipk
 	$(MAKE) $(IMAP_IPK_DIR)/CONTROL/control
-	install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(IMAP_BUILD_DIR)/tmail/tmail $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(IMAP_BUILD_DIR)/dmail/dmail $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	install -m 755 $(IMAP_BUILD_DIR)/imapd/imapd $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	install -m 755 $(IMAP_BUILD_DIR)/ipopd/ipop2d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	install -m 755 $(IMAP_BUILD_DIR)/ipopd/ipop3d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin
-	$(TARGET_STRIP) $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)sbin/* $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(IMAP_BUILD_DIR)/tmail/tmail $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(IMAP_BUILD_DIR)/dmail/dmail $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	install -m 755 $(IMAP_BUILD_DIR)/imapd/imapd $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	install -m 755 $(IMAP_BUILD_DIR)/ipopd/ipop2d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	install -m 755 $(IMAP_BUILD_DIR)/ipopd/ipop3d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin
+	$(TARGET_STRIP) $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/sbin/* $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	### FIXME: could do with some setting up of the daemons here
-	#install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	#install -m 755 $(IMAP_SOURCE_DIR)/rc.imap $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXimap
+	#install -d $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	#install -m 755 $(IMAP_SOURCE_DIR)/rc.imap $(IMAP_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/SXXimap
 	#install -m 755 $(IMAP_SOURCE_DIR)/postinst $(IMAP_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(IMAP_SOURCE_DIR)/prerm $(IMAP_IPK_DIR)/CONTROL/prerm
 	#echo $(IMAP_CONFFILES) | sed -e 's/ /\n/g' > $(IMAP_IPK_DIR)/CONTROL/conffiles
