@@ -128,7 +128,7 @@ $(INDENT_BUILD_DIR)/.configured: $(DL_DIR)/$(INDENT_SOURCE) $(INDENT_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -194,7 +194,7 @@ $(INDENT_IPK_DIR)/CONTROL/control:
 $(INDENT_IPK): $(INDENT_BUILD_DIR)/.built
 	rm -rf $(INDENT_IPK_DIR) $(BUILD_DIR)/indent_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(INDENT_BUILD_DIR) DESTDIR=$(INDENT_IPK_DIR) install-strip
-	rm -f $(INDENT_IPK_DIR)$(OPTWARE_PREFIX)info/dir $(INDENT_IPK_DIR)$(OPTWARE_PREFIX)info/dir.old
+	rm -f $(INDENT_IPK_DIR)$(OPTWARE_PREFIX)/info/dir $(INDENT_IPK_DIR)$(OPTWARE_PREFIX)/info/dir.old
 	$(MAKE) $(INDENT_IPK_DIR)/CONTROL/control
 #	echo $(INDENT_CONFFILES) | sed -e 's/ /\n/g' > $(INDENT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INDENT_IPK_DIR)
