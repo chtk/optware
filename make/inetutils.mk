@@ -121,9 +121,9 @@ $(INETUTILS_BUILD_DIR)/.configured: $(DL_DIR)/$(INETUTILS_SOURCE) $(INETUTILS_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--infodir=$(OPTWARE_PREFIX)doc/inetutils \
-		--mandir=$(OPTWARE_PREFIX)share/man \
+		--prefix=$(OPTWARE_PREFIX) \
+		--infodir=$(OPTWARE_PREFIX)/doc/inetutils \
+		--mandir=$(OPTWARE_PREFIX)/share/man \
 		--with-ncurses \
 		--with-ncurses-include-dir=$(STAGING_INCLUDE_DIR)/ncurses \
 		--program-prefix="" \
@@ -188,19 +188,19 @@ $(INETUTILS_IPK): $(INETUTILS_BUILD_DIR)/.built
 	# Install everything
 	$(MAKE) -C $(INETUTILS_BUILD_DIR) DESTDIR=$(INETUTILS_IPK_DIR) install
 	# Remove the stuff we don't want: inetd, whois, ftpd
-	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)libexec/inetd
-	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8/inetd.8
-	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/whois
-	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8/ftpd.8
-	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)libexec/ftpd
-	$(STRIP_COMMAND) $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)bin/* $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)libexec/*
+	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/libexec/inetd
+	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man8/inetd.8
+	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/whois
+	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man8/ftpd.8
+	rm -f $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/libexec/ftpd
+	$(STRIP_COMMAND) $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/bin/* $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)/libexec/*
 #	install -d $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(INETUTILS_SOURCE_DIR)/rc.inetutils $(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S52inetd
 	$(MAKE) $(INETUTILS_IPK_DIR)/CONTROL/control
 	# Setuid stuff doesn't work as non-root, but we fix it in the postinst script.
 	install -m 644 $(INETUTILS_SOURCE_DIR)/postinst  $(INETUTILS_IPK_DIR)/CONTROL/postinst 
 	echo "#!/bin/sh" > $(INETUTILS_IPK_DIR)/CONTROL/prerm
-	for d in $(OPTWARE_PREFIX)bin $(OPTWARE_PREFIX)libexec $(OPTWARE_PREFIX)share/man/man1 $(OPTWARE_PREFIX)share/man/man8; do \
+	for d in $(OPTWARE_PREFIX)/bin $(OPTWARE_PREFIX)/libexec $(OPTWARE_PREFIX)/share/man/man1 $(OPTWARE_PREFIX)/share/man/man8; do \
 	    cd $(INETUTILS_IPK_DIR)/$$d; \
 	    for f in *; do \
 		mv $$f inetutils-$$f; \
@@ -215,6 +215,9 @@ $(INETUTILS_IPK): $(INETUTILS_BUILD_DIR)/.built
 			$(INETUTILS_IPK_DIR)/CONTROL/postinst $(INETUTILS_IPK_DIR)/CONTROL/prerm; \
 	fi
 	echo $(INETUTILS_CONFFILES) | sed -e 's/ /\n/g' > $(INETUTILS_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(INETUTILS_IPK_DIR)$(OPTWARE_PREFIX),$(INETUTILS_CONFFILES)) \
+		$(INETUTILS_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INETUTILS_IPK_DIR)
 
 #
