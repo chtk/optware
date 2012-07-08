@@ -123,7 +123,7 @@ $(INOTAIL_BUILD_DIR)/.configured: $(DL_DIR)/$(INOTAIL_SOURCE) $(INOTAIL_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -140,7 +140,7 @@ $(INOTAIL_BUILD_DIR)/.built: $(INOTAIL_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(INOTAIL_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(INOTAIL_LDFLAGS)" \
-		prefix=$(OPTWARE_PREFIX)\
+		prefix=$(OPTWARE_PREFIX) \
 		;
 	touch $@
 
@@ -194,8 +194,8 @@ $(INOTAIL_IPK): $(INOTAIL_BUILD_DIR)/.built
 	rm -rf $(INOTAIL_IPK_DIR) $(BUILD_DIR)/inotail_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(INOTAIL_BUILD_DIR) install \
 		DESTDIR=$(INOTAIL_IPK_DIR) \
-		prefix=$(INOTAIL_IPK_DIR)/opt
-	$(STRIP_COMMAND) $(INOTAIL_IPK_DIR)$(OPTWARE_PREFIX)bin/inotail
+		prefix=$(INOTAIL_IPK_DIR)$(OPTWARE_PREFIX)
+	$(STRIP_COMMAND) $(INOTAIL_IPK_DIR)$(OPTWARE_PREFIX)/bin/inotail
 	$(MAKE) $(INOTAIL_IPK_DIR)/CONTROL/control
 	echo $(INOTAIL_CONFFILES) | sed -e 's/ /\n/g' > $(INOTAIL_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(INOTAIL_IPK_DIR)
