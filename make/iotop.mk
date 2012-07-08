@@ -122,9 +122,9 @@ $(IOTOP_BUILD_DIR)/.configured: $(DL_DIR)/$(IOTOP_SOURCE) $(IOTOP_PATCHES) make/
 		echo "[build_ext]"; \
 	        echo "include-dirs=$(STAGING_INCLUDE_DIR):$(STAGING_INCLUDE_DIR)/python2.6"; \
 	        echo "library-dirs=$(STAGING_LIB_DIR)"; \
-	        echo "rpath=$(OPTWARE_PREFIX)lib"; \
+	        echo "rpath=$(OPTWARE_PREFIX)/lib"; \
 		echo "[build_scripts]"; \
-		echo "executable=$(OPTWARE_PREFIX)bin/python2.6" \
+		echo "executable=$(OPTWARE_PREFIX)/bin/python2.6" \
 	    ) >> setup.cfg; \
 	)
 	touch $@
@@ -193,7 +193,7 @@ $(IOTOP_IPK): $(IOTOP_BUILD_DIR)/.built
 	cd $(IOTOP_BUILD_DIR); \
 	    PYTHONPATH=$(STAGING_LIB_DIR)/python2.6/site-packages \
 	    $(HOST_STAGING_PREFIX)/bin/python2.6 setup.py install \
-	    --root=$(IOTOP_IPK_DIR) --prefix=/opt
+	    --root=$(IOTOP_IPK_DIR) --prefix=$(OPTWARE_PREFIX)
 #	$(STRIP_COMMAND) `find $(IOTOP_IPK_DIR)$(OPTWARE_PREFIX)lib/python2.6/site-packages -name '*.so'`
 	$(MAKE) $(IOTOP_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IOTOP_IPK_DIR)
