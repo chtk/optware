@@ -38,7 +38,7 @@ IPKG-OPT_IPK_VERSION=10
 
 #
 # IPKG-OPT_CONFFILES should be a list of user-editable files
-IPKG-OPT_CONFFILES=$(OPTWARE_PREFIX)etc/ipkg.conf
+IPKG-OPT_CONFFILES=$(OPTWARE_PREFIX)/etc/ipkg.conf
 
 #
 # If the compilation of the package requires additional
@@ -119,6 +119,8 @@ $(IPKG-OPT_BUILD_DIR)/.configured: $(DL_DIR)/ipkg-opt-$(IPKG-OPT_VERSION).tar.gz
 	tar -C $(BUILD_DIR) -xzf $(DL_DIR)/ipkg-opt-$(IPKG-OPT_VERSION).tar.gz
 	if test -n "$(IPKG-OPT_PATCHES)" ; \
 		then cat $(IPKG-OPT_PATCHES) | \
+		sed -e "s,/opt\([^a-z]\),$(OPTWARE_PREFIX)\1,g" | \
+		sed -e "s,/opt$$,$(OPTWARE_PREFIX),g" | \
 		patch -d $(BUILD_DIR)/$(IPKG-OPT_DIR) -p1 ; \
 	fi
 	if test "$(BUILD_DIR)/$(IPKG-OPT_DIR)" != "$(@D)" ; \
@@ -134,8 +136,8 @@ $(IPKG-OPT_BUILD_DIR)/.configured: $(DL_DIR)/ipkg-opt-$(IPKG-OPT_VERSION).tar.gz
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--with-ipkglibdir=$(OPTWARE_PREFIX)lib \
-		--prefix=$(OPTWARE_PREFIX)\
+		--with-ipkglibdir=$(OPTWARE_PREFIX)/lib \
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -195,25 +197,25 @@ $(IPKG-OPT_IPK): $(IPKG-OPT_BUILD_DIR)/.built
 	rm -rf $(IPKG-OPT_IPK_DIR) $(BUILD_DIR)/ipkg-opt_*_$(TARGET_ARCH).ipk
 	PATH="$(PATH):$(TOOL_BUILD_DIR)/$(GNU_TARGET_NAME)/$(CROSS_CONFIGURATION)/bin/" \
 		$(MAKE) -C $(IPKG-OPT_BUILD_DIR) DESTDIR=$(IPKG-OPT_IPK_DIR) install-strip
-	install -d $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 ifneq (, $(filter ddwrt ds101 ds101g fsg3 gumstix1151 mss nas100d nslu2 oleg slugosbe slugosle ts72xx wl500g, $(OPTWARE_TARGET)))
 	echo "#Uncomment the following line for native packages feed (if any)" \
-		> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
+		> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
 	echo "#src/gz native $(IPKG-OPT_FEEDS)/$(OPTWARE_TARGET)/native/stable"\
-			>> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
+			>> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
 	echo "src/gz optware $(IPKG-OPT_FEEDS)/$(OPTWARE_TARGET)/cross/stable" \
-			>> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
-	echo "dest $(OPTWARE_PREFIX) /" >> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
-	echo "#option verbose-wget" >> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
+			>> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
+	echo "dest $(OPTWARE_PREFIX) /" >> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
+	echo "#option verbose-wget" >> $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
 else
 	install -m 644 $(IPKG-OPT_SOURCE_DIR)/ipkg.conf \
-		$(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)etc/ipkg.conf
+		$(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/etc/ipkg.conf
 endif
-	rm $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)lib/*.a
-	rm $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	rm -rf $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)include
-	mv $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)bin/ipkg-cl $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)bin/ipkg
-	ln -s ipkg $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)bin/ipkg-opt
+	rm $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.a
+	rm $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	rm -rf $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/include
+	mv $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/bin/ipkg-cl $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/bin/ipkg
+	ln -s ipkg $(IPKG-OPT_IPK_DIR)$(OPTWARE_PREFIX)/bin/ipkg-opt
 	$(MAKE) $(IPKG-OPT_IPK_DIR)/CONTROL/control
 	echo $(IPKG-OPT_CONFFILES) | sed -e 's/ /\n/g' > $(IPKG-OPT_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPKG-OPT_IPK_DIR)
