@@ -130,7 +130,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -148,10 +148,10 @@ $(IPTRAF_BUILD_DIR)/.built: $(IPTRAF_BUILD_DIR)/.configured
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(IPTRAF_CPPFLAGS)" \
 		LDOPTS="$(STAGING_LDFLAGS) $(IPTRAF_LDFLAGS)" \
-		TARGET=$(OPTWARE_PREFIX)bin \
-		WORKDIR=$(OPTWARE_PREFIX)var/iptraf \
-		LOGDIR=$(OPTWARE_PREFIX)var/log/iptraf \
-		LOCKDIR=$(OPTWARE_PREFIX)var/run/iptraf \
+		TARGET=$(OPTWARE_PREFIX)/bin \
+		WORKDIR=$(OPTWARE_PREFIX)/var/iptraf \
+		LOGDIR=$(OPTWARE_PREFIX)/var/log/iptraf \
+		LOCKDIR=$(OPTWARE_PREFIX)/var/run/iptraf \
 		;
 	touch $@
 
@@ -203,14 +203,14 @@ $(IPTRAF_IPK_DIR)/CONTROL/control:
 #
 $(IPTRAF_IPK): $(IPTRAF_BUILD_DIR)/.built
 	rm -rf $(IPTRAF_IPK_DIR) $(BUILD_DIR)/iptraf_*_$(TARGET_ARCH).ipk
-	install -d $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)bin $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/iptraf
+	install -d $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/bin $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/iptraf
 	$(MAKE) -C $(IPTRAF_BUILD_DIR)/src install \
-		TARGET=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)bin \
-		WORKDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)var/iptraf \
-		LOGDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)var/log/iptraf \
-		LOCKDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)var/run/iptraf \
+		TARGET=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/bin \
+		WORKDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/var/iptraf \
+		LOGDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/var/log/iptraf \
+		LOCKDIR=$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/var/run/iptraf \
 		;
-	$(STRIP_COMMAND) $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)bin/*
+	$(STRIP_COMMAND) $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
 	install \
 		$(IPTRAF_BUILD_DIR)/CHANGES \
 		$(IPTRAF_BUILD_DIR)/LICENSE \
@@ -219,10 +219,10 @@ $(IPTRAF_IPK): $(IPTRAF_BUILD_DIR)/.built
 		$(IPTRAF_BUILD_DIR)/README* \
 		$(IPTRAF_BUILD_DIR)/RELEASE-NOTES \
 		$(IPTRAF_BUILD_DIR)/Setup \
-		$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/iptraf/
+		$(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/iptraf/
 #	cp -pR $(IPTRAF_BUILD_DIR)/Documentation $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)share/doc/iptraf/
-	install -d $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8
-	install $(IPTRAF_BUILD_DIR)/Documentation/*.8 $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)share/man/man8/
+	install -d $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man8
+	install $(IPTRAF_BUILD_DIR)/Documentation/*.8 $(IPTRAF_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man8/
 	$(MAKE) $(IPTRAF_IPK_DIR)/CONTROL/control
 	echo $(IPTRAF_CONFFILES) | sed -e 's/ /\n/g' > $(IPTRAF_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPTRAF_IPK_DIR)
