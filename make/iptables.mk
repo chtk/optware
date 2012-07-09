@@ -69,7 +69,7 @@ IPTABLES_BUILD_DIR=$(BUILD_DIR)/iptables
 IPTABLES_SOURCE_DIR=$(SOURCE_DIR)/iptables
 IPTABLES_IPK_DIR=$(BUILD_DIR)/iptables-$(IPTABLES_VERSION)-ipk
 IPTABLES_IPK=$(BUILD_DIR)/iptables_$(IPTABLES_VERSION)-$(IPTABLES_IPK_VERSION)_$(TARGET_ARCH).ipk
-IPTABLES_INST_DIR=/opt
+IPTABLES_INST_DIR=$(OPTWARE_PREFIX)
 
 .PHONY: iptables-source iptables-unpack iptables iptables-stage iptables-ipk iptables-clean iptables-dirclean iptables-check
 
@@ -134,7 +134,7 @@ iptables-unpack: $(IPTABLES_BUILD_DIR)/.configured
 $(IPTABLES_BUILD_DIR)/.built: $(IPTABLES_BUILD_DIR)/.configured
 	rm -f $@
 	$(MAKE) -C $(IPTABLES_BUILD_DIR) all \
-		$(TARGET_CONFIGURE_OPTS) PREFIX=/opt
+		$(TARGET_CONFIGURE_OPTS) PREFIX=$(OPTWARE_PREFIX)
 	touch $@
 
 #
@@ -159,10 +159,10 @@ iptables-stage: $(IPTABLES_BUILD_DIR)/.staged $(IPTABLES_BUILD_DIR)/.staged-head
 iptables-stage-headers: $(IPTABLES_BUILD_DIR)/.staged-headers
 
 $(IPTABLES_BUILD_DIR)/.staged-headers: $(IPTABLES_BUILD_DIR)/.staged
-	cp -R $(IPTABLES_BUILD_DIR)/include $(STAGING_DIR)/opt
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)include/Makefile*
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)include/*.in
-	rm -fr $(STAGING_DIR)$(OPTWARE_PREFIX)lib/*.la
+	cp -R $(IPTABLES_BUILD_DIR)/include $(STAGING_DIR)$(OPTWARE_PREFIX)
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/include/Makefile*
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/include/*.in
+	rm -fr $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/*.la
 	touch $@
 
 
@@ -200,9 +200,9 @@ $(IPTABLES_IPK_DIR)/CONTROL/control:
 $(IPTABLES_IPK): $(IPTABLES_BUILD_DIR)/.built
 	rm -rf $(IPTABLES_IPK_DIR) $(BUILD_DIR)/iptables_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IPTABLES_BUILD_DIR) install \
-		$(TARGET_CONFIGURE_OPTS) PREFIX=$(OPTWARE_PREFIX)DESTDIR=$(IPTABLES_IPK_DIR)
-	$(STRIP_COMMAND) $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so* $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)sbin/* \
-		$(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)libexec/xtables/*.so*
+		$(TARGET_CONFIGURE_OPTS) PREFIX=$(OPTWARE_PREFIX) DESTDIR=$(IPTABLES_IPK_DIR)
+	$(STRIP_COMMAND) $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so* $(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)/sbin/* \
+		$(IPTABLES_IPK_DIR)$(OPTWARE_PREFIX)/libexec/xtables/*.so*
 	$(MAKE) $(IPTABLES_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IPTABLES_IPK_DIR)
 
