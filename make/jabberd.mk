@@ -45,7 +45,7 @@ JABBERD_IPK_VERSION=2
 
 #
 # JABBERD_CONFFILES should be a list of user-editable files
-JABBERD_CONFFILES=$(OPTWARE_PREFIX)etc/jabber/jabber.xml $(OPTWARE_PREFIX)etc/jabber/jabber.conf $(OPTWARE_PREFIX)etc/init.d/S80jabber
+JABBERD_CONFFILES=$(OPTWARE_PREFIX)/etc/jabber/jabber.xml $(OPTWARE_PREFIX)/etc/jabber/jabber.conf $(OPTWARE_PREFIX)/etc/init.d/S80jabber
 
 #
 # JABBERD_PATCHES should list any patches, in the the order in
@@ -124,8 +124,8 @@ $(JABBERD_BUILD_DIR)/.configured: $(DL_DIR)/$(JABBERD_SOURCE) $(JABBERD_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--sysconfdir=$(OPTWARE_PREFIX)etc/jabber \
+		--prefix=$(OPTWARE_PREFIX) \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc/jabber \
 		--enable-debug \
 		--enable-ssl \
 		--without-mysql \
@@ -194,9 +194,9 @@ $(JABBERD_IPK_DIR)/CONTROL/control:
 $(JABBERD_IPK): $(JABBERD_BUILD_DIR)/.built
 	rm -rf $(JABBERD_IPK_DIR) $(BUILD_DIR)/jabberd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JABBERD_BUILD_DIR) DESTDIR=$(JABBERD_IPK_DIR) install-strip
-	install -m 644 $(JABBERD_SOURCE_DIR)/jabber.conf $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/jabber/jabber.conf
-	install -d $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(JABBERD_SOURCE_DIR)/rc.jabber $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S80jabber
+	install -m 644 $(JABBERD_SOURCE_DIR)/jabber.conf $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)/etc/jabber/jabber.conf
+	install -d $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(JABBERD_SOURCE_DIR)/rc.jabber $(JABBERD_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S80jabber
 	$(MAKE) $(JABBERD_IPK_DIR)/CONTROL/control
 	install -m 755 $(JABBERD_SOURCE_DIR)/postinst $(JABBERD_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(JABBERD_SOURCE_DIR)/prerm $(JABBERD_IPK_DIR)/CONTROL/prerm
@@ -204,6 +204,10 @@ ifneq ($(OPTWARE_TARGET), nslu2)
 	sed -i -e '/share.hdd.conf/d' $(JABBERD_IPK_DIR)/CONTROL/postinst
 endif
 	echo $(JABBERD_CONFFILES) | sed -e 's/ /\n/g' > $(JABBERD_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(JABBERD_IPK_DIR)$(OPTWARE_PREFIX),$(JABBERD_CONFFILES)) \
+		$(JABBERD_IPK_DIR)/CONTROL/postinst \
+		$(JABBERD_IPK_DIR)/CONTROL/prerm
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JABBERD_IPK_DIR)
 
 #
