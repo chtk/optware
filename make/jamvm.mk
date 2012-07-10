@@ -108,11 +108,11 @@ $(JAMVM_BUILD_DIR)/.configured: $(DL_DIR)/$(JAMVM_SOURCE) $(JAMVM_PATCHES)
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(JAMVM_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(JAMVM_LDFLAGS)" \
 		./configure \
-		--with-classpath-install-dir=$(OPTWARE_PREFIX)\
+		--with-classpath-install-dir=$(OPTWARE_PREFIX) \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -135,16 +135,16 @@ jamvm: $(JAMVM_BUILD_DIR)/.built
 #
 # If you are building a library, then you need to stage it too.
 #
-$(STAGING_DIR)$(OPTWARE_PREFIX)lib/libjamvm.so.$(JAMVM_VERSION): $(JAMVM_BUILD_DIR)/.built
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -m 644 $(JAMVM_BUILD_DIR)/jamvm.h $(STAGING_DIR)$(OPTWARE_PREFIX)include
-	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.a $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.so.$(JAMVM_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)lib
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so.1
-	cd $(STAGING_DIR)$(OPTWARE_PREFIX)lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so
+$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libjamvm.so.$(JAMVM_VERSION): $(JAMVM_BUILD_DIR)/.built
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -m 644 $(JAMVM_BUILD_DIR)/jamvm.h $(STAGING_DIR)$(OPTWARE_PREFIX)/include
+	install -d $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.a $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	install -m 644 $(JAMVM_BUILD_DIR)/libjamvm.so.$(JAMVM_VERSION) $(STAGING_DIR)$(OPTWARE_PREFIX)/lib
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so.1
+	cd $(STAGING_DIR)$(OPTWARE_PREFIX)/lib && ln -fs libjamvm.so.$(JAMVM_VERSION) libjamvm.so
 
-jamvm-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libjamvm.so.$(JAMVM_VERSION)
+jamvm-stage: $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libjamvm.so.$(JAMVM_VERSION)
 
 #
 # This rule creates a control file for ipkg.  It is no longer
@@ -179,9 +179,9 @@ $(JAMVM_IPK_DIR)/CONTROL/control:
 #
 $(JAMVM_IPK): $(JAMVM_BUILD_DIR)/.built
 	rm -rf $(JAMVM_IPK_DIR) $(BUILD_DIR)/jamvm_*_$(TARGET_ARCH).ipk
-	$(MAKE) -C $(JAMVM_BUILD_DIR) install-strip prefix=$(JAMVM_IPK_DIR)/opt
-	install -d $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jamvm/
-	mv $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jni.h $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)include/jamvm/jni.h
+	$(MAKE) -C $(JAMVM_BUILD_DIR) install-strip prefix=$(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)
+	install -d $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)/include/jamvm/
+	mv $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)/include/jni.h $(JAMVM_IPK_DIR)$(OPTWARE_PREFIX)/include/jamvm/jni.h
 	$(MAKE) $(JAMVM_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JAMVM_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(JAMVM_IPK_DIR)
