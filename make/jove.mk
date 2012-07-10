@@ -93,7 +93,7 @@ jove-unpack: $(JOVE_BUILD_DIR)/.configured
 # directly to the main binary which is built.
 #
 $(JOVE_BUILD_DIR)/jjove: $(JOVE_BUILD_DIR)/.configured
-	$(MAKE) LDFLAGS="$(STAGING_LDFLAGS) -Xlinker -rpath -Xlinker $(OPTWARE_PREFIX)lib" LOCALCC=gcc CC=$(TARGET_CC) -C $(JOVE_BUILD_DIR)
+	$(MAKE) LDFLAGS="$(STAGING_LDFLAGS) -Xlinker -rpath -Xlinker $(OPTWARE_PREFIX)/lib" LOCALCC=gcc CC=$(TARGET_CC) -C $(JOVE_BUILD_DIR)
 
 #
 # You should change the dependency to refer directly to the main binary
@@ -134,8 +134,8 @@ $(JOVE_IPK_DIR)/CONTROL/control:
 #
 $(JOVE_IPK): $(JOVE_BUILD_DIR)/jjove
 	rm -rf $(JOVE_IPK_DIR) $(JOVE_IPK)
-	install -d $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(JOVE_BUILD_DIR)/jjove -o $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)bin/jove
+	install -d $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(JOVE_BUILD_DIR)/jjove -o $(JOVE_IPK_DIR)$(OPTWARE_PREFIX)/bin/jove
 	$(MAKE) $(JOVE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JOVE_IPK_DIR)
 
