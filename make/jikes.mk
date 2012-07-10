@@ -106,7 +106,7 @@ $(JIKES_BUILD_DIR)/.configured: $(DL_DIR)/$(JIKES_SOURCE) $(JIKES_PATCHES)
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $(JIKES_BUILD_DIR)/.configured
@@ -170,7 +170,7 @@ $(JIKES_IPK_DIR)/CONTROL/control:
 $(JIKES_IPK): $(JIKES_BUILD_DIR)/.built
 	rm -rf $(JIKES_IPK_DIR) $(BUILD_DIR)/jikes_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JIKES_BUILD_DIR) DESTDIR=$(JIKES_IPK_DIR) install
-	$(STRIP_COMMAND) $(JIKES_IPK_DIR)$(OPTWARE_PREFIX)bin/jikes
+	$(STRIP_COMMAND) $(JIKES_IPK_DIR)$(OPTWARE_PREFIX)/bin/jikes
 #	install -d $(JIKES_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 755 $(JIKES_SOURCE_DIR)/jikes.conf $(JIKES_IPK_DIR)$(OPTWARE_PREFIX)etc/jikes.conf
 #	install -d $(JIKES_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
