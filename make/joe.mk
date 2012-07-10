@@ -112,7 +112,7 @@ $(JOE_BUILD_DIR)/.configured: $(DL_DIR)/$(JOE_SOURCE) $(JOE_PATCHES) make/joe.mk
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -175,7 +175,7 @@ $(JOE_IPK_DIR)/CONTROL/control:
 $(JOE_IPK): $(JOE_BUILD_DIR)/.built
 	rm -rf $(JOE_IPK_DIR) $(BUILD_DIR)/joe_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JOE_BUILD_DIR) DESTDIR=$(JOE_IPK_DIR) install-strip
-	install -d $(JOE_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(JOE_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 	$(MAKE) $(JOE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(JOE_IPK_DIR)
 
