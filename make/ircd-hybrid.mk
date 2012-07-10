@@ -70,7 +70,7 @@ $(IRCD_HYBRID_DIR)/.configured: $(IRCD_HYBRID_DIR)/.source
 			--build=$(GNU_HOST_NAME) \
 			--host=$(GNU_TARGET_NAME) \
 			--target=$(GNU_TARGET_NAME) \
-			--prefix=/opt	\
+			--prefix=$(OPTWARE_PREFIX)	\
 	);
 	touch $(IRCD_HYBRID_DIR)/.configured
 
@@ -111,10 +111,10 @@ $(IRCD_HYBRID_IPK_DIR)/CONTROL/control:
 #
 $(IRCD_HYBRID_IPK): $(IRCD_HYBRID_DIR)/src/ircd
 	rm -rf $(IRCD_HYBRID_IPK_DIR) $(BUILD_DIR)/ircd-hybrid_*_$(TARGET_ARCH).ipk
-	install -d $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)bin
-	$(STRIP_COMMAND) $(IRCD_HYBRID_DIR)/src/ircd -o $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)bin/ircd
-	install -d $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)doc/ircd-hybrid
-	install -m 644 $(IRCD_HYBRID_DIR)/etc/simple.conf $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)doc/ircd-hybrid/simple.conf
+	install -d $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	$(STRIP_COMMAND) $(IRCD_HYBRID_DIR)/src/ircd -o $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)/bin/ircd
+	install -d $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)/doc/ircd-hybrid
+	install -m 644 $(IRCD_HYBRID_DIR)/etc/simple.conf $(IRCD_HYBRID_IPK_DIR)$(OPTWARE_PREFIX)/doc/ircd-hybrid/simple.conf
 	$(MAKE) $(IRCD_HYBRID_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(IRCD_HYBRID_IPK_DIR)
 
