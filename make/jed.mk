@@ -129,7 +129,7 @@ $(JED_BUILD_DIR)/.configured: $(DL_DIR)/$(JED_SOURCE) $(JED_PATCHES) make/jed.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-slang=$(STAGING_PREFIX) \
 		--without-x \
 		--disable-xft \
@@ -146,7 +146,7 @@ jed-unpack: $(JED_BUILD_DIR)/.configured
 #
 $(JED_BUILD_DIR)/.built: $(JED_BUILD_DIR)/.configured
 	rm -f $@
-	$(MAKE) -C $(@D) JED_ROOT=$(OPTWARE_PREFIX)share/jed
+	$(MAKE) -C $(@D) JED_ROOT=$(OPTWARE_PREFIX)/share/jed
 	touch $@
 
 #
@@ -198,8 +198,8 @@ $(JED_IPK_DIR)/CONTROL/control:
 $(JED_IPK): $(JED_BUILD_DIR)/.built
 	rm -rf $(JED_IPK_DIR) $(BUILD_DIR)/jed_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(JED_BUILD_DIR) install \
-		DESTDIR=$(JED_IPK_DIR) JED_ROOT=$(OPTWARE_PREFIX)share/jed
-	$(STRIP_COMMAND) $(JED_IPK_DIR)$(OPTWARE_PREFIX)bin/jed
+		DESTDIR=$(JED_IPK_DIR) JED_ROOT=$(OPTWARE_PREFIX)/share/jed
+	$(STRIP_COMMAND) $(JED_IPK_DIR)$(OPTWARE_PREFIX)/bin/jed
 #	install -d $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(JED_SOURCE_DIR)/jed.conf $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/jed.conf
 #	install -d $(JED_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
