@@ -70,9 +70,9 @@ IRSSI_PATCHES=$(IRSSI_SOURCE_DIR)/configure.in.patch \
 IRSSI_CPPFLAGS=-I$(STAGING_INCLUDE_DIR)/glib-2.0 -I$(STAGING_LIB_DIR)/glib-2.0/include
 IRSSI_LDFLAGS=
 IRSSI_PERL_CFLAGS=-fomit-frame-pointer  -I$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR)
-IRSSI_PERL_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)lib/$(PERL_LIB_CORE_DIR) \
+IRSSI_PERL_LDFLAGS=-Wl,-rpath,$(OPTWARE_PREFIX)/lib/$(PERL_LIB_CORE_DIR) \
 	-L$(STAGING_LIB_DIR)/$(PERL_LIB_CORE_DIR) \
-	-L$(OPTWARE_PREFIX)lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/CORE \
+	-L$(OPTWARE_PREFIX)/lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/CORE \
 	-lperl -lnsl -ldl -lm -lcrypt -lutil -lc -lgcc_s \
 
 IRSSI_PERL_LDFLAGS += $(if $(filter 5.8, $(PERL_MAJOR_VER)), \
@@ -155,7 +155,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		$(IRSSI_CONFIGURE_OPTIONS) \
 		--with-ncurses=$(STAGING_PREFIX) \
@@ -173,10 +173,10 @@ ifneq (,$(filter perl, $(PACKAGES)))
 	    (cd $(IRSSI_BUILD_DIR)/src/perl/$$i; \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
 		$(TARGET_CONFIGURE_OPTS) \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 	    ) \
 	done
 endif
@@ -197,7 +197,7 @@ ifneq (,$(filter perl, $(PACKAGES)))
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		$(PERL_INC) \
-		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/perl5/site_perl" \
 	    ; \
 	done
 endif
@@ -269,22 +269,22 @@ $(IRSSI_IPK) $(IRSSI-DEV_IPK): $(IRSSI_BUILD_DIR)/.built
 	rm -rf $(IRSSI_IPK_DIR) $(BUILD_DIR)/irssi_*_$(TARGET_ARCH).ipk
 	rm -rf $(IRSSI-DEV_IPK_DIR) $(BUILD_DIR)/irssi-dev_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(IRSSI_BUILD_DIR) DESTDIR=$(IRSSI_IPK_DIR) install-strip
-	install -d $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)etc/
+	install -d $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 #	install -m 644 $(IRSSI_SOURCE_DIR)/irssi.conf $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)etc/irssi.conf
 #	install -d $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(IRSSI_SOURCE_DIR)/rc.irssi $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXirssi
 ifneq (,$(filter perl, $(PACKAGES)))
-	(cd $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
+	(cd $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)/lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	mv $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/perllocal.pod \
-	   $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/perllocal.pod.irssi
+	mv $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)/lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/perllocal.pod \
+	   $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)/lib/perl5/$(PERL_VERSION)/$(PERL_ARCH)/perllocal.pod.irssi
 endif
 	$(MAKE) $(IRSSI_IPK_DIR)/CONTROL/control
-	install -d $(IRSSI-DEV_IPK_DIR)/opt
-	mv $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)include $(IRSSI-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	install -d $(IRSSI-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(IRSSI_IPK_DIR)$(OPTWARE_PREFIX)/include $(IRSSI-DEV_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) $(IRSSI-DEV_IPK_DIR)/CONTROL/control
 #	install -m 755 $(IRSSI_SOURCE_DIR)/postinst $(IRSSI_IPK_DIR)/CONTROL/postinst
 #	install -m 755 $(IRSSI_SOURCE_DIR)/prerm $(IRSSI_IPK_DIR)/CONTROL/prerm
