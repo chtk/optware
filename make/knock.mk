@@ -22,7 +22,7 @@ KNOCK_IPK_VERSION=5
 
 #
 # KNOCK_CONFFILES should be a list of user-editable files
-KNOCK_CONFFILES=$(OPTWARE_PREFIX)etc/knockd.conf $(OPTWARE_PREFIX)etc/init.d/S05knockd
+KNOCK_CONFFILES=$(OPTWARE_PREFIX)/etc/knockd.conf $(OPTWARE_PREFIX)/etc/init.d/S05knockd
 
 
 #
@@ -88,7 +88,7 @@ $(KNOCK_BUILD_DIR)/.configured: $(DL_DIR)/$(KNOCK_SOURCE) make/knock.mk
 	if test "$(BUILD_DIR)/$(KNOCK_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(KNOCK_DIR) $(@D) ; \
 	fi
-	sed -i -e 's|/etc/knockd.conf|/opt&|' $(@D)/src/knockd.c
+	sed -i -e 's|/etc/knockd.conf|$(OPTWARE_PREFIX)&|' $(@D)/src/knockd.c
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CFLAGS="$(STAGING_CPPFLAGS) $(KNOCK_CPPFLAGS)" \
@@ -98,8 +98,8 @@ $(KNOCK_BUILD_DIR)/.configured: $(DL_DIR)/$(KNOCK_SOURCE) make/knock.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--sysconfdir=$(OPTWARE_PREFIX)etc \
+		--prefix=$(OPTWARE_PREFIX) \
+		--sysconfdir=$(OPTWARE_PREFIX)/etc \
 		--disable-nls \
 		--disable-static \
 	)
@@ -162,15 +162,17 @@ $(KNOCK_IPK_DIR)/CONTROL/control:
 $(KNOCK_IPK): $(KNOCK_BUILD_DIR)/.built
 	rm -rf $(KNOCK_IPK_DIR) $(BUILD_DIR)/knock_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(KNOCK_BUILD_DIR) DESTDIR=$(KNOCK_IPK_DIR) install
-	$(STRIP_COMMAND) $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)*bin/*
+	$(STRIP_COMMAND) $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)/*bin/*
 	mv $(KNOCK_IPK_DIR)/etc $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)
-	install -d $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(KNOCK_SOURCE_DIR)/rc.knockd $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05knockd
+	install -d $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(KNOCK_SOURCE_DIR)/rc.knockd $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05knockd
 ifneq (nslu2, $(OPTWARE_TARGET))
-	sed -i -e 's/ -i ixp0//' $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S05knockd
+	sed -i -e 's/ -i ixp0//' $(KNOCK_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S05knockd
 endif
 	$(MAKE) $(KNOCK_IPK_DIR)/CONTROL/control
 	echo $(KNOCK_CONFFILES) | sed -e 's/ /\n/g' > $(KNOCK_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(KNOCK_IPK_DIR)$(OPTWARE_PREFIX),$(KNOCK_CONFFILES))
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(KNOCK_IPK_DIR)
 
 #
