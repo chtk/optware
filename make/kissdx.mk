@@ -46,7 +46,7 @@ KISSDX_IPK_VERSION=3
 
 #
 # KISSDX_CONFFILES should be a list of user-editable files
-KISSDX_CONFFILES=$(OPTWARE_PREFIX)etc/kissdx.conf $(OPTWARE_PREFIX)etc/init.d/S83kissdx
+KISSDX_CONFFILES=$(OPTWARE_PREFIX)/etc/kissdx.conf $(OPTWARE_PREFIX)/etc/init.d/S83kissdx
 
 #
 # KISSDX_PATCHES should list any patches, in the the order in
@@ -136,10 +136,11 @@ endif
 	rm -f $(KISSDX_BUILD_DIR)/Makefile
 	mv $(KISSDX_BUILD_DIR)/Makefile-Unslung $(KISSDX_BUILD_DIR)/Makefile
 	sed -i "s#CFLAGS = #CFLAGS = ${STAGING_CPPFLAGS} ${KISSDX_CPPFLAGS} #" $(KISSDX_BUILD_DIR)/Makefile
-	sed -i "s#-L$(OPTWARE_PREFIX)lib#${STAGING_LDFLAGS} ${KISSDX_LDFLAGS}#" $(KISSDX_BUILD_DIR)/Makefile
-	sed -i "s#$(DESTDIR)/usr/sbin/#${STAGING_DIR}$(OPTWARE_PREFIX)bin/#g" $(KISSDX_BUILD_DIR)/Makefile
-	sed -i "s#$(DESTDIR)/etc/#${STAGING_DIR}$(OPTWARE_PREFIX)etc/#g" $(KISSDX_BUILD_DIR)/Makefile
-	sed -i "s#$(DESTDIR)/usr/share/man/#${STAGING_DIR}$(OPTWARE_PREFIX)man/#g" $(KISSDX_BUILD_DIR)/Makefile
+	# Don't replace /opt here
+	sed -i "s#-L/opt/lib#${STAGING_LDFLAGS} ${KISSDX_LDFLAGS}#" $(KISSDX_BUILD_DIR)/Makefile
+	sed -i "s#$(DESTDIR)/usr/sbin/#${STAGING_DIR}$(OPTWARE_PREFIX)/bin/#g" $(KISSDX_BUILD_DIR)/Makefile
+	sed -i "s#$(DESTDIR)/etc/#${STAGING_DIR}$(OPTWARE_PREFIX)/etc/#g" $(KISSDX_BUILD_DIR)/Makefile
+	sed -i "s#$(DESTDIR)/usr/share/man/#${STAGING_DIR}$(OPTWARE_PREFIX)/man/#g" $(KISSDX_BUILD_DIR)/Makefile
 	sed -i "s#-S .old ##g" $(KISSDX_BUILD_DIR)/Makefile
 	touch $(KISSDX_BUILD_DIR)/.configured
 
@@ -193,21 +194,24 @@ $(KISSDX_IPK_DIR)/CONTROL/control:
 $(KISSDX_IPK): $(KISSDX_BUILD_DIR)/.built
 	rm -rf $(KISSDX_IPK_DIR) $(BUILD_DIR)/kissdx_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(KISSDX_BUILD_DIR) DESTDIR=$(KISSDX_IPK_DIR)
-	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -m 755 $(KISSDX_BUILD_DIR)/kissdx $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)bin/kissdx
-	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 644 $(KISSDX_BUILD_DIR)/kissdx.conf $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)etc/kissdx.conf
-	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	install -m 755 $(KISSDX_SOURCE_DIR)/rc.kissdx $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S83kissdx
-	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/S83kissdx
-	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
-	install -m 644 $(KISSDX_BUILD_DIR)/kissdx.1 $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)man/man1/kissdx.1
+	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -m 755 $(KISSDX_BUILD_DIR)/kissdx $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/bin/kissdx
+	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 644 $(KISSDX_BUILD_DIR)/kissdx.conf $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/etc/kissdx.conf
+	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	install -m 755 $(KISSDX_SOURCE_DIR)/rc.kissdx $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S83kissdx
+	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S83kissdx
+	install -d $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/
+	install -m 644 $(KISSDX_BUILD_DIR)/kissdx.1 $(KISSDX_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/kissdx.1
 	$(MAKE) $(KISSDX_IPK_DIR)/CONTROL/control
 	install -m 755 $(KISSDX_SOURCE_DIR)/postinst $(KISSDX_IPK_DIR)/CONTROL/postinst
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(KISSDX_IPK_DIR)/CONTROL/postinst
 	install -m 755 $(KISSDX_SOURCE_DIR)/prerm $(KISSDX_IPK_DIR)/CONTROL/prerm
 	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(KISSDX_IPK_DIR)/CONTROL/prerm
 	echo $(KISSDX_CONFFILES) | sed -e 's/ /\n/g' > $(KISSDX_IPK_DIR)/CONTROL/conffiles
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
+		$(subst $(OPTWARE_PREFIX),$(KISSDX_IPK_DIR)$(OPTWARE_PREFIX),$(KISSDX_CONFFILES)) \
+		$(KISSDX_IPK_DIR)/CONTROL/postinst
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(KISSDX_IPK_DIR)
 
 #
