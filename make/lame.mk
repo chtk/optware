@@ -34,7 +34,7 @@ LAME_CONFLICTS=
 
 #
 # LAME_CONFFILES should be a list of user-editable files
-LAME_CONFFILES=$(OPTWARE_PREFIX)etc/lame.conf $(OPTWARE_PREFIX)etc/init.d/SXXlame
+LAME_CONFFILES=$(OPTWARE_PREFIX)/etc/lame.conf $(OPTWARE_PREFIX)/etc/init.d/SXXlame
 
 #
 ## LAME_PATCHES should list any patches, in the the order in
@@ -109,7 +109,7 @@ $(LAME_BUILD_DIR)/.configured: $(DL_DIR)/$(LAME_SOURCE) $(LAME_PATCHES) make/lam
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
                 --with-gtk-prefix=$(STAGING_PREFIX) \
 	)
@@ -174,7 +174,7 @@ $(LAME_IPK_DIR)/CONTROL/control:
 $(LAME_IPK): $(LAME_BUILD_DIR)/.built
 	rm -rf $(LAME_IPK_DIR) $(BUILD_DIR)/lame_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LAME_BUILD_DIR) DESTDIR=$(LAME_IPK_DIR) install-strip
-	rm -f $(LAME_IPK_DIR)$(OPTWARE_PREFIX)lib/libmp3lame.a
+	rm -f $(LAME_IPK_DIR)$(OPTWARE_PREFIX)/lib/libmp3lame.a
 	$(MAKE) $(LAME_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LAME_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(LAME_IPK_DIR)
