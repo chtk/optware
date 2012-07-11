@@ -115,7 +115,7 @@ $(KEYCHAIN_BUILD_DIR)/.configured: $(DL_DIR)/$(KEYCHAIN_SOURCE) $(KEYCHAIN_PATCH
 	if test "$(BUILD_DIR)/$(KEYCHAIN_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(KEYCHAIN_DIR) $(@D) ; \
 	fi
-	sed -i -e 's|PATH="|PATH="$(OPTWARE_PREFIX)bin:|' $(@D)/keychain.sh
+	sed -i -e 's|PATH="|PATH="$(OPTWARE_PREFIX)/bin:|' $(@D)/keychain.sh
 #	(cd $(KEYCHAIN_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(KEYCHAIN_CPPFLAGS)" \
@@ -124,7 +124,7 @@ $(KEYCHAIN_BUILD_DIR)/.configured: $(DL_DIR)/$(KEYCHAIN_SOURCE) $(KEYCHAIN_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -190,10 +190,10 @@ $(KEYCHAIN_IPK_DIR)/CONTROL/control:
 $(KEYCHAIN_IPK): $(KEYCHAIN_BUILD_DIR)/.built
 	rm -rf $(KEYCHAIN_IPK_DIR) $(BUILD_DIR)/keychain_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(KEYCHAIN_BUILD_DIR) DESTDIR=$(KEYCHAIN_IPK_DIR) install-strip
-	install -d $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install $(KEYCHAIN_BUILD_DIR)/keychain $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -d $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
-	install $(KEYCHAIN_BUILD_DIR)/keychain.1 $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
+	install -d $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install $(KEYCHAIN_BUILD_DIR)/keychain $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -d $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/
+	install $(KEYCHAIN_BUILD_DIR)/keychain.1 $(KEYCHAIN_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/
 	$(MAKE) $(KEYCHAIN_IPK_DIR)/CONTROL/control
 	echo $(KEYCHAIN_CONFFILES) | sed -e 's/ /\n/g' > $(KEYCHAIN_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(KEYCHAIN_IPK_DIR)
