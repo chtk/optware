@@ -135,7 +135,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -201,9 +201,9 @@ $(LAUNCHTOOL_IPK_DIR)/CONTROL/control:
 $(LAUNCHTOOL_IPK): $(LAUNCHTOOL_BUILD_DIR)/.built
 	rm -rf $(LAUNCHTOOL_IPK_DIR) $(BUILD_DIR)/launchtool_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LAUNCHTOOL_BUILD_DIR) DESTDIR=$(LAUNCHTOOL_IPK_DIR) install
-	$(STRIP_COMMAND) $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)bin/launchtool
-	install -d $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)man/man1
-	install -m 644 $(LAUNCHTOOL_BUILD_DIR)/launchtool.1 $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)man/man1/
+	$(STRIP_COMMAND) $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)/bin/launchtool
+	install -d $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)/man/man1
+	install -m 644 $(LAUNCHTOOL_BUILD_DIR)/launchtool.1 $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)/man/man1/
 #	install -d $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(LAUNCHTOOL_SOURCE_DIR)/launchtool.conf $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/launchtool.conf
 #	install -d $(LAUNCHTOOL_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
