@@ -128,7 +128,7 @@ $(KAFFE_BUILD_DIR)/.hostbuilt: $(KAFFE_BUILD_DIR)/.unpacked
 	mv $(BUILD_DIR)/$(KAFFE_DIR) $(KAFFE_HOST_BUILD_DIR) ; \
 	(cd $(KAFFE_HOST_BUILD_DIR); \
 		./configure \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--disable-gtk-peer \
@@ -141,14 +141,15 @@ $(KAFFE_BUILD_DIR)/.hostbuilt: $(KAFFE_BUILD_DIR)/.unpacked
 $(KAFFE_BUILD_DIR)/.configured: $(KAFFE_BUILD_DIR)/.hostbuilt
 	(cd $(KAFFE_BUILD_DIR); \
 		$(TARGET_CONFIGURE_OPTS) \
-		CPPFLAGS="$(STAGING_CPPFLAGS) $(KAFFE_CPPFLAGS)" \
+		CFLAGS="$(STAGING_CPPFLAGS_) $(KAFFE_CPPFLAGS)" \
+		CPPFLAGS="$(KAFFE_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(KAFFE_LDFLAGS)" \
-		KAFFEH=$(KAFFE_HOST_BUILD_DIR)$(OPTWARE_PREFIX)bin/kaffeh \
+		KAFFEH=$(KAFFE_HOST_BUILD_DIR)$(OPTWARE_PREFIX)/bin/kaffeh \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-gtk-peer \
 		--without-x \
 		--enable-binreloc \
