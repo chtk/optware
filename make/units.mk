@@ -122,7 +122,7 @@ $(UNITS_BUILD_DIR)/.configured: $(DL_DIR)/$(UNITS_SOURCE) $(UNITS_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	touch $@
@@ -184,7 +184,7 @@ $(UNITS_IPK_DIR)/CONTROL/control:
 $(UNITS_IPK): $(UNITS_BUILD_DIR)/.built
 	rm -rf $(UNITS_IPK_DIR) $(BUILD_DIR)/units_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(UNITS_BUILD_DIR) DESTDIR=$(UNITS_IPK_DIR) install
-	$(STRIP_COMMAND) $(UNITS_IPK_DIR)$(OPTWARE_PREFIX)bin/units
+	$(STRIP_COMMAND) $(UNITS_IPK_DIR)$(OPTWARE_PREFIX)/bin/units
 	$(MAKE) $(UNITS_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(UNITS_IPK_DIR)
 
