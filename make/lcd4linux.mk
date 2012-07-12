@@ -42,7 +42,7 @@ LCD4LINUX_IPK_VERSION=1
 
 #
 # LCD4LINUX_CONFFILES should be a list of user-editable files $(OPTWARE_PREFIX)etc/init.d/SXXlcd4linux
-LCD4LINUX_CONFFILES=$(OPTWARE_PREFIX)etc/lcd4linux.conf 
+LCD4LINUX_CONFFILES=$(OPTWARE_PREFIX)/etc/lcd4linux.conf 
 
 #
 # LCD4LINUX_PATCHES should list any patches, in the the order in
@@ -136,7 +136,7 @@ $(LCD4LINUX_BUILD_DIR)/.configured: $(DL_DIR)/$(LCD4LINUX_SOURCE) $(LCD4LINUX_PA
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 		--with-ncurses=$(STAGING_INCLUDE_DIR)/ncurses \
@@ -206,8 +206,8 @@ $(LCD4LINUX_IPK_DIR)/CONTROL/control:
 $(LCD4LINUX_IPK): $(LCD4LINUX_BUILD_DIR)/.built
 	rm -rf $(LCD4LINUX_IPK_DIR) $(BUILD_DIR)/lcd4linux_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LCD4LINUX_BUILD_DIR) DESTDIR=$(LCD4LINUX_IPK_DIR) install-strip
-	install -d $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	install -m 644 $(LCD4LINUX_SOURCE_DIR)/lcd4linux.conf $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/lcd4linux.conf
+	install -d $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	install -m 644 $(LCD4LINUX_SOURCE_DIR)/lcd4linux.conf $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)/etc/lcd4linux.conf
 #	install -d $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(LCD4LINUX_SOURCE_DIR)/rc.lcd4linux $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlcd4linux
 #	sed -i -e '/^#!/aOPTWARE_TARGET=${OPTWARE_TARGET}' $(LCD4LINUX_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlcd4linux
