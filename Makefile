@@ -39,13 +39,13 @@ vorbis-tools rrdtool jove git launchtool gnu-smalltalk \
 ldconfig libao gloox libcdio libdlna libdvb gift-ares \
 opendchub openser wakelan opensips \
 xauth xaw xcursor xmu xt xterm xvid \
-ossp-js mediatomb memcached minidlna pango mkvtoolnix \
+ossp-js mediatomb memcached minidlna mkvtoolnix \
 phoneme-advanced motion picoLisp motor pkgconfig moe \
 player mpd mrtg msynctool mt-daapd mt-daapd-svn mtr \
 rssh rtorrent qemu rxtx sablevm qemu-libc-i386 quickie \
 samba2 sandbox scrobby sm sox srecord swi-prolog \
 ack avn colordiff ipcalc perlbal perlconsole \
-subvertpy slimserver squeezecenter py-codeville SpamAssassin py-pyro \
+subvertpy slimserver squeezecenter SpamAssassin py-pyro \
 
 # Add new packages here - make sure you have tested cross compilation.
 # When they have been tested, they will be promoted and uploaded.
@@ -56,6 +56,9 @@ CROSS_PACKAGES_READY_FOR_TESTING = qt-embedded \
 	udpxy \
 	py-btpd-webui \
 	cryptsetup \
+	unbound \
+	ldns \
+	dnssec-trigger \
 
 # Add new native-only packages here
 # When they have been tested, they will be promoted and uploaded.
@@ -79,6 +82,8 @@ PACKAGES_THAT_NEED_TO_BE_FIXED = lumikki \
 	clinkcc \
         icu xerces-c \
 	nemesis \
+	\
+	appweb atk bluez-utils bluez-hcidump libextractor sandbox \
  
 PERL_PACKAGES = \
 	perl \
@@ -183,7 +188,7 @@ PYTHON_PACKAGES = \
 	py-4suite py-amara py-apsw \
 	py-beaker py-bittorrent py-bluez py-boto py-buildutils \
 	py-celementtree py-cheetah py-cherrypy py-cherrytemplate py-cjson \
-	py-clips py-codeville py-configobj py-constraint py-crypto py-curl \
+	py-clips py-configobj py-constraint py-crypto py-curl \
 	py-decorator py-decoratortools py-django py-docutils py-duplicity \
 	py-elementtree py-feedparser py-flup py-formencode \
 	py-gdchart2 py-gd py-genshi py-gnosis-utils \
@@ -214,6 +219,7 @@ ERLANG_PACKAGES = \
 # removed asterisk-chan-capi, doesn't build because of asterisk-stage problems
 ASTERISK_PACKAGES = \
 	asterisk asterisk-sounds \
+	asterisk10 \
 	asterisk14 \
 	asterisk14-chan-capi \
 	asterisk14-core-sounds-en-alaw \
@@ -253,17 +259,17 @@ COMMON_CROSS_PACKAGES = \
 	9base \
 	abook adduser adns aget aiccu alac-decoder \
 	alsa-lib alsa-oss alsa-utils \
-	amule analog antinat apcupsd appweb \
+	amule analog antinat apcupsd \
 	apache apr apr-util \
 	arc aria2 arping arpwatch aspell \
 	$(ASTERISK_PACKAGES) \
-	at atftp atk atop audiofile autoconf automake autossh avahi \
+	at atftp atop audiofile autoconf automake autossh avahi \
 	bacula bash bash-completion bc bftpd \
 	bind bip bison bitchx bitlbee \
 	bogofilter boost bridge-utils \
 	bsdgames bsdmainutils \
 	btpd busybox byrequest bzflag bzip2 \
-	bluez-libs bluez-utils bluez-hcidump \
+	bluez-libs \
 	bluez2-libs bluez2-utils \
 	c-ares cabextract cadaver cairo calc calcurse castget \
 	catdoc ccollect ccrypt ccxstream cdargs \
@@ -279,14 +285,14 @@ COMMON_CROSS_PACKAGES = \
 	dcled dcraw delegate denyhosts dev-pts devio devmem2 dfu-util \
 	dhcp dialog dict digitemp dircproxy distcc \
 	diffstat diffutils discount \
-	dmsetup dnsmasq dnstracer dokuwiki dosfstools dovecot \
+	dmsetup dnsmasq dnstracer dokuwiki dos2unix dosfstools dovecot \
 	dropbear drraw dspam dtach dump \
 	e2fsprogs e2tools eaccelerator easy-rsa ed ecl electric-fence elinks \
 	emacs22 endian enhanced-ctorrent enscript esmtp esniper \
 	ettercap ettercap-ng \
 	$(ERLANG_PACKAGES) \
 	esound eggdrop eventlog exif expat extract-xiso ez-ipupdate \
-	faad2 fann fatresize fbcat fcgi fconfig \
+	faad2 fann fatresize fatsort fbcat fcgi fconfig \
 	fdupes fetchmail ffmpeg \
 	ficy file finch findutils firedrill-httptunnel \
 	fis fish fixesext flac flex flip \
@@ -322,7 +328,7 @@ COMMON_CROSS_PACKAGES = \
 	libdvb libdvbpsi libdvdnav libdvdread \
 	libebml libexosip2 \
 	libevent \
-	libesmtp libexif libextractor libftdi \
+	libesmtp libexif libftdi \
 	libgc libgcrypt libgd libghttp libgmp libgpg-error \
 	libhid \
 	libid3tag libidn libieee1284 libijs libinklevel libjpeg libksba \
@@ -349,7 +355,7 @@ COMMON_CROSS_PACKAGES = \
 	mpc mpd mpdscribble \
 	mpg123 mpop mrtg msmtp \
 	msort msynctool mt-daapd mt-daapd-svn mtools \
-	mtr multitail mutt mxml \
+	mtr multitail mussh mutt mxml \
 	myrapbook \
 	mysql mysql5 mysql-connector-odbc \
 	nagg nagios-plugins nail nano nanoblogger nbench-byte \
@@ -365,7 +371,7 @@ COMMON_CROSS_PACKAGES = \
 	openobex obexftp \
 	opendchub openjpeg openldap openser opensips \
 	openssl openssh openvpn \
-	optware-devel ossp-js oww \
+	optware-devel ossp-js oww owwlog \
 	p7zip p910nd pal palantir pango parted \
 	par2cmdline patch patchutils \
 	pcal pcapsipdump pciutils pcre pen perltgd pinentry pixman \
@@ -382,7 +388,7 @@ COMMON_CROSS_PACKAGES = \
 	redir renderext rhtvision rkhunter \
 	rlfe rlwrap rrdcollect rrdtool \
 	rssh rsstail rsync rtorrent rtpproxy ruby rubygems rxtx \
-	sablevm samba samba2 samba34 samba35 samba36 sandbox sane-backends \
+	sablevm samba samba2 samba34 samba35 samba36 sane-backends \
 	scli scponly screen scrobby scsi-idle sdl sdparm \
 	sed sendmail ser ser2net setserial setpwc sg3-utils \
 	sharutils shntool silc-client simh sipcalc siproxd sispmctl \

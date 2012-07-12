@@ -24,7 +24,7 @@ ASTERISK18_SOURCE_TYPE=tarball
 #ASTERISK18_SOURCE_TYPE=svn
 
 ASTERISK18_SITE=http://downloads.digium.com/pub/asterisk/releases
-ASTERISK18_BASE_VERSION=1.8.8.0
+ASTERISK18_BASE_VERSION=1.8.13.0
 
 ifeq ($(ASTERISK18_SOURCE_TYPE), svn)
 ASTERISK18_SVN=http://svn.digium.com/svn/asterisk/branches/1.8.0
@@ -58,7 +58,7 @@ asterisk14-core-sounds-en-alaw\
 ,libogg\
 ,net-snmp\
 ,radiusclient-ng\
-,sqlite2\
+,sqlite\
 ,unixodbc
 
 ifeq (jabberd, $(filter jabberd, $(PACKAGES)))
@@ -80,109 +80,108 @@ ASTERISK18_CONFLICTS=asterisk,asterisk14,asterisk16,asterisk-sounds,asterisk-cha
 #
 # ASTERISK18_IPK_VERSION should be incremented when the ipk changes.
 #
-ASTERISK18_IPK_VERSION=2
+ASTERISK18_IPK_VERSION=1
 
 #
 # ASTERISK18_CONFFILES should be a list of user-editable files
 #ASTERISK18_CONFFILES=/opt/etc/asterisk18.conf /opt/etc/init.d/SXXasterisk18
 ASTERISK18_CONFFILES=\
-/opt/etc/asterisk/adsi.conf \
-/opt/etc/asterisk/agents.conf \
-/opt/etc/asterisk/ais.conf \
-/opt/etc/asterisk/alarmreceiver.conf \
-/opt/etc/asterisk/alsa.conf \
-/opt/etc/asterisk/amd.conf \
-/opt/etc/asterisk/app_mysql.conf \
-/opt/etc/asterisk/asterisk.adsi \
-/opt/etc/asterisk/asterisk.conf \
-/opt/etc/asterisk/calendar.conf \
-/opt/etc/asterisk/ccss.conf \
-/opt/etc/asterisk/cdr_adaptive_odbc.conf \
-/opt/etc/asterisk/cdr.conf \
-/opt/etc/asterisk/cdr_custom.conf \
-/opt/etc/asterisk/cdr_manager.conf \
-/opt/etc/asterisk/cdr_mysql.conf \
-/opt/etc/asterisk/cdr_odbc.conf \
-/opt/etc/asterisk/cdr_pgsql.conf \
-/opt/etc/asterisk/cdr_sqlite3_custom.conf \
-/opt/etc/asterisk/cdr_syslog.conf \
-/opt/etc/asterisk/cdr_tds.conf \
-/opt/etc/asterisk/cel.conf \
-/opt/etc/asterisk/cel_custom.conf \
-/opt/etc/asterisk/cel_odbc.conf \
-/opt/etc/asterisk/cel_pgsql.conf \
-/opt/etc/asterisk/cel_sqlite3_custom.conf \
-/opt/etc/asterisk/cel_tds.conf \
-/opt/etc/asterisk/chan_dahdi.conf \
-/opt/etc/asterisk/chan_mobile.conf \
-/opt/etc/asterisk/chan_ooh323.conf \
+/opt/etc/asterisk/vpb.conf \
+/opt/etc/asterisk/voicemail.conf \
+/opt/etc/asterisk/users.conf \
+/opt/etc/asterisk/unistim.conf \
+/opt/etc/asterisk/udptl.conf \
+/opt/etc/asterisk/telcordia-1.adsi \
+/opt/etc/asterisk/smdi.conf \
+/opt/etc/asterisk/sla.conf \
+/opt/etc/asterisk/skinny.conf \
+/opt/etc/asterisk/sip_notify.conf \
+/opt/etc/asterisk/sip.conf \
+/opt/etc/asterisk/say.conf \
+/opt/etc/asterisk/rtp.conf \
+/opt/etc/asterisk/res_stun_monitor.conf \
+/opt/etc/asterisk/res_snmp.conf \
+/opt/etc/asterisk/res_pktccops.conf \
+/opt/etc/asterisk/res_pgsql.conf \
+/opt/etc/asterisk/res_odbc.conf \
+/opt/etc/asterisk/res_ldap.conf \
+/opt/etc/asterisk/res_fax.conf \
+/opt/etc/asterisk/res_curl.conf \
+/opt/etc/asterisk/res_config_sqlite.conf \
+/opt/etc/asterisk/res_config_mysql.conf \
+/opt/etc/asterisk/queues.conf \
+/opt/etc/asterisk/queuerules.conf \
+/opt/etc/asterisk/phoneprov.conf \
+/opt/etc/asterisk/phone.conf \
+/opt/etc/asterisk/oss.conf \
+/opt/etc/asterisk/osp.conf \
+/opt/etc/asterisk/muted.conf \
+/opt/etc/asterisk/musiconhold.conf \
+/opt/etc/asterisk/modules.conf \
+/opt/etc/asterisk/misdn.conf \
+/opt/etc/asterisk/minivm.conf \
+/opt/etc/asterisk/mgcp.conf \
+/opt/etc/asterisk/meetme.conf \
+/opt/etc/asterisk/manager.conf \
+/opt/etc/asterisk/logger.conf \
+/opt/etc/asterisk/jingle.conf \
+/opt/etc/asterisk/jabber.conf \
+/opt/etc/asterisk/indications.conf \
+/opt/etc/asterisk/iaxprov.conf \
+/opt/etc/asterisk/iax.conf \
+/opt/etc/asterisk/http.conf \
+/opt/etc/asterisk/h323.conf \
+/opt/etc/asterisk/gtalk.conf \
+/opt/etc/asterisk/func_odbc.conf \
+/opt/etc/asterisk/followme.conf \
+/opt/etc/asterisk/festival.conf \
+/opt/etc/asterisk/features.conf \
+/opt/etc/asterisk/extensions_minivm.conf \
+/opt/etc/asterisk/extensions.lua \
+/opt/etc/asterisk/extensions.conf \
+/opt/etc/asterisk/extensions.ael \
+/opt/etc/asterisk/extconfig.conf \
+/opt/etc/asterisk/enum.conf \
+/opt/etc/asterisk/dundi.conf \
+/opt/etc/asterisk/dsp.conf \
+/opt/etc/asterisk/dnsmgr.conf \
+/opt/etc/asterisk/dbsep.conf \
+/opt/etc/asterisk/console.conf \
+/opt/etc/asterisk/codecs.conf \
+/opt/etc/asterisk/cli_permissions.conf \
 /opt/etc/asterisk/cli_aliases.conf \
 /opt/etc/asterisk/cli.conf \
-/opt/etc/asterisk/cli_permissions.conf \
-/opt/etc/asterisk/codecs.conf \
-/opt/etc/asterisk/console.conf \
-/opt/etc/asterisk/dbsep.conf \
-/opt/etc/asterisk/dnsmgr.conf \
-/opt/etc/asterisk/dsp.conf \
-/opt/etc/asterisk/dundi.conf \
-/opt/etc/asterisk/enum.conf \
-/opt/etc/asterisk/extconfig.conf \
-/opt/etc/asterisk/extensions.ael \
-/opt/etc/asterisk/extensions.conf \
-/opt/etc/asterisk/extensions.lua \
-/opt/etc/asterisk/extensions_minivm.conf \
-/opt/etc/asterisk/features.conf \
-/opt/etc/asterisk/festival.conf \
-/opt/etc/asterisk/followme.conf \
-/opt/etc/asterisk/func_odbc.conf \
-/opt/etc/asterisk/gtalk.conf \
-/opt/etc/asterisk/h323.conf \
-/opt/etc/asterisk/http.conf \
-/opt/etc/asterisk/iax.conf \
-/opt/etc/asterisk/iaxprov.conf \
-/opt/etc/asterisk/indications.conf \
-/opt/etc/asterisk/jabber.conf \
-/opt/etc/asterisk/jingle.conf \
-/opt/etc/asterisk/logger.conf \
-/opt/etc/asterisk/manager.conf \
-/opt/etc/asterisk/meetme.conf \
-/opt/etc/asterisk/mgcp.conf \
-/opt/etc/asterisk/minivm.conf \
-/opt/etc/asterisk/misdn.conf \
-/opt/etc/asterisk/modules.conf \
-/opt/etc/asterisk/musiconhold.conf \
-/opt/etc/asterisk/muted.conf \
-/opt/etc/asterisk/osp.conf \
-/opt/etc/asterisk/oss.conf \
-/opt/etc/asterisk/phone.conf \
-/opt/etc/asterisk/phoneprov.conf \
-/opt/etc/asterisk/queuerules.conf \
-/opt/etc/asterisk/queues.conf \
-/opt/etc/asterisk/res_config_mysql.conf \
-/opt/etc/asterisk/res_config_sqlite.conf \
-/opt/etc/asterisk/res_curl.conf \
-/opt/etc/asterisk/res_fax.conf \
-/opt/etc/asterisk/res_ldap.conf \
-/opt/etc/asterisk/res_odbc.conf \
-/opt/etc/asterisk/res_pgsql.conf \
-/opt/etc/asterisk/res_pktccops.conf \
-/opt/etc/asterisk/res_snmp.conf \
-/opt/etc/asterisk/res_stun_monitor.conf \
-/opt/etc/asterisk/rpt.conf \
-/opt/etc/asterisk/rtp.conf \
-/opt/etc/asterisk/say.conf \
-/opt/etc/asterisk/sip.conf \
-/opt/etc/asterisk/sip_notify.conf \
-/opt/etc/asterisk/skinny.conf \
-/opt/etc/asterisk/sla.conf \
-/opt/etc/asterisk/smdi.conf \
-/opt/etc/asterisk/telcordia-1.adsi \
-/opt/etc/asterisk/udptl.conf \
-/opt/etc/asterisk/unistim.conf \
-/opt/etc/asterisk/usbradio.conf \
-/opt/etc/asterisk/users.conf \
-/opt/etc/asterisk/voicemail.conf \
-/opt/etc/asterisk/vpb.conf
+/opt/etc/asterisk/chan_ooh323.conf \
+/opt/etc/asterisk/chan_mobile.conf \
+/opt/etc/asterisk/chan_dahdi.conf \
+/opt/etc/asterisk/cel_tds.conf \
+/opt/etc/asterisk/cel_sqlite3_custom.conf \
+/opt/etc/asterisk/cel_pgsql.conf \
+/opt/etc/asterisk/cel_odbc.conf \
+/opt/etc/asterisk/cel_custom.conf \
+/opt/etc/asterisk/cel.conf \
+/opt/etc/asterisk/cdr_tds.conf \
+/opt/etc/asterisk/cdr_syslog.conf \
+/opt/etc/asterisk/cdr_sqlite3_custom.conf \
+/opt/etc/asterisk/cdr_pgsql.conf \
+/opt/etc/asterisk/cdr_odbc.conf \
+/opt/etc/asterisk/cdr_mysql.conf \
+/opt/etc/asterisk/cdr_manager.conf \
+/opt/etc/asterisk/cdr_custom.conf \
+/opt/etc/asterisk/cdr_adaptive_odbc.conf \
+/opt/etc/asterisk/cdr.conf \
+/opt/etc/asterisk/ccss.conf \
+/opt/etc/asterisk/calendar.conf \
+/opt/etc/asterisk/asterisk.conf \
+/opt/etc/asterisk/asterisk.adsi \
+/opt/etc/asterisk/app_mysql.conf \
+/opt/etc/asterisk/amd.conf \
+/opt/etc/asterisk/alsa.conf \
+/opt/etc/asterisk/alarmreceiver.conf \
+/opt/etc/asterisk/ais.conf \
+/opt/etc/asterisk/agents.conf \
+/opt/etc/asterisk/adsi.conf \
+
 
 #
 # ASTERISK18_PATCHES should list any patches, in the the order in
@@ -305,7 +304,7 @@ ifeq (x11, $(filter x11, $(PACKAGES)))
 	$(MAKE) x11-stage
 endif
 	$(MAKE) radiusclient-ng-stage unixodbc-stage popt-stage net-snmp-stage
-	$(MAKE) sqlite2-stage libogg-stage libxml2-stage
+	$(MAKE) sqlite-stage libogg-stage libxml2-stage
 	$(MAKE) mysql-stage bluez2-libs-stage
 	rm -rf $(BUILD_DIR)/$(ASTERISK18_DIR) $(ASTERISK18_BUILD_DIR)
 	$(ASTERISK18_UNZIP) $(DL_DIR)/$(ASTERISK18_SOURCE) | tar -C $(BUILD_DIR) -xvf -
@@ -341,6 +340,7 @@ endif
 		--with-ogg=$(STAGING_PREFIX) \
 		--with-popt=$(STAGING_PREFIX) \
 		--without-tds \
+		--without-openais \
 		--with-sqlite=$(STAGING_PREFIX) \
 		--with-radius=$(STAGING_PREFIX) \
 		--with-odbc=$(STAGING_PREFIX) \
@@ -349,7 +349,6 @@ endif
 		--with-mysqlclient=$(STAGING_PREFIX) \
 		--with-bluetooth=$(STAGING_PREFIX) \
 		--without-postgres \
-		--without-sqlite3 \
 		--without-pwlib \
 		--without-usb \
 		--without-lua \
@@ -474,13 +473,15 @@ $(ASTERISK18_IPK): $(ASTERISK18_BUILD_DIR)/.built
 	echo "noload => app_queue.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => app_mixmonitor.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => app_mysql.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
-	echo "noload => app_stack.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
+	echo "noload => res_ael_share.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
+	echo "noload => res_agi.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_config_curl.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_config_ldap.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_config_mysql.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_config_odbc.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_config_sqlite.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
+	echo "noload => res_fax.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_jabber.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_odbc.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf
 	echo "noload => res_snmp.so" >> $(ASTERISK18_IPK_DIR)/opt/etc/asterisk/modules.conf

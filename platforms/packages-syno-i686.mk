@@ -4,6 +4,7 @@ SPECIFIC_PACKAGES = \
 	optware-bootstrap kernel-modules \
 	$(PACKAGES_REQUIRE_LINUX26) \
 	py-ctypes \
+	redis \
 	$(PERL_PACKAGES) \
 	binutils gcc libc-dev \
 
@@ -19,9 +20,6 @@ BROKEN_PACKAGES = \
          vte xchat \
 
 BIND_CONFIG_ARGS := --disable-epoll
-
-BITLBEE_VERSION := 1.2.8
-BITLBEE_IPK_VERSION := 1
 
 ERLANG_SMP := --enable-smp-support
 

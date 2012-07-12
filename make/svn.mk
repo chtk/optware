@@ -26,8 +26,8 @@
 # from your name or email address.  If you leave MAINTAINER set to
 # "NSLU2 Linux" other developers will feel free to edit.
 #
-SVN_SITE=http://subversion.tigris.org/downloads
-SVN_VERSION=1.6.17
+SVN_SITE=http://archive.apache.org/dist/subversion/
+SVN_VERSION=1.7.5
 SVN_SOURCE=subversion-$(SVN_VERSION).tar.bz2
 SVN_DIR=subversion-$(SVN_VERSION)
 SVN_UNZIP=bzcat
@@ -35,7 +35,7 @@ SVN_MAINTAINER=NSLU2 Linux <nslu2-linux@yahoogroups.com>
 SVN_DESCRIPTION=a compelling replacement for CVS
 SVN_SECTION=net
 SVN_PRIORITY=optional
-SVN_DEPENDS=neon, apr, apr-util, cyrus-sasl-libs, e2fslibs, expat, gdbm, libxml2, sqlite, zlib
+SVN_DEPENDS=neon, apr, apr-util, cyrus-sasl-libs, e2fslibs, expat, file, gdbm, libxml2, sqlite, zlib
 ifeq (openldap, $(filter openldap, $(PACKAGES)))
 SVN_DEPENDS +=, openldap-libs
 endif
@@ -58,7 +58,7 @@ SVN-PL_CONFLICTS=
 #
 # SVN_IPK_VERSION should be incremented when the ipk changes.
 #
-SVN_IPK_VERSION=1
+SVN_IPK_VERSION=2
 
 #
 # SVN_CONFFILES should be a list of user-editable files
@@ -68,7 +68,7 @@ SVN_CONFFILES=
 # SVN_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-#SVN_PATCHES=$(SVN_SOURCE_DIR)/configure.patch
+SVN_PATCHES=$(SVN_SOURCE_DIR)/ltmain.sh.patch
 
 #
 # If the compilation of the package requires additional
@@ -141,12 +141,10 @@ svn-source: $(DL_DIR)/$(SVN_SOURCE) $(SVN_PATCHES)
 # If the compilation of the package requires other packages to be staged
 # first, then do that first (e.g. "$(MAKE) <bar>-stage <baz>-stage").
 #
-$(SVN_BUILD_DIR)/.configured: $(DL_DIR)/$(SVN_SOURCE) $(SVN_PATCHES)
-	$(MAKE) apr-stage apr-util-stage apache-stage neon-stage
-	$(MAKE) cyrus-sasl-stage
-	$(MAKE) expat-stage libxml2-stage
-	$(MAKE) e2fsprogs-stage gdbm-stage sqlite-stage
-	$(MAKE) zlib-stage
+$(SVN_BUILD_DIR)/.configured: $(DL_DIR)/$(SVN_SOURCE) $(SVN_PATCHES) make/svn.mk
+	$(MAKE) apr-stage apr-util-stage apache-stage neon-stage \
+		cyrus-sasl-stage expat-stage file-stage libxml2-stage \
+		e2fsprogs-stage gdbm-stage sqlite-stage zlib-stage
 ifeq (openldap, $(filter openldap, $(PACKAGES)))
 	$(MAKE) openldap-stage
 endif
@@ -155,8 +153,9 @@ ifneq (,$(filter perl, $(PACKAGES)))
 	$(MAKE) perl-stage
 endif
 	rm -rf $(BUILD_DIR)/$(SVN_DIR) $(@D)
+	rm -rf $(STAGING_INCLUDE_DIR)/subversion-1/ $(STAGING_LIB_DIR)/libsvn*
 	$(SVN_UNZIP) $(DL_DIR)/$(SVN_SOURCE) | tar -C $(BUILD_DIR) -xvf -
-	#cat $(SVN_PATCHES) | patch -d $(BUILD_DIR)/$(SVN_DIR) -p1
+	cat $(SVN_PATCHES) | patch -d $(BUILD_DIR)/$(SVN_DIR) -p1
 	mv $(BUILD_DIR)/$(SVN_DIR) $(@D)
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \

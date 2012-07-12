@@ -21,7 +21,7 @@
 # "NSLU2 Linux" other developers will feel free to edit.
 #
 WEECHAT_SITE=http://www.weechat.org/files/src
-WEECHAT_VERSION=0.3.5
+WEECHAT_VERSION=0.3.8
 WEECHAT_SOURCE=weechat-$(WEECHAT_VERSION).tar.bz2
 WEECHAT_DIR=weechat-$(WEECHAT_VERSION)
 WEECHAT_UNZIP=bzcat
@@ -29,17 +29,17 @@ WEECHAT_MAINTAINER=NSLU2 Linux <nslu2-linux@yahoogroups.com>
 WEECHAT_DESCRIPTION=(Wee Enhanced Environment for Chat) is a fast and light IRC client.
 WEECHAT_SECTION=irc
 WEECHAT_PRIORITY=optional
-WEECHAT_DEPENDS=gnutls, $(NCURSES_FOR_OPTWARE_TARGET)
+WEECHAT_DEPENDS=gnutls, libcurl, $(NCURSES_FOR_OPTWARE_TARGET)
 ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 WEECHAT_DEPENDS+=, libiconv
 endif
-WEECHAT_SUGGESTS=
+WEECHAT_SUGGESTS=python26,lua
 WEECHAT_CONFLICTS=
 
 #
 # WEECHAT_IPK_VERSION should be incremented when the ipk changes.
 #
-WEECHAT_IPK_VERSION=1
+WEECHAT_IPK_VERSION=2
 
 #
 # WEECHAT_CONFFILES should be a list of user-editable files
@@ -110,7 +110,7 @@ weechat-source: $(DL_DIR)/$(WEECHAT_SOURCE) $(WEECHAT_PATCHES)
 # shown below to make various patches to it.
 #
 $(WEECHAT_BUILD_DIR)/.configured: $(DL_DIR)/$(WEECHAT_SOURCE) $(WEECHAT_PATCHES) make/weechat.mk
-	$(MAKE) gnutls-stage
+	$(MAKE) gnutls-stage python26-stage lua-stage libcurl-stage
 	$(MAKE) $(NCURSES_FOR_OPTWARE_TARGET)-stage
 ifeq (libiconv, $(filter libiconv, $(PACKAGES)))
 	$(MAKE) libiconv-stage
@@ -126,12 +126,20 @@ endif
 	fi
 #	ACLOCAL="aclocal -I $(STAGING_PREFIX)/share/aclocal"
 	autoreconf -vif $(@D)
+	sed -i	-e '/PYTHON_SYSPREFIX=/s|=.*|=$(STAGING_PREFIX)|' \
+		-e '/PYTHON_VERSION=/s|=.*|=2.6|' \
+		-e '/PYTHON_INCLUDE=/s|=.*|=$(STAGING_INCLUDE_DIR)/python2.6|' \
+		-e '/PYTHON_LIB=/s|`$$PYTHON.*`|$(STAGING_LIB_DIR)/python2.6/config|' \
+		-e '/PYTHON_LFLAGS=/s|"`$$PYTHON.*`|-lpthread -ldl -lpthread -lutil -lm -Xlinker -export-dynamic"|' \
+		-e '/LUA_TEST=/s|=.*|=0|' \
+		$(@D)/configure
 	sed -i -e 's|$$(includedir)/$$(PACKAGE)|$$(DESTDIR)/&|' $(@D)/src/plugins/Makefile.in
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(WEECHAT_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(WEECHAT_LDFLAGS)" \
 		PKG_CONFIG_PATH=$(STAGING_LIB_DIR)/pkgconfig \
+		CURL_CONFIG=$(STAGING_PREFIX)/bin/curl-config \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
@@ -142,9 +150,9 @@ endif
 		--disable-wxwidgets \
 		--disable-aspell \
 		--enable-gnutls \
-		--disable-lua \
+		--enable-lua \
 		--disable-perl \
-		--disable-python \
+		--enable-python \
 		--disable-ruby \
 		--with-libgnutls-prefix=$(STAGING_PREFIX) \
 		--disable-nls \

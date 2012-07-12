@@ -22,7 +22,7 @@
 #
 
 PCRE_SITE=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
-PCRE_VERSION=8.20
+PCRE_VERSION=8.30
 PCRE_SOURCE=pcre-$(PCRE_VERSION).tar.bz2
 PCRE_DIR=pcre-$(PCRE_VERSION)
 PCRE_UNZIP=bzcat
@@ -140,6 +140,7 @@ endif
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
+	sed -i -e 's/ln -s /ln -sf /g' $(@D)/Makefile
 	touch $@
 
 pcre-unpack: $(PCRE_BUILD_DIR)/.configured

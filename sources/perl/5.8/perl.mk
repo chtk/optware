@@ -17,6 +17,7 @@ $(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/Configure.patch \
 $(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/gcc42.patch \
 $(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/asm-page-h-compile-failure.patch \
 $(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/INET.pm.patch \
+$(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/makedepend.SH.patch\
 
 PERL_POST_CONFIGURE_PATCHES=$(PERL_SOURCE_DIR)/Makefile-pp_hot.patch
 
@@ -151,6 +152,7 @@ else
 ifdef PERL_LDFLAGS_EXTRA
 	sed -i -e 's|-shared|& $(PERL_LDFLAGS_EXTRA)|' $(@D)/Cross/config.sh-$(GNU_TARGET_NAME)
 endif
+	sed -i -e 's|-ldb |-ldb-$(LIBDB_LIB_VERSION) |' $(@D)/Cross/config.sh-$(GNU_TARGET_NAME)
 	sed -i -e '/^$$callbacks->.*"CFLAGS"/s|^|#|' $(@D)/Cross/generate_config_sh
 	(cd $(@D)/Cross; \
 		cp -f $(PERL_SOURCE_DIR)/$(PERL_MAJOR_VER)/Makefile . ; \

@@ -15,11 +15,13 @@ BROKEN_PACKAGES = \
 	golang \
 	gtmess gutenprint \
 	iptraf moc \
+	mkvtoolnix \
 	mtr \
 	opensips \
 	pinentry \
 	puppy rssh \
 	sandbox \
+	srecord \
 	lm-sensors \
 	btg clinkcc libopensync msynctool obexftp \
 
