@@ -91,7 +91,7 @@ $(DNSMASQ_IPK): $(DNSMASQ_BUILD_DIR)/.built
 		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq/doc.html
 	install -m 644 $(DNSMASQ_BUILD_DIR)/setup.html \
 		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/doc/dnsmasq/setup.html
-	sed -i -e "s,/opt/,$(OPTWARE_PREFIX),g" \
+	sed -i -e "s,/opt/,$(OPTWARE_PREFIX)/,g" \
 		$(subst $(OPTWARE_PREFIX),$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX),$(DNSMASQ_CONFFILES)) \
 		$(DNSMASQ_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/S56dnsmasq \
 		$(DNSMASQ_IPK_DIR)/CONTROL/postinst
