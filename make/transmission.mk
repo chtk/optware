@@ -208,8 +208,8 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
-		--datadir=$(OPTWARE_PREFIX)share \
+		--prefix=$(OPTWARE_PREFIX) \
+		--datadir=$(OPTWARE_PREFIX)/share \
 		--disable-gtk \
 		--disable-wx \
 		--disable-nls \
@@ -259,7 +259,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-gtk \
 		--disable-wx \
 		--disable-nls \
@@ -343,14 +343,14 @@ else
 $(TRANSMISSION_IPK): $(TRANSMISSION_BUILD_DIR)/.built
 endif
 	rm -rf $(TRANSMISSION_IPK_DIR) $(BUILD_DIR)/transmission_*_$(TARGET_ARCH).ipk
-	install -d $(TRANSMISSION_IPK_DIR)/opt
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)
 	$(MAKE) -C $(TRANSMISSION_BUILD_DIR) DESTDIR=$(TRANSMISSION_IPK_DIR) install-strip
 #	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc
 #	install -m 644 $(TRANSMISSION_SOURCE_DIR)/transmission.conf $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)etc/transmission.conf
-	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmission
-	install -m 666 $(TRANSMISSION_BUILD_DIR)/[CNR]*  $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)share/doc/transmission
-	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)var/log
-	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)var/run
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/transmission
+	install -m 666 $(TRANSMISSION_BUILD_DIR)/[CNR]*  $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/transmission
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)/var/log
+	install -d $(TRANSMISSION_IPK_DIR)$(OPTWARE_PREFIX)/var/run
 	$(MAKE) $(TRANSMISSION_IPK_DIR)/CONTROL/control
 	echo $(TRANSMISSION_CONFFILES) | sed -e 's/ /\n/g' > $(TRANSMISSION_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(TRANSMISSION_IPK_DIR)
