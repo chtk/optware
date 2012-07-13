@@ -40,7 +40,7 @@ TOR_IPK_VERSION=1
 
 #
 # TOR_CONFFILES should be a list of user-editable files
-TOR_CONFFILES=$(OPTWARE_PREFIX)etc/tor.conf $(OPTWARE_PREFIX)etc/init.d/SXXtor
+TOR_CONFFILES=$(OPTWARE_PREFIX)/etc/tor.conf $(OPTWARE_PREFIX)/etc/init.d/SXXtor
 
 #
 # TOR_PATCHES should list any patches, in the the order in
