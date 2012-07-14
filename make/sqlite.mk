@@ -124,7 +124,7 @@ $(SQLITE_BUILD_DIR)/.configured: $(DL_DIR)/$(SQLITE_SOURCE) $(SQLITE_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-readline-inc="$(STAGING_CPPFLAGS) $(SQLITE_CPPFLAGS)" \
 		--with-readline-lib="$(STAGING_LDFLAGS) $(SQLITE_LDFLAGS)" \
 		--disable-nls \
@@ -192,8 +192,8 @@ $(SQLITE_IPK_DIR)/CONTROL/control:
 $(SQLITE_IPK): $(SQLITE_BUILD_DIR)/.built
 	rm -rf $(SQLITE_IPK_DIR) $(BUILD_DIR)/sqlite_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(SQLITE_BUILD_DIR) DESTDIR=$(SQLITE_IPK_DIR) install
-	$(STRIP_COMMAND) $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)bin/sqlite3 $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
-	rm -f $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)lib/libsqlite3.a
+	$(STRIP_COMMAND) $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)/bin/sqlite3 $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so
+	rm -f $(SQLITE_IPK_DIR)$(OPTWARE_PREFIX)/lib/libsqlite3.a
 	$(MAKE) $(SQLITE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(SQLITE_IPK_DIR)
 
