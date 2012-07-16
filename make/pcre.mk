@@ -133,7 +133,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--enable-utf8 \
 		$(PCRE_CONFIG_ARGS) \
 		--disable-nls \
@@ -220,19 +220,19 @@ $(PCRE_IPK) $(PCRE-DEV_IPK): $(PCRE_BUILD_DIR)/.built
 	rm -rf $(PCRE-DEV_IPK_DIR) $(BUILD_DIR)/pcre-dev_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PCRE_BUILD_DIR) DESTDIR=$(PCRE_IPK_DIR) install
 	find $(PCRE_IPK_DIR) -type d -exec chmod go+rx {} \;
-	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)bin/pcregrep
-	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)bin/pcretest
-	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.so
-	rm -f $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	install -d $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin
-	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)bin/pcre-config $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	install -d $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib
-	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)share $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)include $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)
-	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)lib/pkgconfig $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)lib/
-	install -d $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/pcre
-	mv $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/doc/pcre/[ACLNR]* $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/pcre/
-	install -d $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
-	mv $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/pcre[gt]* $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
+	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/bin/pcregrep
+	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/bin/pcretest
+	$(STRIP_COMMAND) $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.so
+	rm -f $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	install -d $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/bin/pcre-config $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	install -d $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/lib
+	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/share $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/include $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)
+	mv $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/lib/pkgconfig $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/lib/
+	install -d $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/pcre
+	mv $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/pcre/[ACLNR]* $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/pcre/
+	install -d $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1
+	mv $(PCRE-DEV_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/pcre[gt]* $(PCRE_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/
 	$(MAKE) $(PCRE_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PCRE_IPK_DIR)
 	$(MAKE) $(PCRE-DEV_IPK_DIR)/CONTROL/control
