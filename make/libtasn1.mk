@@ -46,7 +46,7 @@ LIBTASN1_IPK_VERSION=1
 
 #
 # LIBTASN1_CONFFILES should be a list of user-editable files
-LIBTASN1_CONFFILES=#$(OPTWARE_PREFIX)etc/libtasn1.conf $(OPTWARE_PREFIX)etc/init.d/SXXlibtasn1
+LIBTASN1_CONFFILES=#$(OPTWARE_PREFIX)/etc/libtasn1.conf $(OPTWARE_PREFIX)/etc/init.d/SXXlibtasn1
 
 #
 # LIBTASN1_PATCHES should list any patches, in the the order in
@@ -121,7 +121,7 @@ $(LIBTASN1_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBTASN1_SOURCE) $(LIBTASN1_PATCH
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-static \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -149,7 +149,7 @@ $(LIBTASN1_BUILD_DIR)/.staged: $(LIBTASN1_BUILD_DIR)/.built
 	rm -f $@
 	$(MAKE) -C $(LIBTASN1_BUILD_DIR) DESTDIR=$(STAGING_DIR) install
 #	sed -i -e 's|echo $$includes $$tasn1_cflags|echo "-I$(STAGING_INCLUDE_DIR)"|' $(STAGING_PREFIX)/bin/libtasn1-config
-	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)lib/libtasn1.la
+	rm -f $(STAGING_DIR)$(OPTWARE_PREFIX)/lib/libtasn1.la
 	sed -i -e 's|^prefix=.*|prefix=$(STAGING_PREFIX)|' $(STAGING_LIB_DIR)/pkgconfig/libtasn1.pc
 	touch $@
 
@@ -190,10 +190,10 @@ $(LIBTASN1_IPK): $(LIBTASN1_BUILD_DIR)/.built
 	rm -rf $(LIBTASN1_IPK_DIR) $(BUILD_DIR)/libtasn1_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBTASN1_BUILD_DIR) DESTDIR=$(LIBTASN1_IPK_DIR) install-strip
 #	rm -r $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)info
-	#install -d $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)etc/
-	#install -m 644 $(LIBTASN1_SOURCE_DIR)/libtasn1.conf $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)etc/libtasn1.conf
-	#install -d $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
-	#install -m 755 $(LIBTASN1_SOURCE_DIR)/rc.libtasn1 $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXlibtasn1
+	#install -d $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)/etc/
+	#install -m 644 $(LIBTASN1_SOURCE_DIR)/libtasn1.conf $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)/etc/libtasn1.conf
+	#install -d $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d
+	#install -m 755 $(LIBTASN1_SOURCE_DIR)/rc.libtasn1 $(LIBTASN1_IPK_DIR)$(OPTWARE_PREFIX)/etc/init.d/SXXlibtasn1
 	$(MAKE) $(LIBTASN1_IPK_DIR)/CONTROL/control
 	#install -m 755 $(LIBTASN1_SOURCE_DIR)/postinst $(LIBTASN1_IPK_DIR)/CONTROL/postinst
 	#install -m 755 $(LIBTASN1_SOURCE_DIR)/prerm $(LIBTASN1_IPK_DIR)/CONTROL/prerm
