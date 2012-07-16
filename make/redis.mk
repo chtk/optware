@@ -123,7 +123,7 @@ $(REDIS_BUILD_DIR)/.configured: $(DL_DIR)/$(REDIS_SOURCE) $(REDIS_PATCHES) make/
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -195,19 +195,19 @@ $(REDIS_IPK_DIR)/CONTROL/control:
 $(REDIS_IPK): $(REDIS_BUILD_DIR)/.built
 	rm -rf $(REDIS_IPK_DIR) $(BUILD_DIR)/redis_*_$(TARGET_ARCH).ipk
 ifeq (2.0.4, $(REDIS_VERSION))
-	install -d $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(<D)/redis-benchmark $(<D)/redis-cli $(<D)/redis-server $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)bin/
+	install -d $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(<D)/redis-benchmark $(<D)/redis-cli $(<D)/redis-server $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)/bin/
 else
-	$(MAKE) -C $(REDIS_BUILD_DIR) PREFIX=$(REDIS_IPK_DIR)$(OPTWARE_PREFIX)install \
+	$(MAKE) -C $(REDIS_BUILD_DIR) PREFIX=$(REDIS_IPK_DIR)$(OPTWARE_PREFIX) install \
 		FORCE_LIBC_MALLOC=yes \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(REDIS_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(REDIS_LDFLAGS)" \
 		;
 endif
-	$(STRIP_COMMAND) $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)bin/*
-	install -d $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/redis/examples
-	install -m 755 $(<D)/redis.conf $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)share/doc/redis/examples/
+	$(STRIP_COMMAND) $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)/bin/*
+	install -d $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/redis/examples
+	install -m 755 $(<D)/redis.conf $(REDIS_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/redis/examples/
 	$(MAKE) $(REDIS_IPK_DIR)/CONTROL/control
 	echo $(REDIS_CONFFILES) | sed -e 's/ /\n/g' > $(REDIS_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(REDIS_IPK_DIR)
