@@ -125,7 +125,7 @@ $(NE_BUILD_DIR)/.configured: $(DL_DIR)/$(NE_SOURCE) $(NE_PATCHES) make/ne.mk
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -198,15 +198,15 @@ $(NE_IPK_DIR)/CONTROL/control:
 $(NE_IPK): $(NE_BUILD_DIR)/.built
 	rm -rf $(NE_IPK_DIR) $(BUILD_DIR)/ne_*_$(TARGET_ARCH).ipk
 #	$(MAKE) -C $(NE_BUILD_DIR) DESTDIR=$(NE_IPK_DIR) install-strip
-	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin
-	install -m 755 $(NE_BUILD_DIR)/src/ne $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin/
-	$(STRIP_COMMAND) $(NE_IPK_DIR)$(OPTWARE_PREFIX)bin/ne
-	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne
-	cp -rp $(NE_BUILD_DIR)/doc/* $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne
-	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1
-	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne/*.1 $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/man/man1/
-	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/info
-	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/doc/ne/*.info.gz $(NE_IPK_DIR)$(OPTWARE_PREFIX)share/info/
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)/bin
+	install -m 755 $(NE_BUILD_DIR)/src/ne $(NE_IPK_DIR)$(OPTWARE_PREFIX)/bin/
+	$(STRIP_COMMAND) $(NE_IPK_DIR)$(OPTWARE_PREFIX)/bin/ne
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ne
+	cp -rp $(NE_BUILD_DIR)/doc/* $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ne
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1
+	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ne/*.1 $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/man/man1/
+	install -d $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/info
+	mv $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/doc/ne/*.info.gz $(NE_IPK_DIR)$(OPTWARE_PREFIX)/share/info/
 	$(MAKE) $(NE_IPK_DIR)/CONTROL/control
 	echo $(NE_CONFFILES) | sed -e 's/ /\n/g' > $(NE_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(NE_IPK_DIR)
