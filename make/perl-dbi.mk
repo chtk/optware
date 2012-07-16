@@ -42,9 +42,9 @@ $(PERL-DBI_BUILD_DIR)/.configured: $(DL_DIR)/$(PERL-DBI_SOURCE) $(PERL-DBI_PATCH
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
-		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl" \
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/perl5/site_perl" \
 		$(PERL_HOSTPERL) Makefile.PL \
-		PREFIX=$(OPTWARE_PREFIX)\
+		PREFIX=$(OPTWARE_PREFIX) \
 	)
 	touch $@
 
@@ -57,7 +57,7 @@ $(PERL-DBI_BUILD_DIR)/.built: $(PERL-DBI_BUILD_DIR)/.configured
 		CPPFLAGS="$(STAGING_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS)" \
 		$(PERL_INC) \
-		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)lib/perl5/site_perl"
+		PERL5LIB="$(STAGING_DIR)$(OPTWARE_PREFIX)/lib/perl5/site_perl"
 	touch $@
 
 perl-dbi: $(PERL-DBI_BUILD_DIR)/.built
@@ -87,13 +87,13 @@ $(PERL-DBI_IPK_DIR)/CONTROL/control:
 $(PERL-DBI_IPK): $(PERL-DBI_BUILD_DIR)/.built
 	rm -rf $(PERL-DBI_IPK_DIR) $(BUILD_DIR)/perl-dbi_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PERL-DBI_BUILD_DIR) DESTDIR=$(PERL-DBI_IPK_DIR) install
-	find $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX)-name 'perllocal.pod' -exec rm -f {} \;
-	(cd $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX)lib/perl5 ; \
+	find $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX) -name 'perllocal.pod' -exec rm -f {} \;
+	(cd $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX)/lib/perl5 ; \
 		find . -name '*.so' -exec chmod +w {} \; ; \
 		find . -name '*.so' -exec $(STRIP_COMMAND) {} \; ; \
 		find . -name '*.so' -exec chmod -w {} \; ; \
 	)
-	find $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX)-type d -exec chmod go+rx {} \;
+	find $(PERL-DBI_IPK_DIR)$(OPTWARE_PREFIX) -type d -exec chmod go+rx {} \;
 	$(MAKE) $(PERL-DBI_IPK_DIR)/CONTROL/control
 	echo $(PERL-DBI_CONFFILES) | sed -e 's/ /\n/g' > $(PERL-DBI_IPK_DIR)/CONTROL/conffiles
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(PERL-DBI_IPK_DIR)
