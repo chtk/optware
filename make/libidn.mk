@@ -123,7 +123,7 @@ $(LIBIDN_BUILD_DIR)/.configured: $(DL_DIR)/$(LIBIDN_SOURCE) $(LIBIDN_PATCHES) ma
 		--target=$(GNU_TARGET_NAME) \
 		--disable-csharp \
 		--disable-java \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 	)
 	$(PATCH_LIBTOOL) $(@D)/libtool
@@ -190,7 +190,7 @@ $(LIBIDN_IPK_DIR)/CONTROL/control:
 $(LIBIDN_IPK): $(LIBIDN_BUILD_DIR)/.built
 	rm -rf $(LIBIDN_IPK_DIR) $(BUILD_DIR)/libidn_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(LIBIDN_BUILD_DIR) DESTDIR=$(LIBIDN_IPK_DIR) install-strip
-	rm -f $(LIBIDN_IPK_DIR)$(OPTWARE_PREFIX)lib/libidn.a
+	rm -f $(LIBIDN_IPK_DIR)$(OPTWARE_PREFIX)/lib/libidn.a
 	$(MAKE) $(LIBIDN_IPK_DIR)/CONTROL/control
 	cd $(BUILD_DIR); $(IPKG_BUILD) $(LIBIDN_IPK_DIR)
 	$(WHAT_TO_DO_WITH_IPK_DIR) $(LIBIDN_IPK_DIR)
