@@ -129,7 +129,7 @@ $(MPG123_BUILD_DIR)/.configured: $(DL_DIR)/$(MPG123_SOURCE) $(MPG123_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		$(MPG123_CONFIG_ARG) \
 		--disable-nls \
 		--disable-static \
