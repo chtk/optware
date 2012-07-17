@@ -137,7 +137,7 @@ $(TSHARK_BUILD_DIR)/.configured: $(DL_DIR)/$(TSHARK_SOURCE) $(TSHARK_PATCHES) ma
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-wireshark \
 		--with-glib-prefix=$(STAGING_PREFIX) \
 		--disable-gtk2 \
@@ -210,13 +210,13 @@ $(TSHARK_IPK): $(TSHARK_BUILD_DIR)/.built
 		DESTDIR=$(TSHARK_IPK_DIR) \
 		program_transform_name="" \
 		install
-	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/*.la
-	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/wireshark/plugins/*/*.la
+	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/lib/*.la
+	rm -f $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/lib/wireshark/plugins/*/*.la
 	$(STRIP_COMMAND) \
-		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)bin/[a-em-z]* \
-		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/lib* \
-		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)lib/wireshark/plugins/*/*.so
-	install -d $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/bin/[a-em-z]* \
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/lib/lib* \
+		$(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/lib/wireshark/plugins/*/*.so
+	install -d $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)/etc/
 #	install -m 644 $(TSHARK_SOURCE_DIR)/tshark.conf $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/tshark.conf
 #	install -d $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
 #	install -m 755 $(TSHARK_SOURCE_DIR)/rc.tshark $(TSHARK_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d/SXXtshark
