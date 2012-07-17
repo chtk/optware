@@ -124,7 +124,7 @@ endif
 	if test "$(BUILD_DIR)/$(PSMISC_DIR)" != "$(@D)" ; \
 		then mv $(BUILD_DIR)/$(PSMISC_DIR) $(@D) ; \
 	fi
-	sed -i -e 's|/usr/share/locale|$(OPTWARE_PREFIX)share/locale|' $(@D)/src/Makefile.in
+	sed -i -e 's|/usr/share/locale|$(OPTWARE_PREFIX)/share/locale|' $(@D)/src/Makefile.in
 	(cd $(@D); \
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(PSMISC_CPPFLAGS)" \
@@ -134,7 +134,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
@@ -200,16 +200,16 @@ $(PSMISC_IPK_DIR)/CONTROL/control:
 $(PSMISC_IPK): $(PSMISC_BUILD_DIR)/.built
 	rm -rf $(PSMISC_IPK_DIR) $(BUILD_DIR)/psmisc_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(PSMISC_BUILD_DIR) DESTDIR=$(PSMISC_IPK_DIR) install-strip
-	$(STRIP_COMMAND) $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)bin/pstree.x11
-	mv $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)bin/killall $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)bin/psmisc-killall
+	$(STRIP_COMMAND) $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)/bin/pstree.x11
+	mv $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)/bin/killall $(PSMISC_IPK_DIR)$(OPTWARE_PREFIX)/bin/psmisc-killall
 	$(MAKE) $(PSMISC_IPK_DIR)/CONTROL/control
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/killall killall $(OPTWARE_PREFIX)bin/psmisc-killall 70"; \
-	 echo "update-alternatives --install $(OPTWARE_PREFIX)bin/pidof pidof $(OPTWARE_PREFIX)bin/psmisc-killall 70"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/killall killall $(OPTWARE_PREFIX)/bin/psmisc-killall 70"; \
+	 echo "update-alternatives --install $(OPTWARE_PREFIX)/bin/pidof pidof $(OPTWARE_PREFIX)/bin/psmisc-killall 70"; \
 	) > $(PSMISC_IPK_DIR)/CONTROL/postinst
 	(echo "#!/bin/sh"; \
-	 echo "update-alternatives --remove killall $(OPTWARE_PREFIX)bin/psmisc-killall"; \
-	 echo "update-alternatives --remove pidof $(OPTWARE_PREFIX)bin/psmisc-killall"; \
+	 echo "update-alternatives --remove killall $(OPTWARE_PREFIX)/bin/psmisc-killall"; \
+	 echo "update-alternatives --remove pidof $(OPTWARE_PREFIX)/bin/psmisc-killall"; \
 	) > $(PSMISC_IPK_DIR)/CONTROL/prerm
 	if test -n "$(UPD-ALT_PREFIX)"; then \
 		sed -i -e '/^[ 	]*update-alternatives /s|update-alternatives|$(UPD-ALT_PREFIX)/bin/&|' \
