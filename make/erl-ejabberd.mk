@@ -76,6 +76,12 @@ ERL_EJABBERD_SOURCE_DIR=$(SOURCE_DIR)/erl-ejabberd
 ERL_EJABBERD_IPK_DIR=$(BUILD_DIR)/erl-ejabberd-$(ERL_EJABBERD_VERSION)-ipk
 ERL_EJABBERD_IPK=$(BUILD_DIR)/erl-ejabberd_$(ERL_EJABBERD_VERSION)-$(ERL_EJABBERD_IPK_VERSION)_$(TARGET_ARCH).ipk
 
+ifneq ($(HOSTCC), $(TARGET_CC))
+ERL_EJABBERD_CONFIGURE_OPTS= \
+	ac_cv_path_ERL=$(ERLANG_HOST_BUILD_DIR)/bin/erl \
+	ac_cv_path_ERLC=$(ERLANG_HOST_BUILD_DIR)/bin/erlc
+endif
+
 .PHONY: erl-ejabberd-source erl-ejabberd-unpack erl-ejabberd erl-ejabberd-stage erl-ejabberd-ipk erl-ejabberd-clean erl-ejabberd-dirclean erl-ejabberd-check
 
 #
@@ -132,8 +138,7 @@ endif
 		CPPFLAGS="$(STAGING_CPPFLAGS) $(ERL_EJABBERD_CPPFLAGS)" \
 		CFLAGS="$(STAGING_CPPFLAGS) $(ERL-YAWS_CPPFLAGS)" \
 		LDFLAGS="$(STAGING_LDFLAGS) $(ERL_EJABBERD_LDFLAGS)" \
-		ac_cv_path_ERL=$(ERLANG_HOST_BUILD_DIR)/bin/erl \
-		ac_cv_path_ERLC=$(ERLANG_HOST_BUILD_DIR)/bin/erlc \
+		$(ERL_EJABBERD_CONFIGURE_OPTS) \
 		./configure \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
