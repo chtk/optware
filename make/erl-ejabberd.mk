@@ -43,9 +43,9 @@ ERL_EJABBERD_IPK_VERSION=1
 
 #
 # ERL_EJABBERD_CONFFILES should be a list of user-editable files
-ERL_EJABBERD_CONFFILES=$(OPTWARE_PREFIX)etc/ejabberd/ejabberd.cfg \
-$(OPTWARE_PREFIX)etc/ejabberd/ejabberdctl.cfg \
-$(OPTWARE_PREFIX)etc/ejabberd/inetrc \
+ERL_EJABBERD_CONFFILES=$(OPTWARE_PREFIX)/etc/ejabberd/ejabberd.cfg \
+$(OPTWARE_PREFIX)/etc/ejabberd/ejabberdctl.cfg \
+$(OPTWARE_PREFIX)/etc/ejabberd/inetrc \
 
 #
 # ERL_EJABBERD_PATCHES should list any patches, in the the order in
@@ -138,7 +138,7 @@ endif
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_TARGET_NAME) \
 		--target=$(GNU_TARGET_NAME) \
-		--prefix=$(OPTWARE_PREFIX)\
+		--prefix=$(OPTWARE_PREFIX) \
 		--with-openssl=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
@@ -205,7 +205,7 @@ $(ERL_EJABBERD_IPK_DIR)/CONTROL/control:
 $(ERL_EJABBERD_IPK): $(ERL_EJABBERD_BUILD_DIR)/.built
 	rm -rf $(ERL_EJABBERD_IPK_DIR) $(BUILD_DIR)/erl-ejabberd_*_$(TARGET_ARCH).ipk
 	$(MAKE) -C $(ERL_EJABBERD_BUILD_DIR)/src DESTDIR=$(ERL_EJABBERD_IPK_DIR) install
-	sed -i -e '/^ERL=/s|=.*|=$(OPTWARE_PREFIX)bin/erl|' $(ERL_EJABBERD_IPK_DIR)$(OPTWARE_PREFIX)sbin/ejabberdctl
+	sed -i -e '/^ERL=/s|=.*|=$(OPTWARE_PREFIX)/bin/erl|' $(ERL_EJABBERD_IPK_DIR)$(OPTWARE_PREFIX)/sbin/ejabberdctl
 #	install -d $(ERL_EJABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/
 #	install -m 644 $(ERL_EJABBERD_SOURCE_DIR)/erl-ejabberd.conf $(ERL_EJABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/erl-ejabberd.conf
 #	install -d $(ERL_EJABBERD_IPK_DIR)$(OPTWARE_PREFIX)etc/init.d
