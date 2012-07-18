@@ -140,6 +140,8 @@ endif
 		--target=$(GNU_TARGET_NAME) \
 		--prefix=$(OPTWARE_PREFIX) \
 		--with-openssl=$(STAGING_PREFIX) \
+		--with-expat=$(STAGING_PREFIX) \
+		--with-zlib=$(STAGING_PREFIX) \
 		--disable-nls \
 		--disable-static \
 	)
