@@ -24,7 +24,7 @@ ASTERISK18_SOURCE_TYPE=tarball
 #ASTERISK18_SOURCE_TYPE=svn
 
 ASTERISK18_SITE=http://downloads.digium.com/pub/asterisk/releases
-ASTERISK18_BASE_VERSION=1.8.12.0
+ASTERISK18_BASE_VERSION=1.8.13.0
 
 ifeq ($(ASTERISK18_SOURCE_TYPE), svn)
 ASTERISK18_SVN=http://svn.digium.com/svn/asterisk/branches/1.8.0
@@ -89,7 +89,6 @@ ASTERISK18_CONFFILES=\
 $(OPTWARE_PREFIX)/etc/asterisk/adsi.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/agents.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/ais.conf \
-$(OPTWARE_PREFIX)/etc/asterisk/alarmreceiver.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/alsa.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/amd.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/app_mysql.conf \
@@ -100,7 +99,6 @@ $(OPTWARE_PREFIX)/etc/asterisk/ccss.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr_adaptive_odbc.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr_custom.conf \
-$(OPTWARE_PREFIX)/etc/asterisk/cdr_manager.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr_mysql.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr_odbc.conf \
 $(OPTWARE_PREFIX)/etc/asterisk/cdr_pgsql.conf \
@@ -342,6 +340,7 @@ endif
 		--with-ogg=$(STAGING_PREFIX) \
 		--with-popt=$(STAGING_PREFIX) \
 		--without-tds \
+		--without-openais \
 		--with-sqlite=$(STAGING_PREFIX) \
 		--with-radius=$(STAGING_PREFIX) \
 		--with-odbc=$(STAGING_PREFIX) \

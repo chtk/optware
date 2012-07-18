@@ -21,7 +21,7 @@
 # "NSLU2 Linux" other developers will feel free to edit.
 #
 TOR_SITE=http://www.torproject.org/dist
-TOR_VERSION=0.2.2.32
+TOR_VERSION=0.2.2.36
 TOR_SOURCE=tor-$(TOR_VERSION).tar.gz
 TOR_DIR=tor-$(TOR_VERSION)
 TOR_UNZIP=zcat
@@ -46,7 +46,7 @@ TOR_CONFFILES=$(OPTWARE_PREFIX)/etc/tor.conf $(OPTWARE_PREFIX)/etc/init.d/SXXtor
 # TOR_PATCHES should list any patches, in the the order in
 # which they should be applied to the source code.
 #
-TOR_PATCHES=$(TOR_SOURCE_DIR)/uclibc-lround.patch
+#TOR_PATCHES=$(TOR_SOURCE_DIR)/uclibc-lround.patch
 
 #
 # If the compilation of the package requires additional
